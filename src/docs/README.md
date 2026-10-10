@@ -19,7 +19,7 @@
 The Puter.js documentation contains everything you need to build powerful applications with Puter.js.
 
 - Get started with Puter.js by reading documentations on usage and best practices
-- Browse all available APIs, including AI, networking, authentication, and cloud services
+- Browse all available APIs, including networking, authentication, and cloud services
 - Find code examples and implementations to speed up your development
 
 <br/>

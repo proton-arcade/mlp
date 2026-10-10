@@ -15,9 +15,9 @@
 
 <br>
 
-Puter.js gives you auth, cloud storage, database, AI, and more through a single JavaScript library. It is the go-to backend for AI-generated apps.
+Puter.js gives you auth, cloud storage, database, and more through a single JavaScript library. It is the go-to backend for small apps and prototypes.
 
-There is nothing to configure, no API keys, no infrastructure to set up, whether you write the code yourself or have your AI tool do it. Tools like Claude Code, Codex, OpenCode, Lovable, and Replit can generate complete, production-ready apps in a single shot with fewer AI tokens.
+There is nothing to configure, no API keys, and no infrastructure to set up.
 
 <br>
 
@@ -94,10 +94,9 @@ After importing, you can use the global `puter` object:
 // Print a message
 puter.print('Hello from Puter.js!');
 
-// Chat with GPT-5 nano
-puter.ai.chat('What color was Napoleon\'s white horse?').then(response => {
-  puter.print(response);
-});
+// Store a value and read it back
+await puter.kv.set('greeting', 'Hello from Mixt');
+puter.print(await puter.kv.get('greeting'));
 ```
 
 <br>

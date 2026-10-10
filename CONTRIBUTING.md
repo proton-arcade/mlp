@@ -1,54 +1,27 @@
-# Contributing to Puter Backend
+# Contributing to Mixt
 
-Thanks for contributing. These rules aren't strictly enforced — but following them makes every PR easier. If anything's unclear, ping a core maintainer or open the PR and ask.
+Thanks for helping. Mixt is a Mint-styled desktop built on Puter's internals. Please keep changes focused and tested.
 
-New to the backend? Start with [doc/architecture.md](doc/architecture.md).
+## Setup
 
----
+1. Install Node.js 24 or newer.
+2. Clone the repository and run `node server.cjs` (or `npm start`).
+3. Open `https://mixt.localhost/` and sign in as `admin` with the temporary password printed on the first boot.
 
-## 1. Test it. Run it.
+## Before you open a pull request
 
-Run the affected code path end-to-end before opening a PR. "It builds" is not "it works."
+- `npm run typecheck` passes with no new errors. The baseline lives in `tools/typecheck-baseline.json`; if you fix baselined errors, run `npm run typecheck:update` and commit the result.
+- The tests you touched pass. Backend: `npm run test:backend`. GUI: `npx vitest run --config src/gui/vitest.config.js`. Puter.js API: `npm run test:puterjs`.
+- You have not added AI features, AI provider code, or AI SDK dependencies. The server is intentionally admin-only; do not weaken the lockdown or the whitelist without discussing it first.
+- Source files keep their copyright headers. New files should carry the AGPL-3.0 header used by the existing files.
 
-Add tests for new behavior, endpoints, or bug fixes. If something's genuinely hard to test, say so in the PR.
+## Conventions
 
-## 2. Follow existing patterns
+- Keep the `puter` SDK global and the `@heyputer/*` package names. Renaming them breaks the API.
+- User-visible text says "Mixt". Strings belong in `src/gui/src/i18n/translations/en.js`; other locales fall back to English for any key they do not define.
+- Mixt's visual theme lives in `src/gui/src/css/mixt.css`. Prefer changing its tokens (`--mixt-*`) over editing component styles.
+- Write tests against the real server behaviour where you can. Some suites need a booted backend (see `src/backend/testUtil.ts`).
 
-Match the shape of similar code already in the repo. [doc/architecture.md](doc/architecture.md) is the source of truth for layers, wiring, and naming. If you think a pattern is wrong, raise it — don't quietly diverge.
+## Licensing
 
-In plain-JS files, typing is encouraged via JSDoc `@type` annotations using the TypeScript type system, with `@typedef` for shared shapes. Don't type API surfaces as `unknown` or untyped `...args` unless the values are passed through transparently to an upstream layer that owns their type.
-
-## 3. Don't expose system or user information
-
-Scan your diff for stray logs, debug routes, internal paths, secrets, tokens, or user data in errors/responses. When in doubt, return less. Flag any auth, permission, or data-export changes in the PR description.
-
-For private security reports, see [SECURITY.md](SECURITY.md).
-
-## 4. AI-assisted code is fine — understood code is required
-
-Don't commit code you couldn't have written, debugged, or defended yourself. Read the diff, run it, and be ready to explain it in review.
-
-## 5. Adding or changing APIs
-
-If you add or change a public API (an endpoint, driver method, or puter-js method), follow [doc/contributing-apis.md](doc/contributing-apis.md) — backward compatibility, [developer docs](src/docs/), types, and tests all move in the same PR.
-
-The same rule applies to limits: rate limits, concurrency caps, quotas, and allowances are published in [src/docs/src/rate-limits-and-quotas.md](src/docs/src/rate-limits-and-quotas.md), and a PR that changes one of those numbers updates that page in the same PR. A limit nobody published is a limit developers only discover as a service failure.
-
-## 6. Boy Scout Rule — leave it 1% better
-
-![Boy Scout Rule](https://imgs.search.brave.com/DMmIWl5-NuZVtrR9kXBb06AKF8kturkgSW9UMb2-6m4/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9sYXdz/b2Zzb2Z0d2FyZWVu/Z2luZWVyaW5nLmNv/bS9pbWFnZXMvbGF3/cy9ib3ktc2NvdXQt/cnVsZS5wbmc)
-
-Fix the typo, the dead import, the missing test, the bit you had to read twice. Keep cleanup proportional to the change — no refactors riding along on bug fixes.
-
----
-
-## Opening a PR
-
-- One thing per PR where possible.
-- Describe **what** and **why**; the diff shows how.
-- Mention how you tested user-visible changes.
-- Drafts welcome.
-
----
-
-Questions? Message a core maintainer. Welcome aboard.
+Contributions are licensed under AGPL-3.0-only, the license of the project.

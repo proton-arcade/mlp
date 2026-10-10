@@ -68,7 +68,7 @@ router.get('/posts/:id', getPost);
 | Global | Type | Description |
 |---|---|---|
 | `router` | `Router` | Register handlers via `get`/`post`/`put`/`delete`/`options`/`custom`. |
-| `me` | `{ puter: Puter }` | Deployer's Puter context (FS, KV, AI, auth, etc). |
+| `me` | `{ puter: Puter }` | Deployer's Puter context (FS, KV, auth, etc). |
 | `my`, `myself` | `{ puter: Puter }` | Aliases for `me`. |
 | `puter_auth` | `string` | Deployer's auth token (Cloudflare secret binding). |
 | `puter_endpoint` | `string` | Puter API endpoint. |
