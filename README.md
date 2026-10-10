@@ -12,7 +12,7 @@ Mixt is a browser desktop styled after Linux Mint and Cinnamon: a dark bottom pa
 
 ## Quick start
 
-You need **Node.js 24 or newer**.
+You need **Node.js 24 or newer**. The first install compiles the SQLite driver (`better-sqlite3`), so it also needs Python 3, `make`, and a C++ compiler (Xcode Command Line Tools on macOS, `build-essential` on Debian/Ubuntu, Visual Studio Build Tools on Windows), and internet access to npm and nodejs.org for the Node headers.
 
 ```bash
 node server.cjs

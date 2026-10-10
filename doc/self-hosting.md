@@ -5,6 +5,7 @@ This guide covers running your own Mixt server. For a quick start, see the [READ
 ## Requirements
 
 - Node.js 24 or newer.
+- For the first install only: Python 3, `make`, and a C++ compiler, because `better-sqlite3` is compiled from source. The Node headers are downloaded from nodejs.org during that build.
 - Port 443 for the HTTPS front. On Linux and macOS, either run as administrator (`sudo node server.cjs`) or grant Node the low-port capability once with `sudo setcap 'cap_net_bind_service=+ep' "$(which node)"`.
 - A browser that accepts a self-signed certificate for `mixt.localhost`. The certificate is created in `volatile/tls/` on the first run.
 
