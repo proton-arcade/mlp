@@ -372,7 +372,7 @@ export class PuterHomepageService extends PuterService {
     <meta name="theme-color" content="#ffffff">
     ${bundled ? `<link rel="stylesheet" href="${guiCss}">` : ''}
 
-    <link rel="preload" as="image" href="https://puter-assets.b-cdn.net/wallpaper.webp">
+    <link rel="preload" as="image" href="${assetDir}/images/mixt-wave.jpg">
 
     <script>
         if ( ! window.service_script ) {
