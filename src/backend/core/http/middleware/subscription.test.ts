@@ -82,7 +82,7 @@ describe('requireSubscriptionGate', () => {
 });
 
 describe('subscription.gate hook', () => {
-    const surface = 'route.post.puterai.anthropic.v1.messages';
+    const surface = 'route.post.example.v1.generate';
 
     it('lets a listener on the surface waive the plan for that call', async () => {
         const events = new EventClient({} as IConfig);

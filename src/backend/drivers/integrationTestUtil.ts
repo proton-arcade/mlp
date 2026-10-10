@@ -19,11 +19,11 @@
  */
 
 /**
- * Shared utilities for AI provider integration tests.
+ * Shared utilities for integration tests that need external services.
  *
- * Each test reads its credentials from `PUTER_TEST_AI_*` env vars (loaded by
- * the vitest config's `PUTER_` prefix) and skips itself when the var is missing
- * — tests run only on developer machines and in CI environments that supply the
+ * Each test reads its credentials from `PUTER_TEST_*` env vars (loaded by the
+ * vitest config's `PUTER_` prefix) and skips itself when the var is missing —
+ * tests run only on developer machines and in CI environments that supply the
  * right secrets.
  *
  * Filename intentionally omits `.test.` so vitest does not treat this helper as

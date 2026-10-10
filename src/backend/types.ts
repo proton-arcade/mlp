@@ -274,46 +274,6 @@ export interface IThumbnailStoreConfig {
 }
 
 /**
- * Shape of an entry under `config.providers.*` — each AI / integration driver
- * reads a slightly different subset of these keys. Kept permissive so new
- * providers don't have to touch the root type.
- */
-export interface IAIProviderConfig {
-    /**
-     * API key. Sole canonical name — drivers no longer accept
-     * `secret_key`/`api_key`/`key` aliases.
-     */
-    apiKey?: string;
-    /**
-     * Cloudflare API token (semantically distinct from a regular key).
-     * Cloudflare-only.
-     */
-    apiToken?: string;
-    /**
-     * Override the provider's HTTP base URL (OpenRouter, Cloudflare,
-     * ElevenLabs, Ollama).
-     */
-    apiBaseUrl?: string;
-    /**
-     * Azure AI Foundry deployment endpoint (azure-openai). Required alongside
-     * `apiKey`.
-     */
-    apiURL?: string;
-    /** Cloudflare account id. */
-    accountId?: string;
-    /** ElevenLabs default voice id. */
-    defaultVoiceId?: string;
-    /** ElevenLabs speech-to-speech model id. */
-    speechToSpeechModelId?: string;
-    /** Ollama toggle — defaults true; set `false` to disable. */
-    enabled?: boolean;
-    /** AWS credentials for AWS-backed providers (Polly, Textract). */
-    aws?: IAWSCredentials;
-    /** Escape hatch — providers often expose additional tuning knobs. */
-    [key: string]: unknown;
-}
-
-/**
  * OIDC provider sub-config (google, custom, …). `google` uses discovery, so
  * only `client_id` + `client_secret` are required; custom providers must also
  * supply the three endpoint URLs explicitly.
@@ -1019,16 +979,6 @@ interface IConfigOptional {
          */
         backend?: 'memory' | 'redis' | 'kv';
     };
-
-    // -- AI / integration providers ----------------------------------
-    //
-    // All AI providers — chat, image, video, TTS, OCR, speech-to-text,
-    // speech-to-speech — are configured under `providers[<provider-id>]`.
-    // Provider ids match the driver-side identifier (e.g. `claude`,
-    // `openai-image-generation`, `aws-textract`). There is no `services`
-    // bag and no top-level `openai`/`gemini`/`mistral`/`elevenlabs`/`aws`
-    // shortcut.
-    providers: Record<string, IAIProviderConfig | undefined>;
 
     // -- Cross-node / external integrations --------------------------
 

@@ -23,7 +23,7 @@ import { actorUid } from '../../core/actor.js';
 import { Context } from '../../core/context.js';
 import { abortOnDisconnect } from '../../core/http/abortOnDisconnect.js';
 import { Controller } from '../../core/http/decorators.js';
-import { HttpError, isHttpError } from '../../core/http/HttpError.js';
+import { HttpError } from '../../core/http/HttpError.js';
 import { assertNotUserSession } from '../../core/http/middleware/gates.js';
 import { assertActorMeetsReputation } from '../../core/reputation.js';
 import {
@@ -32,11 +32,6 @@ import {
 } from '../../core/http/middleware/rateLimit.js';
 import type { PuterRouter } from '../../core/http/PuterRouter.js';
 import type { DriverMeta } from '../../drivers/meta.js';
-import {
-    isCreditExhaustion,
-    isUpstreamTimeoutError,
-    sanitizeUpstreamMessage,
-} from '../../drivers/util/upstreamErrors.js';
 import {
     isDriverStreamResult,
     resolveCallableMethods,
@@ -86,95 +81,6 @@ const driverCallDuration = meter.createHistogram('driver.call.duration', {
     description: 'Wall time of a driver method call',
     unit: 'ms',
 });
-
-const extractUpstreamStatus = (e: {
-    status?: number;
-    statusCode?: number;
-    response?: { status?: number };
-    $metadata?: { httpStatusCode?: number };
-    message?: string;
-}): number | undefined => {
-    const direct = e.status ?? e.statusCode;
-    if (typeof direct === 'number') return direct;
-    const fromResponse = e.response?.status;
-    if (typeof fromResponse === 'number') return fromResponse;
-    const fromAws = e.$metadata?.httpStatusCode;
-    if (typeof fromAws === 'number') return fromAws;
-    // Message sniff (e.g. "... failed with status 422 ...").
-    // Only trust if it's adjacent to a status-indicating word to
-    // avoid matching random 4xx/5xx-looking numbers in payloads.
-    const msg = e.message;
-    if (typeof msg === 'string') {
-        const m = msg.match(/\bstatus(?:\s+code)?\s*[:=]?\s*(4\d\d|5\d\d)\b/i);
-        if (m) return Number(m[1]);
-    }
-    return undefined;
-};
-
-const translateProviderError = (err: unknown): unknown => {
-    if (isHttpError(err)) return err;
-    if (!err || typeof err !== 'object') return err;
-    const e = err as {
-        status?: number;
-        statusCode?: number;
-        response?: { status?: number };
-        $metadata?: { httpStatusCode?: number };
-        message?: string;
-        error?: { code?: string; type?: string; message?: string };
-        code?: string;
-        cause?: unknown;
-    };
-    const status = extractUpstreamStatus(e);
-    const msg = sanitizeUpstreamMessage(
-        e.error?.message ?? e.message ?? 'Upstream provider error',
-    );
-    const upstreamCode = e.error?.code ?? e.code;
-    const fields = { upstreamStatus: status, upstreamCode };
-
-    if (isCreditExhaustion(status, upstreamCode, msg)) {
-        return new HttpError(503, 'AI provider out of credits', {
-            legacyCode: 'upstream_credits_exhausted',
-            fields,
-        });
-    }
-    if (typeof status !== 'number') {
-        if (isUpstreamTimeoutError(e)) {
-            const cause = e.cause as { code?: string } | undefined;
-            return new HttpError(504, 'AI provider timed out', {
-                legacyCode: 'upstream_timeout',
-                fields: { upstreamCode: e.code ?? cause?.code },
-                cause: err,
-            });
-        }
-        return err;
-    }
-
-    if (status === 429) {
-        return new HttpError(429, msg, {
-            legacyCode: 'upstream_rate_limited',
-            fields,
-        });
-    }
-    if (status === 401 || status === 403) {
-        return new HttpError(500, msg, {
-            legacyCode: 'upstream_auth_failed',
-            fields,
-        });
-    }
-    if (status >= 500) {
-        return new HttpError(400, 'AI provider unavailable', {
-            legacyCode: 'upstream_provider_unavailable',
-            fields,
-        });
-    }
-    if (status >= 400) {
-        return new HttpError(400, msg, {
-            legacyCode: 'upstream_bad_request',
-            fields,
-        });
-    }
-    return err;
-};
 
 @Controller('/drivers')
 export class DriverController extends PuterController {
@@ -552,12 +458,12 @@ export class DriverController extends PuterController {
                 },
                 {},
             );
-            throw translateProviderError(e);
+            throw e;
         }
 
         // Same window the span and the lifecycle events measure: for streamed
         // results this is stream start, not stream drain. Worth remembering
-        // when reading AI latency — it is time-to-first-token, not total.
+        // when reading streamed latency — it is time-to-first-token, not total.
         driverCallDuration.record(Date.now() - startedAt, {
             driver: ifaceName,
             'driver.method': method,
@@ -651,9 +557,7 @@ export class DriverController extends PuterController {
         // methods can never be dispatched.
         this.#callableMethods.set(instance, resolveCallableMethods(instance));
         // Register each alias pointing at the same instance. Calls that pass
-        // a provider id in the `driver` slot (e.g. `aws-polly` or
-        // `openai-tts` instead of the unified `ai-tts`, as SDK bundles
-        // predating the unified drivers do) resolve here; the handler sets
+        // a provider id in the `driver` slot resolve here; the handler sets
         // Context.driverName to the alias so the method can route to the
         // right internal provider.
         for (const alias of meta.aliases) {

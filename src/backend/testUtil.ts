@@ -236,8 +236,8 @@ export type TestUserCredentials = {
     token: string;
     /**
      * Full-access access token (what the dashboard's "API Token" flow mints).
-     * The `/puterai/*` wire routes reject bare session tokens
-     * (`noUserSession`), so suites exercising them authenticate with this.
+     * Metered wire routes reject bare session tokens (`noUserSession`), so
+     * suites exercising them authenticate with this.
      */
     apiToken: string;
     /**

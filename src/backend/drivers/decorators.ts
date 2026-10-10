@@ -80,8 +80,8 @@ type AnyCtor = new (...args: any[]) => any;
  * Usage:
  *
  * ```ts
- * @Driver('puter-chat-completion', { name: 'openai-completion', default: true })
- * class OpenAIChatDriver extends PuterDriver {
+ * @Driver('puter-example', { name: 'example-driver', default: true })
+ * class ExampleDriver extends PuterDriver {
  *     async complete(args) { ... }
  * }
  * ```

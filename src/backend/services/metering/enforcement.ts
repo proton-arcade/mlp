@@ -83,8 +83,8 @@ export const creditEnforcementExempt = (
 };
 
 /**
- * Reject an actor with nothing left to spend. Same status and code the AI
- * surfaces use, so a client that already handles one handles this.
+ * Reject an actor with nothing left to spend. Same status and code the other
+ * metered surfaces use, so a client that already handles one handles this.
  */
 export const assertActorHasCredits = async (
     metering: CreditMetering | undefined,
@@ -226,7 +226,7 @@ export const actorOnPaidPlan = async (
 /**
  * Where a plan gate sits, so a `subscription.gate.<surface>` listener can waive
  * it for a call it recognizes. `surface` is the key segment after
- * `subscription.gate.`, e.g. `route.post.puterai.openai.v1.chat.completions`.
+ * `subscription.gate.`, e.g. `route.post.example.v1.generate`.
  */
 export interface SubscriptionGateHook {
     events: Pick<EventClient, 'emitAndWait'> | undefined;
