@@ -93,7 +93,6 @@
     "database": {
         "engine": "sqlite",
         "path": "volatile/runtime/puter-database.sqlite",
-        "targetVersion": 0,
         "host": "",
         "port": 3306,
         "user": "",
