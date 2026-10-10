@@ -9,7 +9,7 @@ Three independent checks can stop a request:
 
 | Check             | What it limits                                                   | Resets                                  | Error                         |
 | ----------------- | ---------------------------------------------------------------- | --------------------------------------- | ----------------------------- |
-| **Usage credit**  | What usage costs (AI, egress, KV, storage operations, workers)   | Monthly, per plan                       | `402` `insufficient_funds`    |
+| **Usage credit**  | What usage costs (egress, KV, storage operations, workers)   | Monthly, per plan                       | `402` `insufficient_funds`    |
 | **Rate limit**    | How many requests are made in a window                           | Rolling window (10 s, 1 min or 1 h)     | `429` `too_many_requests`     |
 | **Storage quota** | How many bytes are stored                                        | When the user deletes files or upgrades | `413` `storage_limit_reached` |
 
@@ -40,78 +40,11 @@ Usage is charged against the account's monthly allowance at real cost.
 The main costs:
 
 - **Egress**: every byte sent to a client, on all responses, not just file downloads. This is the one developers underestimate.
-- **AI**: priced per model. `puter.ai.listModels()` lists the models, and `GET /metering/allCosts` returns the per-model rates.
 - **KV and storage operations**: small per-operation costs. Reads served from cache cost a fraction of uncached reads.
-
-For AI:
-
-- A streamed response that stops before the model reports its token counts (an upstream error mid-stream, for example) is charged on an estimate of what was streamed. A request that produced no output is free.
-- In-flight chat, text-to-speech, speech-to-text and voice-changer requests reserve the most they could cost until they finish, then settle at their real cost. If several expensive requests start at once and the balance can't cover all of them, the later ones fail with `402 insufficient_funds`.
 
 ## Rate limits
 
 All rate limits are rolling windows, counted per user, per app unless a scope is given.
-
-### AI
-
-Shared by chat, image generation, video, TTS, speech and OCR. Each interface and method has its own budget, so an image generation and a chat completion don't compete.
-
-| Limit               | Paid | Free | Anonymous |
-| ------------------- | ---- | ---- | --------- |
-| Requests per 10 s   | 200  | 30   | 20        |
-| Concurrent requests | 20   | 3    | 2         |
-
-| Input                                          | Limit            |
-| ---------------------------------------------- | ---------------- |
-| Text for `txt2speech()`                        | 3,000 characters |
-| Audio for `speech2speech()`                    | 25 MiB           |
-| Image inlined in a chat message                | 5 MB             |
-| File attached to a chat message, Claude models | 30 MB            |
-| File attached to a chat message, OpenAI models | 5 MB             |
-
-An input over its limit is rejected before it reaches the model. OCR input limits are under [OCR](#ocr).
-
-The OpenAI- and Anthropic-compatible endpoints (`/puterai/openai/v1/*`, `/puterai/anthropic/v1/messages`) require a paid plan; a free account gets `402 subscription_required`. The same models are available to every account through `puter.ai.*` and `/drivers/call`, and the model catalogue endpoints are open to everyone.
-
-`/puterai/anthropic/v1/messages/count_tokens` has its own budget of 120 requests per minute per user, with no concurrency limit, and is not charged.
-
-Claude's server-executed tools are clamped so a request can't reserve an unbounded amount of credit:
-
-| Tool | Limit |
-| ---- | ----- |
-| Web search / web fetch `max_uses` | Defaults to 10 when omitted; capped at 20. |
-| Advisor `max_uses` | Defaults to 3; capped at 10. |
-| Advisor `max_tokens` | Defaults to 16,384; capped at 32,768. |
-
-A web search is metered at a flat per-request rate in addition to the tokens it reads back; an advisor call is metered under the named advisor model's own rates (an advisor model outside the catalog is priced at the most expensive entry, never left unpriced).
-
-### Image generation
-
-`puter.ai.txt2img()` returns one image per call. These limits apply on top of the AI limits above:
-
-| Provider | Limit |
-|----------|-------|
-| xAI | Up to 5 reference images; more fails with `bad_request`. |
-| Together | Image routes are excluded because they require third-party data sharing; generation fails before any upstream call. |
-| Cloudflare | Output dimensions are clamped per side: FLUX.2 256–1920; Lucid Origin 64–2500; Phoenix 64–2048; SDXL and Inpainting 256–2048. Schnell is fixed at 1024×1024. One reference image on FLUX.2 and Inpainting models. Steps: Schnell 1–8; Lucid Origin 1–40; Phoenix and FLUX.2 Dev 1–50; Klein exactly 4; SDXL and Inpainting 1–20. |
-| Replicate | At most 10 references, or the model's lower limit; FLUX 1.1 Pro accepts one. Each fetched reference is capped at 30 MB. Riverflow accepts at most two fonts. Native options follow each model's schema. For other models with width/height controls, dimensions round to multiples of 8 and clamp to the schema bounds (64–4096 per side if none are given). Predictions expire after 10 minutes and are polled every 2 seconds. Cancellation cleanup polls for up to 30 seconds, plus an in-flight request. Network timeouts: 90 seconds for creation, 30 seconds for other requests. |
-| BytePlus | Pro: 10 references; other Seedream models: 14. |
-| BytePlus explicit output size | Pro: 921,600–4,624,220 total pixels. Lite and 4.5: 3,686,400–16,777,216. 4.0: 921,600–16,777,216. All require integer dimensions and an aspect ratio between 1:16 and 16:1. Sizes under 921,600 total pixels are treated as aspect-ratio hints, not exact sizes. |
-
-See [`txt2img()`](/AI/txt2img) for provider-specific options and supported models.
-
-### OCR
-
-`puter.ai.img2txt()` input limits apply in addition to the shared AI limits above:
-
-| Provider | Limit |
-|----------|-------|
-| AWS Textract | 10 MB per input. JPEG, PNG, TIFF, or a single-page PDF. |
-| Mistral | 50 MB per input. PDFs up to 1,000 pages. |
-
-`File`, `Blob` and data URI inputs are checked by the SDK before upload: 10 MB for Textract, and 36 MB when a Mistral model or provider is named, since the base64 upload must fit the 50 MB request body. URLs and Puter paths are read up to the provider's limit and rejected with `413 storage_limit_reached` beyond it. See [`img2txt()`](/AI/img2txt) for models and options.
-
-Before the provider runs, the balance must cover every page the call can be billed for, or it fails with `402 insufficient_funds`. A PDF counts its own pages, or only the `pages` selected when that is fewer. An image, and any Textract input, counts as one page. Other documents, and PDFs whose pages can't be read, count 20 pages per MB, up to 1,000. That amount is reserved while the call runs; the charge is for the pages actually processed.
 
 ### Key-value store
 
@@ -519,11 +452,11 @@ Puter.js stops a request that makes no progress for too long and rejects it with
 | Request                                                                                                           | Stopped after this long without progress |
 | ----------------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
 | Reads: read-only calls such as `puter.kv.get()`, `puter.kv.list()`, `puter.apps.get()` and `puter.hosting.list()` | 60 s                                     |
-| Everything else, including writes, AI calls, streamed responses and every `puter.fs` call                         | 15 min                                   |
+| Everything else, including writes, streamed responses and every `puter.fs` call                         | 15 min                                   |
 
 A read is held to 60 s only while progress can be seen: before the response headers arrive, and after them once the body has started arriving. Node.js, service workers and Puter Workers report no progress for a non-streamed body, so there a read moves to the 15 min limit once its headers are in.
 
-A read that times out is retried once. A write or AI call that times out is never retried, because the server may already have done the work: check before repeating it. A stream that stalls throws `{ message, code: "request_timeout" }` from its loop.
+A read that times out is retried once. A write that times out is never retried, because the server may already have done the work: check before repeating it. A stream that stalls throws `{ message, code: "request_timeout" }` from its loop.
 
 ## What happens when you hit a limit
 
@@ -533,7 +466,7 @@ A read that times out is retried once. A write or AI call that times out is neve
 | `402`  | `insufficient_funds`    | Monthly credit spent                  | The user buys credit or upgrades; the allowance resets next month. |
 | `402`  | `subscription_required` | The endpoint requires a paid plan     | The user upgrades. Retrying or waiting doesn't help. |
 | `413`  | `storage_limit_reached` | Storage quota reached                 | The user deletes files or upgrades. |
-| none   | `request_timeout`       | No progress within the [request timeout](#request-timeouts) | Retry if the call is safe to repeat. A write or AI call may already have run. |
+| none   | `request_timeout`       | No progress within the [request timeout](#request-timeouts) | Retry if the call is safe to repeat. A write may already have run. |
 
 Errors are JSON: `{ "error": …, "message": …, "code": … }`.
 

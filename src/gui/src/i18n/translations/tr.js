@@ -133,7 +133,7 @@ const tr = {
         forgot_pass_c2a: 'Parolanızı mı unuttunuz?',
         from: 'Kimden',
         general: 'Genel',
-        get_a_copy_of_on_puter: "'%' kopyasını Puter.com'da edinin!",
+        get_a_copy_of_on_puter: "'%' kopyasını Mixt.com'da edinin!",
         get_copy_link: 'Kopyalama Bağlantısını Al',
         hide_all_windows: 'Tüm Pencereleri Gizle',
         home: 'Anasayfa',
@@ -215,13 +215,13 @@ const tr = {
         public: 'Genel',
         publish: 'Yayınla',
         publish_as_website: 'Web sitesi olarak yayınla',
-        puter_description: 'Puter, tüm dosyalarınızı, uygulamalarınızı ve oyunlarınızı tek bir güvenli yerde tutmak için gizliliğe öncelik veren kişisel bir buluttur ve her yerden her zaman erişilebilir.',
+        puter_description: 'Mixt, tüm dosyalarınızı, uygulamalarınızı ve oyunlarınızı tek bir güvenli yerde tutmak için gizliliğe öncelik veren kişisel bir buluttur ve her yerden her zaman erişilebilir.',
         reading_file: '%strong% okunuyor',
         recent: 'En son',
         recommended: 'Önerilen',
         recover_password: 'Parolayı Kurtar',
         refer_friends_c2a: 'Hesap oluşturup onaylayan her arkadaşınız için 1 GB kazanın. Arkadaşınız da 1 GB kazanacak!',
-        refer_friends_social_media_c2a: "Puter.com'da 1 GB ücretsiz depolama alanı kazanın!",
+        refer_friends_social_media_c2a: "Mixt.com'da 1 GB ücretsiz depolama alanı kazanın!",
         refresh: 'Yenile',
         release_address_confirmation: 'Bu adresi bırakmak istediğinize emin misiniz?',
         remove_from_taskbar: 'Görev Çubuğundan Kaldır',
@@ -231,7 +231,7 @@ const tr = {
         replace_all: 'Tümünü Değiştir',
         resend_confirmation_code: 'Onay Kodunu Yeniden Gönder',
         reset_colors: 'Renkleri Sıfırla',
-        restart_puter_confirm: "Puter'i yeniden başlatmak istediğinize emin misiniz?",
+        restart_puter_confirm: "Mixt'i yeniden başlatmak istediğinize emin misiniz?",
         restore: 'Geri Yükle',
         save: 'Kaydet',
         saturation: 'Doygunluk',
@@ -261,7 +261,7 @@ const tr = {
         shortcut_to: 'Şuna kısayol oluştur',
         show_all_windows: 'Tüm Pencereleri Göster',
         show_hidden: 'Gizli dosyaları göster',
-        sign_in_with_puter: 'Puter ile giriş yap',
+        sign_in_with_puter: 'Mixt ile giriş yap',
         sign_up: 'Kaydol',
         signing_in: 'Giriş yapılıyor…',
         size: 'Boyut',
@@ -271,7 +271,7 @@ const tr = {
         start: 'Başlat',
         status: 'Durum',
         storage_usage: 'Depolama Alanı Kullanımı',
-        storage_puter_used: 'Puter tarafından kullanılıyor',
+        storage_puter_used: 'Mixt tarafından kullanılıyor',
         taking_longer_than_usual: 'Normalden biraz daha uzun sürüyor. Lütfen bekleyin...',
         task_manager: 'Görev Yöneticisi',
         taskmgr_header_name: 'Ad',
@@ -279,7 +279,7 @@ const tr = {
         taskmgr_header_type: 'Tür',
         terms: 'Şartlar',
         text_document: 'Metin belgesi',
-        tos_fineprint: "'Ücretsiz Hesap Oluştur'u tıklayarak Puter'ın {{link=terms}}Hizmet Şartları{{/link}} ve {{link=privacy}}Gizlilik Politikası{{/link}}'nı kabul etmiş olursunuz.",
+        tos_fineprint: "'Ücretsiz Hesap Oluştur'u tıklayarak Mixt'ın {{link=terms}}Hizmet Şartları{{/link}} ve {{link=privacy}}Gizlilik Politikası{{/link}}'nı kabul etmiş olursunuz.",
         transparency: 'Saydamlık',
         trash: 'Çöp Kutusu',
         two_factor: 'İki Faktörlü Doğrulama',
@@ -304,7 +304,7 @@ const tr = {
         visibility: 'Görünürlük',
         yes: 'Evet',
         yes_release_it: 'Evet, Bırak',
-        you_have_been_referred_to_puter_by_a_friend: "Bir arkadaşınız tarafından Puter'a yönlendirildiniz!",
+        you_have_been_referred_to_puter_by_a_friend: "Bir arkadaşınız tarafından Mixt'a yönlendirildiniz!",
         zip: 'Sıkıştır',
         zipping_file: '%strong% sıkıştırılıyor',
 
@@ -374,7 +374,6 @@ const tr = {
         'billing.offering.professional': 'Profesyonel', // In English: "Professional"
         'billing.offering.business': 'İşletme', // In English: "Business"
         'billing.cloud_storage': 'Bulut Depolama', // In English: "Cloud Storage"
-        'billing.ai_access': 'Yapay Zeka Erişimi', // In English: "AI Access"
         'billing.bandwidth': 'Bant Genişliği', // In English: "Bandwidth"
         'billing.apps_and_games': 'Uygulamalar & Oyunlar', // In English: "Apps & Games"
         'billing.upgrade_to_pro': 'Yükselt: %strong%', // In English: "Upgrade to %strong%"
@@ -475,7 +474,7 @@ const tr = {
         'window_title_public': 'Genel',
         'window_title_videos': 'Videolar',
         'window_title_pictures': 'Resimler',
-        'window_title_puter': 'Puter',
+        'window_title_puter': 'Mixt',
         'window_folder_empty': 'Bu klasör boş',
         'manage_your_subdomains': 'Alt Alan Adlarınızı Yönetin',
         'open_containing_folder': 'İçeren Klasörü Aç',

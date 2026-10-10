@@ -9,8 +9,6 @@ Various object types and classes that represent different entities in the Puter 
 
 - **[App](/Objects/app/)** - Represents an application
 - **[AppConnection](/Objects/AppConnection/)** - Represents a connection to an application
-- **[ChatResponse](/Objects/chatresponse/)** - Represents an AI chat response
-- **[ChatResponseChunk](/Objects/chatresponsechunk/)** - Represents a chunk of streaming chat response data
 - **[DetailedAppUsage](/Objects/detailedappusage/)** - Represents detailed resource usage statistics for a specific application
 - **[EmailListPage](/Objects/emaillistpage/)** - Represents one page of mailbox listing results
 - **[EmailMessage](/Objects/emailmessage/)** - Represents a fully parsed message from the user's mailbox
@@ -21,13 +19,9 @@ Various object types and classes that represent different entities in the Puter 
 - **[MonthlyUsage](/Objects/monthlyusage/)** - Represents user's monthly resource usage information
 - **[PuterPeerConnection](/Objects/puterpeerconnection/)** - Represents a data-channel connection to a peer
 - **[PuterPeerServer](/Objects/puterpeerserver/)** - Represents a peer server and its connected clients
-- **[Speech2TxtResult](/Objects/speech2txtresult/)** - Represents speech-to-text transcription results
 - **[Subdomain](/Objects/subdomain/)** - Represents a subdomain
 - **[Team](/Objects/team/)** - Represents a Puter team
 - **[TeamDirectoryEntry](/Objects/teamdirectoryentry/)** - Represents a member of a team
-- **[TTSEngine](/Objects/ttsengine/)** - Represents an available text-to-speech engine/model
-- **[TTSVoice](/Objects/ttsvoice/)** - Represents an available text-to-speech voice
-- **[ToolCall](/Objects/toolcall/)** - Represents a tool invocation request
 - **[User](/Objects/user/)** - Represents a Puter user
 - **[WorkerDeployment](/Objects/workerdeployment/)** - Represents a worker deployment result
 - **[WorkerInfo](/Objects/workerinfo/)** - Represents worker information

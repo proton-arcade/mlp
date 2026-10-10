@@ -134,7 +134,7 @@ const ja = {
         forgot_pass_c2a: 'パスワードを忘れましたか？',
         from: '送信者',
         general: '一般',
-        get_a_copy_of_on_puter: 'Puter.comで \'%%\' のコピーを取得！',
+        get_a_copy_of_on_puter: 'Mixt.comで \'%%\' のコピーを取得！',
         get_copy_link: 'コピーリンクを取得',
         hide_all_windows: 'すべてのウィンドウを隠す',
         home: 'ホーム',
@@ -222,7 +222,7 @@ const ja = {
         recommended: 'おすすめ',
         recover_password: 'パスワードを回復',
         refer_friends_c2a: '友達がPuterでアカウントを作成して確認すると、1GBを獲得できます。友達も1GBを獲得できます！',
-        refer_friends_social_media_c2a: 'Puter.comで1GBの無料ストレージを手に入れよう！',
+        refer_friends_social_media_c2a: 'Mixt.comで1GBの無料ストレージを手に入れよう！',
         refresh: '更新',
         release_address_confirmation: 'このアドレスを解放してもよろしいですか？',
         remove_from_taskbar: 'タスクバーから削除',
@@ -373,7 +373,6 @@ const ja = {
         'billing.offering.professional': 'プロフェッショナル', // In English: "Professional"
         'billing.offering.business': 'ビジネス', // In English: "Business"
         'billing.cloud_storage': 'クラウドストレージ', // In English: "Cloud Storage"
-        'billing.ai_access': 'AIアクセス', // In English: "AI Access"
         'billing.bandwidth': 'データの転送量や速度', // In English: "Bandwidth"
         'billing.apps_and_games': 'アプリ＆ゲーム', // In English: "Apps & Games"
         'billing.upgrade_to_pro': '%strong%にアップグレード', // In English: "Upgrade to %strong%"
@@ -478,7 +477,7 @@ const ja = {
         'window_title_public': 'パブリック', // In English: "Public"
         'window_title_videos': '動画', // In English: "Videos"
         'window_title_pictures': '写真', // In English: "Pictures"
-        'window_title_puter': 'Puter', // In English: "Puter"
+        'window_title_puter': 'Mixt', // In English: "Mixt"
         'window_folder_empty': 'このフォルダーは空です', // In English: "This folder is empty"
         'manage_your_subdomains': 'サブドメインを管理する', // In English: "Manage Your Subdomains"
         'open_containing_folder': '保存先のフォルダーを開く', // In English: "Open Containing Folder"

@@ -146,7 +146,7 @@ const ar = {
         forgot_pass_c2a: 'هل نسيت كلمة المرور؟',
         from: 'من',
         general: 'عام',
-        get_a_copy_of_on_puter: "Puter.com! :احصل على نسخة من '%%' على",
+        get_a_copy_of_on_puter: "Mixt.com! :احصل على نسخة من '%%' على",
         get_copy_link: 'احصل على رابط النسخ',
         hide_all_windows: 'إخفاء جميع النوافذ',
         home: 'الصفحة الرئيسية',
@@ -234,15 +234,15 @@ const ar = {
         publish: 'نشر',
         publish_as_website: 'نشر كموقع إلكتروني',
         puter_description:
-      '.هو سحابة شخصية تركز على الخصوصية للحفاظ على جميع ملفاتك، تطبيقاتك، وألعابك في مكان آمن واحد، متاحة من أي مكان وفي أي وقت Puter',
+      '.هو سحابة شخصية تركز على الخصوصية للحفاظ على جميع ملفاتك، تطبيقاتك، وألعابك في مكان آمن واحد، متاحة من أي مكان وفي أي وقت Mixt',
         reading_file: '%strong% جارٍ قراءة',
         recent: 'الأخيرة',
         recommended: 'مُوصى به',
         recover_password: 'استعادة كلمة المرور',
         refer_friends_c2a:
-      '!سيحصل صديقك على 1 جيجابايت أيضًا .Puter احصل على 1 جيجابايت عن كل صديق ينشئ حسابًا ويؤكده على',
+      '!سيحصل صديقك على 1 جيجابايت أيضًا .Mixt احصل على 1 جيجابايت عن كل صديق ينشئ حسابًا ويؤكده على',
         refer_friends_social_media_c2a:
-      'Puter.com! احصل على 1 جيجابايت من التخزين المجاني على',
+      'Mixt.com! احصل على 1 جيجابايت من التخزين المجاني على',
         refresh: 'تحديث',
         release_address_confirmation: 'هل أنت متأكد أنك تريد تحرير هذا العنوان؟',
         remove_from_taskbar: 'إزالة من شريط المهام',
@@ -252,7 +252,7 @@ const ar = {
         replace_all: 'استبدال الكل',
         resend_confirmation_code: 'إعادة إرسال رمز التأكيد',
         reset_colors: 'إعادة ضبط الألوان',
-        restart_puter_confirm: '؟Puter.com! هل أنت متأكد أنك تريد إعادة تشغيل',
+        restart_puter_confirm: '؟Mixt.com! هل أنت متأكد أنك تريد إعادة تشغيل',
         restore: 'استعادة',
         save: 'حفظ',
         saturation: 'تشبع',
@@ -283,7 +283,7 @@ const ar = {
         shortcut_to: 'اختصار إلى',
         show_all_windows: 'عرض جميع النوافذ',
         show_hidden: 'إظهار المخفي',
-        sign_in_with_puter: 'Puter تسجيل الدخول باستخدام',
+        sign_in_with_puter: 'Mixt تسجيل الدخول باستخدام',
         sign_up: 'تسجيل',
         signing_in: '…جارٍ تسجيل الدخول',
         size: 'الحجم',
@@ -293,7 +293,7 @@ const ar = {
         start: 'بدء',
         status: 'الحالة',
         storage_usage: 'استخدام التخزين',
-        storage_puter_used: 'Puter مستخدم بواسطة',
+        storage_puter_used: 'Mixt مستخدم بواسطة',
         taking_longer_than_usual: '…يستغرق وقتًا أطول من المعتاد. يرجى الانتظار',
         task_manager: 'مدير المهام',
         taskmgr_header_name: 'الاسم',
@@ -302,7 +302,7 @@ const ar = {
         terms: 'الشروط',
         text_document: 'مستند نصي',
         tos_fineprint:
-      "Puter لـ {{link=terms}}شروط الخدمة{{/link}} و{{link=privacy}}سياسة الخصوصية{{/link}} بالنقر على 'إنشاء حساب مجاني' فإنك توافق على",
+      "Mixt لـ {{link=terms}}شروط الخدمة{{/link}} و{{link=privacy}}سياسة الخصوصية{{/link}} بالنقر على 'إنشاء حساب مجاني' فإنك توافق على",
         transparency: 'الشفافية',
         trash: 'المهملات',
         two_factor: 'المصادقة الثنائية',
@@ -328,7 +328,7 @@ const ar = {
         yes: 'نعم',
         yes_release_it: 'نعم، أطلقه',
         you_have_been_referred_to_puter_by_a_friend:
-      '!بواسطة صديق Puter تم إحالتك إلى',
+      '!بواسطة صديق Mixt تم إحالتك إلى',
         zip: 'ضغط',
         zipping_file: '%strong% جارٍ ضغط',
 
@@ -392,7 +392,6 @@ const ar = {
         'billing.offering.professional': 'احترافي', // In English: "Professional"
         'billing.offering.business': 'تجاري', // In English: "Business"
         'billing.cloud_storage': 'Cloud Storage', // In English: "Cloud Storage"
-        'billing.ai_access': 'التحصل على الذكاء الاصطناعي', // In English: "AI Access"
         'billing.bandwidth': 'Bandwidth', // In English: "Bandwidth"
         'billing.apps_and_games': 'التطبيقات والألعاب', // In English: "Apps & Games"
         'billing.upgrade_to_pro': '%strong% الترقية إلى', // In English: "Upgrade to %strong%"

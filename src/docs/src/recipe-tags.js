@@ -5,7 +5,6 @@
 // A recipe using a tag that isn't listed here fails the build — see
 // loadRecipes() in ./recipes.js.
 const recipeTags = {
-    ai: 'AI',
     auth: 'Auth',
     perms: 'Permissions',
     fs: 'File System',

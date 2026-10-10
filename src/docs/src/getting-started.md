@@ -27,8 +27,8 @@ npm install @heyputer/puter.js
 ```js
 import { puter } from "@heyputer/puter.js";
 
-// Example: Use AI to answer a question
-puter.ai.chat(`Why did the chicken cross the road?`).then(console.log);
+// Example: print a greeting
+puter.print(`Hello from Mixt!`);
 ```
 
 <br>
@@ -41,8 +41,8 @@ Initialize Puter.js with your auth token using the `init` function:
 import { init } from "@heyputer/puter.js/src/init.cjs";
 const puter = init(process.env.puterAuthToken);
 
-// Example: Use AI to answer a question
-puter.ai.chat("What color was Napoleon's white horse?").then(console.log);
+// Example: print a greeting
+puter.print("Hello from Mixt!");
 ```
 
 If your environment has browser access, you can obtain a token via browser login:
@@ -73,7 +73,7 @@ const puter = init(authToken);
   <body>
     <script src="https://js.puter.com/v2/"></script>
     <script>
-      puter.ai.chat(`Why did the chicken cross the road?`).then(puter.print);
+      puter.print(`Hello from Mixt!`);
     </script>
   </body>
 </html>

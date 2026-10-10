@@ -134,7 +134,7 @@ const zh = {
         forgot_pass_c2a: '忘记密码？',
         from: '从',
         general: '常用',
-        get_a_copy_of_on_puter: '在 Puter.com 上获取 \'%%\' 的副本！',
+        get_a_copy_of_on_puter: '在 Mixt.com 上获取 \'%%\' 的副本！',
         get_copy_link: '获取复制链接',
         hide_all_windows: '隐藏所有窗口',
         home: '主页',
@@ -216,13 +216,13 @@ const zh = {
         public: '公开',
         publish: '发布',
         publish_as_website: '发布为网站',
-        puter_description: 'Puter 是一个隐私优先的个人云，可将您的所有文件、应用程序和游戏保存在一个安全的地方，方便随时随地访问。',
+        puter_description: 'Mixt 是一个隐私优先的个人云，可将您的所有文件、应用程序和游戏保存在一个安全的地方，方便随时随地访问。',
         reading_file: '正在读取 %strong%',
         recent: '最近',
         recommended: '推荐',
         recover_password: '找回密码',
-        refer_friends_c2a: '每个创建并确认 Puter 帐户的朋友都会为您获得 1 GB。您的朋友也将获得 1 GB！',
-        refer_friends_social_media_c2a: '在 Puter.com 上获取 1 GB 的免费存储空间！',
+        refer_friends_c2a: '每个创建并确认 Mixt 帐户的朋友都会为您获得 1 GB。您的朋友也将获得 1 GB！',
+        refer_friends_social_media_c2a: '在 Mixt.com 上获取 1 GB 的免费存储空间！',
         refresh: '刷新',
         release_address_confirmation: '您确定要释放此地址吗？',
         remove_from_taskbar: '从任务栏中删除',
@@ -262,7 +262,7 @@ const zh = {
         shortcut_to: '快捷方式',
         show_all_windows: '显示所有窗口',
         show_hidden: '显示隐藏',
-        sign_in_with_puter: '使用 Puter 登录',
+        sign_in_with_puter: '使用 Mixt 登录',
         sign_up: '注册',
         signing_in: '登录中…',
         size: '大小',
@@ -280,7 +280,7 @@ const zh = {
         taskmgr_header_type: '类型',
         terms: '条款',
         text_document: '文本文档',
-        tos_fineprint: '点击“创建免费帐户”即表示您同意 Puter 的 {{link=terms}}服务条款{{/link}} 和 {{link=privacy}}隐私政策{{/link}}。',
+        tos_fineprint: '点击“创建免费帐户”即表示您同意 Mixt 的 {{link=terms}}服务条款{{/link}} 和 {{link=privacy}}隐私政策{{/link}}。',
         transparency: '透明度',
         trash: '回收站',
         two_factor: '二次身份验证',
@@ -305,7 +305,7 @@ const zh = {
         visibility: '可见性',
         yes: '确定',
         yes_release_it: '是的，释放它',
-        you_have_been_referred_to_puter_by_a_friend: '您已经被朋友推荐到 Puter！',
+        you_have_been_referred_to_puter_by_a_friend: '您已经被朋友推荐到 Mixt！',
         zip: '压缩',
         zipping_file: '正在压缩 %strong%',
 
@@ -371,7 +371,6 @@ const zh = {
         'billing.offering.professional': '专业', // In English: "Professional"
         'billing.offering.business': '商业', // In English: "Business"
         'billing.cloud_storage': '云存储', // In English: "Cloud Storage"
-        'billing.ai_access': '人工智能访问', // In English: "AI Access"
         'billing.bandwidth': '频宽', // In English: "Bandwidth"
         'billing.apps_and_games': '应用和游戏', // In English: "Apps & Games"
         'billing.upgrade_to_pro': '升级至%strong%', // In English: "Upgrade to %strong%"
@@ -473,7 +472,7 @@ const zh = {
         'window_title_public': '公开', // In English: "Public"
         'window_title_videos': '视频', // In English: "Videos"
         'window_title_pictures': '图片', // In English: "Pictures"
-        'window_title_puter': 'Puter', // In English: "Puter"
+        'window_title_puter': 'Mixt', // In English: "Mixt"
         'window_folder_empty': '此文件夹为空', // In English: "This folder is empty"
         'manage_your_subdomains': '管理您的子域名', // In English: "Manage Your Subdomains"
         'open_containing_folder': '打开所在文件夹', // In English: "Open Containing Folder"

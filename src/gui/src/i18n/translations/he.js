@@ -145,7 +145,7 @@ const he = {
         forgot_pass_c2a: 'שכחת את הסיסמא?',
         from: 'טופס',
         general: 'כללי',
-        get_a_copy_of_on_puter: 'קבל עותק של \'%%\' ב Puter.com!',
+        get_a_copy_of_on_puter: 'קבל עותק של \'%%\' ב Mixt.com!',
         get_copy_link: 'קבל העתק קישור',
         hide_all_windows: 'הסתר את כל החלונות',
         home: 'בית',
@@ -231,14 +231,14 @@ const he = {
         public: 'ציבורי',
         publish: 'פרסם',
         publish_as_website: 'פרסום כאתר אינטרנט',
-        puter_description: 'הוא ענן אישי ששם את הפרטיות בראש סדר העדיפויות כדי לשמור על כל הקבצים, המשחקים, והיישומים שלך במקום מאובטח אחד, נגיש מכל מקום ובכל זמן Puter',
+        puter_description: 'הוא ענן אישי ששם את הפרטיות בראש סדר העדיפויות כדי לשמור על כל הקבצים, המשחקים, והיישומים שלך במקום מאובטח אחד, נגיש מכל מקום ובכל זמן Mixt',
         reading_file: 'קורא %strong%',
         recent: 'לאחרונה',
         recommended: 'מומלץ',
         recover_password: 'שחזור סיסמה',
         refer_friends_c2a:
-      'קבל 1 גיגה בייט עבור כל חבר שיוצר ומאשר חשבון ב  Puter. גם החבר שלך יקבל 1 גיגה בייט!',
-        refer_friends_social_media_c2a: 'קבל שטח אחסון של 1 גיגה בייט בחינם Puter.com!',
+      'קבל 1 גיגה בייט עבור כל חבר שיוצר ומאשר חשבון ב  Mixt. גם החבר שלך יקבל 1 גיגה בייט!',
+        refer_friends_social_media_c2a: 'קבל שטח אחסון של 1 גיגה בייט בחינם Mixt.com!',
         refresh: 'רענן',
         release_address_confirmation: 'האם אתה בטוח שברצונך לשחרר כתובת זו?',
         remove_from_taskbar: 'הסרה משורת המשימות',
@@ -248,7 +248,7 @@ const he = {
         replace_all: 'החלף הכל',
         resend_confirmation_code: 'שליחה מחדש של קוד אישור',
         reset_colors: 'איפוס צבעים',
-        restart_puter_confirm: 'האם אתה בטוח שברצונך להפעיל Puter מחדש ?',
+        restart_puter_confirm: 'האם אתה בטוח שברצונך להפעיל Mixt מחדש ?',
         restore: 'שחזור',
         save: 'שמירה',
         saturation: 'סטורציה',
@@ -279,7 +279,7 @@ const he = {
         shortcut_to: 'קיצור דרך אל',
         show_all_windows: 'הצג את כל החלונות',
         show_hidden: 'הצג מוסתר',
-        sign_in_with_puter: 'להתחבר עם Puter',
+        sign_in_with_puter: 'להתחבר עם Mixt',
         sign_up: 'הרשמה',
         signing_in: 'התחברות…',
         size: 'גודל',
@@ -289,7 +289,7 @@ const he = {
         start: 'התחלה',
         status: 'סטטוס',
         storage_usage: 'שימוש באחסון',
-        storage_puter_used: 'Puter בשימוש על ידי',
+        storage_puter_used: 'Mixt בשימוש על ידי',
         taking_longer_than_usual: 'לוקח קצת יותר זמן מהרגיל. חכה בבקשה...',
         task_manager: 'מנהל משימות',
         taskmgr_header_name: 'שם',
@@ -297,7 +297,7 @@ const he = {
         taskmgr_header_type: 'סוג',
         terms: 'תנאים',
         text_document: 'מסמך טקסטואלי',
-        tos_fineprint: 'על ידי לחיצה על \'צור חשבון חינם\' אתה מסכים Puter\'s {{link=terms}}תנאי שימוש{{/link}} ו {{link=privacy}}מדיניות פרטיות{{/link}}.',
+        tos_fineprint: 'על ידי לחיצה על \'צור חשבון חינם\' אתה מסכים Mixt\'s {{link=terms}}תנאי שימוש{{/link}} ו {{link=privacy}}מדיניות פרטיות{{/link}}.',
         transparency: 'שקיפות',
         trash: 'אשפה',
         two_factor: 'אימות דו-שלבי',
@@ -322,7 +322,7 @@ const he = {
         visibility: 'נראות',
         yes: 'כן',
         yes_release_it: 'כן, שחררו אותו',
-        you_have_been_referred_to_puter_by_a_friend: 'הופנית אל Puter על ידי חבר!',
+        you_have_been_referred_to_puter_by_a_friend: 'הופנית אל Mixt על ידי חבר!',
         zip: 'מכווץ',
         zipping_file: 'מכווץ קובץ %strong%',
 
@@ -388,7 +388,6 @@ const he = {
         'billing.offering.professional': 'מקצועי', // In English: "Professional"
         'billing.offering.business': 'עסקי', // In English: "Business"
         'billing.cloud_storage': 'אחסון בענן', // In English: "Cloud Storage"
-        'billing.ai_access': 'גישה לAI', // In English: "AI Access"
         'billing.bandwidth': 'רוחב פס', // In English: "Bandwidth"
         'billing.apps_and_games': 'אפליקציות ומשחקים', // In English: "Apps & Games"
         'billing.upgrade_to_pro': 'שדרוג ל %strong%', // In English: "Upgrade to %strong%"
@@ -489,7 +488,7 @@ const he = {
         'window_title_public': 'ציבורי', // In English: "Public"
         'window_title_videos': 'סרטונים', // In English: "Videos"
         'window_title_pictures': 'תמונות', // In English: "Pictures"
-        'window_title_puter': 'Puter', // In English: "Puter"
+        'window_title_puter': 'Mixt', // In English: "Mixt"
         'window_folder_empty': 'תיקייה זו ריקה', // In English: "This folder is empty"
         'manage_your_subdomains': 'ניהול תת-הדומיינים שלך', // In English: "Manage Your Subdomains"
         'open_containing_folder': 'פתח תיקייה מכילה', // In English: "Open Containing Folder"

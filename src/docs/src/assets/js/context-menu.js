@@ -44,15 +44,6 @@ $(document).ready(function () {
         window.open(new URL('index.md', window.location.href), '_blank');
     });
 
-    $(document).on('click', '#menu-open-chatgpt', function (e) {
-        const message = `Read from ${window.location.href} so I can ask questions about it.`;
-        window.open(`https://chat.openai.com/?q=${message}`, '_blank');
-    });
-
-    $(document).on('click', '#menu-open-claude', function (e) {
-        const message = `Read from ${window.location.href} so I can ask questions about it.`;
-        window.open(`https://claude.ai/new?q=${message}`, '_blank');
-    });
 });
 
 // Close menu dropdown if clicking outside

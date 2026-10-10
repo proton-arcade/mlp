@@ -134,7 +134,7 @@ const vi = {
         forgot_pass_c2a: 'Quên mật khẩu?',
         from: 'Từ',
         general: 'Chung',
-        get_a_copy_of_on_puter: 'Nhận một bản sao của \'%%\' trên Puter.com!',
+        get_a_copy_of_on_puter: 'Nhận một bản sao của \'%%\' trên Mixt.com!',
         get_copy_link: 'Lấy liên kết sao chép',
         hide_all_windows: 'Ẩn tất cả cửa sổ',
         home: 'Trang chủ',
@@ -216,13 +216,13 @@ const vi = {
         public: 'Công khai',
         publish: 'Xuất bản',
         publish_as_website: 'Xuất bản như trang web',
-        puter_description: 'Puter là một đám mây cá nhân đặt quyền riêng tư lên hàng đầu để lưu trữ tất cả các tệp, ứng dụng và trò chơi của bạn trong một nơi an toàn, có thể truy cập từ mọi nơi vào bất kỳ lúc nào.',
+        puter_description: 'Mixt là một đám mây cá nhân đặt quyền riêng tư lên hàng đầu để lưu trữ tất cả các tệp, ứng dụng và trò chơi của bạn trong một nơi an toàn, có thể truy cập từ mọi nơi vào bất kỳ lúc nào.',
         reading_file: 'Đang đọc %strong%',
         recent: 'Gần đây',
         recommended: 'Được đề xuất',
         recover_password: 'Khôi phục mật khẩu',
-        refer_friends_c2a: 'Nhận 1 GB cho mỗi người bạn tạo và xác nhận tài khoản trên Puter. Bạn của bạn cũng sẽ nhận được 1 GB!',
-        refer_friends_social_media_c2a: 'Nhận 1 GB dung lượng lưu trữ miễn phí trên Puter.com!',
+        refer_friends_c2a: 'Nhận 1 GB cho mỗi người bạn tạo và xác nhận tài khoản trên Mixt. Bạn của bạn cũng sẽ nhận được 1 GB!',
+        refer_friends_social_media_c2a: 'Nhận 1 GB dung lượng lưu trữ miễn phí trên Mixt.com!',
         refresh: 'Làm mới',
         release_address_confirmation: 'Bạn có chắc chắn muốn giải phóng địa chỉ này không?',
         remove_from_taskbar: 'Xóa khỏi thanh tác vụ',
@@ -232,7 +232,7 @@ const vi = {
         replace_all: 'Thay thế tất cả',
         resend_confirmation_code: 'Gửi lại mã xác nhận',
         reset_colors: 'Đặt lại màu sắc',
-        restart_puter_confirm: 'Bạn có chắc chắn muốn khởi động lại Puter không?',
+        restart_puter_confirm: 'Bạn có chắc chắn muốn khởi động lại Mixt không?',
         restore: 'Khôi phục',
         save: 'Lưu',
         saturation: 'Độ bão hòa',
@@ -262,7 +262,7 @@ const vi = {
         shortcut_to: 'Lối tắt đến',
         show_all_windows: 'Hiển thị tất cả cửa sổ',
         show_hidden: 'Hiển thị mục ẩn',
-        sign_in_with_puter: 'Đăng nhập bằng Puter',
+        sign_in_with_puter: 'Đăng nhập bằng Mixt',
         sign_up: 'Đăng ký',
         signing_in: 'Đang đăng nhập…',
         size: 'Kích thước',
@@ -272,7 +272,7 @@ const vi = {
         start: 'Bắt đầu',
         status: 'Trạng thái',
         storage_usage: 'Sử dụng bộ nhớ',
-        storage_puter_used: 'đã sử dụng bởi Puter',
+        storage_puter_used: 'đã sử dụng bởi Mixt',
         taking_longer_than_usual: 'Đang mất nhiều thời gian hơn bình thường. Vui lòng đợi...',
         task_manager: 'Trình quản lý tác vụ',
         taskmgr_header_name: 'Tên',
@@ -280,7 +280,7 @@ const vi = {
         taskmgr_header_type: 'Loại',
         terms: 'Điều khoản',
         text_document: 'Tài liệu văn bản',
-        tos_fineprint: 'Bằng cách nhấp vào \'Tạo tài khoản miễn phí\', bạn đồng ý với {{link=terms}}Điều khoản dịch vụ{{/link}} và {{link=privacy}}Chính sách quyền riêng tư{{/link}} của Puter.',
+        tos_fineprint: 'Bằng cách nhấp vào \'Tạo tài khoản miễn phí\', bạn đồng ý với {{link=terms}}Điều khoản dịch vụ{{/link}} và {{link=privacy}}Chính sách quyền riêng tư{{/link}} của Mixt.',
         transparency: 'Độ trong suốt',
         trash: 'Thùng rác',
         two_factor: 'Xác thực hai yếu tố',
@@ -305,7 +305,7 @@ const vi = {
         visibility: 'Hiển thị',
         yes: 'Có',
         yes_release_it: 'Có, giải phóng nó',
-        you_have_been_referred_to_puter_by_a_friend: 'Bạn đã được giới thiệu đến Puter bởi một người bạn!',
+        you_have_been_referred_to_puter_by_a_friend: 'Bạn đã được giới thiệu đến Mixt bởi một người bạn!',
         zip: 'Nén',
         zipping_file: 'Đang nén %strong%',
 
@@ -371,7 +371,6 @@ const vi = {
         'billing.offering.professional': 'Chuyên nghiệp', // In English: "Professional"
         'billing.offering.business': 'Doanh nghiệp', // In English: "Business"
         'billing.cloud_storage': 'Lưu trữ đám mây', // In English: "Cloud Storage"
-        'billing.ai_access': 'Truy cập AI', // In English: "AI Access"
         'billing.bandwidth': 'Băng thông', // In English: "Bandwidth"
         'billing.apps_and_games': 'Ứng dụng & Trò chơi', // In English: "Apps & Games"
         'billing.upgrade_to_pro': 'Nâng cấp lên %strong%', // In English: "Upgrade to %strong%"
@@ -472,7 +471,7 @@ const vi = {
         'window_title_public': 'Công khai', // In English: "Public"
         'window_title_videos': 'Video', // In English: "Videos"
         'window_title_pictures': 'Hình ảnh', // In English: "Pictures"
-        'window_title_puter': 'Puter', // In English: "Puter"
+        'window_title_puter': 'Mixt', // In English: "Mixt"
         'window_folder_empty': 'Thư mục này trống', // In English: "This folder is empty"
         'manage_your_subdomains': 'Quản lý tên miền phụ', // In English: "Manage Your Subdomains"
         'open_containing_folder': 'Mở thư mục chứa', // In English: "Open Containing Folder"

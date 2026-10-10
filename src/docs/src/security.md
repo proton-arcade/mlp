@@ -32,6 +32,5 @@ Once the user has been authenticated, your app will get a few things by default:
 
 Your app will also be able to use the following services by default:
 
-- **AI**: Your app will be able to use the AI services provided by Puter.com. This includes chat, txt2img, img2txt, and more.
 
 - **Hosting**: Your app will be able to use puter to create and publish websites on the user's behalf.

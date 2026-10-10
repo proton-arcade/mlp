@@ -145,7 +145,7 @@ const id = {
         forgot_pass_c2a: 'Lupa kata sandi?',
         from: 'Dari',
         general: 'Umum',
-        get_a_copy_of_on_puter: 'Dapatkan salinan \'%%\' di Puter.com!',
+        get_a_copy_of_on_puter: 'Dapatkan salinan \'%%\' di Mixt.com!',
         get_copy_link: 'Dapatkan Salinan Tautan',
         hide_all_windows: 'Sembunyikan Semua Jendela',
         home: 'Beranda',
@@ -232,14 +232,14 @@ const id = {
         public: 'Publik',
         publish: 'Publikasi',
         publish_as_website: 'Publikasikan sebagai situs web',
-        puter_description: 'Puter adalah cloud pribadi yang mengutamakan privasi untuk menyimpan semua file, aplikasi, dan permainan Anda di satu tempat yang aman, dapat diakses dari mana pun dan kapan pun.',
+        puter_description: 'Mixt adalah cloud pribadi yang mengutamakan privasi untuk menyimpan semua file, aplikasi, dan permainan Anda di satu tempat yang aman, dapat diakses dari mana pun dan kapan pun.',
         reading_file: 'Membaca %strong%',
         recent: 'Terbaru',
         recommended: 'Direkomendasikan',
         recover_password: 'Pulihkan Kata Sandi',
         refer_friends_c2a:
-      'Dapatkan 1 GB untuk setiap teman yang membuat dan mengonfirmasi akun di Puter. Teman Anda juga akan mendapatkan 1 GB!',
-        refer_friends_social_media_c2a: 'Dapatkan 1 GB penyimpanan gratis di Puter.com!',
+      'Dapatkan 1 GB untuk setiap teman yang membuat dan mengonfirmasi akun di Mixt. Teman Anda juga akan mendapatkan 1 GB!',
+        refer_friends_social_media_c2a: 'Dapatkan 1 GB penyimpanan gratis di Mixt.com!',
         refresh: 'Muat Ulang',
         release_address_confirmation: 'Apakah Anda yakin ingin melepaskan alamat ini?',
         remove_from_taskbar: 'Hapus dari Bilah Tugas',
@@ -249,7 +249,7 @@ const id = {
         replace_all: 'Ganti Semua',
         resend_confirmation_code: 'Kirim Ulang Kode Konfirmasi',
         reset_colors: 'Mengatur Ulang Warna',
-        restart_puter_confirm: 'Apakah Anda yakin ingin memulai ulang Puter?',
+        restart_puter_confirm: 'Apakah Anda yakin ingin memulai ulang Mixt?',
         restore: 'Pulihkan',
         save: 'Simpan',
         saturation: 'Saturasi',
@@ -280,7 +280,7 @@ const id = {
         shortcut_to: 'Pintasan ke',
         show_all_windows: 'Tampilkan Semua Jendela',
         show_hidden: 'Tampilkan yang tersembunyi',
-        sign_in_with_puter: 'Masuk dengan Puter',
+        sign_in_with_puter: 'Masuk dengan Mixt',
         sign_up: 'Daftar',
         signing_in: 'Masuk…',
         size: 'Ukuran',
@@ -290,7 +290,7 @@ const id = {
         start: 'Mulai',
         status: 'Status',
         storage_usage: 'Penggunaan Penyimpanan',
-        storage_puter_used: 'digunakan oleh Puter',
+        storage_puter_used: 'digunakan oleh Mixt',
         taking_longer_than_usual:
       'Memakan waktu sedikit lebih lama dari biasanya. Silakan tunggu...',
         task_manager: 'Pengelola Tugas',
@@ -299,7 +299,7 @@ const id = {
         taskmgr_header_type: 'Tipe',
         terms: 'Persyaratan',
         text_document: 'Dokumen Teks',
-        tos_fineprint: 'Dengan mengklik \'Buat Akun Gratis\', Anda menyetujui {{link=terms}}Syarat Layanan{{/link}} dan {{link=privacy}}Kebijakan Privasi{{/link}} Puter.',
+        tos_fineprint: 'Dengan mengklik \'Buat Akun Gratis\', Anda menyetujui {{link=terms}}Syarat Layanan{{/link}} dan {{link=privacy}}Kebijakan Privasi{{/link}} Mixt.',
         transparency: 'Transparansi',
         trash: 'Tempat Sampah',
         two_factor: 'Otentikasi Dua Faktor',
@@ -325,7 +325,7 @@ const id = {
         yes: 'Ya',
         yes_release_it: 'Ya, Lepaskan',
         you_have_been_referred_to_puter_by_a_friend:
-      'Anda telah dirujuk ke Puter oleh seorang teman!',
+      'Anda telah dirujuk ke Mixt oleh seorang teman!',
         zip: 'Zip',
         zipping_file: 'Mengekstrak %strong%',
 
@@ -392,7 +392,6 @@ const id = {
         'billing.offering.professional': 'Profesional', // In English: "Professional"
         'billing.offering.business': 'Bisnis', // In English: "Business"
         'billing.cloud_storage': 'Penyimpanan Cloud', // In English: "Cloud Storage"
-        'billing.ai_access': 'Akses AI', // In English: "AI Access"
         'billing.bandwidth': 'Bandwidth', // In English: "Bandwidth"
         'billing.apps_and_games': 'Aplikasi & Permainan', // In English: "Apps & Games"
         'billing.switch_to': 'Beralih ke %strong%', // In English: "Switch to %strong%"
@@ -498,7 +497,7 @@ const id = {
         'window_title_public': 'Publik', // In English: "Public"
         'window_title_videos': 'Video', // In English: "Videos"
         'window_title_pictures': 'Gambar', // In English: "Pictures"
-        'window_title_puter': 'Puter', // In English: "Puter"
+        'window_title_puter': 'Mixt', // In English: "Mixt"
         'window_folder_empty': 'Folder ini kosong', // In English: "This folder is empty"
         'manage_your_subdomains': 'Kelola Subdomain Anda', // In English: "Manage Your Subdomains"
         'open_containing_folder': 'Buka Folder Saat Ini', // In English: "Open Containing Folder"

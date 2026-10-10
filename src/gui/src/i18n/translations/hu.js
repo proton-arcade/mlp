@@ -134,7 +134,7 @@ const hu = {
         forgot_pass_c2a: 'Elfelejtetted a jelszavad?',
         from: 'Tól',
         general: 'Általános',
-        get_a_copy_of_on_puter: "Szerezz egy példányt a(z) '%%' Puter.com-on!",
+        get_a_copy_of_on_puter: "Szerezz egy példányt a(z) '%%' Mixt.com-on!",
         get_copy_link: 'Másolási link megszerzése',
         hide_all_windows: 'Minden ablak elrejtése',
         home: 'Otthon',
@@ -216,13 +216,13 @@ const hu = {
         public: 'Nyilvános',
         publish: 'Közzététel',
         publish_as_website: 'Közzététel weboldalként',
-        puter_description: 'A Puter egy adatvédelmi elsőként kezelt személyes felhő, amelyben minden fájlodat, alkalmazásodat és játékodat egy biztonságos helyen tárolhatod, bárhonnan, bármikor elérhetően.',
+        puter_description: 'A Mixt egy adatvédelmi elsőként kezelt személyes felhő, amelyben minden fájlodat, alkalmazásodat és játékodat egy biztonságos helyen tárolhatod, bárhonnan, bármikor elérhetően.',
         reading_file: 'Fájl olvasása: %strong%',
         recent: 'Legutóbbi',
         recommended: 'Ajánlott',
         recover_password: 'Jelszó visszaállítása',
         refer_friends_c2a: 'Kapj 1 GB-ot minden barátodért, aki létrehoz és megerősít egy fiókot a Puteren. A barátod is kap 1 GB-ot!',
-        refer_friends_social_media_c2a: 'Kapj 1 GB ingyenes tárhelyet a Puter.com-on!',
+        refer_friends_social_media_c2a: 'Kapj 1 GB ingyenes tárhelyet a Mixt.com-on!',
         refresh: 'Frissítés',
         release_address_confirmation: 'Biztosan felszabadítod ezt a címet?',
         remove_from_taskbar: 'Eltávolítás a tálcáról',
@@ -272,7 +272,7 @@ const hu = {
         start: 'Indítás',
         status: 'Állapot',
         storage_usage: 'Tárhely használat',
-        storage_puter_used: 'Puter által használt',
+        storage_puter_used: 'Mixt által használt',
         taking_longer_than_usual: 'Kicsit tovább tart, mint általában. Kérlek várj...',
         task_manager: 'Feladatkezelő',
         taskmgr_header_name: 'Név',
@@ -280,7 +280,7 @@ const hu = {
         taskmgr_header_type: 'Típus',
         terms: 'Feltételek',
         text_document: 'Szöveges dokumentum',
-        tos_fineprint: "A 'Ingyenes fiók létrehozása' gombra kattintva elfogadod a Puter {{link=terms}}Szolgáltatási feltételeit{{/link}} és {{link=privacy}}Adatvédelmi irányelveit{{/link}}.",
+        tos_fineprint: "A 'Ingyenes fiók létrehozása' gombra kattintva elfogadod a Mixt {{link=terms}}Szolgáltatási feltételeit{{/link}} és {{link=privacy}}Adatvédelmi irányelveit{{/link}}.",
         transparency: 'Átlátszóság',
         trash: 'Kuka',
         two_factor: 'Kétfaktoros hitelesítés',
@@ -364,7 +364,6 @@ const hu = {
         'billing.offering.professional': 'Professzionális', // In English: "Professional"
         'billing.offering.business': 'Üzleti', // In English: "Business"
         'billing.cloud_storage': 'Felhő Tárhely', // In English: "Cloud Storage"
-        'billing.ai_access': 'AI hozzáférés', // In English: "AI Access"
         'billing.bandwidth': 'Sávszélesség', // In English: "Bandwidth"
         'billing.apps_and_games': 'Alkalmazások és játékok', // In English: "Apps & Games"
         'billing.upgrade_to_pro': 'Csomag váltása erre: %strong%', // In English: "Upgrade to %strong%"
@@ -465,7 +464,7 @@ const hu = {
         'window_title_public': 'Nyilvános', // English: "Public"
         'window_title_videos': 'Videók', // English: "Videos"
         'window_title_pictures': 'Képek', // English: "Pictures"
-        'window_title_puter': 'Puter', // English: "Puter"
+        'window_title_puter': 'Mixt', // English: "Mixt"
         'window_folder_empty': 'Ez a mappa üres', // English: "This folder is empty"
         'manage_your_subdomains': 'Aldomainjeinek kezelése', // English: "Manage Your Subdomains"
         'open_containing_folder': 'A tartalmazó mappa megnyitása', // English: "Open Containing Folder"

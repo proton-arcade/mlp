@@ -134,7 +134,7 @@ const nl = {
         forgot_pass_c2a: 'Wachtwoord vergeten?',
         from: 'Van',
         general: 'Algemeen',
-        get_a_copy_of_on_puter: 'Krijg een kopie van \'%%\' op Puter.com!',
+        get_a_copy_of_on_puter: 'Krijg een kopie van \'%%\' op Mixt.com!',
         get_copy_link: 'Krijg Kopieerlink',
         hide_all_windows: 'Alle Vensters Verbergen',
         home: 'Home',
@@ -217,13 +217,13 @@ const nl = {
         public: 'Openbaar',
         publish: 'Publiceren',
         publish_as_website: 'Publiceer als website',
-        puter_description: 'Puter is een privacy-first persoonlijke cloud om al je bestanden, apps en games op één veilige plek te bewaren, overal en altijd toegankelijk.',
+        puter_description: 'Mixt is een privacy-first persoonlijke cloud om al je bestanden, apps en games op één veilige plek te bewaren, overal en altijd toegankelijk.',
         reading_file: 'Lezen %strong%',
         recent: 'Recent',
         recommended: 'Aanbevolen',
         recover_password: 'Wachtwoord herstellen',
-        refer_friends_c2a: 'Krijg 1 GB voor elke vriend die een account aanmaakt en bevestigt op Puter. Je vriend krijgt ook 1 GB!',
-        refer_friends_social_media_c2a: 'Krijg 1 GB gratis opslagruimte op Puter.com!',
+        refer_friends_c2a: 'Krijg 1 GB voor elke vriend die een account aanmaakt en bevestigt op Mixt. Je vriend krijgt ook 1 GB!',
+        refer_friends_social_media_c2a: 'Krijg 1 GB gratis opslagruimte op Mixt.com!',
         refresh: 'Vernieuwen',
         release_address_confirmation: 'Weet je zeker dat je dit adres wilt vrijgeven?',
         remove_from_taskbar: 'Verwijderen van taakbalk',
@@ -233,7 +233,7 @@ const nl = {
         replace_all: 'Alles vervangen',
         resend_confirmation_code: 'Bevestigingscode opnieuw verzenden',
         reset_colors: 'Kleuren resetten',
-        restart_puter_confirm: 'Weet je zeker dat je Puter wilt herstarten?',
+        restart_puter_confirm: 'Weet je zeker dat je Mixt wilt herstarten?',
         restore: 'Herstellen',
         save: 'Opslaan',
         saturation: 'Verzadiging',
@@ -263,7 +263,7 @@ const nl = {
         shortcut_to: 'Snelkoppeling naar',
         show_all_windows: 'Toon alle vensters',
         show_hidden: 'Toon verborgen',
-        sign_in_with_puter: 'Inloggen met Puter',
+        sign_in_with_puter: 'Inloggen met Mixt',
         sign_up: 'Aanmelden',
         signing_in: 'Inloggen…',
         size: 'Grootte',
@@ -273,7 +273,7 @@ const nl = {
         start: 'Start',
         status: 'Status',
         storage_usage: 'Opslaggebruik',
-        storage_puter_used: 'gebruikt door Puter',
+        storage_puter_used: 'gebruikt door Mixt',
         taking_longer_than_usual: 'Het duurt langer dan normaal. Even geduld alstublieft...',
         task_manager: 'Taakbeheer',
         taskmgr_header_name: 'Naam',
@@ -281,7 +281,7 @@ const nl = {
         taskmgr_header_type: 'Type',
         terms: 'Voorwaarden',
         text_document: 'Tekstdocument',
-        tos_fineprint: 'Door op \'Gratis Account Aanmaken\' te klikken, ga je akkoord met de {{link=terms}}Servicevoorwaarden{{/link}} en de {{link=privacy}}Privacybeleid{{/link}} van Puter.',
+        tos_fineprint: 'Door op \'Gratis Account Aanmaken\' te klikken, ga je akkoord met de {{link=terms}}Servicevoorwaarden{{/link}} en de {{link=privacy}}Privacybeleid{{/link}} van Mixt.',
         transparency: 'Transparantie',
         trash: 'Prullenbak',
         two_factor: 'Tweestapsverificatie',
@@ -306,7 +306,7 @@ const nl = {
         visibility: 'Zichtbaarheid',
         yes: 'Ja',
         yes_release_it: 'Ja, vrijgeven',
-        you_have_been_referred_to_puter_by_a_friend: 'Je bent door een vriend doorverwezen naar Puter!',
+        you_have_been_referred_to_puter_by_a_friend: 'Je bent door een vriend doorverwezen naar Mixt!',
         zip: 'Zip',
         zipping_file: 'Bestand inpakken %strong%',
 
@@ -371,7 +371,6 @@ const nl = {
         'billing.offering.professional': 'Professioneel', // In English: 'Professional"
         'billing.offering.business': 'Bedrijf', // In English: 'Business"
         'billing.cloud_storage': 'Cloudopslag', // In English: 'Cloud Storage"
-        'billing.ai_access': 'AI Toegang', // In English: 'AI Access"
         'billing.bandwidth': 'Bandbreedte', // In English: 'Bandwidth"
         'billing.apps_and_games': 'Apps & Spelletjes', // In English: 'Apps & Games"
         'billing.upgrade_to_pro': 'Upgraden naar %strong%', // In English: 'Upgrade to %strong%"
@@ -477,7 +476,7 @@ const nl = {
         'window_title_public': 'Openbaar', // In English: "Public"
         'window_title_videos': "Video's", // In English: "Videos"
         'window_title_pictures': 'Afbeeldingen', // In English: "Pictures"
-        'window_title_puter': 'Puter', // In English: "Puter"
+        'window_title_puter': 'Mixt', // In English: "Mixt"
         'window_folder_empty': 'Deze map is leeg', // In English: "This folder is empty"
         'manage_your_subdomains': 'Beheer uw subdomeinen', // In English: "Manage Your Subdomains"
         'open_containing_folder': 'Bestandslocatie openen', // In English: "Open Containing Folder"

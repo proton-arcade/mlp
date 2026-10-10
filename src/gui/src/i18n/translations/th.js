@@ -133,7 +133,7 @@ const th = {
         forgot_pass_c2a: 'ลืมรหัสผ่าน?',
         from: 'จาก',
         general: 'ทั่วไป',
-        get_a_copy_of_on_puter: 'รับสำเนาของ "%%" ได้ที่ Puter.com!',
+        get_a_copy_of_on_puter: 'รับสำเนาของ "%%" ได้ที่ Mixt.com!',
         get_copy_link: 'คัดลอกลิงก์',
         hide_all_windows: 'ซ่อนหน้าต่างทั้งหมด',
         home: 'บ้าน',
@@ -214,13 +214,13 @@ const th = {
         public: 'สาธารณะ',
         publish: 'เผยแพร่',
         publish_as_website: 'เผยแพร่เป็นเว็บไซต์',
-        puter_description: 'Puter is a privacy-first personal cloud to keep all your files, apps, and games in one secure place, accessible from anywhere at any time.',
+        puter_description: 'Mixt is a privacy-first personal cloud to keep all your files, apps, and games in one secure place, accessible from anywhere at any time.',
         reading_file: 'กำลังอ่าน %strong%',
         recent: 'ล่าสุด',
         recommended: 'แนะนำ',
         recover_password: 'กู้คืนรหัสผ่าน',
-        refer_friends_c2a: 'รับพื้นที่ 1 GB สำหรับเพื่อนทุกคนที่สร้าง และยืนยันบัญชีบน Puter เพื่อนของคุณจะได้รับพื้นที่ 1 GB เช่นกัน!',
-        refer_friends_social_media_c2a: 'รับพื้นที่จัดเก็บข้อมูลฟรี 1 GB บน Puter.com!',
+        refer_friends_c2a: 'รับพื้นที่ 1 GB สำหรับเพื่อนทุกคนที่สร้าง และยืนยันบัญชีบน Mixt เพื่อนของคุณจะได้รับพื้นที่ 1 GB เช่นกัน!',
+        refer_friends_social_media_c2a: 'รับพื้นที่จัดเก็บข้อมูลฟรี 1 GB บน Mixt.com!',
         refresh: 'รีเฟรช',
         release_address_confirmation: 'คุณแน่ใจหรือไม่ว่าต้องการยกเลิกที่อยู่นี้?',
         remove_from_taskbar: 'นำออกจากทาสก์บาร์',
@@ -230,7 +230,7 @@ const th = {
         replace_all: 'แทนที่ทั้งหมด',
         resend_confirmation_code: 'ส่งรหัสยืนยันอีกครั้ง',
         reset_colors: 'ล้างค่าสี',
-        restart_puter_confirm: 'คุณแน่ใจว่าจะรีสตาร์ท Puter?',
+        restart_puter_confirm: 'คุณแน่ใจว่าจะรีสตาร์ท Mixt?',
         restore: 'คืนค่า',
         saturation: 'ความอิ่มตัว',
         save_account: 'บันทึกบัญชี',
@@ -259,7 +259,7 @@ const th = {
         shortcut_to: 'ทางลัดไป',
         show_all_windows: 'แสดงหน้าต่างทั้งหมด',
         show_hidden: 'แสดงที่ซ่อนไว้',
-        sign_in_with_puter: 'ลงชื่อเข้าใช้ด้วย Puter',
+        sign_in_with_puter: 'ลงชื่อเข้าใช้ด้วย Mixt',
         sign_up: 'สมัครสมาชิก',
         signing_in: 'กำลังเข้าสู่ระบบ...',
         size: 'ขนาด',
@@ -269,7 +269,7 @@ const th = {
         start: 'เริ่มต้น',
         status: 'สถานะ',
         storage_usage: 'การใช้งานพื้นที่',
-        storage_puter_used: 'ถูกใช้โดย Puter',
+        storage_puter_used: 'ถูกใช้โดย Mixt',
         taking_longer_than_usual: 'ใช้เวลานานกว่าปกติเล็กน้อย กรุณารอสักครู่...',
         task_manager: 'ทาส์กแมแนเจอร์',
         taskmgr_header_name: 'ชื่อ',
@@ -302,7 +302,7 @@ const th = {
         visibility: 'การมองเห็น',
         yes: 'ใช่',
         yes_release_it: 'ใช่, เผยแพร่มัน',
-        you_have_been_referred_to_puter_by_a_friend: 'เพื่อนของคุณได้แนะนำ Puter ให้คุณ!',
+        you_have_been_referred_to_puter_by_a_friend: 'เพื่อนของคุณได้แนะนำ Mixt ให้คุณ!',
         zip: 'บีบอัด',
         zipping_file: 'กำลังบีบอัด %strong%',
 
@@ -371,7 +371,6 @@ const th = {
         'billing.offering.professional': 'มืออาชีพ', // In English: "Professional"
         'billing.offering.business': 'ธุรกิจ', // In English: "Business"
         'billing.cloud_storage': 'จัดเก็บบนคลาวด์', // In English: "Cloud Storage"
-        'billing.ai_access': 'การเข้าถึงโดย AI', // In English: "AI Access"
         'billing.bandwidth': 'แบนด์วิดท์', // In English: "Bandwidth"
         'billing.apps_and_games': 'แอป และ เกมส์', // In English: "Apps & Games"
         'billing.upgrade_to_pro': 'เพิ่ม %strong%', // In English: "Upgrade to %strong%"
@@ -472,7 +471,7 @@ const th = {
         'window_title_public': 'สาธารณะ',
         'window_title_videos': 'วีดีโอ',
         'window_title_pictures': 'รูปภาพ',
-        'window_title_puter': 'Puter',
+        'window_title_puter': 'Mixt',
         'window_folder_empty': 'โฟลเดอร์นี้ว่างเปล่า',
         'manage_your_subdomains': 'จัดการซับโดเมนของคุณ',
         'open_containing_folder': 'เปิดโฟลเดอร์ที่บรรจุ',

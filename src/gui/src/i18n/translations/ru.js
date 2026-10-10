@@ -150,7 +150,7 @@ const ru = {
         forgot_pass_c2a: 'Забыли пароль?',
         from: 'От',
         general: 'Общее',
-        get_a_copy_of_on_puter: 'Получите копию \'%%\' на Puter.com!',
+        get_a_copy_of_on_puter: 'Получите копию \'%%\' на Mixt.com!',
         get_copy_link: 'Получить ссылку для копирования',
         hide_all_windows: 'Скрыть все окна',
         home: 'Домой',
@@ -238,14 +238,14 @@ const ru = {
         publish: 'Опубликовать',
         public: 'Общий доступ',
         publish_as_website: 'Опубликовать как сайт',
-        puter_description: 'Puter — это персональное облако, обеспечивающее конфиденциальность, позволяющее хранить все ваши файлы, приложения и игры в одном безопасном месте, доступном из любого места в любое время.',
+        puter_description: 'Mixt — это персональное облако, обеспечивающее конфиденциальность, позволяющее хранить все ваши файлы, приложения и игры в одном безопасном месте, доступном из любого места в любое время.',
         reading_file: 'Чтение %strong%',
         recent: 'Недавнее',
         recommended: 'Рекоммендации',
         recover_password: 'Восстановить Пароль',
         refer_friends_c2a:
-      'Получите 1 ГБ за каждого друга, который создаст и подтвердит учетную запись на Puter. Ваш друг тоже получит 1 ГБ!',
-        refer_friends_social_media_c2a: 'Получите 1 ГБ бесплатного хранилища на Puter.com!',
+      'Получите 1 ГБ за каждого друга, который создаст и подтвердит учетную запись на Mixt. Ваш друг тоже получит 1 ГБ!',
+        refer_friends_social_media_c2a: 'Получите 1 ГБ бесплатного хранилища на Mixt.com!',
         refresh: 'Обновить',
         release_address_confirmation: 'Вы уверены, что хотите освободить этот адрес?',
         remove_from_taskbar: 'Удалить из панели задач',
@@ -255,7 +255,7 @@ const ru = {
         replace_all: 'Заменить все',
         resend_confirmation_code: 'Повторно отправить код подтверждения',
         reset_colors: 'Сбросить цвета',
-        restart_puter_confirm: 'Вы уверены, что хотите перезапустить Puter?',
+        restart_puter_confirm: 'Вы уверены, что хотите перезапустить Mixt?',
         restore: 'Восстановить',
         save: 'Сохранить',
         saturation: 'Насыщенность',
@@ -292,7 +292,7 @@ const ru = {
         shortcut_to: 'Ярлык для',
         show_all_windows: 'Показать Все Окна',
         show_hidden: 'Показать скрытые',
-        sign_in_with_puter: 'Войти с Puter',
+        sign_in_with_puter: 'Войти с Mixt',
         sign_up: 'Зарегистрироваться',
         signing_in: 'Вход в систему…',
         size: 'Размер',
@@ -302,7 +302,7 @@ const ru = {
         start: 'Начать',
         status: 'Статус',
         storage_usage: 'Использование хранилища',
-        storage_puter_used: 'использовано Puter',
+        storage_puter_used: 'использовано Mixt',
         taking_longer_than_usual:
       'Это занимает немного больше времени чем обычно, пожалуйста, подождите...',
         task_manager: 'Диспетчер задач',
@@ -311,7 +311,7 @@ const ru = {
         taskmgr_header_type: 'Тип',
         terms: 'Условия',
         text_document: 'Текстовый документ',
-        tos_fineprint: 'Нажимая \'Создать бесплатную учетную запись\', вы соглашаетесь с {{link=terms}}Условиями Использования{{/link}} и {{link=privacy}}Политикой Конфиденциальности{{/link}} Puter.',
+        tos_fineprint: 'Нажимая \'Создать бесплатную учетную запись\', вы соглашаетесь с {{link=terms}}Условиями Использования{{/link}} и {{link=privacy}}Политикой Конфиденциальности{{/link}} Mixt.',
         transparency: 'Прозрачность',
         trash: 'Корзина',
         two_factor: 'Двухфакторная аутентификация',
@@ -338,7 +338,7 @@ const ru = {
         yes: 'Да',
         yes_release_it: 'Да, освободить.',
         you_have_been_referred_to_puter_by_a_friend:
-      'Вы были приглашены в Puter другом!',
+      'Вы были приглашены в Mixt другом!',
         zip: 'Добавить в архив',
         zipping_file: 'Добавление в архив %strong%',
 
@@ -407,7 +407,6 @@ const ru = {
         'billing.offering.professional': 'Профессиональная', // In English: "Professional"
         'billing.offering.business': 'Бизнес', // In English: "Business"
         'billing.cloud_storage': 'Облачное хранилище', // In English: "Cloud Storage"
-        'billing.ai_access': 'Доступ к ИИ', // In English: "AI Access"
         'billing.bandwidth': 'Пропускная способность', // In English: "Bandwidth"
         'billing.apps_and_games': 'Игры и приложения', // In English: "Apps & Games"
         'billing.upgrade_to_pro': 'Обновить до %strong%', // In English: "Upgrade to %strong%"
@@ -508,7 +507,7 @@ const ru = {
         'window_title_public': 'Публичный', // In English: "Public"
         'window_title_videos': 'Видео', // In English: "Videos"
         'window_title_pictures': 'Изображения', // In English: "Pictures"
-        'window_title_puter': 'Путер', // In English: "Puter"
+        'window_title_puter': 'Путер', // In English: "Mixt"
         'window_folder_empty': 'Эта папка пуста', // In English: "This folder is empty"
         'manage_your_subdomains': 'Управление вашими поддоменами', // In English: "Manage Your Subdomains"
         'open_containing_folder': 'Открыть содержащую папку', // In English: "Open Containing Folder"

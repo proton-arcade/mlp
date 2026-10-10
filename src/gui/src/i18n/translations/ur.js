@@ -138,7 +138,7 @@ const ur = {
         forgot_pass_c2a: 'پاس ورڈ بھول گئے ہیں؟',
         from: 'سے',
         general: 'عام ',
-        get_a_copy_of_on_puter: "Puter.com پر '%%' کی ایک کاپی حاصل کریں!",
+        get_a_copy_of_on_puter: "Mixt.com پر '%%' کی ایک کاپی حاصل کریں!",
         get_copy_link: 'کاپی لنک حاصل کریں',
         hide_all_windows: 'تمام ونڈوز چھپائیں ',
         home: 'گھر',
@@ -221,7 +221,7 @@ const ur = {
         public: 'عوام',
         publish: 'شائع کریں',
         publish_as_website: 'ویب سائٹ کے طور پر شائع کریں',
-        puter_description: 'Puter ایک رازداری کا پہلا ذاتی کلاؤڈ ہے جو آپ کی تمام فائلوں، ایپس اور گیمز کو ایک محفوظ جگہ پر رکھتا ہے، کسی بھی وقت کہیں سے بھی قابل رسائی ہے۔',
+        puter_description: 'Mixt ایک رازداری کا پہلا ذاتی کلاؤڈ ہے جو آپ کی تمام فائلوں، ایپس اور گیمز کو ایک محفوظ جگہ پر رکھتا ہے، کسی بھی وقت کہیں سے بھی قابل رسائی ہے۔',
         reading_file: 'پڑھنا %strong%',
         recent: 'حال ہی میں',
         recommended: 'تجویز کردہ',
@@ -239,7 +239,7 @@ const ur = {
         replace_all: 'سبھی کو تبدیل کریں۔',
         resend_confirmation_code: 'تصدیقی کوڈ دوبارہ بھیجیں',
         reset_colors: 'رنگوں کو دوبارہ ترتیب دیں۔',
-        restart_puter_confirm: 'کیا آپ واقعی Puter کو دوبارہ شروع کرنا چاہتے ہیں؟',
+        restart_puter_confirm: 'کیا آپ واقعی Mixt کو دوبارہ شروع کرنا چاہتے ہیں؟',
         restore: 'بحال کریں',
         saturation: 'سنترپتی',
         save_account: 'اکاؤنٹ محفوظ کریں۔',
@@ -277,7 +277,7 @@ const ur = {
         start: 'شروع کریں ',
         status: 'حالت',
         storage_usage: 'اسٹوریج کا استعمال',
-        storage_puter_used: 'Puter کی طرف سے استعمال کیا جاتا ہے',
+        storage_puter_used: 'Mixt کی طرف سے استعمال کیا جاتا ہے',
         taking_longer_than_usual: 'عام طور پر سے زیادہ وقت لگ رہا ہے ',
         task_manager: 'ٹاسک مینیجر',
         taskmgr_header_name: 'نام',
@@ -400,7 +400,6 @@ const ur = {
         'billing.offering.professional': 'پروفیشنل', // In English: "Professional"
         'billing.offering.business': 'کاروبار', // In English: "Business"
         'billing.cloud_storage': 'کلاؤڈ اسٹوریج', // In English: "Cloud Storage"
-        'billing.ai_access': 'اے آئی تک رسائی', // In English: "AI Access"
         'billing.bandwidth': 'بینڈوتھ', // In English: "Bandwidth"
         'billing.apps_and_games': 'ایپس اور گیمز', // In English: "Apps & Games"
         'billing.upgrade_to_pro': 'پروفیشنل میں اپ گریڈ کریں', // In English: "Upgrade to %strong%"
@@ -501,7 +500,7 @@ const ur = {
         'window_title_public': 'عوامی', // In English: "Public"
         'window_title_videos': 'ویڈیوز', // In English: "Videos"
         'window_title_pictures': 'تصاویر', // In English: "Pictures"
-        'window_title_puter': 'پیوٹر', // In English: "Puter"
+        'window_title_puter': 'پیوٹر', // In English: "Mixt"
         'window_folder_empty': 'یہ فولڈر خالی ہے', // In English: "This folder is empty"
         'manage_your_subdomains': 'اپنے سب ڈومینز کو منظم کریں', // In English: "Manage Your Subdomains"
         'open_containing_folder': 'موجودہ فولڈر کھولیں', // In English: "Open Containing Folder"

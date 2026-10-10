@@ -7,7 +7,7 @@ Puter.js works on any platform with JavaScript support. This includes websites, 
 
 ## **Websites**
 
-Use Puter.js in your websites to add powerful features like AI, databases, and cloud storage without worrying about infrastructure.
+Use Puter.js in your websites to add powerful features like databases and cloud storage without worrying about infrastructure.
 
 You can use it across all kinds of web development technologies, from static HTML sites and single-page applications (React, Vue, Angular) to full-stack frameworks like Next.js, Nuxt, and SvelteKit, or any JavaScript-based web application.
 
@@ -46,16 +46,6 @@ const puter = require("@heyputer/puter.js");
 
 ### Usage via CDN
 
-```html;ai-chatgpt
-<html>
-<body>
-    <script src="https://js.puter.com/v2/"></script>
-    <script>
-        puter.ai.chat(`What is life?`, { model: "gpt-5.6-luna" }).then(puter.print);
-    </script>
-</body>
-</html>
-```
 
 </div>
 
@@ -96,7 +86,7 @@ The Puter ecosystem hosts over 60,000 live applications, from essential tools li
 
 ## **Node.js**
 
-Puter.js works seamlessly in Node.js environments, allowing you to integrate AI, databases, and cloud storage with your Node.js applications. This makes it ideal for building backend services and APIs, performing server-side data processing, or creating CLI tools and automation scripts.
+Puter.js works seamlessly in Node.js environments, allowing you to integrate databases and cloud storage with your Node.js applications. This makes it ideal for building backend services and APIs, performing server-side data processing, or creating CLI tools and automation scripts.
 
 ```js
 const { init } = require("@heyputer/puter.js/src/init.cjs");
@@ -105,10 +95,8 @@ import { init } from "@heyputer/puter.js/src/init.cjs";
 
 const puter = init(process.env.puterAuthToken); // uses your auth token
 
-// Chat with GPT-5 nano
-puter.ai.chat("What color was Napoleon's white horse?").then((response) => {
-  puter.print(response);
-});
+// Print a greeting
+puter.print("Hello from Mixt!");
 ```
 
 Get started quickly with the [Node.js + Express template](https://github.com/HeyPuter/node.js-express.js).
@@ -119,7 +107,7 @@ Get started quickly with the [Node.js + Express template](https://github.com/Hey
 
 [Serverless Workers](/Workers/) let you run HTTP servers and backend APIs.
 
-Think of them as your serverless backend and API endpoints. Just like in other serverless platforms, you can use Puter.js in workers to access AI, cloud storage, key-value stores, and databases.
+Think of them as your serverless backend and API endpoints. Just like in other serverless platforms, you can use Puter.js in workers to access cloud storage, key-value stores, and databases.
 
 ```js
 // Simple GET endpoint

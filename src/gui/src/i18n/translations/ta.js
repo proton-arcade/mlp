@@ -151,7 +151,7 @@ const ta = {
         forgot_pass_c2a: 'கடவுச்சொல்லை மறந்துவிட்டீர்களா?',
         from: 'இருந்து',
         general: 'பொது',
-        get_a_copy_of_on_puter: 'Puter.com இல் \'%%\' நகலைப் பெறுங்கள்!',
+        get_a_copy_of_on_puter: 'Mixt.com இல் \'%%\' நகலைப் பெறுங்கள்!',
         get_copy_link: 'நகல் இணைப்பைப் பெறவும்',
         hide_all_windows: 'அனைத்து விண்டோஸையும் மறைக்கவும்',
         home: 'வீடு',
@@ -249,7 +249,7 @@ const ta = {
         refer_friends_c2a:
       'புட்டர் இல் கணக்கை உருவாக்கி உறுதிப்படுத்தும் ஒவ்வொரு நண்பருக்கும் 1 GB கிடைக்கும். உங்கள் நண்பருக்கும் 1 ஜிபி கிடைக்கும்!',
         refer_friends_social_media_c2a:
-      'Puter.com இல் 1 GB இலவச சேமிப்பிடத்தைப் பெறுங்கள்!',
+      'Mixt.com இல் 1 GB இலவச சேமிப்பிடத்தைப் பெறுங்கள்!',
         refresh: 'புதுப்பிப்பு',
         release_address_confirmation:
       'இந்த முகவரியை நிச்சயமாக வெளியிட விரும்புகிறீர்களா?',
@@ -414,7 +414,6 @@ const ta = {
         'billing.offering.professional': 'தொழில்முறை',
         'billing.offering.business': 'வியாபாரம்',
         'billing.cloud_storage': 'மேக சேமிப்பு',
-        'billing.ai_access': 'AI அணுகல்',
         'billing.bandwidth': 'அலைவரிசை',
         'billing.apps_and_games': 'ஆப்ஸ் & கேம்ஸ்',
         'billing.upgrade_to_pro': '%strong%க்கு மேம்படுத்தவும்',
@@ -533,7 +532,7 @@ const ta = {
         window_title_public: 'பொது',
         window_title_videos: 'வீடியோக்கள்',
         window_title_pictures: 'படங்கள்',
-        window_title_puter: 'Puter',
+        window_title_puter: 'Mixt',
         window_folder_empty: 'இந்த கோப்புறை காலியாக உள்ளது',
         manage_your_subdomains: 'உங்கள் துணை-டொமைன்களை நிர்வகிக்கவும்',
         open_containing_folder: 'கொண்டுள்ள கோப்புறையைத் திற',

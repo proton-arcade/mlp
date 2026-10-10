@@ -147,7 +147,7 @@ const ig = {
         forgot_pass_c2a: 'Chefuru paswọọdụ?',
         from: 'si',
         general: 'Izugbe',
-        get_a_copy_of_on_puter: 'Nweta otu \'%%\' na Puter.com!',
+        get_a_copy_of_on_puter: 'Nweta otu \'%%\' na Mixt.com!',
         get_copy_link: 'Nweta njikọ nke',
         hide_all_windows: 'Ezo Windows niile',
         home: 'ụlọ',
@@ -235,14 +235,14 @@ const ig = {
         public: 'eze',
         publish: 'Bipụta',
         publish_as_website: 'Bipụta dị ka webụsaịtị',
-        puter_description: 'Puter bụ igwe ojii nzuzo nke mbụ iji dobe faịlụ gị, ngwa na egwuregwu gị n\'otu ebe echekwara, enwere ike ịnweta ya ebe ọ bụla n\'oge ọ bụla..',
+        puter_description: 'Mixt bụ igwe ojii nzuzo nke mbụ iji dobe faịlụ gị, ngwa na egwuregwu gị n\'otu ebe echekwara, enwere ike ịnweta ya ebe ọ bụla n\'oge ọ bụla..',
         reading_file: 'ọgụgụ %strong%',
         recent: 'Na nso nso a',
         recommended: 'nwere ike ikwu',
         recover_password: 'Weghachite paswọọdụ',
         refer_friends_c2a:
-      'Nweta 1 GB maka enyi ọ bụla mepụtara ma kwado akaụntụ na Puter. Enyi gị ga-enwetakwa 1 GB!',
-        refer_friends_social_media_c2a: 'Nweta 1 GB nke nchekwa efu na Puter.com!',
+      'Nweta 1 GB maka enyi ọ bụla mepụtara ma kwado akaụntụ na Mixt. Enyi gị ga-enwetakwa 1 GB!',
+        refer_friends_social_media_c2a: 'Nweta 1 GB nke nchekwa efu na Mixt.com!',
         refresh: 'Weghachite ume',
         release_address_confirmation: 'O doro gị anya na ịchọrọ wepụtara adreesị a?',
         remove_from_taskbar: 'Wepu na Taskbar',
@@ -252,7 +252,7 @@ const ig = {
         replace_all: 'Dochie ihe niile',
         resend_confirmation_code: 'Tinyegharịa koodu nkwenye',
         reset_colors: 'Tọgharịa Agba',
-        restart_puter_confirm: "Ị ji n'aka na ịchọrọ ịmalitegharịa Puter?",
+        restart_puter_confirm: "Ị ji n'aka na ịchọrọ ịmalitegharịa Mixt?",
         restore: 'weghachi',
         save: 'chekwa',
         saturation: 'juputa',
@@ -284,7 +284,7 @@ const ig = {
         shortcut_to: 'Ụzọ mkpirisi ka',
         show_all_windows: 'Gosi Windows niile',
         show_hidden: 'Gosi ihe ezozo',
-        sign_in_with_puter: 'Jiri Puter banye',
+        sign_in_with_puter: 'Jiri Mixt banye',
         sign_up: 'Debanye aha',
         signing_in: 'Ịbanye…',
         size: 'Nha',
@@ -294,7 +294,7 @@ const ig = {
         start: 'mbido',
         status: 'Ọnọdụ',
         storage_usage: 'Ojiji Nchekwa',
-        storage_puter_used: 'nke Puter na-ji',
+        storage_puter_used: 'nke Mixt na-ji',
         taking_longer_than_usual:
       'Na-ewe obere oge karịa ka ọ dị na mbụ. Biko chere...',
         task_manager: 'Onye njikwa ọrụ',
@@ -303,7 +303,7 @@ const ig = {
         taskmgr_header_type: 'Ụdị',
         terms: 'Usoro',
         text_document: 'Akwụkwọ ederede',
-        tos_fineprint: 'Site na ịpị \'Mepụta Akaụntụ efu\' ị kwenyere na Puter {{link=terms}} Usoro ọrụ{{/link}} na {{link=privacy}}Amụma nzuzo{{/link}} Puter.',
+        tos_fineprint: 'Site na ịpị \'Mepụta Akaụntụ efu\' ị kwenyere na Mixt {{link=terms}} Usoro ọrụ{{/link}} na {{link=privacy}}Amụma nzuzo{{/link}} Mixt.',
         transparency: 'nghọta',
         trash: 'ahịhịa',
         two_factor: 'Nyocha ihe abụọ',
@@ -328,7 +328,7 @@ const ig = {
         visibility: 'Nhụta',
         yes: 'Ee',
         yes_release_it: 'Ee, Hapụ ya',
-        you_have_been_referred_to_puter_by_a_friend: 'Otu enyi zigara gị na Puter!',
+        you_have_been_referred_to_puter_by_a_friend: 'Otu enyi zigara gị na Mixt!',
         zip: 'Zip',
         zipping_file: 'Zipping %strong%',
 
@@ -396,7 +396,6 @@ const ig = {
         'billing.offering.professional': 'Ọkachamara', // In English: "Professional"
         'billing.offering.business': 'Azụmahịa', // In English: "Business"
         'billing.cloud_storage': 'Nchekwa igwe ojii', // In English: "Cloud Storage"
-        'billing.ai_access': 'Nweta AI', // In English: "AI Access"
         'billing.bandwidth': 'Bandwit', // In English: "Bandwidth"
         'billing.apps_and_games': 'Ngwa & Egwuregwu', // In English: "Apps & Games"
         'billing.upgrade_to_pro': 'Kwalite ka sie ike', // In English: "Upgrade to %strong%"
@@ -502,7 +501,7 @@ const ig = {
         'window_title_public': 'Ọha', // In English: "Public"
         'window_title_videos': 'Vidiyo', // In English: "Videos"
         'window_title_pictures': 'Foto', // In English: "Pictures"
-        'window_title_puter': 'Puter', // In English: "Puter"
+        'window_title_puter': 'Mixt', // In English: "Mixt"
         'window_folder_empty': 'Mpempe akwụkwọ a tọgbọ chakoo', // In English: "This folder is empty"
         'manage_your_subdomains': 'Jikwaa subdomains gị', // In English: "Manage Your Subdomains"
         'open_containing_folder': 'Mepee folda nwere', // In English: "Open Containing Folder"

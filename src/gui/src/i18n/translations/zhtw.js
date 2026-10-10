@@ -27,19 +27,16 @@ const zhtw = {
         account_password: '驗證帳戶密碼',
         access_granted_to: '已授予存取權給',
         add_app: '新增應用程式',
-        add_app_ai: '使用 AI 建立應用程式',
-        add_app_ai_desc: '描述您想要的應用程式，AI 會為您建立！',
         add_app_browse: '尋找應用程式',
         add_app_browse_desc: '瀏覽應用程式中心，安裝您需要的應用程式',
         add_app_request: '提出應用程式需求',
-        add_app_request_c2a: '告訴我們您希望 Puter 提供哪種應用程式；您的需求會直接送交我們的團隊。',
+        add_app_request_c2a: '告訴我們您希望 Mixt 提供哪種應用程式；您的需求會直接送交我們的團隊。',
         add_app_request_desc: '告訴我們接下來該開發什麼',
         add_app_request_failed: '無法送出您的需求，請再試一次。',
-        add_app_request_placeholder: '我希望 Puter 提供的應用程式是……',
+        add_app_request_placeholder: '我希望 Mixt 提供的應用程式是……',
         add_app_request_sent: '謝謝，您的需求已送達我們的團隊。如果您的帳戶設有電子郵件，我們可能會透過該信箱與您聯絡。',
         add_another_account: '新增其他帳戶',
         add_to_desktop: '新增至桌面',
-        ai_app_unavailable: 'AI 應用程式目前無法使用，請稍後再試。',
         all_fields_required: '所有欄位都是必填的。',
         allow: '允許',
         app_group_default_name: '資料夾',
@@ -154,7 +151,7 @@ const zhtw = {
         forgot_pass_c2a: '忘記密碼？',
         from: '來自',
         general: '一般',
-        get_a_copy_of_on_puter: '在 Puter.com 上獲取 \'%%\' 的副本！',
+        get_a_copy_of_on_puter: '在 Mixt.com 上獲取 \'%%\' 的副本！',
         get_copy_link: '獲取副本連結',
         hide_all_windows: '隱藏所有視窗',
         home: '首頁',
@@ -236,13 +233,13 @@ const zhtw = {
         public: '公開',
         publish: '發布',
         publish_as_website: '發布為網站',
-        puter_description: 'Puter 是一個以隱私為先的個人雲端，可將您所有的檔案、應用程式和遊戲保存在一個安全的地方，隨時隨地都能存取。',
+        puter_description: 'Mixt 是一個以隱私為先的個人雲端，可將您所有的檔案、應用程式和遊戲保存在一個安全的地方，隨時隨地都能存取。',
         reading_file: '正在讀取 %strong%',
         recent: '最近',
         recommended: '推薦',
         recover_password: '恢復密碼',
-        refer_friends_c2a: '每邀請一位朋友在 Puter 上建立並確認帳戶，您就可獲得 1 GB 空間。您的朋友也會獲得 1 GB！',
-        refer_friends_social_media_c2a: '在 Puter.com 上獲得 1 GB 免費儲存空間！',
+        refer_friends_c2a: '每邀請一位朋友在 Mixt 上建立並確認帳戶，您就可獲得 1 GB 空間。您的朋友也會獲得 1 GB！',
+        refer_friends_social_media_c2a: '在 Mixt.com 上獲得 1 GB 免費儲存空間！',
         refresh: '重新整理',
         release_address_confirmation: '您確定要釋放此地址嗎？',
         remove_from_taskbar: '從工作列移除',
@@ -252,7 +249,7 @@ const zhtw = {
         replace_all: '全部取代',
         resend_confirmation_code: '重新發送確認碼',
         reset_colors: '重設顏色',
-        restart_puter_confirm: '您確定要重新啟動 Puter 嗎？',
+        restart_puter_confirm: '您確定要重新啟動 Mixt 嗎？',
         restore: '還原',
         save: '儲存',
         saturation: '飽和度',
@@ -282,7 +279,7 @@ const zhtw = {
         shortcut_to: '捷徑到',
         show_all_windows: '顯示所有視窗',
         show_hidden: '顯示隱藏項目',
-        sign_in_with_puter: '使用 Puter 登入',
+        sign_in_with_puter: '使用 Mixt 登入',
         sign_up: '註冊',
         signing_in: '正在登入…',
         size: '大小',
@@ -292,7 +289,7 @@ const zhtw = {
         start: '開始',
         status: '狀態',
         storage_usage: '儲存空間使用量',
-        storage_puter_used: '由 Puter 使用',
+        storage_puter_used: '由 Mixt 使用',
         taking_longer_than_usual: '正在花費比平常更長的時間。請稍候...',
         task_manager: '工作管理員',
         taskmgr_header_name: '名稱',
@@ -300,7 +297,7 @@ const zhtw = {
         taskmgr_header_type: '類型',
         terms: '條款',
         text_document: '文字文件',
-        tos_fineprint: '點擊「建立免費帳戶」即表示您同意 Puter 的{{link=terms}}服務條款{{/link}}和{{link=privacy}}隱私政策{{/link}}',
+        tos_fineprint: '點擊「建立免費帳戶」即表示您同意 Mixt 的{{link=terms}}服務條款{{/link}}和{{link=privacy}}隱私政策{{/link}}',
         transparency: '透明度',
         trash: '垃圾桶',
         two_factor: '雙重驗證',
@@ -325,7 +322,7 @@ const zhtw = {
         visibility: '可見性',
         yes: '是',
         yes_release_it: '是的，釋放它',
-        you_have_been_referred_to_puter_by_a_friend: '您已被朋友推薦到 Puter！',
+        you_have_been_referred_to_puter_by_a_friend: '您已被朋友推薦到 Mixt！',
         zip: '壓縮',
         zipping_file: '正在壓縮 %strong%',
 
@@ -389,7 +386,6 @@ const zhtw = {
         'billing.offering.professional': '專業版', // Professional
         'billing.offering.business': '商業版', // Business
         'billing.cloud_storage': '雲端儲存空間', // Cloud Storage
-        'billing.ai_access': 'AI 使用權限', // AI Access
         'billing.bandwidth': '頻寬', // Bandwidth
         'billing.apps_and_games': '應用程式與遊戲', // Apps & Games
         'billing.upgrade_to_pro': '升級到 %strong%', // Upgrade to %strong%
@@ -490,7 +486,7 @@ const zhtw = {
         'window_title_public': "公開", // In English: "Public"
         'window_title_videos': "影片", // In English: "Videos"
         'window_title_pictures': "圖片", // In English: "Pictures"
-        'window_title_puter': "Puter", // In English: "Puter"
+        'window_title_puter': "Mixt", // In English: "Mixt"
         'window_folder_empty': "此資料夾是空的", // In English: "This folder is empty"
         'manage_your_subdomains': "管理您的子網域", // In English: "Manage Your Subdomains"
         'open_containing_folder': "開啟所在的資料夾", // In English: "Open containing folder"

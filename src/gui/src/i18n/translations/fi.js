@@ -177,7 +177,7 @@ const fi = {
         // "general (about something)" => "Yleistä" or
         // "military general" => "Kenraali"
 
-        get_a_copy_of_on_puter: 'Hanki \'%%\' -kopio Puter.com-sivustolta!', // TODO: Very difficult ambiguity due to different case suffix for any possible word that you can substitue here. Can stay as is, but it's not exactly correct.
+        get_a_copy_of_on_puter: 'Hanki \'%%\' -kopio Mixt.com-sivustolta!', // TODO: Very difficult ambiguity due to different case suffix for any possible word that you can substitue here. Can stay as is, but it's not exactly correct.
 
         get_copy_link: 'Hanki kopiolinkki', // TODO: Ambiguous meaning
         // 'get a copy of a link' => 'Ota Kopio Linkkiin' or
@@ -282,14 +282,14 @@ const fi = {
         public: 'Julkinen',
         publish: 'Julkaise',
         publish_as_website: 'Julkaise verkkosivustona',
-        puter_description: 'Puter on yksityisyyttä korostava henkilökohtainen pilvipalvelu, jossa voit säilyttää kaikki tiedostosi, sovelluksesi ja pelisi yhdessä turvallisessa paikassa, ja jotka ovat saatavilla mistä tahansa milloin tahansa.',
+        puter_description: 'Mixt on yksityisyyttä korostava henkilökohtainen pilvipalvelu, jossa voit säilyttää kaikki tiedostosi, sovelluksesi ja pelisi yhdessä turvallisessa paikassa, ja jotka ovat saatavilla mistä tahansa milloin tahansa.',
         reading_file: 'Luetaan %strong%',
         recent: 'Viimeisimmät',
         recommended: 'Suositellut',
         recover_password: 'Palauta salasanasi',
         refer_friends_c2a:
       'Saat 1 Gt ilmaista tallennustilaa jokaisesta ystävästä, joka luo ja vahvistaa tilin Puterissa. Myös ystäväsi saa 1 Gt:n ilmaista tallennustilaa!',
-        refer_friends_social_media_c2a: 'Hanki 1 Gt ilmaista tallennustilaa Puter.comista!',
+        refer_friends_social_media_c2a: 'Hanki 1 Gt ilmaista tallennustilaa Mixt.comista!',
         refresh: 'Päivitä',
 
         release_address_confirmation: 'Haluatko varmasti julkaista tämän osoitteen?', // TODO: Slight ambiguity between the meaning of "release"
@@ -463,7 +463,6 @@ const fi = {
         'billing.offering.professional': 'Ammattilainen', // In English: "Professional"
         'billing.offering.business': 'Yritys', // In English: "Business"
         'billing.cloud_storage': 'Pilvitallennustila', // In English: "Cloud Storage"
-        'billing.ai_access': 'Tekoälykäyttö', // In English: "AI Access"
         'billing.bandwidth': 'Kaistanleveys', // In English: "Bandwidth"
         'billing.apps_and_games': 'Sovellukset ja pelit', // In English: "Apps & Games"
         'billing.upgrade_to_pro': 'Vaihda %strong% tilaukseen', // In English: "Upgrade to %strong%"
@@ -565,7 +564,7 @@ const fi = {
         'window_title_public': 'Julkinen',
         'window_title_videos': 'Videot',
         'window_title_pictures': 'Kuvat',
-        'window_title_puter': 'Puter',
+        'window_title_puter': 'Mixt',
         'window_folder_empty': 'Tämä kansio on tyhjä',
         'manage_your_subdomains': 'Hallitse aliverkkotunnuksiasi',
         'open_containing_folder': 'Avaa sisältävä kansio',

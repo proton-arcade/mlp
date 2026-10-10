@@ -11,7 +11,7 @@ Workers run server-side, which makes them a good fit for centralized application
 
 ## Router
 
-Workers use a router-based system to handle HTTP requests and can integrate with Puter's cloud services like file storage, key-value databases, and AI APIs. Workers are perfect for building backend services, REST APIs, webhooks, shared data stores, and data processing pipelines.
+Workers use a router-based system to handle HTTP requests and can integrate with Puter's cloud services like file storage and key-value databases. Workers are perfect for building backend services, REST APIs, webhooks, shared data stores, and data processing pipelines.
 
 ### Examples
 

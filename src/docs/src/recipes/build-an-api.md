@@ -19,7 +19,7 @@ path and the function that handles it.
 When your app calls a worker with
 [`puter.workers.exec()`](/Workers/exec/), the worker knows which user is calling
 and gets that user's Puter account as `user.puter`. A route can then read and
-write the user's own [key-value store](/KV/), files and AI, the same way your
+write the user's own [key-value store](/KV/), and files, the same way your
 app does in the browser. The data stays in the user's account, and the usage is
 billed to them under the [User-Pays model](/user-pays-model/), so you get a
 backend without paying for its storage.

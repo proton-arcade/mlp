@@ -14,7 +14,7 @@ npm install @heyputer/puter.js
 ```javascript
 import puter from "@heyputer/puter.js";
 
-puter.ai.chat("hello world");
+puter.print("hello world");
 ```
 
 Here are examples for some popular frameworks:
@@ -31,7 +31,7 @@ import puter from "@heyputer/puter.js";
 export function MyComponent() {
     ...
     useEffect(() => {
-        puter.ai.chat("hello");
+        puter.print("hello");
     }, [])
     ...
 }
@@ -53,7 +53,7 @@ import puter from "@heyputer/puter.js";
 export function MyComponent() {
     ...
     useEffect(() => {
-        puter.ai.chat("hello");
+        puter.print("hello");
     }, [])
     ...
 }
@@ -83,7 +83,7 @@ import puter from "@heyputer/puter.js";
 })
 export class MyComponent {
     handleClick() {
-        puter.ai.chat("hello");
+        puter.print("hello");
     }
 }
 ```
@@ -100,7 +100,7 @@ With Vue.js, import Puter.js and call it from your component functions.
 import puter from "@heyputer/puter.js";
 
 function handleClick() {
-    puter.ai.chat("hello");
+    puter.print("hello");
 }
 </script>
 
@@ -121,7 +121,7 @@ With Svelte, import Puter.js and call it from your component functions.
 import puter from "@heyputer/puter.js";
 
 function handleClick() {
-    puter.ai.chat("hello");
+    puter.print("hello");
 }
 </script>
 
@@ -139,7 +139,7 @@ With Astro, import Puter.js in any client-side script tag.
 ...
 <script>
     import puter from "@heyputer/puter.js";
-    puter.ai.chat("hello");
+    puter.print("hello");
 </script>
 ...
 ```

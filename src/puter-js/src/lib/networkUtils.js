@@ -1172,8 +1172,8 @@ function driverLineStream(lineStream, puter, upgradePrompt) {
 }
 
 /**
- * Driver call resolving the method's `result`, the shape `puter.ai.*`,
- * `puter.kv.*`, `puter.apps.*` and friends expose. Rejects with the driver's
+ * Driver call resolving the method's `result`, the shape `puter.kv.*`,
+ * `puter.apps.*` and friends expose. Rejects with the driver's
  * error payload on failure, drives the env-specific auth / funding / email
  * prompts, and resolves an async iterator of lines for a streaming response.
  *

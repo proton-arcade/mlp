@@ -397,7 +397,6 @@ const ku = {
         'billing.offering.professional': 'پیشەیی',
         'billing.offering.business': 'بزنس',
         'billing.cloud_storage': 'خزێنەی هەور',
-        'billing.ai_access': 'دەستڕاگەیشتن بە AI',
         'billing.bandwidth': 'باندفیدت',
         'billing.apps_and_games': 'ئەپەکان & یارییەکان',
         'billing.upgrade_to_pro': 'بە %strong% بەرز بکەرەوە',
@@ -498,7 +497,7 @@ const ku = {
         'window_title_public': 'گشتی', // In English: "Public"
         'window_title_videos': 'ڤیدیۆ', // In English: "Videos"
         'window_title_pictures': 'وێنە', // In English: "Pictures"
-        'window_title_puter': 'پوتێر', // In English: "Puter"
+        'window_title_puter': 'پوتێر', // In English: "Mixt"
         'window_folder_empty': 'ئەم بوخچەیە بەتاڵە', // In English: "This folder is empty"
         'manage_your_subdomains': 'بەڕێوەبردنی ژێر دۆمەینەکانت', // In English: "Manage Your Subdomains"
         'open_containing_folder': 'کردنەوەی بوخچەیەکەی کە پەڕگەکە تێدایە', // In English: "Open Containing Folder"

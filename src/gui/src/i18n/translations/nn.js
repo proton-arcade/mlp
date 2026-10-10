@@ -75,7 +75,7 @@ const nn = {
         forgot_pass_c2a: 'Gløymt passord?',
         from: 'Frå',
         general: 'Generelt',
-        get_a_copy_of_on_puter: "Få ein kopi av '%%' på Puter.com!",
+        get_a_copy_of_on_puter: "Få ein kopi av '%%' på Mixt.com!",
         get_copy_link: 'Få kopilenkje',
         hide_all_windows: 'Skjul alle vindauge',
         html_document: 'HTML-dokument',
@@ -124,8 +124,8 @@ const nn = {
         recent: 'Nyleg',
         recover_password: 'Gjenopprett passord',
         refer_friends_c2a:
-      'Få 1 GB for kvar ven som opprettar og stadfestar ein konto på Puter. Vennen din får òg 1 GB.',
-        refer_friends_social_media_c2a: 'Få 1 GB gratis lagringsplass på Puter.com!',
+      'Få 1 GB for kvar ven som opprettar og stadfestar ein konto på Mixt. Vennen din får òg 1 GB.',
+        refer_friends_social_media_c2a: 'Få 1 GB gratis lagringsplass på Mixt.com!',
         refresh: 'Oppdater',
         release_address_confirmation: 'Er du sikker på at du vil sleppe denne adressa?',
         remove_from_taskbar: 'Fjern frå oppgåvelinja',
@@ -146,7 +146,7 @@ const nn = {
         share_to: 'Del',
         show_all_windows: 'Vis alle vindauge',
         show_hidden: 'Vis skjulte',
-        sign_in_with_puter: 'Logg inn med Puter',
+        sign_in_with_puter: 'Logg inn med Mixt',
         sign_up: 'Registrer deg',
         signing_in: 'Logger inn…',
         size: 'Storleik',
@@ -166,7 +166,7 @@ const nn = {
         username_changed: 'Brukarnamn oppdatert.',
         versions: 'Versjonar',
         yes_release_it: 'Ja, slepp den',
-        you_have_been_referred_to_puter_by_a_friend: 'Du har blitt referert til Puter av ein ven!',
+        you_have_been_referred_to_puter_by_a_friend: 'Du har blitt referert til Mixt av ein ven!',
         zip: 'Zip',
 
         // Updated translations for previously missing keys
@@ -278,14 +278,14 @@ const nn = {
         process_type_ui: 'Brukargrensesnitt',
         public: 'Offentleg',
         puter_description:
-      'Puter er ein personleg skyteknologi med fokus på personvern, der du kan lagre alle filene, appane og spela dine på ein sikker stad, tilgjengeleg frå overalt til ei kvar tid.',
+      'Mixt er ein personleg skyteknologi med fokus på personvern, der du kan lagre alle filene, appane og spela dine på ein sikker stad, tilgjengeleg frå overalt til ei kvar tid.',
         reading: 'Leser %strong%',
         writing: 'Skriv %strong%',
         recommended: 'Anbefalt',
         replace: 'Erstatt',
         replace_all: 'Erstatt alle',
         reset_colors: 'Nullstill fargar',
-        restart_puter_confirm: 'Er du sikker på at du vil starte Puter på nytt?',
+        restart_puter_confirm: 'Er du sikker på at du vil starte Mixt på nytt?',
         save: 'Lagre',
         saturation: 'Metting',
         save_account: 'Lagre konto',
@@ -305,7 +305,7 @@ const nn = {
         something_went_wrong: 'Noko gjekk galt.',
         status: 'Status',
         storage_usage: 'Lagringsbruk',
-        storage_puter_used: 'brukt av Puter',
+        storage_puter_used: 'brukt av Mixt',
         task_manager: 'Oppgavehandsaming',
         taskmgr_header_name: 'Namn',
         taskmgr_header_status: 'Status',
@@ -381,7 +381,6 @@ const nn = {
         'billing.offering.professional': 'Profesjonell',
         'billing.offering.business': 'Bedrift',
         'billing.cloud_storage': 'Skylagring',
-        'billing.ai_access': 'AI-tilgang',
         'billing.bandwidth': 'Båndbredde',
         'billing.apps_and_games': 'Appar og spel',
         'billing.upgrade_to_pro': 'Oppgrader til %strong%',
@@ -489,7 +488,7 @@ const nn = {
         window_title_public: 'Offentleg', // "Original English: Public"
         window_title_videos: 'Videoar', // "Original English: Videos"
         window_title_pictures: 'Bilete', // "Original English: Pictures"
-        window_title_puter: 'Puter', // "Original English: Puter - Brand name kept unchanged"
+        window_title_puter: 'Mixt', // "Original English: Mixt - Brand name kept unchanged"
         window_folder_empty: 'Denne mappa er tom', // "Original English: This folder is empty"
         manage_your_subdomains: 'Administrer underdomene dine', // "Original English: Manage Your Subdomains"
         open_containing_folder: 'Opne innhaldsmappa', // "Original English: Open Containing Folder"

@@ -134,10 +134,10 @@ router.post('/summary', async ({ request, user }) => {
     }
 
     try {
-        const reply = await user.puter.ai.chat(`Summarize: ${body.text}`);
-        return { summary: reply.message.content };
+        const reply = await user.puter.fs.write(`notes/${body.id}.txt`, body.text);
+        return { saved: true, path: reply.path };
     } catch {
-        return error(502, 'could not summarize right now, try again');
+        return error(502, 'could not save right now, try again');
     }
 });
 ```

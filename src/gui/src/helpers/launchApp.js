@@ -547,7 +547,7 @@ const launch_app = async (options) => {
             });
 
             // `silent_on_failure` callers (e.g. best-effort auto-launches
-            // like the AI panel on desktop boot) skip the blocking alert.
+            // like the startup launchers) skip the blocking alert.
             if ( ! options?.silent_on_failure ) {
                 const tokenErrorAppTitle = app_info?.title ?? app_info?.name ?? options?.name ?? 'this app';
                 const safeTokenErrorAppTitle = window.html_encode

@@ -147,7 +147,7 @@ const ko = {
         forgot_pass_c2a: '비밀번호를 잊으셨나요?',
         from: '보낸 사람',
         general: '일반',
-        get_a_copy_of_on_puter: 'Puter.com에서 \'%%\'의 사본을 받으세요!',
+        get_a_copy_of_on_puter: 'Mixt.com에서 \'%%\'의 사본을 받으세요!',
         get_copy_link: '링크 복사',
         hide_all_windows: '모든 창 숨기기',
         home: '홈',
@@ -248,7 +248,7 @@ const ko = {
         recover_password: '비밀번호 찾기',
         refer_friends_c2a:
       'Puter에 가입하고 이메일 인증을 완료하는 친구 한 명당 1GB의 저장 공간을 드립니다. 친구도 1GB를 받을 수 있습니다!',
-        refer_friends_social_media_c2a: 'Puter.com에서 1GB의 무료 저장 공간을 받아보세요!',
+        refer_friends_social_media_c2a: 'Mixt.com에서 1GB의 무료 저장 공간을 받아보세요!',
         refresh: '새로 고침',
         release_address_confirmation: '이 주소를 해제하시겠습니까?',
         remove_from_taskbar: '작업 표시줄에서 제거',
@@ -408,7 +408,6 @@ const ko = {
         'billing.offering.professional': '프로페셔널',
         'billing.offering.business': '비즈니스',
         'billing.cloud_storage': '클라우드 저장 공간',
-        'billing.ai_access': 'AI 이용',
         'billing.bandwidth': '대역폭',
         'billing.apps_and_games': '앱 및 게임',
         'billing.upgrade_to_pro': '%strong%로 업그레이드',
@@ -506,7 +505,7 @@ const ko = {
         'window_title_public': '공용',
         'window_title_videos': '동영상',
         'window_title_pictures': '사진',
-        'window_title_puter': 'Puter',
+        'window_title_puter': 'Mixt',
         'window_folder_empty': '이 폴더는 비어 있습니다',
 
         // Website Management

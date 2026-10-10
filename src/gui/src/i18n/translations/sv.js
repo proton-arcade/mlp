@@ -134,7 +134,7 @@ const sv = {
         forgot_pass_c2a: 'Glömt lösenord?',
         from: 'Från',
         general: 'Allmänt',
-        get_a_copy_of_on_puter: "Få en kopia av '%%' på Puter.com!",
+        get_a_copy_of_on_puter: "Få en kopia av '%%' på Mixt.com!",
         get_copy_link: 'Få kopieringslänk',
         hide_all_windows: 'Dölj alla fönster',
         home: 'Hem',
@@ -216,13 +216,13 @@ const sv = {
         public: 'Offentligt',
         publish: 'Publicera',
         publish_as_website: 'Publicera som webbplats',
-        puter_description: 'Puter är ett integritetsvänligt personligt moln för alla dina filer, appar och spel på ett säkert ställe, tillgängligt varsomhelst och närsomhelst.',
+        puter_description: 'Mixt är ett integritetsvänligt personligt moln för alla dina filer, appar och spel på ett säkert ställe, tillgängligt varsomhelst och närsomhelst.',
         reading_file: 'Läser in %strong%',
         recent: 'Senaste',
         recommended: 'Rekommenderat',
         recover_password: 'Återställ lösenord',
-        refer_friends_c2a: 'Få 1 GB för varje vän som skapar och bekräftar ett konto på Puter. Din vän får också 1 GB.',
-        refer_friends_social_media_c2a: 'Få 1 GB gratis lagringsutrymme på Puter.com!',
+        refer_friends_c2a: 'Få 1 GB för varje vän som skapar och bekräftar ett konto på Mixt. Din vän får också 1 GB.',
+        refer_friends_social_media_c2a: 'Få 1 GB gratis lagringsutrymme på Mixt.com!',
         refresh: 'Uppdatera',
         release_address_confirmation: 'Är du säker på att du vill frigöra denna adress?',
         remove_from_taskbar: 'Ta bort från aktivitetsfältet',
@@ -232,7 +232,7 @@ const sv = {
         replace_all: 'Ersätt alla',
         resend_confirmation_code: 'Skicka bekräftelsekoden igen',
         reset_colors: 'Nolställ färgerna',
-        restart_puter_confirm: 'Är det säkert att du vill starta om Puter?',
+        restart_puter_confirm: 'Är det säkert att du vill starta om Mixt?',
         restore: 'Återställ',
         save: 'Spara',
         saturation: 'Mättnad',
@@ -262,7 +262,7 @@ const sv = {
         shortcut_to: 'Genväg till',
         show_all_windows: 'Visa alla fönster',
         show_hidden: 'Visa dolda',
-        sign_in_with_puter: 'Logga in med Puter',
+        sign_in_with_puter: 'Logga in med Mixt',
         sign_up: 'Skapa konto',
         signing_in: 'Loggar in…',
         size: 'Storlek',
@@ -272,7 +272,7 @@ const sv = {
         start: 'Start',
         status: 'Tillstånd',
         storage_usage: 'Användning av lagringsutrymme',
-        storage_puter_used: 'använt av Puter',
+        storage_puter_used: 'använt av Mixt',
         taking_longer_than_usual: 'Detta tar längre tid än vanligt. Vänligen vänta...',
         task_manager: 'Aktivitetshanteraren',
         taskmgr_header_name: 'Namn',
@@ -305,7 +305,7 @@ const sv = {
         visibility: 'Synlighet',
         yes: 'Ja',
         yes_release_it: 'Ja, frigör den',
-        you_have_been_referred_to_puter_by_a_friend: 'Du har blivit hänvisad till Puter av en vän!',
+        you_have_been_referred_to_puter_by_a_friend: 'Du har blivit hänvisad till Mixt av en vän!',
         zip: 'Zippa',
         zipping_file: 'Komprimerar %strong%',
 
@@ -373,7 +373,6 @@ const sv = {
         'billing.offering.professional': 'Professionell', // In English: "Professional"
         'billing.offering.business': 'Företag', // In English: "Business"
         'billing.cloud_storage': 'Molnlagring', // In English: "Cloud Storage"
-        'billing.ai_access': 'AI Tillgång', // In English: "AI Access"
         'billing.bandwidth': 'Bandbredd', // In English: "Bandwidth"
         'billing.apps_and_games': 'Appar & Spel', // In English: "Apps & Games"
         'billing.upgrade_to_pro': 'Uppgradera till %strong%', // In English: "Upgrade to %strong%"
@@ -475,7 +474,7 @@ const sv = {
         'window_title_public': 'Offentligt', // In English: "Public"
         'window_title_videos': 'Videor', // In English: "Videos"
         'window_title_pictures': 'Bilder', // In English: "Pictures"
-        'window_title_puter': 'Puter', // In English: "Puter"
+        'window_title_puter': 'Mixt', // In English: "Mixt"
         'window_folder_empty': 'Denna mapp är tom', // In English: "This folder is empty"
         'manage_your_subdomains': 'Hantera dina subdomäner', // In English: "Manage Your Subdomains"
         'open_containing_folder': 'Öppna innehållande mapp', // In English: "Open Containing Folder"

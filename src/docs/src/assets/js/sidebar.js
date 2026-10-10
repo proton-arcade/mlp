@@ -79,11 +79,6 @@ $(document).on('mouseenter focus', '[data-tooltip]', function () {
 $(document).on('mouseleave blur click', '[data-tooltip]', hideSidebarTooltip);
 $('#sidebar').on('scroll', hideSidebarTooltip);
 
-// track clicks on the AI builder link as a Plausible custom event
-$(document).on('click', 'a[href^="https://builder.puter.com"]', function () {
-    window.plausible?.('AI Builder Click');
-});
-
 function fetchGitHubData () {
     // GitHub API fetching and handling
 

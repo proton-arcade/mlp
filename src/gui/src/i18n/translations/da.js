@@ -134,7 +134,7 @@ const da = {
         forgot_pass_c2a: 'Glemt adgangskode?',
         from: 'Fra',
         general: 'Generelt',
-        get_a_copy_of_on_puter: 'Få en kopi af \'%%\' på Puter.com!',
+        get_a_copy_of_on_puter: 'Få en kopi af \'%%\' på Mixt.com!',
         get_copy_link: 'Få kopi-link',
         hide_all_windows: 'Skjul alle vinduer',
         home: 'Hjem',
@@ -216,13 +216,13 @@ const da = {
         public: 'Offentlig',
         publish: 'Offentliggør',
         publish_as_website: 'Offentliggør som websted',
-        puter_description: 'Puter er en privatlivsorienteret personlig sky til at opbevare alle dine filer, apps og spil på ét sikkert sted, tilgængeligt fra hvor som helst, når som helst.',
+        puter_description: 'Mixt er en privatlivsorienteret personlig sky til at opbevare alle dine filer, apps og spil på ét sikkert sted, tilgængeligt fra hvor som helst, når som helst.',
         reading_file: 'Læser %strong%',
         recent: 'Seneste',
         recommended: 'Anbefalet',
         recover_password: 'Gendan adgangskode',
-        refer_friends_c2a: 'Få 1 GB for hver ven, der opretter og bekræfter en konto på Puter. Din ven vil også få 1 GB!',
-        refer_friends_social_media_c2a: 'Få 1 GB gratis lagerplads på Puter.com!',
+        refer_friends_c2a: 'Få 1 GB for hver ven, der opretter og bekræfter en konto på Mixt. Din ven vil også få 1 GB!',
+        refer_friends_social_media_c2a: 'Få 1 GB gratis lagerplads på Mixt.com!',
         refresh: 'Opdater',
         release_address_confirmation: 'Er du sikker på, at du vil frigive denne adresse?',
         remove_from_taskbar: 'Fjern fra proceslinje',
@@ -232,7 +232,7 @@ const da = {
         replace_all: 'Erstat alle',
         resend_confirmation_code: 'Send bekræftelseskode igen',
         reset_colors: 'Nulstil farver',
-        restart_puter_confirm: 'Er du sikker på, at du vil genstarte Puter?',
+        restart_puter_confirm: 'Er du sikker på, at du vil genstarte Mixt?',
         restore: 'Gendan',
         save: 'Gem',
         saturation: 'Mætning',
@@ -262,7 +262,7 @@ const da = {
         shortcut_to: 'Genvej til',
         show_all_windows: 'Vis alle vinduer',
         show_hidden: 'Vis skjulte',
-        sign_in_with_puter: 'Log ind med Puter',
+        sign_in_with_puter: 'Log ind med Mixt',
         sign_up: 'Tilmeld dig',
         signing_in: 'Logger ind…',
         size: 'Størrelse',
@@ -272,7 +272,7 @@ const da = {
         start: 'Start',
         status: 'Status',
         storage_usage: 'Lagerforbrug',
-        storage_puter_used: 'brugt af Puter',
+        storage_puter_used: 'brugt af Mixt',
         taking_longer_than_usual: 'Tager lidt længere tid end normalt. Vent venligst...',
         task_manager: 'Opgavehåndtering',
         taskmgr_header_name: 'Navn',
@@ -305,7 +305,7 @@ const da = {
         visibility: 'Synlighed',
         yes: 'Ja',
         yes_release_it: 'Ja, frigiv det',
-        you_have_been_referred_to_puter_by_a_friend: 'Du er blevet henvist til Puter af en ven!',
+        you_have_been_referred_to_puter_by_a_friend: 'Du er blevet henvist til Mixt af en ven!',
         zip: 'Zip',
         zipping_file: 'Zipper %strong%',
 
@@ -368,7 +368,6 @@ const da = {
         billing_offering_pro: 'Professionel',
         billing_offering_business: 'Forretning',
         billing_cloud_storage: 'Cloud-lager',
-        billing_ai_access: 'AI-adgang',
         billing_bandwidth: 'Båndbredde',
         billing_apps_and_games: 'Apps & Spil',
         billing_upgrade_to_pro: 'Opgrader til %strong%',
@@ -442,7 +441,6 @@ const da = {
         'billing.offering.professional': undefined, // In English: "Professional"
         'billing.offering.business': undefined, // In English: "Business"
         'billing.cloud_storage': undefined, // In English: "Cloud Storage"
-        'billing.ai_access': undefined, // In English: "AI Access"
         'billing.bandwidth': undefined, // In English: "Bandwidth"
         'billing.apps_and_games': undefined, // In English: "Apps & Games"
         'billing.upgrade_to_pro': undefined, // In English: "Upgrade to %strong%"
@@ -524,7 +522,7 @@ const da = {
         'window_title_public': undefined, // In English: "Public"
         'window_title_videos': undefined, // In English: "Videos"
         'window_title_pictures': undefined, // In English: "Pictures"
-        'window_title_puter': undefined, // In English: "Puter"
+        'window_title_puter': undefined, // In English: "Mixt"
         'window_folder_empty': undefined, // In English: "This folder is empty"
         'manage_your_subdomains': undefined, // In English: "Manage Your Subdomains"
         'open_containing_folder': undefined, // In English: "Open Containing Folder"

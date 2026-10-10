@@ -204,6 +204,3 @@ You can see various Puter.js Apps API in action from the following examples:
   - [Create a random app then get it](/playground/app-get/)
 - Sample Apps
   - [To-Do List](/playground/app-todo/)
-  - [AI Chat](/playground/app-ai-chat/)
-  - [Camera Photo Describer](/playground/app-camera/)
-  - [Text Summarizer](/playground/app-summarizer/)

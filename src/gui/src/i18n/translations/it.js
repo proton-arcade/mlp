@@ -149,7 +149,7 @@ const it = {
         forgot_pass_c2a: 'Password dimenticata?',
         from: 'Da',
         general: 'Generale',
-        get_a_copy_of_on_puter: 'Ottieni una copia di \'%%\' su Puter.com!',
+        get_a_copy_of_on_puter: 'Ottieni una copia di \'%%\' su Mixt.com!',
         get_copy_link: 'Ottieni link di copia',
         hide_all_windows: 'Nascondi tutte le finestre',
         home: 'Home',
@@ -238,14 +238,14 @@ const it = {
         public: 'Pubblico',
         publish: 'Pubblica',
         publish_as_website: 'Pubblica come sito web',
-        puter_description: 'Puter è un cloud personale che mette la privacy al primo posto, per conservare tutti i tuoi file, app e giochi in un unico luogo sicuro, accessibile da qualsiasi luogo e in qualsiasi momento.',
+        puter_description: 'Mixt è un cloud personale che mette la privacy al primo posto, per conservare tutti i tuoi file, app e giochi in un unico luogo sicuro, accessibile da qualsiasi luogo e in qualsiasi momento.',
         reading_file: 'Leggendo %strong%',
         recent: 'Recenti',
         recommended: 'Consigliati',
         recover_password: 'Ripristina la Password',
         refer_friends_c2a:
-      'Ottieni 1 GB di spazio di archiviazione per ogni amico che crea un account e conferma l’email su Puter. Anche il tuo amico riceverà dello spazio extra!',
-        refer_friends_social_media_c2a: 'Ottieni 1GB di spazio di spazio di archiviazione gratuito su Puter.com!',
+      'Ottieni 1 GB di spazio di archiviazione per ogni amico che crea un account e conferma l’email su Mixt. Anche il tuo amico riceverà dello spazio extra!',
+        refer_friends_social_media_c2a: 'Ottieni 1GB di spazio di spazio di archiviazione gratuito su Mixt.com!',
         refresh: 'Ricarica',
         release_address_confirmation: 'Sei sicuro di voler liberare questo indirizzo?',
         remove_from_taskbar: 'Sblocca dalla barra delle applicazioni',
@@ -255,7 +255,7 @@ const it = {
         replace_all: 'Sostituisci tutto',
         resend_confirmation_code: 'Invia di nuovo il codice di conferma',
         reset_colors: 'Ripristina i colori',
-        restart_puter_confirm: 'Sei sicuro di voler riavviare Puter?',
+        restart_puter_confirm: 'Sei sicuro di voler riavviare Mixt?',
         restore: 'Ripristina',
         save: 'Salva',
         saturation: 'Saturazione',
@@ -290,7 +290,7 @@ const it = {
         shortcut_to: 'Scorciatoia per',
         show_all_windows: 'Mostra tutte le finestre',
         show_hidden: 'Mostra nascosti',
-        sign_in_with_puter: 'Accedi con Puter',
+        sign_in_with_puter: 'Accedi con Mixt',
         sign_up: 'Registrati',
         signing_in: 'Accesso in corso…',
         size: 'Dimensione',
@@ -300,7 +300,7 @@ const it = {
         start: 'Start',
         status: 'Stato',
         storage_usage: 'Utilizzo dello spazio',
-        storage_puter_used: 'utilizzato da Puter',
+        storage_puter_used: 'utilizzato da Mixt',
         taking_longer_than_usual:
       'Il processo in corso ci sta mettendo più del solito. Attendere prego...',
         task_manager: 'Gestione attività',
@@ -309,7 +309,7 @@ const it = {
         taskmgr_header_type: 'Tipo',
         terms: 'Termini',
         text_document: 'Documento di testo',
-        tos_fineprint: 'Cliccando su \'Crea un account gratis\' accetti i {{link=terms}}Termini di Servizio{{/link}} e l\'{{link=privacy}}Informativa sulla Privacy{{/link}} di Puter.',
+        tos_fineprint: 'Cliccando su \'Crea un account gratis\' accetti i {{link=terms}}Termini di Servizio{{/link}} e l\'{{link=privacy}}Informativa sulla Privacy{{/link}} di Mixt.',
         transparency: 'Trasparenza',
         trash: 'Cestino',
         two_factor: 'Autenticazione a due fattori',
@@ -336,7 +336,7 @@ const it = {
         yes: 'Sì',
         yes_release_it: 'Si, rilascialo',
         you_have_been_referred_to_puter_by_a_friend:
-      'Sei stato invitato su Puter da un amico!',
+      'Sei stato invitato su Mixt da un amico!',
         zip: 'File compresso',
         zipping_file: 'Compressione di %strong%',
 
@@ -406,7 +406,6 @@ const it = {
         'billing.offering.professional': 'Professionale', // In English: "Professional"
         'billing.offering.business': 'Business', // In English: "Business"
         'billing.cloud_storage': 'Archiviazione cloud', // In English: "Cloud Storage"
-        'billing.ai_access': 'Accesso AI', // In English: "AI Access"
         'billing.bandwidth': 'Larghezza di banda', // In English: "Bandwidth"
         'billing.apps_and_games': 'App e Giochi', // In English: "Apps & Games"
         'billing.upgrade_to_pro': 'Passa al piano %strong%', // In English: "Upgrade to %strong%"
@@ -512,7 +511,7 @@ const it = {
         'window_title_public': 'Pubblica',
         'window_title_videos': 'Video', // In Italian there's no translation for "videos", we use "più video" translated in "more videos"; in this case all the OSs use "video"
         'window_title_pictures': 'Foto',
-        'window_title_puter': 'Puter',
+        'window_title_puter': 'Mixt',
         'window_folder_empty': 'Questa cartella è vuota',
         'manage_your_subdomains': 'Gestisci i tuoi sottodomini',
         'open_containing_folder': 'Apri cartella contenente', // In English: "Open Containing Folder"

@@ -1,6 +1,6 @@
-Puter.js gives you access to auth, cloud storage, databases, and AI (Claude, GPT, Gemini, and 500+ other models) with no API keys and no infrastructure setup. The entire library is a single `<script>` tag or the `@heyputer/puter.js` npm module.
+Puter.js gives you access to auth, cloud storage, databases, and more with no API keys and no infrastructure setup. The entire library is a single `<script>` tag or the `@heyputer/puter.js` npm module.
 
-This is also what makes Puter.js work so well as the backend for AI-generated apps. There is nothing to configure: no keys to obtain, no servers to provision, no SDK to initialize. AI coding tools and platforms like Claude Code, Codex, OpenCode, Lovable, and Replit can generate complete, working apps in a single shot with Puter.js. The API is small and consistent enough for language models to use correctly, and the full reference is published as [llms.txt](https://docs.puter.com/llms.txt) so AI tools can read it in one request.
+This is also what makes Puter.js work so well as the backend for apps. There is nothing to configure: no keys to obtain, no servers to provision, no SDK to initialize.  The API is small and consistent enough for language models to use correctly, and the full reference is published as [llms.txt](https://docs.puter.com/llms.txt).
 
 <div class="browser-window">
     <div class="titlebar">
@@ -21,10 +21,6 @@ This is also what makes Puter.js work so well as the backend for AI-generated ap
     </div>
     <div class="content" style="position: relative; margin-top: 20px; display: flex; flex-direction: column; justify-content: center; align-items: center; margin-bottom: 40px;">
         <div style="width: 620px; height: 120px; position: relative; font-weight: 500;">
-            <div style="width: 100px; height: 100px; position: absolute; left:10px;">
-                <div class="feature-name-top">OpenAI</div>
-                <div  class="feature-line-top"></div><div></div>
-            </div>
             <div style="width: 100px; height: 65px; position: absolute; left: 120px; bottom: 20px;">
                 <div class="feature-name-top">Cloud Storage</div>
                 <div  class="feature-line-top"></div><div></div>
@@ -83,22 +79,21 @@ This is also what makes Puter.js work so well as the backend for AI-generated ap
     </div>
 </div>
 
-Additionally, with Puter.js, you as the developer pay nothing since each user of your app [covers their own Cloud and AI usage](/user-pays-model/). Whether your app has 1 user or 1 million users, it costs you zero to run. Puter.js gives you infinitely scalable infrastructure, completely free.
+Additionally, with Puter.js, you as the developer pay nothing since each user of your app [covers their own Cloud usage](/user-pays-model/). Whether your app has 1 user or 1 million users, it costs you zero to run. Puter.js gives you infinitely scalable infrastructure, completely free.
 
 Puter.js is powered by [Puter](https://github.com/HeyPuter/puter), the open-source cloud operating system with a heavy focus on privacy. Puter does not use tracking technologies and does not monetize or even collect personal information.
 
 ## Examples
 
 <div style="overflow:hidden; margin-bottom: 30px;">
-    <div class="example-group active" data-section="ai" data-icon="ai_outline" data-icon-active="ai_active"><i class="icon"></i><span>AI</span></div>
-    <div class="example-group" data-section="fs" data-icon="fs_outline" data-icon-active="fs_active"><i class="icon"></i><span>Cloud Storage</span></div>
+    <div class="example-group active" data-section="fs" data-icon="fs_outline" data-icon-active="fs_active"><i class="icon"></i><span>Cloud Storage</span></div>
     <div class="example-group" data-section="kv" data-icon="kv_outline" data-icon-active="kv_active"><i class="icon"></i><span>NoSQL Database</span></div>
     <div class="example-group" data-section="hosting" data-icon="hosting_outline" data-icon-active="hosting_active"><i class="icon"></i><span>Hosting</span></div>
     <div class="example-group" data-section="auth" data-icon="auth_outline" data-icon-active="auth_active"><i class="icon"></i><span>Auth</span></div>
     <div class="example-group" data-section="networking" data-icon="networking_outline" data-icon-active="networking_active"><i class="icon"></i><span>Networking</span></div>
 </div>
 
-<div class="example-content" data-section="fs">
+<div class="example-content" data-section="fs" style="display:block;">
 
 #### Write a file to the cloud
 
@@ -157,74 +152,6 @@ Puter.js is powered by [Puter](https://github.com/HeyPuter/puter), the open-sour
                 puter.print(`User preference: ${value}`);
             });
         })
-    </script>
-</body>
-</html>
-```
-
-</div>
-
-<div class="example-content" data-section="ai" style="display:block;">
-
-#### Chat with GPT-5.6 Luna
-
-```html;intro-chatgpt
-<html>
-<body>
-    <script src="https://js.puter.com/v2/"></script>
-    <script>
-        // Chat with GPT-5.6 Luna
-        puter.ai.chat(`What is life?`, { model: "gpt-5.6-luna" }).then(puter.print);
-    </script>
-</body>
-</html>
-```
-
-<p><strong class="example-title" style="margin-top:40px;">Image Analysis</strong></p>
-
-```html;intro-gpt-vision
-<html>
-<body>
-    <script src="https://js.puter.com/v2/"></script>
-    <img src="https://assets.puter.site/doge.jpeg" style="display:block;">
-    <script>
-        puter.ai
-            .chat(`What do you see?`, `https://assets.puter.site/doge.jpeg`, {
-                model: "gpt-5.6-luna",
-            })
-            .then(puter.print);
-    </script>
-</body>
-</html>
-```
-
-<strong class="example-title" style="margin-top:40px;">Generate an image of a cat using AI</strong>
-
-```html;ai-txt2img
-<html>
-<body>
-    <script src="https://js.puter.com/v2/"></script>
-    <script>
-        // Generate an image of a cat using the default model and quality. Please note that testMode is set to true so that you can test this code without using up API credits.
-        puter.ai.txt2img('A picture of a cat.', true).then((image)=>{
-            document.body.appendChild(image);
-        });
-    </script>
-</body>
-</html>
-```
-
-<p><strong class="example-title" style="margin-top:40px;">Stream the response</strong></p>
-
-```html;ai-chat-stream
-<html>
-<body>
-    <script src="https://js.puter.com/v2/"></script>
-    <script>
-    (async () => {
-        const resp = await puter.ai.chat('Tell me in detail what Rick and Morty is all about.', {model: 'gemini-3.5-flash-lite', stream: true });
-        for await ( const part of resp ) puter.print(part?.text?.replaceAll('\n', '<br>'));
-    })();
     </script>
 </body>
 </html>

@@ -154,7 +154,7 @@ const bg = {
         forgot_pass_c2a: 'Забравена парола?',
         from: 'От',
         general: 'Общи',
-        get_a_copy_of_on_puter: 'Вземете копие на %% в Puter.com!',
+        get_a_copy_of_on_puter: 'Вземете копие на %% в Mixt.com!',
         get_copy_link: 'Вземи връзка за копие',
         hide_all_windows: 'Скрий всички прозорци',
         home: 'Начало',
@@ -249,16 +249,16 @@ const bg = {
         publish_as_website: 'Публикувай като уебсайт',
         publish_as_serverless_worker: 'Публикувай като Worker',
         puter_description:
-      'Puter е личен облак с приоритет на поверителността, който съхранява всичките ви файлове, приложения и игри на едно сигурно място, достъпно отвсякъде и по всяко време.',
+      'Mixt е личен облак с приоритет на поверителността, който съхранява всичките ви файлове, приложения и игри на едно сигурно място, достъпно отвсякъде и по всяко време.',
         reading: 'Четене на %strong%',
         writing: 'Записване на %strong%',
         recent: 'Скорошни',
         recommended: 'Препоръчано',
         recover_password: 'Възстанови паролата',
         refer_friends_c2a:
-      'Получете 1 GB за всеки приятел, който създаде и потвърди акаунт в Puter. Вашият приятел също ще получи 1 GB!',
+      'Получете 1 GB за всеки приятел, който създаде и потвърди акаунт в Mixt. Вашият приятел също ще получи 1 GB!',
         refer_friends_social_media_c2a:
-      'Получете 1 GB безплатно пространство в Puter.com!',
+      'Получете 1 GB безплатно пространство в Mixt.com!',
         refresh: 'Опресни',
         release_address_confirmation:
       'Сигурни ли сте, че искате да освободите този адрес?',
@@ -269,7 +269,7 @@ const bg = {
         replace_all: 'Замени всички',
         resend_confirmation_code: 'Изпрати отново кода за потвърждение',
         reset_colors: 'Нулирай цветовете',
-        restart_puter_confirm: 'Сигурни ли сте, че искате да рестартирате Puter?',
+        restart_puter_confirm: 'Сигурни ли сте, че искате да рестартирате Mixt?',
         restore: 'Възстанови',
         save: 'Запази',
         saturation: 'Наситеност',
@@ -303,7 +303,7 @@ const bg = {
         shortcut_to: 'Пряк път до',
         show_all_windows: 'Покажи всички прозорци',
         show_hidden: 'Покажи скритите',
-        sign_in_with_puter: 'Влез с Puter',
+        sign_in_with_puter: 'Влез с Mixt',
         sign_up: 'Регистрирай се',
         signing_in: 'Влизане…',
         size: 'Размер',
@@ -329,7 +329,7 @@ const bg = {
         'toolbar.search': 'Търсене',
         'toolbar.qrcode': 'QR код',
         tos_fineprint:
-      "С натискане на 'Създай безплатен акаунт' вие се съгласявате с {{link=terms}}Условията за ползване{{/link}} и {{link=privacy}}Политиката за поверителност{{/link}} на Puter.",
+      "С натискане на 'Създай безплатен акаунт' вие се съгласявате с {{link=terms}}Условията за ползване{{/link}} и {{link=privacy}}Политиката за поверителност{{/link}} на Mixt.",
         transparency: 'Прозрачност',
         trash: 'Кошче',
         two_factor: 'Двуфакторно удостоверяване',
@@ -360,7 +360,7 @@ const bg = {
         yes: 'Да',
         yes_release_it: 'Да, освободи',
         you_have_been_referred_to_puter_by_a_friend:
-      'Били сте препоръчани в Puter от приятел!',
+      'Били сте препоръчани в Mixt от приятел!',
         zip: 'ZIP архивиране',
         tar: 'TAR архивиране',
         download_as_tar: 'Изтегли като TAR',
@@ -432,7 +432,6 @@ const bg = {
         'billing.offering.professional': 'Професионален',
         'billing.offering.business': 'Бизнес',
         'billing.cloud_storage': 'Облачно хранилище',
-        'billing.ai_access': 'Достъп до изкуствен интелект',
         'billing.bandwidth': 'Пропускателна способност',
         'billing.apps_and_games': 'Приложения и игри',
         'billing.upgrade_to_pro': 'Надградете до %strong%',
@@ -541,7 +540,7 @@ const bg = {
         window_title_public: 'Публична',
         window_title_videos: 'Видеоклипове',
         window_title_pictures: 'Снимки',
-        window_title_puter: 'Puter',
+        window_title_puter: 'Mixt',
         window_folder_empty: 'Тази папка е празна',
 
         // Website Management

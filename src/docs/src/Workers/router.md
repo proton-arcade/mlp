@@ -31,7 +31,7 @@ The router object supports standard HTTP methods and provides a clean way to org
 Route handlers receive a single object as their parameter, which can be destructured into the following properties:
 
 - `request` - The incoming [HTTP request](https://developer.mozilla.org/en-US/docs/Web/API/Request).
-- `user` - An object representing the user who made the request to this worker. It has a `puter` property (`user.puter`) that gives you access to that user's own Puter resources — KV, FS, AI, etc. Only available when the worker is called via [`puter.workers.exec()`](/Workers/exec/).
+- `user` - An object representing the user who made the request to this worker. It has a `puter` property (`user.puter`) that gives you access to that user's own Puter resources — KV, FS, etc. Only available when the worker is called via [`puter.workers.exec()`](/Workers/exec/).
 - `params` - Route parameters captured from the path (see [Route Parameters](#route-parameters))
 
 ## Global Objects
@@ -39,11 +39,11 @@ Route handlers receive a single object as their parameter, which can be destruct
 When writing worker code, you have access to these global objects:
 
 - `router` - The router object for defining API endpoints
-- `me` - An object representing you, the worker's owner. It has a `puter` property (`me.puter`) that gives you access to your own Puter resources — KV, FS, AI, etc. `me` is set up when the first request arrives, so use it inside route handlers (or functions they call), not at the top level of your script.
+- `me` - An object representing you, the worker's owner. It has a `puter` property (`me.puter`) that gives you access to your own Puter resources — KV, FS, etc. `me` is set up when the first request arrives, so use it inside route handlers (or functions they call), not at the top level of your script.
 
 ## Integration with Puter.js
 
-Just like in apps or websites, you can use Puter.js in workers to access AI, cloud storage, key-value stores, and databases.
+Just like in apps or websites, you can use Puter.js in workers to access cloud storage, key-value stores, and databases.
 
 The difference is *whose* resources you use. A worker gives you two `.puter` objects to work with, and operations are billed to whichever one you call:
 
@@ -338,67 +338,6 @@ router.get("/api/kv/get/:key", async ({ request, params }) => {
 });
 ```
 
-<strong class="example-title">AI Integration</strong>
-
-```js
-router.post("/api/chat", async ({ request, user }) => {
-  const { message } = await request.json();
-
-  if (!message) {
-    return new Response(JSON.stringify({ error: "Message required" }), {
-      status: 400,
-      headers: { "Content-Type": "application/json" },
-    });
-  }
-
-  // Require user authentication to prevent abuse
-  if (!user || !user.puter) {
-    return new Response(
-      JSON.stringify({
-        error: "Authentication required",
-        message:
-          "This endpoint requires user authentication. Call this worker via puter.workers.exec() with your user token to use your own AI resources.",
-      }),
-      {
-        status: 401,
-        headers: { "Content-Type": "application/json" },
-      }
-    );
-  }
-
-  try {
-    // Use user's AI resources
-    const aiResponse = await user.puter.ai.chat(message);
-
-    // Store chat history in developer's KV for analytics
-    const chatHistory = {
-      userId: user.id || "unknown",
-      message,
-      response: aiResponse,
-      timestamp: new Date().toISOString(),
-      usedUserAI: true,
-    };
-    await me.puter.kv.set(`chat_${Date.now()}`, chatHistory);
-
-    return {
-      originalMessage: message,
-      aiResponse,
-      usedUserAI: true,
-    };
-  } catch (error) {
-    return new Response(
-      JSON.stringify({
-        error: "AI service error",
-        message: error.message,
-      }),
-      {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      }
-    );
-  }
-});
-```
 
 <strong class="example-title">404 Handler</strong>
 

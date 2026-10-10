@@ -27,7 +27,7 @@ Usage information per API. Each key is an API name, and the value is an object w
 
 - `cost` (Number) - Total resource consumed by this API.
 - `count` (Number) - Number of times the API is called.
-- `units` (Number) - Units of measurement for each API (e.g., tokens for AI calls, bytes for FS operations, etc).
+- `units` (Number) - Units of measurement for each API (e.g., bytes for FS operations, etc).
 
 <div class="info">
 
