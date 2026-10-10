@@ -91,7 +91,7 @@ if ( window.user !== undefined && window.user !== null ) {
     window.public_path = `/${ window.user.username }/Public`;
     window.home_path = `/${ window.user.username}`;
 }
-window.root_dirname = 'Puter';
+window.root_dirname = 'Mixt';
 
 // Not a real directory — items shared with this user live under their owners'
 // paths. Deliberately not path-shaped so it can never collide with a folder

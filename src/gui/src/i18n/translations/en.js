@@ -559,7 +559,7 @@ const en = {
         skip: 'Skip',
         something_went_wrong: 'Something went wrong.',
         sort_by: 'Sort by',
-        start: 'Start',
+        start: 'Menu',
         status: 'Status',
         'Storage': 'Storage',
         storage_usage: 'Storage Usage',

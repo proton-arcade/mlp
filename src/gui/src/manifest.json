@@ -1,10 +1,10 @@
 {
-    "name": "Puter",
-    "short_name": "Puter",
+    "name": "Mixt",
+    "short_name": "Mixt",
     "display": "standalone",
     "start_url": "/",
-    "id": "puter",
-    "description": "Personal Cloud Computer: All your files, apps, and games in one place accessible from anywhere at any time.",
+    "id": "mixt",
+    "description": "Mixt: a personal cloud desktop. All your files, apps, and games in one place, accessible from anywhere.",
     "dir": "auto",
     "lang": "en",
     "orientation": "any",
@@ -26,7 +26,7 @@
         {
             "name": "Dev Center",
             "short_name": "Dev Center",
-            "description": "Publish your apps and games on the Puter",
+            "description": "Publish your apps and games on Mixt",
             "url": "/app/dev-center"
         },
         {

@@ -1,31 +1,33 @@
 /* ==========================================================================
    Mixt look — loaded after style.css and dashboard.css so it wins the cascade.
    Panel-and-menu desktop: a full-width dark panel along the bottom, flat
-   windows with grey gradient title bars, and Mixt-Y green as the accent.
+   windows with grey gradient title bars, and Mint-Y green as the accent.
    ========================================================================== */
 
 :root {
-    --mixt-accent: #9ede6a;
-    --mixt-accent-dim: #7cc93f;
-    --mixt-panel: rgba(43, 46, 49, 0.96);
-    --mixt-panel-text: #f0f2ef;
-    --mixt-titlebar-a: #4b5054;
-    --mixt-titlebar-b: #35393c;
-    --mixt-window-bg: #f7f8f6;
-    --mixt-window-border: rgba(0, 0, 0, 0.45);
+    /* Mint-Y palette: green accent, light grey window headers, dark panel. */
+    --mixt-accent: #68b723;
+    --mixt-accent-dim: #4e8f17;
+    --mixt-panel: rgba(45, 47, 49, 0.96);
+    --mixt-panel-text: #eeeeec;
+    --mixt-titlebar-a: #f6f6f5;
+    --mixt-titlebar-b: #e1e1df;
+    --mixt-titlebar-text: #2e3436;
+    --mixt-window-bg: #f2f2f1;
+    --mixt-window-border: rgba(0, 0, 0, 0.32);
 
-    /* Puter's selection and taskbar tokens, retuned to the Mixt palette. */
-    --select-hue: 92;
-    --select-saturation: 45%;
-    --select-lightness: 60%;
+    /* Puter's selection and taskbar tokens, retuned to the Mint-Y palette. */
+    --select-hue: 96;
+    --select-saturation: 58%;
+    --select-lightness: 42%;
     --taskbar-hue: 210;
-    --taskbar-saturation: 4%;
-    --taskbar-lightness: 19%;
+    --taskbar-saturation: 3%;
+    --taskbar-lightness: 18%;
     --taskbar-alpha: 0.96;
 }
 
 body {
-    font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+    font-family: 'Noto Sans', Ubuntu, system-ui, -apple-system, 'Segoe UI', sans-serif;
     background-color: #16181a;
 }
 
@@ -89,7 +91,7 @@ body {
 /* ------------------------------ windows ---------------------------------- */
 
 .window {
-    border-radius: 8px 8px 4px 4px;
+    border-radius: 6px 6px 3px 3px;
     border: 1px solid var(--mixt-window-border);
     box-shadow: 0 18px 48px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.35);
 }
@@ -103,17 +105,17 @@ body {
     background-image: linear-gradient(to bottom, var(--mixt-titlebar-a), var(--mixt-titlebar-b));
     filter: none;
     box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.35);
-    color: #f4f6f3;
-    border-radius: 8px 8px 0 0;
+    color: var(--mixt-titlebar-text);
+    border-radius: 6px 6px 0 0;
 }
 
 .window-head .window-head-title {
-    color: #f4f6f3;
+    color: var(--mixt-titlebar-text);
 }
 
 .window-head .window-head-icon,
 .window-head img {
-    filter: brightness(0) invert(1);
+    filter: none;
 }
 
 .window-head-title,
@@ -125,7 +127,7 @@ body {
 
 .popover-launcher,
 .launch-popover {
-    border-radius: 10px;
+    border-radius: 6px;
 }
 
 .launch-search {
@@ -136,7 +138,7 @@ body {
 
 ::selection {
     background: var(--mixt-accent);
-    color: #14260a;
+    color: #ffffff;
 }
 
 /* ------------------------------ administration tab ----------------------- */

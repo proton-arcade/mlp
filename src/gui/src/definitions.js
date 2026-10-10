@@ -125,7 +125,7 @@ export class InitProcess extends Process {
     }
 
     _construct () {
-        this.name = 'Puter';
+        this.name = 'Mixt';
 
         this.type_ = 'init'; // thanks minify
 

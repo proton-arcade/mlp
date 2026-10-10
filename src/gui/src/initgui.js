@@ -2816,7 +2816,7 @@ window.initgui = async function (options) {
                 update_title_based_on_uploads();
             }
         } else if (window.active_uploads) {
-            document.title = window.doc_title_before_blur ?? 'Puter';
+            document.title = window.doc_title_before_blur ?? 'Mixt';
         }
     });
 };

@@ -76,7 +76,7 @@ function UIWindowSignup(options) {
             '<div style="margin: 0 auto;">';
         // logo
         h += authLogoHeader({
-            logoSrc: window.icons['logo-white.svg'],
+            logoSrc: (window.gui_env === 'prod') ? '/dist/images/mixt-logo.svg' : '/src/images/mixt-logo.svg',
             logoClickable: logo_clickable,
             openerOrigin: window.embedded_in_popup && isAttestedOrigin(window.openerOrigin) ? window.openerOrigin : '',
             openerFallbackSrc: window.icons['website.svg'],

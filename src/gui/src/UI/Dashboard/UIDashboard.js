@@ -126,7 +126,7 @@ async function UIDashboard (options) {
             // Sidebar header with logo and collapse toggle
             h += '<div class="dashboard-sidebar-header">';
                 h += '<div class="dashboard-sidebar-brand">';
-                    h += `<div class="dashboard-sidebar-logo"><img class="dashboard-sidebar-logo-light" src="${window.icons['logo.svg']}" alt="Puter"><img class="dashboard-sidebar-logo-dark" src="${window.icons['logo-white.svg']}" alt="Puter"><span>Puter</span></div>`;
+                    h += `<div class="dashboard-sidebar-logo"><img class="dashboard-sidebar-logo-light" src="${(window.gui_env === 'prod') ? '/dist/images/mixt-logo.svg' : '/src/images/mixt-logo.svg'}" alt="Mixt"><img class="dashboard-sidebar-logo-dark" src="${(window.gui_env === 'prod') ? '/dist/images/mixt-logo.svg' : '/src/images/mixt-logo.svg'}" alt="Mixt"><span>Mixt</span></div>`;
                     h += teamBadgeHtml(window.user);
                 h += '</div>';
                 h += '<button class="dashboard-sidebar-collapse-toggle">';

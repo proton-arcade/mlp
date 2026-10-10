@@ -277,7 +277,7 @@ async function UIWindowLogin (options) {
         const logo_clickable = !!options.window_options?.cover_page && !window.embedded_in_popup;
         h += '<div class="logo-wrapper" style="display:flex; justify-content:center; padding:20px 20px 0 20px; margin-bottom: 0;">';
         h += authLogoHeader({
-            logoSrc: window.icons['logo-white.svg'],
+            logoSrc: (window.gui_env === 'prod') ? '/dist/images/mixt-logo.svg' : '/src/images/mixt-logo.svg',
             logoClickable: logo_clickable,
             openerOrigin: window.embedded_in_popup && isAttestedOrigin(window.openerOrigin) ? window.openerOrigin : '',
             openerFallbackSrc: window.icons['website.svg'],
