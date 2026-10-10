@@ -71,6 +71,7 @@ coverage/
 undefined
 servers.json
 config.*.json
+!config.default.json
 
 volatile/
 
