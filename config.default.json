@@ -108,13 +108,7 @@
         }
     },
     "dynamo": {
-        "endpoint": "http://localhost:8000",
-        "path": "",
-        "aws": {
-            "access_key": "",
-            "secret_key": "",
-            "region": "us-west-2"
-        }
+        "path": "volatile/runtime/puter-ddb"
     },
     "redis": {
         "useMock": true,
