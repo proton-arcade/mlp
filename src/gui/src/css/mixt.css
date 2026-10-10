@@ -1,0 +1,246 @@
+/* ==========================================================================
+   Mixt look — loaded after style.css and dashboard.css so it wins the cascade.
+   Panel-and-menu desktop: a full-width dark panel along the bottom, flat
+   windows with grey gradient title bars, and Mixt-Y green as the accent.
+   ========================================================================== */
+
+:root {
+    --mixt-accent: #9ede6a;
+    --mixt-accent-dim: #7cc93f;
+    --mixt-panel: rgba(43, 46, 49, 0.96);
+    --mixt-panel-text: #f0f2ef;
+    --mixt-titlebar-a: #4b5054;
+    --mixt-titlebar-b: #35393c;
+    --mixt-window-bg: #f7f8f6;
+    --mixt-window-border: rgba(0, 0, 0, 0.45);
+
+    /* Puter's selection and taskbar tokens, retuned to the Mixt palette. */
+    --select-hue: 92;
+    --select-saturation: 45%;
+    --select-lightness: 60%;
+    --taskbar-hue: 210;
+    --taskbar-saturation: 4%;
+    --taskbar-lightness: 19%;
+    --taskbar-alpha: 0.96;
+}
+
+body {
+    font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+    background-color: #16181a;
+}
+
+/* ------------------------------ panel ------------------------------------ */
+
+.taskbar {
+    left: 0;
+    right: 0;
+    width: 100%;
+    bottom: 0;
+    height: 40px !important;
+    padding: 0 6px;
+    border-radius: 0;
+    transform: none;
+    background-color: var(--mixt-panel);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    justify-content: flex-start;
+}
+
+.taskbar.taskbar-position-bottom {
+    bottom: 0;
+}
+
+.taskbar .taskbar-sortable {
+    justify-content: flex-start !important;
+    align-items: center;
+    gap: 2px;
+    height: 100%;
+}
+
+.taskbar .taskbar-item {
+    border-radius: 6px;
+    height: 34px;
+    margin: 3px 1px;
+    color: var(--mixt-panel-text);
+}
+
+.taskbar .taskbar-item:hover {
+    background-color: rgba(255, 255, 255, 0.10);
+}
+
+.taskbar .taskbar-item.window-active,
+.taskbar .taskbar-item.taskbar-item-active {
+    background-color: rgba(255, 255, 255, 0.14);
+    box-shadow: inset 0 -2px 0 var(--mixt-accent);
+}
+
+/* The first item is the Start button — it reads as the panel's menu button. */
+.taskbar .taskbar-sortable > .taskbar-item:first-child {
+    font-weight: 600;
+    padding: 0 10px;
+    margin-right: 6px;
+    background-color: rgba(158, 222, 106, 0.16);
+    box-shadow: inset 0 0 0 1px rgba(158, 222, 106, 0.35);
+}
+
+.taskbar .taskbar-sortable > .taskbar-item:first-child:hover {
+    background-color: rgba(158, 222, 106, 0.28);
+}
+
+/* ------------------------------ windows ---------------------------------- */
+
+.window {
+    border-radius: 8px 8px 4px 4px;
+    border: 1px solid var(--mixt-window-border);
+    box-shadow: 0 18px 48px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+.window.window-active {
+    box-shadow: 0 26px 70px rgba(0, 0, 0, 0.62), 0 3px 10px rgba(0, 0, 0, 0.4);
+}
+
+.window-head {
+    background-color: transparent;
+    background-image: linear-gradient(to bottom, var(--mixt-titlebar-a), var(--mixt-titlebar-b));
+    filter: none;
+    box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.35);
+    color: #f4f6f3;
+    border-radius: 8px 8px 0 0;
+}
+
+.window-head .window-head-title {
+    color: #f4f6f3;
+}
+
+.window-head .window-head-icon,
+.window-head img {
+    filter: brightness(0) invert(1);
+}
+
+.window-head-title,
+.window:not(.window-active) .window-head {
+    opacity: 0.92;
+}
+
+/* ------------------------------ menu ------------------------------------- */
+
+.popover-launcher,
+.launch-popover {
+    border-radius: 10px;
+}
+
+.launch-search {
+    border-radius: 6px;
+}
+
+/* ------------------------------ selection -------------------------------- */
+
+::selection {
+    background: var(--mixt-accent);
+    color: #14260a;
+}
+
+/* ------------------------------ administration tab ----------------------- */
+
+.admin-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+    margin: 12px 0;
+}
+
+.admin-card {
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 8px;
+    padding: 12px;
+}
+
+.admin-card-value {
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.admin-card-label,
+.admin-generated,
+.admin-empty {
+    font-size: 12px;
+    opacity: 0.7;
+}
+
+.admin-section {
+    margin-top: 22px;
+}
+
+.admin-section h3 {
+    font-size: 15px;
+    margin-bottom: 8px;
+}
+
+.admin-count {
+    font-weight: 400;
+    opacity: 0.6;
+}
+
+.admin-table-wrap {
+    overflow-x: auto;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 6px;
+}
+
+.admin-table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.admin-table th,
+.admin-table td {
+    text-align: left;
+    padding: 6px 8px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.admin-table th {
+    background: rgba(0, 0, 0, 0.05);
+    font-weight: 600;
+}
+
+.admin-live {
+    color: #3d8b1f;
+    font-weight: 600;
+}
+
+.admin-error {
+    color: #b3261e;
+}
+
+.admin-notice {
+    margin: 10px 0;
+    padding: 10px 12px;
+    border-radius: 6px;
+    background: rgba(158, 222, 106, 0.22);
+    border: 1px solid rgba(124, 201, 63, 0.6);
+    font-size: 13px;
+    word-break: break-word;
+}
+
+.admin-whitelist-add {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    margin: 6px 0 10px;
+}
+
+.admin-whitelist-add input {
+    padding: 6px 8px;
+    border: 1px solid rgba(0, 0, 0, 0.25);
+    border-radius: 6px;
+    min-width: 200px;
+}
+
+.admin-whitelist-msg {
+    width: 100%;
+    margin: 0;
+}
