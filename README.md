@@ -45,7 +45,7 @@ On its first boot the server creates the `admin` account with a temporary passwo
 - Anonymous requests and signed-in users other than `admin` are rejected, except for whitelisted users.
 - In the Admin tab, the administrator adds a user to the whitelist by username:
   - If the account already exists, it is whitelisted and keeps its password.
-  - If it does not exist, a new account is created and its temporary password is shown **once**. Give that password to the user out of band.
+  - If it does not exist, a new account is created and its temporary password is shown **once**, and it expires after 24 hours. Give that password to the user out of band.
 - Removing a user from the whitelist revokes their access immediately: their existing sessions stop working and they cannot sign in again until re-added.
 
 ## Configuration

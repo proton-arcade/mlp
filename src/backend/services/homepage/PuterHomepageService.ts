@@ -297,7 +297,7 @@ export class PuterHomepageService extends PuterService {
         const title = meta.title;
         const description = meta.description ?? '';
         const shortDescription = meta.short_description ?? description;
-        const company = meta.company ?? 'Puter Technologies Inc.';
+        const company = meta.company ?? 'Mixt';
         const canonical = meta.canonical_url ?? '';
         const socialImage = this.#validSocialImage(
             meta.social_media_image,

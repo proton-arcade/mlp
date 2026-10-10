@@ -35,7 +35,7 @@ Only `admin` can use the server. Other accounts can sign in only after the admin
 
 Use the **Admin** tab in the dashboard:
 
-- **Add**: enter a username. An existing account is whitelisted and keeps its password. A new account is created with a one-time temporary password, which is shown once. Share it with the user out of band; they should change it at first sign-in.
+- **Add**: enter a username. An existing account is whitelisted and keeps its password. A new account is created with a one-time temporary password, which is shown once and expires after 24 hours. Share it with the user out of band; they should change it at first sign-in.
 - **Remove**: revokes access at once. The user's current sessions stop working, and they cannot sign in again until they are re-added.
 
 The Admin tab also shows the server's state: the live user count, every account (creation time, username, email, the built-in `<username>@puter.email` address and its mailbox, and whether a password is set), app counts, and other server data. Password hashes and plaintext passwords are never displayed.
