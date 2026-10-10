@@ -38,7 +38,7 @@ sudo setcap 'cap_net_bind_service=+ep' "$(which node)"
 
 ## First sign-in
 
-On its first boot the server creates the `admin` account with a temporary password and prints that password to the console. Sign in as `admin` with it. Only `admin` can sign in until you add other users.
+On its first boot the server creates the `admin` account with a temporary password and prints it to the console. Sign in as `admin` with it, then change the password. Until you change it, the console prints the temporary password again on every start. Only `admin` can sign in until you add other users.
 
 ## Access control
 

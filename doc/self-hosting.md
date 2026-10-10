@@ -27,7 +27,7 @@ Open `https://mixt.localhost/`.
 
 ## The administrator account
 
-The `admin` account is created on the first boot, with a temporary password that is printed to the console. Sign in with it, then change the password.
+The `admin` account is created on the first boot, with a temporary password that is printed to the console. Sign in with it, then change the password. Until the password is changed, the console prints it on every start, and the server keeps it in the account metadata; changing the password clears both.
 
 Only `admin` can use the server. Other accounts can sign in only after the administrator whitelists them.
 
