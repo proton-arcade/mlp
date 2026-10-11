@@ -245,7 +245,12 @@ const loadOverview = async (el) => {
         }
         $content.html(renderOverview(body));
     } catch (err) {
-        $content.html(`<p class="admin-error">Could not load the overview: ${esc(err.message)}</p>`);
+        // A TypeError from fetch means the browser never got a usable response:
+        // the API address isn't reachable or its certificate isn't accepted yet.
+        const detail = err instanceof TypeError
+            ? `The browser could not reach ${esc(window.api_origin)}. Open that address in this browser, accept its certificate warning, then press Refresh.`
+            : esc(err.message);
+        $content.html(`<div class="admin-error" role="alert"><strong>Could not load the overview.</strong> ${detail}</div>`);
     } finally {
         $button.prop('disabled', false);
     }
