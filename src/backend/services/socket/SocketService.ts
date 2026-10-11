@@ -256,6 +256,61 @@ interface AuthenticatedSocket extends Socket {
  * Cross-node fan-out comes free via `@socket.io/redis-streams-adapter`:
  * `send()` on any node reaches every socket for that room cluster-wide.
  */
+/** Peers allowed in one meeting room at once. */
+const MEETING_MAX_PEERS = 8;
+/** Largest single signalling payload (SDP or ICE candidate), in bytes. */
+const MEETING_SIGNAL_MAX_BYTES = 64 * 1024;
+/** Signalling messages per socket per window. ICE bursts are short. */
+const MEETING_SIGNAL_LIMIT = 600;
+
+/** Meeting codes are lowercase letters, digits and hyphens, 8 to 64 long. */
+function parseMeetingRoom(msg: unknown): string | null {
+    const room =
+        typeof msg === 'string' ? msg : (msg as { room?: unknown })?.room;
+    return typeof room === 'string' && /^[a-z0-9-]{8,64}$/.test(room)
+        ? room
+        : null;
+}
+
+function meetingRoomName(room: string): string {
+    return `meeting:${room}`;
+}
+
+function meetingRoomOf(socket: Socket): string | undefined {
+    return (socket.data as { meeting?: string }).meeting;
+}
+
+function meetingLabel(requested: unknown, username: unknown): string {
+    const raw =
+        typeof requested === 'string' && requested.trim()
+            ? requested
+            : typeof username === 'string'
+              ? username
+              : 'Guest';
+    return (
+        raw
+            .replace(/[\u0000-\u001f]/g, '')
+            .trim()
+            .slice(0, 40) || 'Guest'
+    );
+}
+
+/** Meeting rooms in this process: room name -> socket id -> display name. */
+const meetingMembers = new Map<string, Map<string, string>>();
+
+/** Remove a socket from its meeting and tell the remaining peers. */
+function leaveMeeting(io: SocketIOServer, socket: Socket): void {
+    const name = meetingRoomOf(socket);
+    if (!name) return;
+    const members = meetingMembers.get(name);
+    members?.delete(socket.id);
+    if (members && members.size === 0) meetingMembers.delete(name);
+    socket.leave(name);
+    delete (socket.data as { meeting?: string }).meeting;
+    delete (socket.data as { meetingName?: string }).meetingName;
+    io.to(name).emit('meeting.peer-left', { id: socket.id });
+}
+
 export class SocketService extends MixtService {
     #io: SocketIOServer | null = null;
     #reauthTimer: ReturnType<typeof setInterval> | null = null;
@@ -306,9 +361,9 @@ export class SocketService extends MixtService {
 
     /**
      * Hostnames permitted to upgrade to a socket connection. Built from
-     * `config.domain` (e.g. `mixt.mpl` → allows `mixt.mpl` +
-     * `api.mixt.mpl`). Subdomain user-sites and other wildcard-served
-     * hostnames are not in this set.
+     * `config.domain` (e.g. `mixt.mpl` → allows `mixt.mpl` + `api.mixt.mpl`).
+     * Subdomain user-sites and other wildcard-served hostnames are not in this
+     * set.
      */
     #allowedSocketHosts(): Set<string> {
         const domain = (this.config.domain ?? '').toLowerCase().trim();
@@ -784,6 +839,89 @@ export class SocketService extends MixtService {
             // whose listeners read it as "the UI is up". An app connection is
             // none of those things.
             if (isAppActor(actor)) return;
+
+            // Meeting signalling. The server only passes WebRTC offers,
+            // answers and ICE candidates between sockets that joined the same
+            // meeting room; audio and video never pass through the server.
+            // Membership is tracked in this process (see meetingMembers).
+            const io = this.#io;
+            if (io) {
+                const reply = (ack: unknown, body: unknown): void => {
+                    if (typeof ack === 'function')
+                        (ack as (b: unknown) => void)(body);
+                };
+                socket.on('meeting.join', (msg: unknown, ack?: unknown) => {
+                    const room = parseMeetingRoom(msg);
+                    if (!room)
+                        return reply(ack, { ok: false, error: 'bad_room' });
+                    void this.#allowSocketEvent(userId, 'meeting.join').then(
+                        (ok) => {
+                            if (!ok)
+                                return reply(ack, {
+                                    ok: false,
+                                    error: 'rate_limited',
+                                });
+                            const name = meetingRoomName(room);
+                            if (meetingRoomOf(socket) !== name)
+                                leaveMeeting(io, socket);
+                            let members = meetingMembers.get(name);
+                            if (!members) {
+                                members = new Map();
+                                meetingMembers.set(name, members);
+                            }
+                            if (!members.has(socket.id)) {
+                                if (members.size >= MEETING_MAX_PEERS) {
+                                    return reply(ack, {
+                                        ok: false,
+                                        error: 'full',
+                                    });
+                                }
+                                const label = meetingLabel(
+                                    (msg as { name?: unknown })?.name,
+                                    actor.user?.username,
+                                );
+                                members.set(socket.id, label);
+                                socket.data.meeting = name;
+                                socket.data.meetingName = label;
+                                socket.join(name);
+                                socket.to(name).emit('meeting.peer-joined', {
+                                    id: socket.id,
+                                    name: label,
+                                });
+                            }
+                            const peers = [...members]
+                                .filter(([id]) => id !== socket.id)
+                                .map(([id, label]) => ({ id, name: label }));
+                            reply(ack, { ok: true, room, peers });
+                        },
+                    );
+                });
+                socket.on('meeting.leave', () => leaveMeeting(io, socket));
+                socket.on('meeting.signal', (msg: unknown) => {
+                    const name = meetingRoomOf(socket);
+                    if (!name || !msg || typeof msg !== 'object') return;
+                    const { to, data } = msg as {
+                        to?: unknown;
+                        data?: unknown;
+                    };
+                    if (typeof to !== 'string' || data === undefined) return;
+                    if (JSON.stringify(data).length > MEETING_SIGNAL_MAX_BYTES)
+                        return;
+                    void checkRateLimit(
+                        `socket:meeting.signal:${socket.id}`,
+                        MEETING_SIGNAL_LIMIT,
+                        SocketService.SOCKET_EVENT_WINDOW_MS,
+                    ).then((ok) => {
+                        if (!ok) return;
+                        if (!meetingMembers.get(name)?.has(to)) return;
+                        io.to(to).emit('meeting.signal', {
+                            from: socket.id,
+                            data,
+                        });
+                    });
+                });
+                socket.on('disconnect', () => leaveMeeting(io, socket));
+            }
 
             // Peer-echo: one tab notifies others that trash is empty.
             socket.on('trash.is_empty', (msg: unknown) => {

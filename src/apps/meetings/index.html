@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meetings</title>
+<style>
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body { font: 14px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: #222; background: #1d1f21; display: flex; flex-direction: column; }
+    button, input { font: inherit; }
+    button { padding: 6px 12px; border: 1px solid #888; border-radius: 6px; background: #fff; cursor: pointer; }
+    button:disabled { opacity: .45; cursor: default; }
+    button.on { background: #2f6fd6; color: #fff; border-color: #2f6fd6; }
+    button.danger { background: #c62828; color: #fff; border-color: #c62828; }
+    input { padding: 6px 8px; border: 1px solid #aaa; border-radius: 6px; }
+    .lobby { margin: auto; background: #fff; padding: 28px; border-radius: 10px; width: min(420px, 92vw); }
+    .lobby h1 { margin: 0 0 16px; font-size: 20px; }
+    .lobby label { display: block; margin: 12px 0 4px; font-weight: 600; }
+    .lobby .row { display: flex; gap: 8px; align-items: center; }
+    .lobby .row input { flex: 1; }
+    .lobby .actions { display: flex; gap: 8px; margin-top: 18px; flex-wrap: wrap; }
+    .hint { color: #666; font-size: 12px; margin-top: 8px; }
+    .error { color: #c62828; margin-top: 10px; min-height: 1.4em; }
+    .call { flex: 1; display: none; min-height: 0; }
+    .call.show { display: flex; }
+    .stage { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+    .grid { flex: 1; display: grid; gap: 8px; padding: 8px; grid-auto-rows: 1fr; align-content: stretch; min-height: 0; overflow: auto; }
+    .tile { position: relative; background: #000; border-radius: 8px; overflow: hidden; min-height: 160px; }
+    .tile video { width: 100%; height: 100%; object-fit: contain; background: #000; display: block; }
+    .tile.screen video { object-fit: contain; }
+    .tile .label { position: absolute; left: 8px; bottom: 8px; background: rgba(0,0,0,.6); color: #fff; padding: 2px 8px; border-radius: 4px; font-size: 12px; }
+    .tile .avatar { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; color: #fff; font-size: 40px; font-weight: 700; background: #3b4252; }
+    .tile.novideo .avatar { display: flex; }
+    .tile.novideo video { visibility: hidden; }
+    .controls { display: flex; gap: 8px; justify-content: center; padding: 10px; background: #2a2d31; flex-wrap: wrap; }
+    .controls .room { color: #ddd; align-self: center; margin-right: auto; font-size: 13px; }
+    .side { width: 280px; background: #fff; display: none; flex-direction: column; min-height: 0; }
+    .side.show { display: flex; }
+    .side h2 { font-size: 15px; margin: 0; padding: 10px 12px; border-bottom: 1px solid #ddd; }
+    .msgs { flex: 1; overflow: auto; padding: 8px 12px; }
+    .msg { margin-bottom: 8px; }
+    .msg b { font-size: 12px; color: #444; }
+    .msg.sys { color: #777; font-style: italic; font-size: 12px; }
+    .msg p { margin: 2px 0 0; white-space: pre-wrap; word-wrap: break-word; }
+    .sendrow { display: flex; gap: 6px; padding: 8px; border-top: 1px solid #ddd; }
+    .sendrow input { flex: 1; min-width: 0; }
+    @media (max-width: 700px) { .side.show { position: absolute; right: 0; top: 0; bottom: 0; width: 85vw; z-index: 2; } }
+</style>
+</head>
+<body>
+<div class="lobby" id="lobby">
+    <h1>Meetings</h1>
+    <label for="name">Your name</label>
+    <input id="name" maxlength="40" placeholder="Name shown to others">
+    <label for="room">Meeting code</label>
+    <div class="row">
+        <input id="room" maxlength="64" placeholder="e.g. team-standup-2026">
+        <button id="gen" type="button">New code</button>
+    </div>
+    <div class="hint">Everyone who joins with the same code, up to 8 people, is in the same meeting. Share the code, not a link.</div>
+    <div class="actions">
+        <button id="join" type="button" class="on">Join meeting</button>
+    </div>
+    <div class="error" id="err"></div>
+</div>
+
+<div class="call" id="call">
+    <div class="stage">
+        <div class="grid" id="grid"></div>
+        <div class="controls">
+            <span class="room" id="roomLabel"></span>
+            <button id="mic" type="button">Mute</button>
+            <button id="cam" type="button">Camera off</button>
+            <button id="share" type="button">Share screen</button>
+            <button id="chatToggle" type="button">Chat</button>
+            <button id="leave" type="button" class="danger">Leave</button>
+        </div>
+    </div>
+    <aside class="side" id="side">
+        <h2>Meeting chat</h2>
+        <div class="msgs" id="msgs"></div>
+        <form class="sendrow" id="sendForm">
+            <input id="chatText" maxlength="1000" placeholder="Message everyone" autocomplete="off">
+            <button type="submit">Send</button>
+        </form>
+    </aside>
+</div>
+
+<script src="vendor/socket.io.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
