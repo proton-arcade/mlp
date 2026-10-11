@@ -64,15 +64,6 @@ const playgroundHtml = `
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="msapplication-TileImage" content="/assets/favicon/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
-    <script defer data-domain="docs.puter.com" src="https://plausible.io/js/script.js"></script>
-    <script type="text/javascript">
-        (function(c,l,a,r,i,t,y){
-            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-            c[a]("identify", (sessionStorage.cid ??= crypto.randomUUID()));
-        })(window, document, "clarity", "script", "ubxybtas0w");
-    </script>
     <link rel="stylesheet" href="/playground/assets/css/style.css">
 </head>
 
@@ -82,7 +73,7 @@ const playgroundHtml = `
     <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.min.js"
         integrity="sha512-ZG31AN9z/CQD1YDDAK4RUAvogwbJHv6bHrumrnMLzdCrVu4HeAqrUX7Jsal/cbUwXGfaMUNmQU04tQ8XXl5Znw=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="/puter.js/v2"></script>
 
     <div style="height: 70px; padding: 10px; background-color: #474e5d; display: flex; flex-direction: row;">
         <h1 class="logo">

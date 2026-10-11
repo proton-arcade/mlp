@@ -1010,7 +1010,7 @@ interface IConfigOptional {
     gui_css: string;
     /**
      * Override the puter.js preload URL when bundled. Default:
-     * `https://js.puter.com/v2/`.
+     * `/puter.js/v2`.
      */
     gui_puterjs_bundle: string;
     /**

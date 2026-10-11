@@ -760,7 +760,7 @@ button{border:0;border-radius:10px;font-size:15px;font-weight:600;padding:10px 1
 <button id="retryButton" type="button">Retry</button>
 </div>
 </main>
-<script src="https://js.puter.com/v2/"></script>
+<script src="/puter.js/v2"></script>
 <script>
 (() => {
 const status = document.getElementById('status');

@@ -242,7 +242,7 @@ export class PuterHomepageService extends PuterService {
             // The GUI loads the SDK itself in bundled mode, so it needs this
             // to serve its own build rather than the public CDN.
             puterjs_bundle:
-                this.config.gui_puterjs_bundle ?? 'https://js.puter.com/v2/',
+                this.config.gui_puterjs_bundle ?? '/puter.js/v2',
             asset_dir: assetDir,
             captchaRequired,
             // Whether notifications are dispatched through the events layer,
@@ -307,7 +307,7 @@ export class PuterHomepageService extends PuterService {
         const guiBundle = this.config.gui_bundle ?? '/dist/bundle.min.js';
         const guiCss = this.config.gui_css ?? '/dist/bundle.min.css';
         const puterJsBundle =
-            this.config.gui_puterjs_bundle ?? 'https://js.puter.com/v2/';
+            this.config.gui_puterjs_bundle ?? '/puter.js/v2';
 
         const manifestCss =
             !bundled && manifest?.css_paths
