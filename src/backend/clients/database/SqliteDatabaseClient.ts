@@ -133,6 +133,7 @@ const AVAILABLE_MIGRATIONS: [number, string[]][] = [
     [95, ['0100_business-apps.sql']],
     [96, ['0101_spreadsheet-whiteboard.sql']],
     [97, ['0102_presentation-terminal.sql']],
+    [98, ['0103_pdf-editor.sql']],
 ];
 
 export class SqliteDatabaseClient extends AbstractDatabaseClient {
