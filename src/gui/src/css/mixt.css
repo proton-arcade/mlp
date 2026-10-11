@@ -418,3 +418,34 @@ body {
     font-size: 11px;
     opacity: 0.8;
 }
+
+/* ----------------------- Panel item centring ------------------------------ */
+/* One rule decides every launcher's box: the panel is 40px tall, each item is
+   34px with 3px above and below, and its icon is centred on that line. The
+   display property is left alone because the taskbar code shows and hides
+   items with it. */
+.taskbar .taskbar-item {
+    height: 34px !important;
+    min-height: 0 !important;
+    margin: 3px 1px !important;
+    padding: 0 6px !important;
+    line-height: 34px !important;
+    box-sizing: border-box !important;
+    text-align: center;
+}
+
+.taskbar .taskbar-item .taskbar-icon,
+.taskbar .taskbar-item img,
+.taskbar .taskbar-item svg {
+    vertical-align: middle !important;
+}
+
+.taskbar .taskbar-sortable > .taskbar-item:first-child {
+    padding: 0 10px !important;
+}
+
+/* Sortable launchers (jQuery UI adds its own offsets to them): same box as the rest. */
+.taskbar .taskbar-item.taskbar-item-sortable {
+    margin: 3px 1px !important;
+    top: 0 !important;
+}

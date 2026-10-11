@@ -21,12 +21,19 @@
         statusEl.textContent = text || '';
     }
 
+    // Inside the desktop, mixt provides the API origin and token. Opened on its
+    // own, the page uses the same token and the api. host beside the page.
+    function apiOrigin () {
+        return (window.mixt && mixt.APIOrigin) || location.origin.replace('//', '//api.');
+    }
+    function authToken () {
+        return (window.mixt && mixt.authToken) || localStorage.getItem('auth_token_v2') || '';
+    }
+
     async function loadCatalog () {
         setStatus('Loading apps...');
-        const api = (window.mixt && mixt.APIOrigin) || '';
-        const token = (window.mixt && mixt.authToken) || '';
-        const resp = await fetch(`${api}/apps/catalog`, {
-            headers: { Authorization: `Bearer ${token}` },
+        const resp = await fetch(`${apiOrigin()}/apps/catalog`, {
+            headers: { Authorization: `Bearer ${authToken()}` },
             cache: 'no-store',
         });
         if ( ! resp.ok ) throw new Error(`HTTP ${resp.status}`);
@@ -85,7 +92,12 @@
 
         if ( btn.dataset.act === 'open' ) {
             try {
-                await mixt.ui.launchApp(name);
+                if ( window.mixt && mixt.ui && mixt.ui.launchApp ) {
+                    await mixt.ui.launchApp(name);
+                } else {
+                    // Opened on its own: built-in apps live under /builtin/<name>/.
+                    window.open(`/builtin/${encodeURIComponent(name)}/index.html`, '_blank', 'noopener');
+                }
             } catch (err) {
                 console.error(`Could not open ${name}:`, err);
                 setStatus(`Could not open ${label}.`);
@@ -96,7 +108,12 @@
         if ( btn.dataset.act === 'uninstall' ) {
             if ( ! window.confirm(`Uninstall ${label}? This revokes its permissions.`) ) return;
             try {
-                await mixt.perms.revokeApp(uid, '*');
+                const resp = await fetch(`${apiOrigin()}/auth/revoke-user-app`, {
+                    method: 'POST',
+                    headers: { Authorization: `Bearer ${authToken()}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ app_uid: uid, permission: '*' }),
+                });
+                if ( ! resp.ok ) throw new Error(`HTTP ${resp.status}`);
                 apps = apps.filter((a) => a.uid !== uid);
                 render();
                 setStatus(`${label} was uninstalled.`);
