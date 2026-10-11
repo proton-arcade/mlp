@@ -43,8 +43,53 @@ const card = (label, value) => `
         <div class="admin-card-label">${esc(label)}</div>
     </div>`;
 
+// Accounts from the last overview, by username, so the editor can prefill.
+let accountsByName = {};
+
+const checkField = (name, label, checked, disabled = false) =>
+    `<label class="admin-check"><input type="checkbox" name="${name}" ${checked ? 'checked' : ''} ${disabled ? 'disabled' : ''}> ${esc(label)}</label>`;
+
+const textField = (name, label, value, type = 'text') =>
+    `<label class="admin-field"><span>${esc(label)}</span><input type="${type}" name="${name}" value="${esc(value ?? '')}"></label>`;
+
+const renderAccountEditor = (u) => {
+    const stored = u.stored_password != null
+        ? 'Stored in the admin vault'
+        : (u.has_password ? 'Set (not in the admin vault)' : 'Not set');
+    const isAdmin = u.username === 'admin';
+    return `
+        <form class="admin-account-form" data-username="${esc(u.username)}">
+            <h3>Edit account: ${esc(u.username)}</h3>
+            <p class="admin-readonly">
+                Created ${esc(fmtDate(u.created_at))} · Last activity ${esc(fmtDate(u.last_activity))} ·
+                ${u.is_live ? '<span class="admin-live">Online now</span>' : 'Offline'} ·
+                Password: ${esc(stored)} · Mixt mail: ${esc(u.mixt_email)}
+            </p>
+            <p class="admin-readonly">The username cannot be changed, because files and apps are stored under it. The password is changed with the Set password form below. Two-step sign-in is managed by the account owner.</p>
+            <div class="admin-form-grid">
+                ${textField('email', 'Email', u.email)}
+                ${textField('phone', 'Phone', u.phone)}
+                ${textField('dev_first_name', 'Developer first name', u.dev_first_name)}
+                ${textField('dev_last_name', 'Developer last name', u.dev_last_name)}
+                ${textField('free_storage_bytes', 'Free storage in bytes (blank = default)', u.free_storage_bytes, 'number')}
+                ${textField('max_subdomains', 'Max subdomains (blank = default)', u.max_subdomains, 'number')}
+                ${textField('suspended_reason', 'Suspension reason', u.suspended_reason)}
+            </div>
+            <div class="admin-form-checks">
+                ${checkField('whitelisted', 'Whitelisted (can sign in)', u.whitelisted, isAdmin)}
+                ${checkField('suspended', 'Suspended', u.suspended, isAdmin)}
+                ${checkField('email_confirmed', 'Email confirmed', u.email_confirmed)}
+                ${checkField('requires_password_change', 'Must change password at next sign-in', u.requires_password_change)}
+                ${checkField('dev_approved_for_incentive_program', 'Approved for the developer incentive program', u.dev_approved_for_incentive_program)}
+            </div>
+            <p class="admin-edit-msg admin-error"></p>
+            <button type="submit" class="button">Save account</button>
+        </form>`;
+};
+
 const renderOverview = (data) => {
     const s = data.summary;
+    accountsByName = Object.fromEntries(data.users.map((u) => [u.username, u]));
     const cards = [
         card('Live users', s.live_users),
         card('Accounts', s.users),
@@ -59,7 +104,7 @@ const renderOverview = (data) => {
     ].join('');
 
     const users = section('Accounts', data.users.length, table(
-        ['Username', 'Mixt email', 'Email', 'Created', 'Last activity', 'Live', 'Whitelisted', 'Password', 'Email confirmed', '2FA', 'Suspended', 'Storage', 'Files', 'Apps', 'Subdomains', 'Mail (in/sent/out)', 'Groups', 'Signup IP', 'Signup user agent', 'Signup origin', 'Phone', 'Referral'],
+        ['Username', 'Mixt email', 'Email', 'Created', 'Last activity', 'Live', 'Whitelisted', 'Password', 'Email confirmed', '2FA', 'Suspended', 'Storage', 'Files', 'Apps', 'Subdomains', 'Mail (in/sent/out)', 'Groups', 'Signup IP', 'Signup user agent', 'Signup origin', 'Phone', 'Referral', 'Edit'],
         data.users.map((u) => [
             `<strong>${esc(u.username)}</strong>`,
             esc(u.mixt_email),
@@ -85,6 +130,7 @@ const renderOverview = (data) => {
             esc(u.signup_origin ?? '—'),
             esc(u.phone ?? '—'),
             esc(u.referral_code ?? '—'),
+            `<button class="button admin-edit" data-username="${esc(u.username)}">Edit</button>`,
         ]),
     ));
 
@@ -196,7 +242,7 @@ const renderOverview = (data) => {
         ${notice}
         <div class="admin-cards">${cards}</div>
         <p class="admin-generated">Live = a session used in the last ${esc(data.live_window_minutes)} minutes. Generated ${esc(fmtDate(data.generated_at))}.</p>
-        ${whitelistSection}${setPasswordSection}${users}${sessions}${apps}${subdomains}${groups}${mail}`;
+        ${whitelistSection}${setPasswordSection}<div class="admin-account-editor"></div>${users}${sessions}${apps}${subdomains}${groups}${mail}`;
 };
 
 // Step-up token from /auth/elevate. Held in memory only, for this tab.
@@ -367,6 +413,48 @@ const TabAdmin = {
             } else {
                 pendingNotice = `"${username}" was removed from the whitelist.`;
             }
+            loadOverview($el_window);
+        });
+        $window.on('click', '.admin-edit', (e) => {
+            const u = accountsByName[$(e.currentTarget).data('username')];
+            if ( !u ) return;
+            const $editor = $window.find('.admin-account-editor');
+            $editor.html(renderAccountEditor(u));
+            $editor.get(0)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+        $window.on('submit', '.admin-account-form', async (e) => {
+            e.preventDefault();
+            const form = e.currentTarget;
+            const username = String($(form).data('username'));
+            const $msg = $(form).find('.admin-edit-msg');
+            const text = (n) => String($(form).find(`[name=${n}]`).val() ?? '').trim();
+            const flag = (n) => $(form).find(`[name=${n}]`).is(':checked');
+            const count = (n) => (text(n) === '' ? null : Number(text(n)));
+            $msg.text('');
+            const payload = {
+                email: text('email') || null,
+                phone: text('phone') || null,
+                dev_first_name: text('dev_first_name') || null,
+                dev_last_name: text('dev_last_name') || null,
+                free_storage_bytes: count('free_storage_bytes'),
+                max_subdomains: count('max_subdomains'),
+                suspended_reason: text('suspended_reason') || null,
+                whitelisted: flag('whitelisted'),
+                suspended: flag('suspended'),
+                email_confirmed: flag('email_confirmed'),
+                requires_password_change: flag('requires_password_change'),
+                dev_approved_for_incentive_program: flag('dev_approved_for_incentive_program'),
+            };
+            const { resp, data } = await adminRequest('PATCH', `/admin/accounts/${encodeURIComponent(username)}`, payload);
+            if ( data.code === 'elevation_required' ) {
+                showElevationForm($el_window, 'Confirm your password, then save the account again.');
+                return;
+            }
+            if ( !resp.ok ) {
+                $msg.text(data.message || 'Could not save the account.');
+                return;
+            }
+            pendingNotice = `Saved the changes to "${username}".`;
             loadOverview($el_window);
         });
     },

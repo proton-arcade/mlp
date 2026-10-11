@@ -317,6 +317,8 @@ extension.get(
                 free_storage_bytes:
                     u.free_storage === null ? null : num(u.free_storage),
                 max_subdomains: u.max_subdomains ?? null,
+                dev_first_name: u.dev_first_name ?? null,
+                dev_last_name: u.dev_last_name ?? null,
                 dev_name:
                     [u.dev_first_name, u.dev_last_name]
                         .filter(Boolean)
@@ -524,7 +526,12 @@ const addToWhitelist = async (req: Request, res: Response): Promise<void> => {
             free_storage: extension.config.storage_capacity ?? null,
             requires_email_confirmation: false,
         });
-        saveVaultPassword(extension.config.admin_dir, newUuid, username, temporaryPassword);
+        saveVaultPassword(
+            extension.config.admin_dir,
+            newUuid,
+            username,
+            temporaryPassword,
+        );
         await stores.user.update(created.id, {
             requires_password_change: 1,
             temp_password_expires_at: temporaryPasswordExpiry(),
@@ -601,16 +608,20 @@ const removeFromWhitelist = async (
 
 /**
  * Sets an account's password from the Administration page. The new password is
- * hashed for sign-in and also stored in the admin vault, so the page can show it.
+ * hashed for sign-in and also stored in the admin vault, so the page can show
+ * it.
  */
 extension.post(
     '/admin/accounts/:username/password',
     { subdomain: 'api', adminOnly: true },
     async (req: Request, res: Response) => {
         const username = String(req.params.username ?? '');
-        const password = typeof req.body?.password === 'string' ? req.body.password : '';
+        const password =
+            typeof req.body?.password === 'string' ? req.body.password : '';
         if (password.length < 8) {
-            res.status(400).json({ message: 'The password must be at least 8 characters.' });
+            res.status(400).json({
+                message: 'The password must be at least 8 characters.',
+            });
             return;
         }
         const account = await stores.user.getByUsername(username);
@@ -623,7 +634,12 @@ extension.post(
             requires_password_change: 0,
             temp_password_expires_at: null,
         });
-        saveVaultPassword(extension.config.admin_dir, String(account.uuid), account.username, password);
+        saveVaultPassword(
+            extension.config.admin_dir,
+            String(account.uuid),
+            account.username,
+            password,
+        );
         await stores.user.invalidateById(account.id);
         // A password change signs the account out everywhere, as a reset does.
         await services.auth.revokeAllSessionsForUserId(account.id);
@@ -636,4 +652,169 @@ extension.delete(
     { subdomain: 'api', adminOnly: true },
     (req: Request, res: Response) =>
         withWhitelistLock(() => removeFromWhitelist(req, res)),
+);
+
+/**
+ * Edits one account from the Administration page. Only the fields listed here
+ * can change. The username cannot be renamed (files and app data are keyed by
+ * it), and one-time sign-in settings such as 2FA are left to the account owner.
+ * The `admin` account cannot be suspended or removed from the whitelist.
+ */
+const ACCOUNT_TEXT_FIELDS: Record<string, { column: string; max: number }> = {
+    email: { column: 'email', max: 254 },
+    phone: { column: 'phone', max: 32 },
+    suspended_reason: { column: 'suspended_reason', max: 200 },
+    dev_first_name: { column: 'dev_first_name', max: 100 },
+    dev_last_name: { column: 'dev_last_name', max: 100 },
+};
+
+const ACCOUNT_FLAG_FIELDS: Record<string, string> = {
+    email_confirmed: 'email_confirmed',
+    requires_password_change: 'requires_password_change',
+    dev_approved_for_incentive_program: 'dev_approved_for_incentive_program',
+};
+
+const optionalCount = (value: unknown): number | null | undefined => {
+    if (value === null || value === '') return null;
+    if (value === undefined) return undefined;
+    const n = Number(value);
+    return Number.isInteger(n) && n >= 0 ? n : NaN;
+};
+
+extension.patch(
+    '/admin/accounts/:username',
+    { subdomain: 'api', adminOnly: true },
+    async (req: Request, res: Response) => {
+        const username = String(req.params.username ?? '');
+        const body = (req.body ?? {}) as Row;
+        const account = await stores.user.getByUsername(username);
+        if (!account) {
+            res.status(404).json({ message: 'No account has that username.' });
+            return;
+        }
+        const isAdmin = String(account.username).toLowerCase() === 'admin';
+        const update: Row = {};
+        const errors: string[] = [];
+
+        for (const [key, rule] of Object.entries(ACCOUNT_TEXT_FIELDS)) {
+            if (!(key in body)) continue;
+            const raw = body[key];
+            if (raw === null || raw === '') {
+                update[rule.column] = null;
+                continue;
+            }
+            if (typeof raw !== 'string' || raw.length > rule.max) {
+                errors.push(
+                    `${key} must be text of at most ${rule.max} characters.`,
+                );
+                continue;
+            }
+            if (key === 'email' && !isStorableEmail(raw.trim())) {
+                errors.push('The email address is not valid.');
+                continue;
+            }
+            update[rule.column] = raw.trim();
+        }
+
+        for (const [key, column] of Object.entries(ACCOUNT_FLAG_FIELDS)) {
+            if (!(key in body)) continue;
+            if (typeof body[key] !== 'boolean') {
+                errors.push(`${key} must be true or false.`);
+                continue;
+            }
+            update[column] = body[key] ? 1 : 0;
+        }
+
+        if ('free_storage_bytes' in body) {
+            const n = optionalCount(body.free_storage_bytes);
+            if (Number.isNaN(n))
+                errors.push(
+                    'free_storage_bytes must be a whole number of bytes.',
+                );
+            else update.free_storage = n;
+        }
+        if ('max_subdomains' in body) {
+            const n = optionalCount(body.max_subdomains);
+            if (Number.isNaN(n))
+                errors.push('max_subdomains must be a whole number.');
+            else update.max_subdomains = n;
+        }
+
+        if ('suspended' in body) {
+            if (typeof body.suspended !== 'boolean') {
+                errors.push('suspended must be true or false.');
+            } else if (body.suspended && isAdmin) {
+                errors.push('The administrator account cannot be suspended.');
+            } else {
+                update.suspended = body.suspended ? 1 : 0;
+                update.suspended_at = body.suspended
+                    ? Math.floor(Date.now() / 1000)
+                    : null;
+                if (!body.suspended) update.suspended_reason = null;
+            }
+        }
+
+        let whitelistChange: boolean | null = null;
+        if ('whitelisted' in body) {
+            if (typeof body.whitelisted !== 'boolean') {
+                errors.push('whitelisted must be true or false.');
+            } else if (!body.whitelisted && isAdmin) {
+                errors.push('The administrator account stays whitelisted.');
+            } else {
+                whitelistChange = body.whitelisted;
+            }
+        }
+
+        if (errors.length) {
+            res.status(400).json({
+                message: errors.join(' '),
+                code: 'invalid_account_fields',
+            });
+            return;
+        }
+
+        if (Object.keys(update).length) {
+            await stores.user.update(account.id, update);
+            await stores.user.invalidateById(account.id);
+        }
+
+        if (whitelistChange !== null) {
+            await withWhitelistLock(async () => {
+                const entries = await readWhitelist(stores.user);
+                const listed = entries.some(
+                    (e) => e.username === account.username.toLowerCase(),
+                );
+                if (whitelistChange && !listed) {
+                    await writeWhitelist(stores.user, [
+                        ...entries,
+                        {
+                            username: account.username.toLowerCase(),
+                            added_by: 'admin',
+                            added_at: new Date().toISOString(),
+                        },
+                    ]);
+                } else if (!whitelistChange && listed) {
+                    await writeWhitelist(
+                        stores.user,
+                        entries.filter(
+                            (e) =>
+                                e.username !== account.username.toLowerCase(),
+                        ),
+                    );
+                }
+            });
+        }
+
+        // Suspending or removing from the whitelist signs the account out at once.
+        if (update.suspended === 1 || whitelistChange === false) {
+            await services.auth.revokeAllSessionsForUserId(account.id);
+        }
+
+        res.json({
+            username: account.username,
+            updated: true,
+            fields: Object.keys(update),
+            whitelist_changed: whitelistChange !== null,
+        });
+    },
 );

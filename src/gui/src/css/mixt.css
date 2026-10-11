@@ -457,3 +457,54 @@ body {
     margin: 3px 1px !important;
     top: 0 !important;
 }
+
+/* ----------------------- Administration: account editor ------------------- */
+
+.admin-account-form {
+    margin: 12px 0 20px;
+    padding: 14px;
+    border: 1px solid #d8dde3;
+    border-radius: 8px;
+    background: #fff;
+}
+
+.admin-form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 10px 14px;
+    margin: 10px 0;
+}
+
+.admin-field {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.admin-field span {
+    font-size: 12px;
+    color: #666;
+}
+
+.admin-field input {
+    width: 100%;
+    padding: 5px 7px;
+}
+
+.admin-form-checks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 18px;
+    margin: 8px 0;
+}
+
+.admin-check {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.admin-readonly {
+    color: #555;
+    font-size: 13px;
+}
