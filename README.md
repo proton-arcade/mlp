@@ -77,6 +77,6 @@ Some browser-based GUI tests need Playwright's Chromium to be installed.
 
 ## Credits and license
 
-Mixt is licensed under the **GNU Affero General Public License v3.0 only** (`LICENSE.txt`). It contains code derived from Puter, copyright Puter Technologies Inc., which is also AGPL-3.0. Keep the original copyright notices in the source files. The Mint-style visual design is adapted from webmpl.
+Mixt is licensed under the **GNU Affero General Public License v3.0 only** (`LICENSE.txt`). It contains code derived from Puter, copyright Puter Technologies Inc., which is also AGPL-3.0. Keep the original copyright notices in the source files.
 
 Mixt is not affiliated with Linux Mint, Cinnamon, or Puter Technologies. The upstream attribution and the `@heyputer/*` npm package names are kept only where a legal notice or an external dependency requires them.
