@@ -173,7 +173,7 @@ describe('an app uid that returns after its app was deleted', () => {
         });
 
         const sub = `shop-${uuidv4().slice(0, 8)}`;
-        const origin = `http://${sub}.site.puter.localhost`;
+        const origin = `http://${sub}.site.localhost`;
 
         const aCreate = await call(devA.token, 'puter-subdomains', 'create', {
             object: {
@@ -241,7 +241,7 @@ describe('an app uid that returns after its app was deleted', () => {
         });
 
         const sub = `shop-${uuidv4().slice(0, 8)}`;
-        const origin = `http://${sub}.site.puter.localhost`;
+        const origin = `http://${sub}.site.localhost`;
 
         const aCreate = await call(devA.token, 'puter-subdomains', 'create', {
             object: {

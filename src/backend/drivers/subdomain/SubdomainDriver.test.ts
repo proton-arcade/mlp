@@ -859,7 +859,7 @@ describe('SubdomainDriver.create launch-origin reservation', () => {
 
         await createAppWithIndexUrl(
             victim.userId,
-            `http://${sub}.site.puter.localhost/`,
+            `http://${sub}.site.localhost/`,
         );
 
         await expect(
@@ -881,7 +881,7 @@ describe('SubdomainDriver.create launch-origin reservation', () => {
 
         await createAppWithIndexUrl(
             null,
-            `http://${sub}.site.puter.localhost`,
+            `http://${sub}.site.localhost`,
         );
 
         await expect(
@@ -902,7 +902,7 @@ describe('SubdomainDriver.create launch-origin reservation', () => {
 
         await createAppWithIndexUrl(
             owner.userId,
-            `http://${sub}.site.puter.localhost/`,
+            `http://${sub}.site.localhost/`,
         );
 
         const created = (await withActor(owner.actor, () =>
@@ -941,7 +941,7 @@ describe('SubdomainDriver.create launch-origin reservation', () => {
 
         await createAppWithIndexUrl(
             owner.userId,
-            `http://${sub}.site.puter.localhost/`,
+            `http://${sub}.site.localhost/`,
         );
         const unrelated = await createAppWithIndexUrl(
             otherDev.userId,
@@ -963,7 +963,7 @@ describe('SubdomainDriver.create launch-origin reservation', () => {
 
         const app = await createAppWithIndexUrl(
             owner.userId,
-            `http://${sub}.site.puter.localhost/`,
+            `http://${sub}.site.localhost/`,
         );
         const root = await appDataDir(owner, app);
 
@@ -983,7 +983,7 @@ describe('SubdomainDriver.create launch-origin reservation', () => {
         );
         await createAppWithIndexUrl(
             owner.userId,
-            `http://${sub}.site.puter.localhost/`,
+            `http://${sub}.site.localhost/`,
             { appOwner: builder.id },
         );
         const root = await appDataDir(owner, builder);
@@ -1082,7 +1082,7 @@ describe('SubdomainDriver associated_app derivation', () => {
         // default test hosting domain. The derive logic crosses host
         // variants × protocols × paths, so any reasonable index_url
         // anchored at the subdomain's name should match.
-        const indexUrl = `http://${sub}.site.puter.localhost/`;
+        const indexUrl = `http://${sub}.site.localhost/`;
         const app = await createAppWithIndexUrl(userId, indexUrl);
 
         const created = (await withActor(actor, () =>
@@ -1112,7 +1112,7 @@ describe('SubdomainDriver associated_app derivation', () => {
 
         await createAppWithIndexUrl(
             b.userId,
-            `http://${sub}.site.puter.localhost/`,
+            `http://${sub}.site.localhost/`,
             { isPrivate: true },
         );
 
@@ -1159,7 +1159,7 @@ describe('SubdomainDriver.select at scale', () => {
         const lastSub = names[names.length - 1]!;
         const app = await createAppWithIndexUrl(
             userId,
-            `http://${lastSub}.site.puter.localhost/`,
+            `http://${lastSub}.site.localhost/`,
         );
 
         const result = (await withActor(actor, () =>

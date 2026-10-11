@@ -32,7 +32,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Arguments: the first bare argument selects the env ('dev' or 'prod');
 // `--server=<domain-or-origin>` points the GUI at a remote Puter backend,
-// e.g. `--server=puter.com` or `--server=http://puter.localhost:4100`.
+// e.g. `--server=puter.com` or `--server=http://localhost:4100`.
 // `--extensions=<dir>[;<dir>...]` bundles extra (out-of-tree) GUI extension
 // directories into the build via PUTER_GUI_EXTENSION_PATHS.
 // `npm start --server=puter.com` (repo root) arrives via npm_config_server.

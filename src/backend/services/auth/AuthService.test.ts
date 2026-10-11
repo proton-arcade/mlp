@@ -1700,16 +1700,16 @@ describe('AuthService (integration)', () => {
             const sub = `canon-${Math.random().toString(36).slice(2, 10)}`;
             const uids = await Promise.all([
                 authService.appUidFromOrigin(
-                    `https://${sub}.site.puter.localhost`,
+                    `https://${sub}.site.localhost`,
                 ),
                 authService.appUidFromOrigin(
-                    `https://${sub}.host.puter.localhost`,
+                    `https://${sub}.host.localhost`,
                 ),
                 authService.appUidFromOrigin(
-                    `http://${sub}.app.puter.localhost`,
+                    `http://${sub}.app.localhost`,
                 ),
                 authService.appUidFromOrigin(
-                    `https://${sub}.dev.puter.localhost`,
+                    `https://${sub}.dev.localhost`,
                 ),
             ]);
             expect(new Set(uids).size).toBe(1);
@@ -1720,7 +1720,7 @@ describe('AuthService (integration)', () => {
             const sub = `pref-${Math.random().toString(36).slice(2, 10)}`;
             await server.stores.app.createFromOrigin(
                 `app-${uuidv4()}`,
-                `https://${sub}.host.puter.localhost`,
+                `https://${sub}.host.localhost`,
                 { ownerUserId: user.id },
             );
             const realUid = `app-${uuidv4()}`;
@@ -1730,14 +1730,14 @@ describe('AuthService (integration)', () => {
                     realUid,
                     `real-${sub}`,
                     'Real app',
-                    `https://${sub}.app.puter.localhost`,
+                    `https://${sub}.app.localhost`,
                     user.id,
                     1,
                 ],
             );
             await expect(
                 authService.appUidFromOrigin(
-                    `https://${sub}.host.puter.localhost`,
+                    `https://${sub}.host.localhost`,
                 ),
             ).resolves.toBe(realUid);
         });
@@ -1866,15 +1866,15 @@ describe('AuthService (integration)', () => {
                 // index_url lookup but is still the same origin.
                 const sub = `kept-${Math.random().toString(36).slice(2, 10)}`;
                 const app = await bootstrap(
-                    `https://${sub}.site.puter.localhost`,
+                    `https://${sub}.site.localhost`,
                 );
                 await server.stores.app.update(app.id, {
-                    index_url: `https://${sub}.app.puter.localhost/v2/index.html`,
+                    index_url: `https://${sub}.app.localhost/v2/index.html`,
                 });
 
                 expect(
                     await authService.appUidFromOrigin(
-                        `https://${sub}.site.puter.localhost`,
+                        `https://${sub}.site.localhost`,
                     ),
                 ).toBe(app.uid);
             });
@@ -1885,9 +1885,9 @@ describe('AuthService (integration)', () => {
         it('matches appUidFromOrigin across hosting variants, an unknown external, and a repointed origin', async () => {
             const sub = `batch-${Math.random().toString(36).slice(2, 10)}`;
             const origins = [
-                `https://${sub}.site.puter.localhost`,
-                `https://${sub}.host.puter.localhost`,
-                `http://${sub}.app.puter.localhost`,
+                `https://${sub}.site.localhost`,
+                `https://${sub}.host.localhost`,
+                `http://${sub}.app.localhost`,
                 `https://external-${uuidv4()}.example.com`,
                 `chrome-extension://${uuidv4()}`,
             ];
@@ -1957,7 +1957,7 @@ describe('AuthService (integration)', () => {
             const sub = `batch-priv-${Math.random().toString(36).slice(2, 10)}`;
             await server.stores.app.createFromOrigin(
                 `app-${uuidv4()}`,
-                `https://${sub}.host.puter.localhost`,
+                `https://${sub}.host.localhost`,
                 { ownerUserId: user.id },
             );
             const realUid = `app-${uuidv4()}`;
@@ -1967,13 +1967,13 @@ describe('AuthService (integration)', () => {
                     realUid,
                     `real-${sub}`,
                     'Real app',
-                    `https://${sub}.app.puter.localhost`,
+                    `https://${sub}.app.localhost`,
                     user.id,
                     1,
                 ],
             );
 
-            const origin = `https://${sub}.host.puter.localhost`;
+            const origin = `https://${sub}.host.localhost`;
             const result = await authService.appUidsFromOrigins([origin]);
             expect(result.get(origin)).toBe(realUid);
         });
@@ -2010,8 +2010,8 @@ describe('AuthService (integration)', () => {
         it('does not cross-assign uids between origins that each have their own canonical row', async () => {
             const subA = `batch-cross-a-${Math.random().toString(36).slice(2, 8)}`;
             const subB = `batch-cross-b-${Math.random().toString(36).slice(2, 8)}`;
-            const originA = `https://${subA}.site.puter.localhost`;
-            const originB = `https://${subB}.site.puter.localhost`;
+            const originA = `https://${subA}.site.localhost`;
+            const originB = `https://${subB}.site.localhost`;
             const appA = await server.stores.app.createFromOrigin(
                 await authService.appUidFromOrigin(originA),
                 authService.canonicalizeOrigin(originA),
@@ -2035,10 +2035,10 @@ describe('AuthService (integration)', () => {
         // puter.site / puter.host / puter.app / puter.dev) from
         // config.default.json.
         it.each([
-            'site.puter.localhost',
-            'host.puter.localhost',
-            'app.puter.localhost',
-            'dev.puter.localhost',
+            'site.localhost',
+            'host.localhost',
+            'app.localhost',
+            'dev.localhost',
         ])(
             'returns the subdomain owner for an origin under %s',
             async (hostingDomain) => {
@@ -2065,7 +2065,7 @@ describe('AuthService (integration)', () => {
             });
             await expect(
                 authService.subdomainOwnerIdFromOrigin(
-                    `http://${subdomain}.site.puter.localhost:4100`,
+                    `http://${subdomain}.site.localhost:4100`,
                 ),
             ).resolves.toBe(user.id);
         });
@@ -2079,7 +2079,7 @@ describe('AuthService (integration)', () => {
         });
 
         it('returns null for a subdomain of the main domain', async () => {
-            // `<sub>.puter.localhost` sits under the main `domain`, not a
+            // `<sub>.localhost` sits under the main `domain`, not a
             // hosting domain — no owner resolves even when a subdomain row
             // with the same name exists.
             const user = await makeUser();
@@ -2090,7 +2090,7 @@ describe('AuthService (integration)', () => {
             });
             await expect(
                 authService.subdomainOwnerIdFromOrigin(
-                    `https://${subdomain}.puter.localhost`,
+                    `https://${subdomain}.localhost`,
                 ),
             ).resolves.toBeNull();
         });
@@ -2098,12 +2098,12 @@ describe('AuthService (integration)', () => {
         it('returns null for an unregistered subdomain and for the apex host', async () => {
             await expect(
                 authService.subdomainOwnerIdFromOrigin(
-                    `https://ghost-${uuidv4().slice(0, 8)}.site.puter.localhost`,
+                    `https://ghost-${uuidv4().slice(0, 8)}.site.localhost`,
                 ),
             ).resolves.toBeNull();
             await expect(
                 authService.subdomainOwnerIdFromOrigin(
-                    'https://site.puter.localhost',
+                    'https://site.localhost',
                 ),
             ).resolves.toBeNull();
         });
@@ -3273,7 +3273,7 @@ describe('AuthService.subdomainOwnerIdFromOrigin — edge cases', () => {
     it('returns null for the hosting domain apex itself', async () => {
         expect(
             await authService.subdomainOwnerIdFromOrigin(
-                'https://site.puter.localhost',
+                'https://site.localhost',
             ),
         ).toBeNull();
     });
@@ -3289,7 +3289,7 @@ describe('AuthService.subdomainOwnerIdFromOrigin — edge cases', () => {
     it('returns null for an unregistered subdomain under a hosting domain', async () => {
         expect(
             await authService.subdomainOwnerIdFromOrigin(
-                `https://never-made-${uuidv4()}.site.puter.localhost`,
+                `https://never-made-${uuidv4()}.site.localhost`,
             ),
         ).toBeNull();
     });

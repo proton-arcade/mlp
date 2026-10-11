@@ -218,7 +218,7 @@ describe('metering enforcement over HTTP', () => {
 
         const port = new URL(env.origin).port;
         const site = await fetch(
-            `http://${subdomain}.site.puter.localhost:${port}/index.html`,
+            `http://${subdomain}.site.localhost:${port}/index.html`,
         );
         // Visitors have no say in the owner's balance, so hosting is metered
         // and never gated.

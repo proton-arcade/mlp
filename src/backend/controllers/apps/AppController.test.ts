@@ -515,7 +515,7 @@ describe('AppController GET /apps/:name', () => {
             subdomain: sub,
         });
         const app = await createApp(owner.actor, {
-            index_url: `https://${sub}.site.puter.localhost/`,
+            index_url: `https://${sub}.site.localhost/`,
         });
         await server.stores.subdomain.deleteByUuid(
             String((row as { uuid: string }).uuid),
@@ -598,7 +598,7 @@ describe('AppController GET /apps/:name', () => {
             subdomain: sub,
         });
         const app = await createApp(owner.actor, {
-            index_url: `https://${sub}.site.puter.localhost/`,
+            index_url: `https://${sub}.site.localhost/`,
         });
         await server.stores.subdomain.deleteByUuid(
             String((row as { uuid: string }).uuid),

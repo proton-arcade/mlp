@@ -64,7 +64,7 @@ async function loginAsAdmin ({ origin, username, password }) {
 export default async function globalSetup () {
     await loadDotEnv(ENV_FILE_PATH);
 
-    const PUTER_ORIGIN = process.env.PUTER_TEST_ORIGIN || 'http://puter.localhost:4100';
+    const PUTER_ORIGIN = process.env.PUTER_TEST_ORIGIN || 'http://localhost:4100';
     const ADMIN_USERNAME = process.env.PUTER_ADMIN_USERNAME || 'admin';
     const ADMIN_PASSWORD = process.env.PUTER_ADMIN_PASSWORD || '';
 

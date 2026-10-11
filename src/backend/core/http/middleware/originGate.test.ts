@@ -62,7 +62,7 @@ describe('guiOriginGate', () => {
     // exactly what an attacker's page would claim to be if claiming helped.
     it('rejects a loopback origin', () => {
         expectForbidden(run(CONFIG, 'http://localhost:4000'));
-        expectForbidden(run(CONFIG, 'http://puter.localhost:4100'));
+        expectForbidden(run(CONFIG, 'http://localhost:4100'));
     });
 
     // Non-browser callers (CLI, mobile, server-side, integration tests) send

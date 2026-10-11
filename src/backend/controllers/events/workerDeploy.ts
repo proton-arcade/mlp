@@ -296,7 +296,7 @@ export class LocalEventsInvokeTransport {
     }> {
         const request = (): Request =>
             new Request(
-                `http://${call.script}.workers.puter.localhost${EVENTS_INVOKE_PATH}`,
+                `http://${call.script}.workers.localhost${EVENTS_INVOKE_PATH}`,
                 {
                     method: 'POST',
                     headers: {

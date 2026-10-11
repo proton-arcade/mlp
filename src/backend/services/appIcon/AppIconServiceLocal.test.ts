@@ -83,7 +83,7 @@ describe('AppIconService', () => {
     beforeAll(async () => {
         server = await setupTestServer({
             no_default_user: false,
-            api_base_url: 'http://api.puter.localhost:4100',
+            api_base_url: 'http://api.localhost:4100',
         } as unknown as IConfig);
         appIcon = server.services.appIcon as unknown as AppIconService;
     }, 60_000);
@@ -113,19 +113,19 @@ describe('AppIconService', () => {
     describe('canonical URLs', () => {
         it('serves sized and original icons off the app-icons subdomain', () => {
             expect(appIcon.getIconUrl('app-abc', 64)).toBe(
-                'http://puter-app-icons.site.puter.localhost/app-abc-64.png',
+                'http://puter-app-icons.site.localhost/app-abc-64.png',
             );
             expect(appIcon.getOriginalIconUrl('app-abc')).toBe(
-                'http://puter-app-icons.site.puter.localhost/app-abc.png',
+                'http://puter-app-icons.site.localhost/app-abc.png',
             );
         });
 
         it('normalizes a uid that is missing the app- prefix', () => {
             expect(appIcon.getIconUrl('abc', 16)).toBe(
-                'http://puter-app-icons.site.puter.localhost/app-abc-16.png',
+                'http://puter-app-icons.site.localhost/app-abc-16.png',
             );
             expect(appIcon.getOriginalIconUrl('abc')).toBe(
-                'http://puter-app-icons.site.puter.localhost/app-abc.png',
+                'http://puter-app-icons.site.localhost/app-abc.png',
             );
         });
 
@@ -135,11 +135,11 @@ describe('AppIconService', () => {
             ).config;
             cfg.pub_port = 8080;
             expect(appIcon.getIconUrl('app-abc', 32)).toContain(
-                'site.puter.localhost:8080/',
+                'site.localhost:8080/',
             );
             cfg.pub_port = 443;
             expect(appIcon.getIconUrl('app-abc', 32)).toContain(
-                'site.puter.localhost/',
+                'site.localhost/',
             );
             delete cfg.pub_port;
         });
@@ -151,7 +151,7 @@ describe('AppIconService', () => {
             const primary = cfg.static_hosting_domain;
             cfg.static_hosting_domain = undefined;
             expect(appIcon.getIconUrl('app-abc', 32)).toBe(
-                'http://puter-app-icons.host.puter.localhost/app-abc-32.png',
+                'http://puter-app-icons.host.localhost/app-abc-32.png',
             );
 
             const alt = cfg.static_hosting_domain_alt;
@@ -183,12 +183,12 @@ describe('AppIconService', () => {
             );
 
             expect(await appIcon.resolveIconRedirectUrl(app.uid, 64)).toBe(
-                `http://puter-app-icons.site.puter.localhost/${app.uid}-64.png`,
+                `http://puter-app-icons.site.localhost/${app.uid}-64.png`,
             );
 
             // No 999px variant is generated — fall back to the original.
             expect(await appIcon.resolveIconRedirectUrl(app.uid, 999)).toBe(
-                `http://puter-app-icons.site.puter.localhost/${app.uid}.png`,
+                `http://puter-app-icons.site.localhost/${app.uid}.png`,
             );
         });
     });
@@ -226,7 +226,7 @@ describe('AppIconService', () => {
             // The DB icon column no longer carries the base64 payload.
             const fresh = await server.stores.app.getByUid(app.uid);
             expect(fresh?.icon).toBe(
-                `http://api.puter.localhost:4100/app-icon/${app.uid}`,
+                `http://api.localhost:4100/app-icon/${app.uid}`,
             );
             await vi.waitFor(() => expect(migrated).toHaveLength(1));
             server.clients.event.off('app.changed', onChanged);
@@ -241,7 +241,7 @@ describe('AppIconService', () => {
             );
             const fresh = await server.stores.app.getByUid(app.uid);
             expect(fresh?.icon).toBe(
-                `http://api.puter.localhost:4100/app-icon/${app.uid}`,
+                `http://api.localhost:4100/app-icon/${app.uid}`,
             );
         });
 
@@ -408,7 +408,7 @@ describe('AppIconService', () => {
 
                 expect(iconWriteCount(writeSpy.mock.calls)).toBe(2);
                 expect((await server.stores.app.getByUid(app.uid))?.icon).toBe(
-                    `http://api.puter.localhost:4100/app-icon/${app.uid}`,
+                    `http://api.localhost:4100/app-icon/${app.uid}`,
                 );
                 expect(await readIconFile(`${app.uid}.png`)).toEqual(
                     await sharp(newest).png().toBuffer(),
@@ -482,7 +482,7 @@ describe('AppIconService', () => {
                 { app_uid: app.uid, data_url: PNG_DATA_URL },
                 {},
             );
-            const endpointUrl = `http://api.puter.localhost:4100/app-icon/${app.uid}`;
+            const endpointUrl = `http://api.localhost:4100/app-icon/${app.uid}`;
             expect((await server.stores.app.getByUid(app.uid))?.icon).toBe(
                 endpointUrl,
             );

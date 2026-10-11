@@ -19,9 +19,8 @@
     "allow_nipio_domains": false,
     "custom_domains_enabled": false,
     "enable_ip_validation": false,
-    "trust_proxy": false,
-    "no_browser_launch": false,
-    "no_devwatch": false,
+    "no_browser_launch": true,
+    "no_devwatch": true,
     "devwatch": {
         "ready_delay_ms": 5000
     },

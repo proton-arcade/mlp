@@ -147,15 +147,15 @@ const loadDefaultConfig = async (): Promise<IConfig> => {
 // placeholders are refused outside `env: "dev"`. Per-test overrides still win.
 const TEST_HARNESS_CONFIG = {
     env: 'dev',
-    domain: 'puter.localhost',
+    domain: 'localhost',
     protocol: 'http',
     pub_port: undefined,
     trust_proxy: false,
     disable_user_signup: false,
-    static_hosting_domain: 'site.puter.localhost',
-    static_hosting_domain_alt: 'host.puter.localhost',
-    private_app_hosting_domain: 'app.puter.localhost',
-    private_app_hosting_domain_alt: 'dev.puter.localhost',
+    static_hosting_domain: 'site.localhost',
+    static_hosting_domain_alt: 'host.localhost',
+    private_app_hosting_domain: 'app.localhost',
+    private_app_hosting_domain_alt: 'dev.localhost',
     jwt_secret_v2: randomBytes(32).toString('hex'),
     url_signature_secret: randomBytes(32).toString('hex'),
 } as unknown as IConfig;
@@ -351,14 +351,14 @@ export const createTestUser = async (
 
 export type PuterTestEnv = {
     /**
-     * Root origin (`http://puter.localhost:<port>`) — GUI and root-only routes
-     * like `POST /login` live here.
+     * Root origin (`http://localhost:<port>`) — GUI and root-only routes like
+     * `POST /login` live here.
      */
     origin: string;
     /**
-     * API origin (`http://api.puter.localhost:<port>`) — what puter.js clients
-     * use as their APIOrigin. Routes gated on the `api` subdomain (e.g.
-     * `/whoami`) only match this host.
+     * API origin (`http://api.localhost:<port>`) — what puter.js clients use as
+     * their APIOrigin. Routes gated on the `api` subdomain (e.g. `/whoami`)
+     * only match this host.
      */
     apiOrigin: string;
     /**
@@ -401,7 +401,7 @@ export const setupPuterTestEnv = async (
     // Real hostnames rather than 127.0.0.1: API routes are gated on the
     // `api` subdomain, and `*.localhost` resolves to loopback on modern
     // platforms (and in browsers).
-    const domain = 'puter.localhost';
+    const domain = 'localhost';
     const origin = `http://${domain}:${port}`;
     const apiOrigin = `http://api.${domain}:${port}`;
 

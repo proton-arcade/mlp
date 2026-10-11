@@ -30,7 +30,7 @@ import type { PermissionService } from '../permission/PermissionService.js';
 let server: PuterServer;
 let permissions: PermissionService;
 
-const HOSTING_DOMAIN = 'site.puter.localhost';
+const HOSTING_DOMAIN = 'site.localhost';
 
 beforeAll(async () => {
     server = await setupTestServer();

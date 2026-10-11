@@ -43,7 +43,7 @@ afterAll(async () => {
 const uniqueName = (prefix: string) =>
     `${prefix}-${Math.random().toString(36).slice(2, 10)}`;
 
-const hostedUrl = (sub: string) => `https://${sub}.site.puter.localhost/`;
+const hostedUrl = (sub: string) => `https://${sub}.site.localhost/`;
 
 const makeUser = async (): Promise<{ userId: number }> => {
     const username = `sa-${Math.random().toString(36).slice(2, 10)}`;

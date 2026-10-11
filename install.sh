@@ -19,7 +19,7 @@
 # Tunable env vars:
 #   PUTER_DIR         install directory                   (default: ./puter-selfhosted)
 #   PUTER_URL         base URL to fetch docker-compose.yml (default: GitHub raw, main branch)
-#   PUTER_DOMAIN      domain Puter will serve on           (default: puter.localhost)
+#   PUTER_DOMAIN      domain Puter will serve on           (default: localhost)
 #   PUTER_PORT        HTTP port for Caddy                  (default: 80)
 #   PUTER_PROTOCOL    public scheme: http | https          (default: http)
 #                     Set https once TLS is terminating in front of Puter —
@@ -38,7 +38,7 @@ set -eu
 
 PUTER_DIR="${PUTER_DIR:-puter-selfhosted}"
 PUTER_URL="${PUTER_URL:-https://raw.githubusercontent.com/HeyPuter/puter/main}"
-PUTER_DOMAIN="${PUTER_DOMAIN:-puter.localhost}"
+PUTER_DOMAIN="${PUTER_DOMAIN:-localhost}"
 PUTER_PORT="${PUTER_PORT:-80}"
 PUTER_PROTOCOL="${PUTER_PROTOCOL:-http}"
 PUTER_TRUST_PROXY="${PUTER_TRUST_PROXY:-1}"

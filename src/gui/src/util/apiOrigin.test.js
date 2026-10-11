@@ -27,8 +27,8 @@ describe('isLoopbackOrigin', () => {
     it('accepts the hosts a local Puter is served from', () => {
         for ( const origin of [
             'http://localhost:4100',
-            'http://puter.localhost:4100',
-            'http://api.puter.localhost:4100',
+            'http://localhost:4100',
+            'http://api.localhost:4100',
             'http://127.0.0.1:4100',
             'http://127.10.0.2',
             'http://[::1]:4100',
@@ -80,16 +80,16 @@ describe('resolveAPIOrigin', () => {
 
     it('honors a URL-supplied origin on a local Puter', () => {
         expect(resolveAPIOrigin({
-            configuredOrigin: 'http://api.puter.localhost:4100',
-            guiOrigin: 'http://puter.localhost:4100',
+            configuredOrigin: 'http://api.localhost:4100',
+            guiOrigin: 'http://localhost:4100',
             urlOrigin: CONFIGURED,
         })).toBe(CONFIGURED);
     });
 
     it('falls back to a stored origin on a local Puter, URL winning', () => {
         const local = {
-            configuredOrigin: 'http://api.puter.localhost:4100',
-            guiOrigin: 'http://puter.localhost:4100',
+            configuredOrigin: 'http://api.localhost:4100',
+            guiOrigin: 'http://localhost:4100',
         };
         expect(resolveAPIOrigin({ ...local, storedOrigin: CONFIGURED }))
             .toBe(CONFIGURED);
@@ -100,7 +100,7 @@ describe('resolveAPIOrigin', () => {
     it('falls back to the configured origin when nothing is supplied', () => {
         expect(resolveAPIOrigin({
             configuredOrigin: CONFIGURED,
-            guiOrigin: 'http://puter.localhost:4100',
+            guiOrigin: 'http://localhost:4100',
             urlOrigin: null,
             storedOrigin: null,
         })).toBe(CONFIGURED);

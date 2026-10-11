@@ -102,7 +102,7 @@ describe('share email', () => {
             // A transport has to exist for the service to try sending at all;
             // nothing reaches it, because `sendRaw` is spied below.
             email: {
-                from: '"Puter (test)" <no-reply@puter.localhost>',
+                from: '"Puter (test)" <no-reply@localhost>',
                 host: '127.0.0.1',
                 port: 1,
             },
@@ -699,7 +699,7 @@ describe('share email digest durability', () => {
     beforeAll(async () => {
         env = await setupPuterTestEnv({
             email: {
-                from: '"Puter (test)" <no-reply@puter.localhost>',
+                from: '"Puter (test)" <no-reply@localhost>',
                 host: '127.0.0.1',
                 port: 1,
             },

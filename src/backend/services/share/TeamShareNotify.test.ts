@@ -110,7 +110,7 @@ describe('announcing a team share', () => {
             // A transport must exist for the service to try at all; `sendRaw`
             // is spied, so nothing leaves the process.
             email: {
-                from: '"Puter (test)" <no-reply@puter.localhost>',
+                from: '"Puter (test)" <no-reply@localhost>',
                 host: '127.0.0.1',
                 port: 1,
             },

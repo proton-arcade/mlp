@@ -1865,7 +1865,7 @@ describe('WebDAVController verbs', () => {
                 method: 'COPY',
                 path: source,
                 actor,
-                headers: { destination, host: 'dav.puter.localhost' },
+                headers: { destination, host: 'dav.localhost' },
             });
             expect(captured.statusCode).toBe(201);
             expect(
@@ -1887,8 +1887,8 @@ describe('WebDAVController verbs', () => {
                 path: source,
                 actor,
                 headers: {
-                    destination: `http://dav.puter.localhost${destination}`,
-                    host: 'dav.puter.localhost',
+                    destination: `http://dav.localhost${destination}`,
+                    host: 'dav.localhost',
                 },
             });
             expect(captured.statusCode).toBe(201);
@@ -1908,7 +1908,7 @@ describe('WebDAVController verbs', () => {
                 method: 'COPY',
                 path: source,
                 actor,
-                headers: { destination, host: 'dav.puter.localhost' },
+                headers: { destination, host: 'dav.localhost' },
             });
             expect(captured.statusCode).toBe(204);
         });
@@ -1927,7 +1927,7 @@ describe('WebDAVController verbs', () => {
                 headers: {
                     destination,
                     overwrite: 'F',
-                    host: 'dav.puter.localhost',
+                    host: 'dav.localhost',
                 },
             });
             expect(captured.statusCode).toBe(412);
@@ -1942,7 +1942,7 @@ describe('WebDAVController verbs', () => {
                 actor,
                 headers: {
                     destination: `/${username}/Documents/anywhere.txt`,
-                    host: 'dav.puter.localhost',
+                    host: 'dav.localhost',
                 },
             });
             expect(captured.statusCode).toBe(404);
@@ -1962,7 +1962,7 @@ describe('WebDAVController verbs', () => {
                 actor,
                 headers: {
                     destination: `${blocker}/child.txt`,
-                    host: 'dav.puter.localhost',
+                    host: 'dav.localhost',
                 },
             });
             expect(captured.statusCode).toBe(409);
@@ -1980,7 +1980,7 @@ describe('WebDAVController verbs', () => {
                 method: 'MOVE',
                 path: source,
                 actor,
-                headers: { destination, host: 'dav.puter.localhost' },
+                headers: { destination, host: 'dav.localhost' },
             });
             expect(captured.statusCode).toBe(201);
             expect(
@@ -2005,7 +2005,7 @@ describe('WebDAVController verbs', () => {
                 headers: {
                     destination,
                     overwrite: 'F',
-                    host: 'dav.puter.localhost',
+                    host: 'dav.localhost',
                 },
             });
             expect(captured.statusCode).toBe(412);
@@ -2019,7 +2019,7 @@ describe('WebDAVController verbs', () => {
                 actor,
                 headers: {
                     destination: `/${username}/Documents/elsewhere.txt`,
-                    host: 'dav.puter.localhost',
+                    host: 'dav.localhost',
                 },
             });
             expect(captured.statusCode).toBe(404);
@@ -2038,7 +2038,7 @@ describe('WebDAVController verbs', () => {
                 actor: stranger.actor,
                 headers: {
                     destination: `/${owner.username}/Documents/yours.txt`,
-                    host: 'dav.puter.localhost',
+                    host: 'dav.localhost',
                 },
             });
             expect(captured.statusCode).toBe(403);
@@ -2162,7 +2162,7 @@ describe('WebDAVController verbs', () => {
                 method: 'COPY',
                 path: source,
                 actor,
-                headers: { destination, host: 'dav.puter.localhost' },
+                headers: { destination, host: 'dav.localhost' },
             });
             expect(captured.statusCode).toBe(423);
         });

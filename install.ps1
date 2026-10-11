@@ -22,7 +22,7 @@
 # Tunable env vars (or pass as -Parameters when running the file directly):
 #   PUTER_DIR     install directory                       (default: ./puter-selfhosted)
 #   PUTER_URL     base URL to fetch docker-compose.yml    (default: GitHub raw, main branch)
-#   PUTER_DOMAIN  domain Puter will serve on              (default: puter.localhost)
+#   PUTER_DOMAIN  domain Puter will serve on              (default: localhost)
 #   PUTER_PORT    HTTP port for Caddy                     (default: 80)
 #   PUTER_FORCE   set to 1 to overwrite existing .env / config.json
 
@@ -30,7 +30,7 @@
 param(
     [string]$PuterDir    = $(if ($env:PUTER_DIR)    { $env:PUTER_DIR }         else { 'puter-selfhosted' }),
     [string]$PuterUrl    = $(if ($env:PUTER_URL)    { $env:PUTER_URL }         else { 'https://raw.githubusercontent.com/HeyPuter/puter/main' }),
-    [string]$PuterDomain = $(if ($env:PUTER_DOMAIN) { $env:PUTER_DOMAIN }      else { 'puter.localhost' }),
+    [string]$PuterDomain = $(if ($env:PUTER_DOMAIN) { $env:PUTER_DOMAIN }      else { 'localhost' }),
     [int]   $PuterPort   = $(if ($env:PUTER_PORT)   { [int]$env:PUTER_PORT }   else { 80 }),
     [switch]$Force       = $($env:PUTER_FORCE -eq '1')
 )

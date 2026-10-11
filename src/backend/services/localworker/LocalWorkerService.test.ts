@@ -36,7 +36,7 @@ beforeAll(async () => {
     server = await setupTestServer({
         // Miniflare binds this into every local worker; the constructor
         // rejects an undefined binding value.
-        api_base_url: 'http://api.puter.localhost:4100',
+        api_base_url: 'http://api.localhost:4100',
     } as never);
     localWorkers = server.services
         .localworkerservice as unknown as LocalWorkerService;
@@ -211,7 +211,7 @@ describe('LocalWorkerService.cfDeployLocal', () => {
 
         expect(deployed.success).toBe(true);
         expect(deployed.errors).toEqual([]);
-        expect(deployed.url).toContain(`${name}.workers.puter.localhost`);
+        expect(deployed.url).toContain(`${name}.workers.localhost`);
 
         const res = await localWorkers.cfCallLocal(
             name,

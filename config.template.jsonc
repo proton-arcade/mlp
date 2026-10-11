@@ -37,19 +37,19 @@
     // and its clients see 502s.
     "keep_alive_timeout": 620000,
     "protocol": "http",
-    "domain": "puter.localhost",
+    "domain": "localhost",
     // Fully-qualified externally-visible URL. Computed from protocol/domain/
     // pub_port if unset.
-    "origin": "http://puter.localhost:4100",
+    "origin": "http://localhost:4100",
     // Public base URL for the API subdomain (used to build signed URLs and
     // surfaced to the client by the `installedApps` and `whoami` extensions).
-    "api_base_url": "http://api.puter.localhost:4100",
+    "api_base_url": "http://api.localhost:4100",
     // Subdomains Puter routes on. Wildcard DNS (`*.<domain>`) must point at
     // this server for site/app hosting to work.
-    "static_hosting_domain": "site.puter.localhost",
-    "static_hosting_domain_alt": "host.puter.localhost",
-    "private_app_hosting_domain": "app.puter.localhost",
-    "private_app_hosting_domain_alt": "dev.puter.localhost",
+    "static_hosting_domain": "site.localhost",
+    "static_hosting_domain_alt": "host.localhost",
+    "private_app_hosting_domain": "app.localhost",
+    "private_app_hosting_domain_alt": "dev.localhost",
     // Host-header / domain handling. Defaults below are the dev-friendly
     // settings; tighten for any public install.
     "allow_all_host_values": true,

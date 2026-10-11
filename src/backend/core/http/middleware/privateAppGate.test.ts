@@ -142,18 +142,18 @@ describe('subdomainFromHost', () => {
 describe('buildHostingConfig', () => {
     it('normalizes domains, fills raw counterparts, and resolves protocol', () => {
         const cfg = buildHostingConfig({
-            domain: 'puter.localhost',
-            static_hosting_domain: 'Site.Puter.Localhost:4100',
-            static_hosting_domain_alt: 'host.puter.localhost',
-            private_app_hosting_domain: 'App.Puter.Localhost:4100',
-            private_app_hosting_domain_alt: 'dev.puter.localhost',
+            domain: 'localhost',
+            static_hosting_domain: 'Site.Localhost:4100',
+            static_hosting_domain_alt: 'host.localhost',
+            private_app_hosting_domain: 'App.Localhost:4100',
+            private_app_hosting_domain_alt: 'dev.localhost',
             protocol: 'http:',
         } as unknown as IConfig);
-        expect(cfg.domain).toBe('puter.localhost');
-        expect(cfg.staticDomains).toContain('site.puter.localhost');
-        expect(cfg.staticDomainsRaw).toContain('site.puter.localhost:4100');
-        expect(cfg.privateDomains).toContain('app.puter.localhost');
-        expect(cfg.privateDomainsRaw).toContain('app.puter.localhost:4100');
+        expect(cfg.domain).toBe('localhost');
+        expect(cfg.staticDomains).toContain('site.localhost');
+        expect(cfg.staticDomainsRaw).toContain('site.localhost:4100');
+        expect(cfg.privateDomains).toContain('app.localhost');
+        expect(cfg.privateDomainsRaw).toContain('app.localhost:4100');
         // Protocol trims a trailing colon and falls back to https.
         expect(cfg.protocol).toBe('http');
     });
@@ -262,10 +262,10 @@ describe('getBootstrapToken', () => {
 
 describe('buildAppCenterFallback', () => {
     const cfg = buildHostingConfig({
-        domain: 'puter.localhost',
-        static_hosting_domain: 'site.puter.localhost',
+        domain: 'localhost',
+        static_hosting_domain: 'site.localhost',
         static_hosting_domain_alt: null,
-        private_app_hosting_domain: 'app.puter.localhost',
+        private_app_hosting_domain: 'app.localhost',
         private_app_hosting_domain_alt: null,
         protocol: 'http',
     } as unknown as IConfig);
@@ -273,7 +273,7 @@ describe('buildAppCenterFallback', () => {
     it('encodes the app name into the app-center query string', () => {
         const url = buildAppCenterFallback({ name: 'cool app & co' }, cfg);
         expect(url).toBe(
-            'https://puter.localhost/app/app-center/?item=cool%20app%20%26%20co',
+            'https://localhost/app/app-center/?item=cool%20app%20%26%20co',
         );
     });
 
@@ -283,7 +283,7 @@ describe('buildAppCenterFallback', () => {
             cfg,
         );
         expect(url).toBe(
-            'https://puter.localhost/app/app-center/?item=app-1234',
+            'https://localhost/app/app-center/?item=app-1234',
         );
     });
 
@@ -295,10 +295,10 @@ describe('buildAppCenterFallback', () => {
 
 describe('buildPrivateHostRedirect', () => {
     const cfg = buildHostingConfig({
-        domain: 'puter.localhost',
-        static_hosting_domain: 'site.puter.localhost',
+        domain: 'localhost',
+        static_hosting_domain: 'site.localhost',
         static_hosting_domain_alt: null,
-        private_app_hosting_domain: 'app.puter.localhost:4100',
+        private_app_hosting_domain: 'app.localhost:4100',
         private_app_hosting_domain_alt: null,
         protocol: 'http',
     } as unknown as IConfig);
@@ -314,24 +314,24 @@ describe('buildPrivateHostRedirect', () => {
     it('swaps the public hosting domain for the private one (preserving port)', () => {
         const url = buildPrivateHostRedirect(
             reqOf({
-                hostname: 'beans.site.puter.localhost',
+                hostname: 'beans.site.localhost',
                 originalUrl: '/some/path?x=1',
             }),
             { name: 'beans', uid: 'app-1' },
             cfg,
         );
         expect(url).toBe(
-            'http://beans.app.puter.localhost:4100/some/path?x=1',
+            'http://beans.app.localhost:4100/some/path?x=1',
         );
     });
 
     it("defaults the path to '/' when originalUrl is empty", () => {
         const url = buildPrivateHostRedirect(
-            reqOf({ hostname: 'beans.site.puter.localhost' }),
+            reqOf({ hostname: 'beans.site.localhost' }),
             { name: 'beans' },
             cfg,
         );
-        expect(url).toBe('http://beans.app.puter.localhost:4100/');
+        expect(url).toBe('http://beans.app.localhost:4100/');
     });
 
     it('collapses a scheme-relative path so it cannot escape the host (open redirect)', () => {
@@ -343,14 +343,14 @@ describe('buildPrivateHostRedirect', () => {
         ]) {
             const url = buildPrivateHostRedirect(
                 reqOf({
-                    hostname: 'beans.site.puter.localhost',
+                    hostname: 'beans.site.localhost',
                     originalUrl: evil,
                 }),
                 { name: 'beans' },
                 cfg,
             );
             expect(url).toBe(
-                'http://beans.app.puter.localhost:4100/evil.com/',
+                'http://beans.app.localhost:4100/evil.com/',
             );
         }
     });
@@ -363,7 +363,7 @@ describe('buildPrivateHostRedirect', () => {
         };
         expect(
             buildPrivateHostRedirect(
-                reqOf({ hostname: 'beans.site.puter.localhost' }),
+                reqOf({ hostname: 'beans.site.localhost' }),
                 { name: 'beans' },
                 noPrivate,
             ),
@@ -373,7 +373,7 @@ describe('buildPrivateHostRedirect', () => {
     it('returns null for the bare hosting domain (no subdomain to forward)', () => {
         expect(
             buildPrivateHostRedirect(
-                reqOf({ hostname: 'site.puter.localhost' }),
+                reqOf({ hostname: 'site.localhost' }),
                 { name: 'beans' },
                 cfg,
             ),
@@ -442,10 +442,10 @@ describe('buildPublicHostRedirect', () => {
     // at all) hits the private host, so a paid-→-free app's old
     // `puter.app` URL still resolves on `puter.site`.
     const cfg = buildHostingConfig({
-        domain: 'puter.localhost',
-        static_hosting_domain: 'site.puter.localhost:4100',
+        domain: 'localhost',
+        static_hosting_domain: 'site.localhost:4100',
         static_hosting_domain_alt: null,
-        private_app_hosting_domain: 'app.puter.localhost',
+        private_app_hosting_domain: 'app.localhost',
         private_app_hosting_domain_alt: null,
         protocol: 'http',
     } as unknown as IConfig);
@@ -461,22 +461,22 @@ describe('buildPublicHostRedirect', () => {
     it('swaps the private hosting domain for the public one (preserving port + path + query)', () => {
         const url = buildPublicHostRedirect(
             reqOf({
-                hostname: 'beans.app.puter.localhost',
+                hostname: 'beans.app.localhost',
                 originalUrl: '/some/path?x=1',
             }),
             cfg,
         );
         expect(url).toBe(
-            'http://beans.site.puter.localhost:4100/some/path?x=1',
+            'http://beans.site.localhost:4100/some/path?x=1',
         );
     });
 
     it("defaults the path to '/' when originalUrl is empty", () => {
         const url = buildPublicHostRedirect(
-            reqOf({ hostname: 'beans.app.puter.localhost' }),
+            reqOf({ hostname: 'beans.app.localhost' }),
             cfg,
         );
-        expect(url).toBe('http://beans.site.puter.localhost:4100/');
+        expect(url).toBe('http://beans.site.localhost:4100/');
     });
 
     it('collapses a scheme-relative path so it cannot escape the host (open redirect)', () => {
@@ -488,13 +488,13 @@ describe('buildPublicHostRedirect', () => {
         ]) {
             const url = buildPublicHostRedirect(
                 reqOf({
-                    hostname: 'beans.app.puter.localhost',
+                    hostname: 'beans.app.localhost',
                     originalUrl: evil,
                 }),
                 cfg,
             );
             expect(url).toBe(
-                'http://beans.site.puter.localhost:4100/evil.com/',
+                'http://beans.site.localhost:4100/evil.com/',
             );
         }
     });
@@ -507,7 +507,7 @@ describe('buildPublicHostRedirect', () => {
         };
         expect(
             buildPublicHostRedirect(
-                reqOf({ hostname: 'beans.app.puter.localhost' }),
+                reqOf({ hostname: 'beans.app.localhost' }),
                 noPublic,
             ),
         ).toBeNull();
@@ -516,7 +516,7 @@ describe('buildPublicHostRedirect', () => {
     it('returns null for the bare private host (no subdomain to forward)', () => {
         expect(
             buildPublicHostRedirect(
-                reqOf({ hostname: 'app.puter.localhost' }),
+                reqOf({ hostname: 'app.localhost' }),
                 cfg,
             ),
         ).toBeNull();
@@ -615,11 +615,11 @@ const createPrivateApp = async (
 
 const baseConfig = () =>
     buildHostingConfig({
-        domain: 'puter.localhost',
-        static_hosting_domain: 'site.puter.localhost',
-        static_hosting_domain_alt: 'host.puter.localhost',
-        private_app_hosting_domain: 'app.puter.localhost',
-        private_app_hosting_domain_alt: 'dev.puter.localhost',
+        domain: 'localhost',
+        static_hosting_domain: 'site.localhost',
+        static_hosting_domain_alt: 'host.localhost',
+        private_app_hosting_domain: 'app.localhost',
+        private_app_hosting_domain_alt: 'dev.localhost',
         protocol: 'http',
     } as unknown as IConfig);
 
@@ -661,10 +661,10 @@ describe('resolveOwnedAppForHostedSite', () => {
         const owner = await makeUser();
         const app = await createPrivateApp(
             owner.id,
-            'http://beans.site.puter.localhost/',
+            'http://beans.site.localhost/',
         );
         const out = await resolveOwnedAppForHostedSite({
-            req: reqOf('beans.site.puter.localhost'),
+            req: reqOf('beans.site.localhost'),
             site: { user_id: owner.id },
             db: server.clients.db,
             config: baseConfig(),
@@ -676,10 +676,10 @@ describe('resolveOwnedAppForHostedSite', () => {
         const owner = await makeUser();
         const app = await createPrivateApp(
             owner.id,
-            'http://beans.site.puter.localhost/',
+            'http://beans.site.localhost/',
         );
         const out = await resolveOwnedAppForHostedSite({
-            req: reqOf('beans.app.puter.localhost'),
+            req: reqOf('beans.app.localhost'),
             site: { user_id: owner.id },
             db: server.clients.db,
             config: baseConfig(),
@@ -693,9 +693,9 @@ describe('resolveOwnedAppForHostedSite', () => {
         // owned by user A, even when the index_url notionally matches.
         const a = await makeUser();
         const b = await makeUser();
-        await createPrivateApp(b.id, 'http://beans.site.puter.localhost/');
+        await createPrivateApp(b.id, 'http://beans.site.localhost/');
         const out = await resolveOwnedAppForHostedSite({
-            req: reqOf('beans.site.puter.localhost'),
+            req: reqOf('beans.site.localhost'),
             site: { user_id: a.id },
             db: server.clients.db,
             config: baseConfig(),
@@ -707,11 +707,11 @@ describe('resolveOwnedAppForHostedSite', () => {
         const owner = await makeUser();
         const app = await createApp(
             owner.id,
-            'http://beans.site.puter.localhost/',
+            'http://beans.site.localhost/',
             { isPrivate: false },
         );
         const out = await resolveOwnedAppForHostedSite({
-            req: reqOf('beans.site.puter.localhost'),
+            req: reqOf('beans.site.localhost'),
             site: { user_id: owner.id },
             db: server.clients.db,
             config: baseConfig(),
@@ -723,11 +723,11 @@ describe('resolveOwnedAppForHostedSite', () => {
         const owner = await makeUser();
         await createApp(
             owner.id,
-            'http://beans.site.puter.localhost/',
+            'http://beans.site.localhost/',
             { isPrivate: false },
         );
         const out = await resolveOwnedAppForHostedSite({
-            req: reqOf('beans.site.puter.localhost'),
+            req: reqOf('beans.site.localhost'),
             site: { user_id: owner.id },
             db: server.clients.db,
             config: baseConfig(),
@@ -740,15 +740,15 @@ describe('resolveOwnedAppForHostedSite', () => {
         const owner = await makeUser();
         await server.stores.app.createFromOrigin(
             `app-${uuidv4()}`,
-            'http://beans.host.puter.localhost',
+            'http://beans.host.localhost',
             { ownerUserId: owner.id },
         );
         const app = await createPrivateApp(
             owner.id,
-            'http://beans.app.puter.localhost/',
+            'http://beans.app.localhost/',
         );
         const out = await resolveOwnedAppForHostedSite({
-            req: reqOf('beans.app.puter.localhost'),
+            req: reqOf('beans.app.localhost'),
             site: { user_id: owner.id },
             db: server.clients.db,
             config: baseConfig(),
@@ -759,7 +759,7 @@ describe('resolveOwnedAppForHostedSite', () => {
 
     it('returns null when the site has no owner', async () => {
         const out = await resolveOwnedAppForHostedSite({
-            req: reqOf('beans.site.puter.localhost'),
+            req: reqOf('beans.site.localhost'),
             site: { user_id: null },
             db: server.clients.db,
             config: baseConfig(),
@@ -799,7 +799,7 @@ describe('resolvePrivateIdentity', () => {
             appUid,
             userUid: user.uuid,
             subdomain: 'beans',
-            privateHost: 'beans.app.puter.localhost',
+            privateHost: 'beans.app.localhost',
         });
         const out = await resolvePrivateIdentity({
             req: reqOf({
@@ -811,7 +811,7 @@ describe('resolvePrivateIdentity', () => {
             sessionCookieName: 'puter_auth_token',
             expectedAppUid: appUid,
             expectedSubdomain: 'beans',
-            expectedPrivateHost: 'beans.app.puter.localhost',
+            expectedPrivateHost: 'beans.app.localhost',
         });
         expect(out.source).toBe('private-cookie');
         expect(out.userUid).toBe(user.uuid);
@@ -824,7 +824,7 @@ describe('resolvePrivateIdentity', () => {
             appUid: `app-${uuidv4()}`,
             userUid: user.uuid,
             subdomain: 'beans',
-            privateHost: 'beans.app.puter.localhost',
+            privateHost: 'beans.app.localhost',
         });
         const out = await resolvePrivateIdentity({
             req: reqOf({
@@ -1068,7 +1068,7 @@ describe('resolvePublicHostedIdentity', () => {
             appUid,
             userUid: user.uuid,
             subdomain: 'beans',
-            host: 'beans.site.puter.localhost',
+            host: 'beans.site.localhost',
         });
         const out = await resolvePublicHostedIdentity({
             req: reqOf({
@@ -1080,7 +1080,7 @@ describe('resolvePublicHostedIdentity', () => {
             sessionCookieName: 'puter_auth_token',
             expectedAppUid: appUid,
             expectedSubdomain: 'beans',
-            expectedHost: 'beans.site.puter.localhost',
+            expectedHost: 'beans.site.localhost',
         });
         expect(out.source).toBe('public-cookie');
         expect(out.userUid).toBe(user.uuid);

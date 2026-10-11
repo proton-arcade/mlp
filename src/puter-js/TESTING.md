@@ -102,7 +102,7 @@ By default, video and trace are saved **only on failure**. `test:e2e:record` ena
 ┌─────────────────────────────────────────────────────────────┐
 │ Playwright (chromium / mobile-chromium)                     │
 │   ↓ navigates to                                            │
-│   http://puter.localhost:4100/app/puter-js-testing-<uuid>   │
+│   http://localhost:4100/app/puter-js-testing-<uuid>   │
 │                                                             │
 │   ┌─── Puter desktop (renders menus, contextMenus) ──────┐  │
 │   │   ┌─── App iframe (the fixture) ──────────────────┐  │  │
@@ -121,7 +121,7 @@ By default, video and trace are saved **only on failure**. `test:e2e:record` ena
 
 1. Direct `POST /login` from Node with the admin credentials → JWT token.
 2. Probes `window.api_origin` from Puter (server-templated) so the SDK's adopted origin can be asserted — the GUI always uses its own API origin and will not take one from the URL.
-3. Opens chromium once and navigates to `puter.localhost:4100/?auth_token=<token>`, then accepts the "Continue as \<username\>?" confirmation the auth_token handler shows before adopting a token from a URL. Puter's `initgui` auth_token handler then runs the full auth setup: `puter.setAuthToken`, `/session/sync-cookie`, `update_auth_data`.
+3. Opens chromium once and navigates to `localhost:4100/?auth_token=<token>`, then accepts the "Continue as \<username\>?" confirmation the auth_token handler shows before adopting a token from a URL. Puter's `initgui` auth_token handler then runs the full auth setup: `puter.setAuthToken`, `/session/sync-cookie`, `update_auth_data`.
 4. Saves cookies + localStorage to `tests/e2e/.auth/state.json` (gitignored, cached for 24h).
 
 Every test context loads with that `storageState` → already signed in as admin → no per-test `/login`, no `/signup`, no rate limits.
@@ -131,8 +131,8 @@ Every test context loads with that `storageState` → already signed in as admin
 For each test:
 
 1. **Test's `page` fixture** opens with the cached storageState — already authenticated.
-2. **`registerTestApp(page)`** verifies the fixture URL is reachable, navigates to `puter.localhost:4100/`, waits for the SDK to settle, and calls `puter.apps.create('puter-js-testing-<uuid>', '<fixture URL>')`.
-3. **`gotoTestApp(page, name)`** navigates to `puter.localhost:4100/app/<name>`. Puter desktop's `/app/<name>` handler calls `puter.apps.get(name)` → `launch_app(...)` → opens a window with an iframe at the fixture URL (with `?puter.app_instance_id=...` so puter.js detects `env=app`). Waits for `body.ready` inside the iframe.
+2. **`registerTestApp(page)`** verifies the fixture URL is reachable, navigates to `localhost:4100/`, waits for the SDK to settle, and calls `puter.apps.create('puter-js-testing-<uuid>', '<fixture URL>')`.
+3. **`gotoTestApp(page, name)`** navigates to `localhost:4100/app/<name>`. Puter desktop's `/app/<name>` handler calls `puter.apps.get(name)` → `launch_app(...)` → opens a window with an iframe at the fixture URL (with `?puter.app_instance_id=...` so puter.js detects `env=app`). Waits for `body.ready` inside the iframe.
 4. **Test body**: clicks fixture buttons inside the iframe → fixture calls `puter.ui.setMenubar(...)` / `puter.ui.contextMenu(...)`. puter.js postMessages to Puter desktop → desktop renders `.window-menubar` / `.context-menu` in the **parent** DOM. Playwright asserts on those parent-frame elements and clicks items. Each click fires the item's `action` callback **back inside the iframe** (via Puter's RPC hydration), which appends a known string to `<div id="log">`. Assertions check that the right log entry appeared.
 5. **`deleteTestApp(page, name)`** in `finally` — best-effort cleanup of the ephemeral app.
 
@@ -182,7 +182,7 @@ All env vars are optional unless marked required.
 | --- | --- | --- |
 | `PUTER_ADMIN_PASSWORD` | _(required)_ | Local Puter admin password (from `npm start`'s startup banner). Stable across restarts. |
 | `PUTER_ADMIN_USERNAME` | `admin` | Local Puter admin username. |
-| `PUTER_TEST_ORIGIN` | `http://puter.localhost:4100` | The Puter desktop origin Playwright drives. |
+| `PUTER_TEST_ORIGIN` | `http://localhost:4100` | The Puter desktop origin Playwright drives. |
 | `PUTER_TEST_FIXTURE_ORIGIN` | `http://localhost:8080` | Where the fixture HTML is served. The Puter app's `indexURL` is set to `${PUTER_TEST_FIXTURE_ORIGIN}/tests/e2e/fixtures/menubar-contextmenu.html`. |
 | `PUTER_TEST_RECORD` | unset | When `1`, records video for every test (default: only on failure). |
 | `PUTER_TEST_RESET_AUTH` | unset | When `1`, ignores the cached auth in `tests/e2e/.auth/state.json` and forces a fresh `/login`. Use after a password change or if Puter rejects the cached token. |

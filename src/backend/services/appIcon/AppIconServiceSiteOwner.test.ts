@@ -41,7 +41,7 @@ describe('AppIconService — system-owned icons site', () => {
     beforeAll(async () => {
         server = await setupTestServer({
             no_default_user: false,
-            api_base_url: 'http://api.puter.localhost:4100',
+            api_base_url: 'http://api.localhost:4100',
         } as unknown as IConfig);
     }, 60_000);
 
@@ -52,8 +52,8 @@ describe('AppIconService — system-owned icons site', () => {
     const fetchIconStatus = async (path: string) => {
         const middleware = createPuterSiteMiddleware(
             {
-                domain: 'puter.localhost',
-                static_hosting_domain: 'site.puter.localhost',
+                domain: 'localhost',
+                static_hosting_domain: 'site.localhost',
                 protocol: 'http',
             } as unknown as IConfig,
             {
@@ -82,7 +82,7 @@ describe('AppIconService — system-owned icons site', () => {
             redirect: chain,
         });
         const req = {
-            hostname: 'puter-app-icons.site.puter.localhost',
+            hostname: 'puter-app-icons.site.localhost',
             path,
             originalUrl: path,
             protocol: 'http',

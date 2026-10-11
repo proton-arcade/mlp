@@ -178,7 +178,7 @@ const scriptName = async (): Promise<string> =>
 /** Whether that script is up in the local worker backend. */
 const isResident = async (script: string): Promise<boolean> =>
     (await localWorkers().dispatchEventsWorker(
-        new Request(`http://${script}.workers.puter.localhost/`, {
+        new Request(`http://${script}.workers.localhost/`, {
             method: 'GET',
         }),
     )) !== null;
@@ -719,7 +719,7 @@ describe('what can reach a deployed events worker', () => {
             // deployed under its own registry key — never findable there,
             // and it has no `subdomains` row for the proxy to fall back to.
             const overHttp = await requestWithHost(
-                `${script}.workers.puter.localhost`,
+                `${script}.workers.localhost`,
                 EVENTS_INVOKE_PATH,
                 { handler: 'ingest' },
             );
@@ -731,7 +731,7 @@ describe('what can reach a deployed events worker', () => {
                 (
                     await localWorkers().dispatchEventsWorker(
                         new Request(
-                            `http://${script}.workers.puter.localhost${EVENTS_INVOKE_PATH}`,
+                            `http://${script}.workers.localhost${EVENTS_INVOKE_PATH}`,
                             {
                                 method: 'POST',
                                 headers: {

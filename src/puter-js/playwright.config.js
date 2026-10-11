@@ -3,7 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const PUTER_ORIGIN = process.env.PUTER_TEST_ORIGIN || 'http://puter.localhost:4100';
+const PUTER_ORIGIN = process.env.PUTER_TEST_ORIGIN || 'http://localhost:4100';
 const FIXTURE_ORIGIN = process.env.PUTER_TEST_FIXTURE_ORIGIN || 'http://localhost:8080';
 const RECORD_ALL = !!process.env.PUTER_TEST_RECORD;
 const STORAGE_STATE_PATH = path.join(__dirname, 'tests', 'e2e', '.auth', 'state.json');

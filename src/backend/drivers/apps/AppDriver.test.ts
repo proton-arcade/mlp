@@ -146,12 +146,12 @@ describe('AppDriver.create', () => {
 
     // App iframes get `allow-same-origin allow-scripts`, so an index_url
     // on a Puter system host would run third-party code same-origin with
-    // the GUI. The test server's domain is `puter.localhost` (from
+    // the GUI. The test server's domain is `localhost` (from
     // config.default.json).
     it.each([
-        ['the GUI host', 'https://puter.localhost/evil.html'],
-        ['the GUI host on another port/scheme', 'http://puter.localhost:4100/evil.html'],
-        ['the API host', 'https://api.puter.localhost/evil.html'],
+        ['the GUI host', 'https://localhost/evil.html'],
+        ['the GUI host on another port/scheme', 'http://localhost:4100/evil.html'],
+        ['the API host', 'https://api.localhost/evil.html'],
         ['the builtin sentinel host', 'https://builtins.namespaces.puter.com/emulator'],
     ])('rejects an index_url on %s with 400', async (_label, index_url) => {
         const { actor } = await makeUser();
@@ -186,7 +186,7 @@ describe('AppDriver.create', () => {
             withActor(actor, () =>
                 driver.update({
                     uid: created.uid,
-                    object: { index_url: 'https://puter.localhost/evil.html' },
+                    object: { index_url: 'https://localhost/evil.html' },
                 }),
             ),
         ).rejects.toMatchObject({
@@ -1687,7 +1687,7 @@ describe('AppDriver alias-group index_url merge', () => {
 // replica/cache miss by confirming against the primary before refusing.
 
 describe('AppDriver hosted-subdomain ownership check', () => {
-    const hostedUrl = (sub: string) => `https://${sub}.site.puter.localhost/`;
+    const hostedUrl = (sub: string) => `https://${sub}.site.localhost/`;
 
     it('accepts a hosted index_url when the subdomain row has not reached the replica yet', async () => {
         const { actor, userId } = await makeUser();
@@ -1746,7 +1746,7 @@ describe('AppDriver hosted-subdomain ownership check', () => {
         const stubUid = `app-${uuidv4()}`;
         await server.stores.app.createFromOrigin(
             stubUid,
-            `https://${sub}.site.puter.localhost`,
+            `https://${sub}.site.localhost`,
             { ownerUserId: userId },
         );
 
@@ -1774,7 +1774,7 @@ describe('AppDriver hosted-subdomain ownership check', () => {
         const stubUid = `app-${uuidv4()}`;
         await server.stores.app.createFromOrigin(
             stubUid,
-            `https://${sub}.host.puter.localhost`,
+            `https://${sub}.host.localhost`,
             { ownerUserId: userId },
         );
 
@@ -2006,7 +2006,7 @@ describe('AppDriver.select query-count regression', () => {
                         object: {
                             name: uniqueName(`qc-live-${i}`),
                             title: 't',
-                            index_url: `https://${sub}.site.puter.localhost/`,
+                            index_url: `https://${sub}.site.localhost/`,
                         },
                     }),
                 );
@@ -2022,7 +2022,7 @@ describe('AppDriver.select query-count regression', () => {
                         object: {
                             name: uniqueName(`qc-dangling-${i}`),
                             title: 't',
-                            index_url: `https://${sub}.site.puter.localhost/`,
+                            index_url: `https://${sub}.site.localhost/`,
                         },
                     }),
                 );
@@ -2150,7 +2150,7 @@ describe('AppDriver.select / read parity', () => {
         const { actor, userId } = await makeUser();
         const sub = uniqueName('cfo');
         await server.stores.subdomain.create({ userId, subdomain: sub });
-        const url = `https://${sub}.site.puter.localhost/`;
+        const url = `https://${sub}.site.localhost/`;
         const canonical = await withActor(actor, () =>
             driver.create({
                 object: {
@@ -2175,7 +2175,7 @@ describe('AppDriver.select / read parity', () => {
         const canonItem = result.find((r) => r.uid === canonical.uid);
         const dupItem = result.find((r) => r.uid === dupUid);
         expect(canonItem?.created_from_origin).toBe(
-            `https://${sub}.site.puter.localhost`,
+            `https://${sub}.site.localhost`,
         );
         expect(dupItem?.created_from_origin).toBeNull();
     });
@@ -2235,7 +2235,7 @@ describe('AppDriver.select / read parity', () => {
                 object: {
                     name: uniqueName('dangling-sel'),
                     title: 't',
-                    index_url: `https://${sub}.site.puter.localhost/`,
+                    index_url: `https://${sub}.site.localhost/`,
                 },
             }),
         );
@@ -2310,7 +2310,7 @@ describe('AppDriver.read prefetched-param isolation', () => {
                 object: {
                     name: uniqueName('sec-app'),
                     title: 't',
-                    index_url: `https://${sub}.site.puter.localhost/`,
+                    index_url: `https://${sub}.site.localhost/`,
                     filetype_associations: ['.puter'],
                 },
             }),

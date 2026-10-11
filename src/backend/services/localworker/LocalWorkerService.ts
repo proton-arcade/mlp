@@ -126,12 +126,12 @@ export class LocalWorkerService extends PuterService {
 
     /**
      * Local analogue of the production worker URL, matching the host the local
-     * worker proxy dispatches on (`<name>.workers.puter.localhost`). Clients
-     * rely on `create` returning a usable `url`.
+     * worker proxy dispatches on (`<name>.workers.localhost`). Clients rely on
+     * `create` returning a usable `url`.
      */
     #localWorkerUrl(workerName: string): string {
         const port = this.config.port ? `:${this.config.port}` : '';
-        return `http://${workerName}.workers.puter.localhost${port}`;
+        return `http://${workerName}.workers.localhost${port}`;
     }
     async cfCallLocal(workerName: string, request: Request) {
         let mf = activeWorkers.get(workerName);

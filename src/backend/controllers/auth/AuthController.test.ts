@@ -3668,7 +3668,7 @@ describe('AuthController.handleGetUserAppToken + handleCheckApp', () => {
     });
 
     it('stamps the hosted-subdomain owner as the bootstrap app creator', async () => {
-        // Test config inherits `static_hosting_domain: site.puter.localhost`
+        // Test config inherits `static_hosting_domain: site.localhost`
         // from config.default.json. The subdomain belongs to a different
         // user than the visitor minting the token — the app must be owned
         // by the site owner, not the visitor.
@@ -3693,7 +3693,7 @@ describe('AuthController.handleGetUserAppToken + handleCheckApp', () => {
         await inCtx(actor, () =>
             controller.handleGetUserAppToken(
                 makeReq(
-                    { origin: `https://${subdomain}.site.puter.localhost` },
+                    { origin: `https://${subdomain}.site.localhost` },
                     { actor },
                 ),
                 res,
@@ -3713,7 +3713,7 @@ describe('AuthController.handleGetUserAppToken + handleCheckApp', () => {
         await inCtx(actor, () =>
             controller.handleGetUserAppToken(
                 makeReq(
-                    { origin: `https://${subdomain}.host.puter.localhost` },
+                    { origin: `https://${subdomain}.host.localhost` },
                     { actor },
                 ),
                 res,
@@ -3722,14 +3722,14 @@ describe('AuthController.handleGetUserAppToken + handleCheckApp', () => {
         const body = res.body as { token: string; app_uid: string };
         const bootstrapped = await server.stores.app.getByUid(body.app_uid);
         expect(bootstrapped?.index_url).toBe(
-            `http://${subdomain}.site.puter.localhost`,
+            `http://${subdomain}.site.localhost`,
         );
 
         const res2 = makeRes();
         await inCtx(actor, () =>
             controller.handleGetUserAppToken(
                 makeReq(
-                    { origin: `https://${subdomain}.app.puter.localhost` },
+                    { origin: `https://${subdomain}.app.localhost` },
                     { actor },
                 ),
                 res2,

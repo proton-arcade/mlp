@@ -157,10 +157,10 @@ const runMiddleware = async (
 
 let server: PuterServer;
 const hostingConfig: IConfig = {
-    domain: 'puter.localhost',
-    static_hosting_domain: 'site.puter.localhost',
+    domain: 'localhost',
+    static_hosting_domain: 'site.localhost',
     static_hosting_domain_alt: null,
-    private_app_hosting_domain: 'app.puter.localhost',
+    private_app_hosting_domain: 'app.localhost',
     private_app_hosting_domain_alt: null,
     protocol: 'http',
 } as unknown as IConfig;
@@ -210,7 +210,7 @@ describe('createPuterSiteMiddleware — config gating', () => {
         // touch any request, even ones that look like site hostnames.
         const mw = createPuterSiteMiddleware(
             {
-                domain: 'puter.localhost',
+                domain: 'localhost',
                 static_hosting_domain: null,
                 static_hosting_domain_alt: null,
                 private_app_hosting_domain: null,
@@ -224,7 +224,7 @@ describe('createPuterSiteMiddleware — config gating', () => {
         );
         const { out, next } = await runMiddleware(
             mw,
-            makeReq({ hostname: 'beans.site.puter.localhost' }),
+            makeReq({ hostname: 'beans.site.localhost' }),
         );
         expect(next).toHaveBeenCalledTimes(1);
         expect(out.statusCode).toBeUndefined();
@@ -235,7 +235,7 @@ describe('createPuterSiteMiddleware — config gating', () => {
         const mw = buildMiddleware();
         const { out, next } = await runMiddleware(
             mw,
-            makeReq({ hostname: 'api.puter.localhost' }),
+            makeReq({ hostname: 'api.localhost' }),
         );
         expect(next).toHaveBeenCalledTimes(1);
         expect(out.statusCode).toBeUndefined();
@@ -256,21 +256,21 @@ describe('createPuterSiteMiddleware — config gating', () => {
 
 describe('createPuterSiteMiddleware — bare host and www', () => {
     it('redirects the bare hosting domain to the configured main domain', async () => {
-        // Hitting `site.puter.localhost` directly (no subdomain) belongs
+        // Hitting `site.localhost` directly (no subdomain) belongs
         // on the app shell — 302 to the main domain so legacy bookmarks
         // still work.
         const mw = buildMiddleware();
         const { out, next } = await runMiddleware(
             mw,
             makeReq({
-                hostname: 'site.puter.localhost',
+                hostname: 'site.localhost',
                 protocol: 'http',
             }),
         );
         expect(next).not.toHaveBeenCalled();
         expect(out.redirected).toEqual({
             status: 302,
-            url: 'http://puter.localhost',
+            url: 'http://localhost',
         });
     });
 
@@ -279,13 +279,13 @@ describe('createPuterSiteMiddleware — bare host and www', () => {
         const { out } = await runMiddleware(
             mw,
             makeReq({
-                hostname: 'www.site.puter.localhost',
+                hostname: 'www.site.localhost',
                 protocol: 'http',
             }),
         );
         expect(out.redirected).toEqual({
             status: 302,
-            url: 'http://puter.localhost',
+            url: 'http://localhost',
         });
     });
 
@@ -305,7 +305,7 @@ describe('createPuterSiteMiddleware — bare host and www', () => {
         );
         const { out } = await runMiddleware(
             mw,
-            makeReq({ hostname: 'site.puter.localhost' }),
+            makeReq({ hostname: 'site.localhost' }),
         );
         expect(out.statusCode).toBe(404);
         expect(out.body).toBe('Subdomain not found');
@@ -322,7 +322,7 @@ describe('createPuterSiteMiddleware — subdomain lookup', () => {
             makeReq({
                 hostname: `never-exists-${Math.random()
                     .toString(36)
-                    .slice(2, 10)}.site.puter.localhost`,
+                    .slice(2, 10)}.site.localhost`,
             }),
         );
         expect(out.statusCode).toBe(404);
@@ -343,7 +343,7 @@ describe('createPuterSiteMiddleware — subdomain lookup', () => {
         const mw = buildMiddleware();
         const { out } = await runMiddleware(
             mw,
-            makeReq({ hostname: `${sub}.site.puter.localhost` }),
+            makeReq({ hostname: `${sub}.site.localhost` }),
         );
         expect(out.statusCode).toBe(404);
         expect(out.body).toBe('Subdomain not found');
@@ -362,7 +362,7 @@ describe('createPuterSiteMiddleware — subdomain lookup', () => {
         const mw = buildMiddleware();
         const { out } = await runMiddleware(
             mw,
-            makeReq({ hostname: `${sub}.site.puter.localhost` }),
+            makeReq({ hostname: `${sub}.site.localhost` }),
         );
         expect(out.statusCode).toBe(404);
         expect(out.contentType).toBe('text/html; charset=UTF-8');
@@ -389,14 +389,14 @@ describe('createPuterSiteMiddleware — private hosting domain', () => {
         const { out } = await runMiddleware(
             mw,
             makeReq({
-                // Note: app.puter.localhost is the *private* hosting domain.
-                hostname: `${sub}.app.puter.localhost`,
+                // Note: app.localhost is the *private* hosting domain.
+                hostname: `${sub}.app.localhost`,
                 path: '/some/deep/path.html',
             }),
         );
         expect(out.redirected).toEqual({
             status: 302,
-            url: `http://${sub}.site.puter.localhost/some/deep/path.html`,
+            url: `http://${sub}.site.localhost/some/deep/path.html`,
         });
     });
 
@@ -419,7 +419,7 @@ describe('createPuterSiteMiddleware — private hosting domain', () => {
         );
         expect(out.redirected).toEqual({
             status: 302,
-            url: `http://${sub}.site.puter.localhost/`,
+            url: `http://${sub}.site.localhost/`,
         });
     });
 
@@ -446,7 +446,7 @@ describe('createPuterSiteMiddleware — private hosting domain', () => {
         );
         const { out } = await runMiddleware(
             mw,
-            makeReq({ hostname: `${sub}.app.puter.localhost` }),
+            makeReq({ hostname: `${sub}.app.localhost` }),
         );
         expect(out.statusCode).toBe(404);
         expect(out.body).toBe('Subdomain not found');
@@ -522,7 +522,7 @@ describe('createPuterSiteMiddleware — file serving', () => {
         const { res, out } = makeRes();
         await mw(
             makeReq({
-                hostname: `${sub}.site.puter.localhost`,
+                hostname: `${sub}.site.localhost`,
                 path: '/index.html',
             }),
             res,
@@ -557,7 +557,7 @@ describe('createPuterSiteMiddleware — file serving', () => {
         await writeFile(owner.id, `${homePath}/index.html`, Buffer.from('hi'));
 
         const req = makeReq({
-            hostname: `${sub}.site.puter.localhost`,
+            hostname: `${sub}.site.localhost`,
             path: '/index.html',
         });
         const { res } = makeRes();
@@ -593,7 +593,7 @@ describe('createPuterSiteMiddleware — file serving', () => {
             const { res } = makeRes();
             await mw(
                 makeReq({
-                    hostname: `${sub}.site.puter.localhost`,
+                    hostname: `${sub}.site.localhost`,
                     path: '/index.html',
                     originalUrl: '/index.html?brand=paypal',
                 }),
@@ -637,7 +637,7 @@ describe('createPuterSiteMiddleware — file serving', () => {
         const { res, out } = makeRes();
         await mw(
             makeReq({
-                hostname: `${sub}.site.puter.localhost`,
+                hostname: `${sub}.site.localhost`,
                 path: '/clip.bin',
                 headers: { range: 'bytes=0-3' },
             }),
@@ -670,7 +670,7 @@ describe('createPuterSiteMiddleware — file serving', () => {
         const { res, out } = makeRes();
         await mw(
             makeReq({
-                hostname: `${sub}.site.puter.localhost`,
+                hostname: `${sub}.site.localhost`,
                 // Trailing slash → driver appends `index.html`.
                 path: '/',
             }),
@@ -698,7 +698,7 @@ describe('createPuterSiteMiddleware — file serving', () => {
         const { res, out } = makeRes();
         await mw(
             makeReq({
-                hostname: `${sub}.site.puter.localhost`,
+                hostname: `${sub}.site.localhost`,
                 path: '/does-not-exist.html',
             }),
             res,
@@ -725,7 +725,7 @@ describe('createPuterSiteMiddleware — file serving', () => {
         const { res, out } = makeRes();
         await mw(
             makeReq({
-                hostname: `${sub}.site.puter.localhost`,
+                hostname: `${sub}.site.localhost`,
                 // Documents/ exists from generateDefaultFsentries but has
                 // no index.html — directory fallback must still 404.
                 path: '/Documents',
@@ -760,7 +760,7 @@ describe('createPuterSiteMiddleware — file serving', () => {
         const { res, out } = makeRes();
         await mw(
             makeReq({
-                hostname: `${sub}.site.puter.localhost`,
+                hostname: `${sub}.site.localhost`,
                 // No trailing slash; folder exists and contains index.html.
                 path: '/Documents',
             }),
@@ -792,7 +792,7 @@ describe('createPuterSiteMiddleware — file serving', () => {
         const { res, out } = makeRes();
         await mw(
             makeReq({
-                hostname: `${sub}.site.puter.localhost`,
+                hostname: `${sub}.site.localhost`,
                 path: '/',
             }),
             res,
@@ -825,7 +825,7 @@ describe('createPuterSiteMiddleware — file serving', () => {
         const { res, out } = makeRes();
         await mw(
             makeReq({
-                hostname: `${sub}.site.puter.localhost`,
+                hostname: `${sub}.site.localhost`,
                 path: '/',
             }),
             res,
@@ -858,7 +858,7 @@ describe('createPuterSiteMiddleware — file serving', () => {
         const { res, out } = makeRes();
         await mw(
             makeReq({
-                hostname: `${sub}.site.puter.localhost`,
+                hostname: `${sub}.site.localhost`,
                 path: '/hello%20world.txt',
             }),
             res,
@@ -887,7 +887,7 @@ describe('createPuterSiteMiddleware — file serving', () => {
         const { res, out } = makeRes();
         await mw(
             makeReq({
-                hostname: `${sub}.site.puter.localhost`,
+                hostname: `${sub}.site.localhost`,
                 // ../../etc/passwd — must normalize to /etc/passwd under
                 // the SITE ROOT, not the FS root; lookup will 404.
                 path: '/../../etc/passwd',
@@ -937,7 +937,7 @@ describe('createPuterSiteMiddleware — site.access.check', () => {
         const { out } = await runMiddleware(
             buildMiddleware(),
             makeReq({
-                hostname: `${sub}.site.puter.localhost`,
+                hostname: `${sub}.site.localhost`,
                 path: '/secret.txt',
             }),
         );
@@ -951,7 +951,7 @@ describe('createPuterSiteMiddleware — site.access.check', () => {
         expect(seen).toHaveLength(1);
         expect(seen[0]).toMatchObject({
             subdomain: sub,
-            host: `${sub}.site.puter.localhost`,
+            host: `${sub}.site.localhost`,
             requestPath: '/secret.txt',
             entry: { name: 'secret.txt' },
             result: { allowed: true },
@@ -1005,7 +1005,7 @@ describe('createPuterSiteMiddleware — .puter_site_config', () => {
         const { res, out } = makeRes();
         await mw(
             makeReq({
-                hostname: `${sub}.site.puter.localhost`,
+                hostname: `${sub}.site.localhost`,
                 path: '/some/client-route',
             }),
             res,
@@ -1034,7 +1034,7 @@ describe('createPuterSiteMiddleware — .puter_site_config', () => {
         const { res, out } = makeRes();
         await mw(
             makeReq({
-                hostname: `${sub}.site.puter.localhost`,
+                hostname: `${sub}.site.localhost`,
                 path: '/no-such-page',
             }),
             res,
@@ -1061,7 +1061,7 @@ describe('createPuterSiteMiddleware — .puter_site_config', () => {
         const { res, out } = makeRes();
         await mw(
             makeReq({
-                hostname: `${sub}.site.puter.localhost`,
+                hostname: `${sub}.site.localhost`,
                 path: '/anything',
             }),
             res,
@@ -1085,7 +1085,7 @@ describe('createPuterSiteMiddleware — .puter_site_config', () => {
         const { res, out } = makeRes();
         await mw(
             makeReq({
-                hostname: `${sub}.site.puter.localhost`,
+                hostname: `${sub}.site.localhost`,
                 path: '/.puter_site_config',
             }),
             res,
@@ -1125,7 +1125,7 @@ describe('createPuterSiteMiddleware — .puter_site_config', () => {
         const { res, out } = makeRes();
         await mw(
             makeReq({
-                hostname: `${sub}.site.puter.localhost`,
+                hostname: `${sub}.site.localhost`,
                 path: '/anything',
             }),
             res,
@@ -1169,7 +1169,7 @@ describe('createPuterSiteMiddleware — .puter_site_config', () => {
         const { res, out } = makeRes();
         await mw(
             makeReq({
-                hostname: `${sub}.site.puter.localhost`,
+                hostname: `${sub}.site.localhost`,
                 path: '/unknown',
             }),
             res,
@@ -1203,7 +1203,7 @@ describe('createPuterSiteMiddleware — .puter_site_config', () => {
         const { res, out } = makeRes();
         await mw(
             makeReq({
-                hostname: `${sub}.site.puter.localhost`,
+                hostname: `${sub}.site.localhost`,
                 path: '/page.html',
             }),
             res,
@@ -1234,7 +1234,7 @@ describe('createPuterSiteMiddleware — .puter_site_config', () => {
         const first = makeRes();
         await mw(
             makeReq({
-                hostname: `${sub}.site.puter.localhost`,
+                hostname: `${sub}.site.localhost`,
                 path: '/route-a',
             }),
             first.res,
@@ -1257,7 +1257,7 @@ describe('createPuterSiteMiddleware — .puter_site_config', () => {
         const second = makeRes();
         await mw(
             makeReq({
-                hostname: `${sub}.site.puter.localhost`,
+                hostname: `${sub}.site.localhost`,
                 path: '/route-b',
             }),
             second.res,
@@ -1287,7 +1287,7 @@ describe('createPuterSiteMiddleware — .puter_site_config', () => {
         const { res, out } = makeRes();
         await mw(
             makeReq({
-                hostname: `${sub}.site.puter.localhost`,
+                hostname: `${sub}.site.localhost`,
                 path: '/missing',
             }),
             res,
@@ -1336,7 +1336,7 @@ describe('createPuterSiteMiddleware — __workers/ is never served', () => {
         const mw = buildMiddleware();
         const { res, out } = makeRes();
         await mw(
-            makeReq({ hostname: `${sub}.site.puter.localhost`, path }),
+            makeReq({ hostname: `${sub}.site.localhost`, path }),
             res,
             vi.fn(),
         );
@@ -1492,7 +1492,7 @@ describe('createPuterSiteMiddleware — hosting CSP', () => {
         const { res, out } = makeRes();
         await mw(
             makeReq({
-                hostname: `${sub}.site.puter.localhost`,
+                hostname: `${sub}.site.localhost`,
                 path: `/${filename}`,
             }),
             res,
@@ -1572,7 +1572,7 @@ const serveSite = async (sub: string) => {
     const { res, out } = makeRes();
     await mw(
         makeReq({
-            hostname: `${sub}.site.puter.localhost`,
+            hostname: `${sub}.site.localhost`,
             path: '/index.html',
         }),
         res,
@@ -1715,7 +1715,7 @@ describe('createPuterSiteMiddleware — private app sign-in token', () => {
         const homePath = `/${owner.username}`;
         const homeEntry = await server.stores.fsEntry.getEntryByPath(homePath);
         sub = `priv-${Math.random().toString(36).slice(2, 8)}`;
-        host = `${sub}.app.puter.localhost`;
+        host = `${sub}.app.localhost`;
         await server.stores.subdomain.create({
             userId: owner.id,
             subdomain: sub,

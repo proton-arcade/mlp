@@ -90,9 +90,9 @@ describe('PuterServer host header validation', () => {
         server = await setupTestServer(
             {
                 port,
-                domain: 'puter.localhost',
-                origin: `http://puter.localhost:${port}`,
-                api_base_url: `http://api.puter.localhost:${port}`,
+                domain: 'localhost',
+                origin: `http://localhost:${port}`,
+                api_base_url: `http://api.localhost:${port}`,
                 // The gate under test is skipped entirely when hosts are
                 // unrestricted (the OSS default).
                 allow_all_host_values: false,
@@ -116,9 +116,9 @@ describe('PuterServer host header validation', () => {
 
     it('accepts the configured main domain and its subdomains', async () => {
         for (const host of [
-            `puter.localhost:${port}`,
-            `api.puter.localhost:${port}`,
-            `anything.puter.localhost:${port}`,
+            `localhost:${port}`,
+            `api.localhost:${port}`,
+            `anything.localhost:${port}`,
         ]) {
             const res = await request('/healthcheck', { host });
             expect(res.status).not.toBe(400);
@@ -127,11 +127,11 @@ describe('PuterServer host header validation', () => {
 
     it('accepts the hosting domains and the `at.` alias derived from them', async () => {
         for (const host of [
-            `foo.site.puter.localhost:${port}`,
-            `foo.host.puter.localhost:${port}`,
-            `foo.app.puter.localhost:${port}`,
-            `foo.dev.puter.localhost:${port}`,
-            `someone.at.site.puter.localhost:${port}`,
+            `foo.site.localhost:${port}`,
+            `foo.host.localhost:${port}`,
+            `foo.app.localhost:${port}`,
+            `foo.dev.localhost:${port}`,
+            `someone.at.site.localhost:${port}`,
         ]) {
             const res = await request('/', { host });
             expect(res.status).not.toBe(400);
@@ -145,7 +145,7 @@ describe('PuterServer host header validation', () => {
     });
 
     it('rejects a lookalike suffix that only ends with the domain text', async () => {
-        const res = await request('/', { host: 'notputer.localhost' });
+        const res = await request('/', { host: 'notlocalhost' });
         expect(res.status).toBe(400);
     });
 
@@ -160,7 +160,7 @@ describe('PuterServer host header validation', () => {
 
     it('reflects the caller origin and allows credentials only on the api subdomain', async () => {
         const apiRes = await request('/healthcheck', {
-            host: `api.puter.localhost:${port}`,
+            host: `api.localhost:${port}`,
             origin: 'https://third-party.example',
         });
         expect(apiRes.headers['access-control-allow-origin']).toBe(
@@ -170,7 +170,7 @@ describe('PuterServer host header validation', () => {
         expect(String(apiRes.headers.vary).toLowerCase()).toContain('origin');
 
         const davRes = await request('/healthcheck', {
-            host: `dav.puter.localhost:${port}`,
+            host: `dav.localhost:${port}`,
             origin: 'https://third-party.example',
         });
         expect(davRes.headers['access-control-allow-credentials']).toBe(
@@ -180,7 +180,7 @@ describe('PuterServer host header validation', () => {
 
     it('falls back to `*` when the request carries no Origin', async () => {
         const res = await request('/healthcheck', {
-            host: `api.puter.localhost:${port}`,
+            host: `api.localhost:${port}`,
         });
         expect(res.headers['access-control-allow-origin']).toBe('*');
         expect(res.headers['access-control-allow-credentials']).toBeUndefined();
@@ -188,7 +188,7 @@ describe('PuterServer host header validation', () => {
 
     it('advertises the WebDAV verbs and headers the clients need', async () => {
         const res = await request('/healthcheck', {
-            host: `puter.localhost:${port}`,
+            host: `localhost:${port}`,
         });
         const methods = String(
             res.headers['access-control-allow-methods'] ?? '',
@@ -215,7 +215,7 @@ describe('PuterServer host header validation', () => {
         // controller instead.
         const res = await request(
             '/some-user',
-            { host: `dav.puter.localhost:${port}` },
+            { host: `dav.localhost:${port}` },
             'OPTIONS',
         );
         expect(res.headers['dav']).toContain('1');
@@ -228,7 +228,7 @@ describe('PuterServer host header validation', () => {
     // stays on the `dav` subdomain.
     // SKIPPED: anonymous request to a public route; the admin-only server lockdown answers 401 by design
     it.skip('routes every WebDAV verb on the dav subdomain, root included', async () => {
-        const dav = { host: `dav.puter.localhost:${port}` };
+        const dav = { host: `dav.localhost:${port}` };
         for (const [method, path] of [
             ['PROPFIND', '/'],
             ['PROPFIND', '/some-user/Documents'],
@@ -255,7 +255,7 @@ describe('PuterServer host header validation', () => {
         // thing keeping it off the main domain.
         const res = await request(
             '/',
-            { host: `puter.localhost:${port}` },
+            { host: `localhost:${port}` },
             'PROPFIND',
         );
         expect(res.status).not.toBe(401);
@@ -271,8 +271,8 @@ describe('PuterServer host header validation', () => {
         const res = await request(
             '/some-user/.vscode/settings.json',
             {
-                host: `dav.puter.localhost:${port}`,
-                origin: 'https://code.puter.localhost',
+                host: `dav.localhost:${port}`,
+                origin: 'https://code.localhost',
                 'access-control-request-method': 'PROPFIND',
                 'access-control-request-headers': 'authorization,depth',
             },
@@ -285,7 +285,7 @@ describe('PuterServer host header validation', () => {
             'Depth',
         );
         expect(res.headers['access-control-allow-origin']).toBe(
-            'https://code.puter.localhost',
+            'https://code.localhost',
         );
         // A browser client reads ETags and lock tokens off the reply, so they
         // have to be exposed to it.
@@ -297,7 +297,7 @@ describe('PuterServer host header validation', () => {
     it('still short-circuits OPTIONS preflight off the dav subdomain', async () => {
         const res = await request(
             '/some-path',
-            { host: `api.puter.localhost:${port}` },
+            { host: `api.localhost:${port}` },
             'OPTIONS',
         );
         expect(res.status).toBe(200);
@@ -306,12 +306,12 @@ describe('PuterServer host header validation', () => {
 
     it('pins X-Frame-Options on the main domain only', async () => {
         const main = await request('/healthcheck', {
-            host: 'puter.localhost',
+            host: 'localhost',
         });
         expect(main.headers['x-frame-options']).toBe('SAMEORIGIN');
 
         const api = await request('/healthcheck', {
-            host: `api.puter.localhost:${port}`,
+            host: `api.localhost:${port}`,
         });
         expect(api.headers['x-frame-options']).toBeUndefined();
     });
@@ -323,7 +323,7 @@ describe('PuterServer host header validation', () => {
         server.clients.event.on('ip.validate', handler as never);
         try {
             const res = await request('/healthcheck', {
-                host: `puter.localhost:${port}`,
+                host: `localhost:${port}`,
             });
             expect(res.status).toBe(403);
             expect(res.body).toBe('Forbidden');
@@ -401,8 +401,8 @@ describe('PuterServer host header validation — permissive modes', () => {
         server = await setupTestServer(
             {
                 port,
-                domain: 'puter.localhost',
-                origin: `http://puter.localhost:${port}`,
+                domain: 'localhost',
+                origin: `http://localhost:${port}`,
                 allow_all_host_values: false,
                 allow_no_host_header: false,
                 custom_domains_enabled: true,
@@ -501,9 +501,9 @@ describe('PuterServer claimed subdomains', () => {
         server = await setupTestServer(
             {
                 port,
-                domain: 'puter.localhost',
-                origin: `http://puter.localhost:${port}`,
-                static_hosting_domain: 'site.puter.localhost',
+                domain: 'localhost',
+                origin: `http://localhost:${port}`,
+                static_hosting_domain: 'site.localhost',
             } as unknown as IConfig,
             { listen: true },
         );
@@ -529,7 +529,7 @@ describe('PuterServer claimed subdomains', () => {
         rawRequest(
             port,
             path,
-            { ...headers, host: 'claimtest.puter.localhost' },
+            { ...headers, host: 'claimtest.localhost' },
             method,
         );
 
@@ -542,7 +542,7 @@ describe('PuterServer claimed subdomains', () => {
         const unclaimed = await rawRequest(
             port,
             path,
-            { ...headers, host: 'unclaimed.puter.localhost' },
+            { ...headers, host: 'unclaimed.localhost' },
             method,
         );
         expect(res.status).toBe(404);
@@ -595,7 +595,7 @@ describe('PuterServer claimed subdomains', () => {
         }
         expect(seen).toContain('GET /everywhere');
         const elsewhere = await rawRequest(port, '/everywhere', {
-            host: 'puter.localhost',
+            host: 'localhost',
         });
         expect(elsewhere.body).toBe('everywhere');
     });
@@ -604,12 +604,12 @@ describe('PuterServer claimed subdomains', () => {
 
     it.skip("keeps the claim's routes off every other host", async () => {
         const root = await rawRequest(port, '/hello', {
-            host: 'puter.localhost',
+            host: 'localhost',
         });
         expect(root.body).toBe('root hello');
         for (const host of [
-            'api.puter.localhost',
-            'unclaimed.puter.localhost',
+            'api.localhost',
+            'unclaimed.localhost',
         ]) {
             for (const path of ['/hello', '/ctl/hello']) {
                 const res = await rawRequest(port, path, { host });
@@ -617,7 +617,7 @@ describe('PuterServer claimed subdomains', () => {
             }
         }
         const rootController = await rawRequest(port, '/ctl/hello', {
-            host: 'puter.localhost',
+            host: 'localhost',
         });
         expect(rootController.body).not.toBe('from controller');
     });
@@ -639,12 +639,12 @@ describe('PuterServer claimed subdomains', () => {
 
     it('treats a host carrying a port like the same host without one', async () => {
         const ported = await rawRequest(port, '/hello', {
-            host: `claimtest.puter.localhost:${port}`,
+            host: `claimtest.localhost:${port}`,
         });
         expect(ported.body).toBe('from extension');
 
         const unclaimed = await rawRequest(port, '/healthcheck', {
-            host: `unclaimed.puter.localhost:${port}`,
+            host: `unclaimed.localhost:${port}`,
         });
         expect(unclaimed.status).toBe(404);
         expect(
@@ -654,10 +654,10 @@ describe('PuterServer claimed subdomains', () => {
 
     it('leaves a deeper host under the claimed label alone', async () => {
         const res = await rawRequest(port, '/hello', {
-            host: 'claimtest.x.puter.localhost',
+            host: 'claimtest.x.localhost',
         });
         const unclaimed = await rawRequest(port, '/hello', {
-            host: 'unclaimed.x.puter.localhost',
+            host: 'unclaimed.x.localhost',
         });
         expect(seen).toEqual([]);
         expect(comparable(res)).toEqual(comparable(unclaimed));
@@ -858,8 +858,8 @@ describe('PuterServer route option validation', () => {
         const server = await setupTestServer(
             {
                 port: listenPort,
-                domain: 'puter.localhost',
-                origin: `http://puter.localhost:${listenPort}`,
+                domain: 'localhost',
+                origin: `http://localhost:${listenPort}`,
             } as unknown as IConfig,
             { listen: true },
         );
@@ -867,7 +867,7 @@ describe('PuterServer route option validation', () => {
             // `false` declares nothing: no plan gate, and no auth gate
             // dragged in behind it.
             const res = await rawRequest(listenPort, '/plan-open', {
-                host: 'puter.localhost',
+                host: 'localhost',
             });
             expect(res.status).toBe(200);
         } finally {
@@ -946,8 +946,8 @@ describe('PuterServer HTTP alarm gate', () => {
         server = await setupTestServer(
             {
                 port,
-                domain: 'puter.localhost',
-                origin: `http://puter.localhost:${port}`,
+                domain: 'localhost',
+                origin: `http://localhost:${port}`,
             } as unknown as IConfig,
             { listen: true },
         );
@@ -966,7 +966,7 @@ describe('PuterServer HTTP alarm gate', () => {
         const alarm = vi
             .spyOn(server.clients.alarm, 'create')
             .mockImplementation(() => undefined);
-        const res = await rawRequest(port, path, { host: 'puter.localhost' });
+        const res = await rawRequest(port, path, { host: 'localhost' });
         expect(res.status).toBe(status);
         const raised = alarm.mock.calls.find((c) =>
             String(c[0]).startsWith(`http_${status}:GET:${path}:`),
@@ -1014,7 +1014,7 @@ describe('PuterServer HTTP alarm gate', () => {
         const res = await rawRequest(
             port,
             '/explode-with-secrets?auth_token=query-secret',
-            { host: 'puter.localhost', 'content-type': 'application/json' },
+            { host: 'localhost', 'content-type': 'application/json' },
             'POST',
             JSON.stringify({ username: 'u', password: 'body-secret' }),
         );
@@ -1091,7 +1091,7 @@ describe('PuterServer keep-alive timeout', () => {
             socket.once('error', reject);
         });
         socket.write(
-            'GET /healthcheck HTTP/1.1\r\nHost: puter.localhost\r\n\r\n',
+            'GET /healthcheck HTTP/1.1\r\nHost: localhost\r\n\r\n',
         );
         await new Promise<void>((resolve) => socket.once('data', resolve));
 

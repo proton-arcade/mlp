@@ -37,9 +37,9 @@ import {
 // against a live store (replica lag, malformed owner ids, lookup errors).
 
 const CONFIG = {
-    static_hosting_domain: 'site.puter.localhost',
+    static_hosting_domain: 'site.localhost',
     static_hosting_domain_alt: 'puter.site',
-    private_app_hosting_domain: 'private.puter.localhost',
+    private_app_hosting_domain: 'private.localhost',
 };
 
 const fakeStore = (
@@ -55,9 +55,9 @@ describe('getPuterHostedDomains', () => {
             getPuterHostedDomains({
                 static_hosting_domain: '  .Puter.Site  ',
                 static_hosting_domain_alt: 'puter.site',
-                private_app_hosting_domain: 'private.puter.localhost:4100',
+                private_app_hosting_domain: 'private.localhost:4100',
             }).sort(),
-        ).toEqual(['private.puter.localhost', 'puter.site']);
+        ).toEqual(['private.localhost', 'puter.site']);
     });
 
     it('ignores absent and non-string config values', () => {
@@ -94,18 +94,18 @@ describe('buildHostedSubdomainIndexUrlCandidates', () => {
 
     it('keeps both the ported and bare host for dev configs', () => {
         const candidates = buildHostedSubdomainIndexUrlCandidates('dev', {
-            static_hosting_domain: 'site.puter.localhost:4100',
+            static_hosting_domain: 'site.localhost:4100',
             protocol: 'http',
         });
-        expect(candidates).toContain('http://dev.site.puter.localhost:4100/');
-        expect(candidates).toContain('http://dev.site.puter.localhost/');
+        expect(candidates).toContain('http://dev.site.localhost:4100/');
+        expect(candidates).toContain('http://dev.site.localhost/');
     });
 
     it('spans the alt and private hosting domains', () => {
         const candidates = buildHostedSubdomainIndexUrlCandidates('x', CONFIG);
         expect(candidates).toContain('https://x.puter.site/');
-        expect(candidates).toContain('https://x.site.puter.localhost/');
-        expect(candidates).toContain('https://x.private.puter.localhost/');
+        expect(candidates).toContain('https://x.site.localhost/');
+        expect(candidates).toContain('https://x.private.localhost/');
     });
 
     it('normalizes the name and refuses unusable input', () => {
@@ -135,13 +135,13 @@ describe('extractPuterHostedSubdomain', () => {
     it('matches the alt and private hosting domains too', () => {
         expect(
             extractPuterHostedSubdomain(
-                'https://a.site.puter.localhost/index.html',
+                'https://a.site.localhost/index.html',
                 CONFIG,
             ),
         ).toBe('a');
         expect(
             extractPuterHostedSubdomain(
-                'https://b.private.puter.localhost/',
+                'https://b.private.localhost/',
                 CONFIG,
             ),
         ).toBe('b');
@@ -157,13 +157,13 @@ describe('extractPuterHostedSubdomain', () => {
     });
 
     it('prefers the longest matching hosting domain', () => {
-        // `x.site.puter.localhost` ends with both `site.puter.localhost`
+        // `x.site.localhost` ends with both `site.localhost`
         // and (hypothetically) a shorter configured suffix. Longest wins,
         // so the label is `x` — not `x.site`.
         expect(
-            extractPuterHostedSubdomain('https://x.site.puter.localhost/', {
+            extractPuterHostedSubdomain('https://x.site.localhost/', {
                 ...CONFIG,
-                private_app_hosting_domain_alt: 'puter.localhost',
+                private_app_hosting_domain_alt: 'localhost',
             }),
         ).toBe('x');
     });
@@ -363,12 +363,12 @@ describe('buildHostedBackingDenial', () => {
 // created through the real store resolve the same way `AppDriver` would see
 // them in production.
 const HOSTING_CONFIG = {
-    static_hosting_domain: 'site.puter.localhost',
-    static_hosting_domain_alt: 'host.puter.localhost',
-    private_app_hosting_domain: 'app.puter.localhost',
-    private_app_hosting_domain_alt: 'dev.puter.localhost',
+    static_hosting_domain: 'site.localhost',
+    static_hosting_domain_alt: 'host.localhost',
+    private_app_hosting_domain: 'app.localhost',
+    private_app_hosting_domain_alt: 'dev.localhost',
 };
-const hostedUrl = (sub: string) => `https://${sub}.site.puter.localhost/`;
+const hostedUrl = (sub: string) => `https://${sub}.site.localhost/`;
 
 describe('hostedIndexUrlBackingsAreUnavailable (batched, against a real store)', () => {
     let server: PuterServer;

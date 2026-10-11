@@ -85,7 +85,7 @@ describe('the concurrency-slot renew timer touching presence', () => {
             broadcast: broadcastConfig,
             events: { enabled: true },
         } as never, { listen: true });
-        origin = `http://puter.localhost:${port}`;
+        origin = `http://localhost:${port}`;
     }, 60_000);
 
     afterAll(async () => {

@@ -4,7 +4,7 @@
 //   1. installs dependencies if they are missing
 //   2. writes a git-ignored config.json with random secrets if there is none
 //   3. builds the desktop (GUI) and SDK bundles when they are missing or older than their sources
-//   4. builds the backend and runs it on http://puter.localhost:4100
+//   4. builds the backend and runs it on http://localhost:4100
 //
 // Other modes, all optional:
 //

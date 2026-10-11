@@ -339,7 +339,7 @@ describe('SocketService (live socket.io)', () => {
         port = await allocateEphemeralPort();
         server = await setupTestServer({ port } as never, { listen: true });
         socketService = server.services.socket as unknown as SocketService;
-        // puter.localhost does not resolve in every environment, so connect to
+        // localhost does not resolve in every environment, so connect to
         // the loopback address and send the hostname the server expects.
         serverUrl = `http://127.0.0.1:${port}`;
         user = await createTestUser(server, {
@@ -372,7 +372,7 @@ describe('SocketService (live socket.io)', () => {
                 reconnection: false,
                 ...opts,
                 extraHeaders: {
-                    Host: `puter.localhost:${port}`,
+                    Host: `localhost:${port}`,
                     ...(opts.extraHeaders ?? {}),
                 },
             });
@@ -1104,7 +1104,7 @@ describe('SocketService — outer.gui fan-out', () => {
 describe('SocketService — before attachHttpServer', () => {
     const makeDetached = () => {
         const args = [
-            { domain: 'puter.localhost' },
+            { domain: 'localhost' },
             { redis: { get: async () => null } },
             {},
             {},

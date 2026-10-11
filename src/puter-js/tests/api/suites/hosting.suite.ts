@@ -5,7 +5,7 @@ const home = (t: TestContext) => `/${t.env.users.user.username}`;
 
 /**
  * Sites are served on `<subdomain>.<static_hosting_domain>` — with the
- * default test config that's `<subdomain>.site.puter.localhost`, which
+ * default test config that's `<subdomain>.site.localhost`, which
  * resolves to loopback like every other *.localhost name.
  *
  * The subdomain driver requires `root_dir` to be an existing directory,
@@ -13,7 +13,7 @@ const home = (t: TestContext) => `/${t.env.users.user.username}`;
  */
 const siteUrl = (t: TestContext, subdomain: string) => {
     const port = new URL(t.env.apiOrigin).port;
-    return `http://${subdomain}.site.puter.localhost:${port}/`;
+    return `http://${subdomain}.site.localhost:${port}/`;
 };
 
 const makeSiteDir = async (t: TestContext, name: string, html?: string) => {

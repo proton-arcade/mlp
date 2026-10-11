@@ -4849,7 +4849,7 @@ describe('LegacyFSController.updateFsentryThumbnail', () => {
 // is served regardless, so the guard is applied here too.
 
 describe('LegacyFSController GET /get-launch-apps', () => {
-    const hostedUrl = (sub: string) => `https://${sub}.site.puter.localhost/`;
+    const hostedUrl = (sub: string) => `https://${sub}.site.localhost/`;
 
     // The route is an inline lambda in `registerRoutes`, so pull it off a
     // freshly-registered router rather than calling a named method.

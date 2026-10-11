@@ -85,6 +85,9 @@ const startHttpsFront = () => new Promise((resolve, reject) => {
             headers: {
                 ...req.headers,
                 'x-forwarded-proto': 'https',
+                // Overwrite (never append to) any client-supplied value: this
+                // front is the trust boundary, so the backend sees one hop.
+                'x-forwarded-for': req.socket.remoteAddress ?? '',
                 'x-forwarded-host': req.headers.host ?? HOST,
             },
         }, (upRes) => {
@@ -135,25 +138,18 @@ const startHttpsFront = () => new Promise((resolve, reject) => {
 
 // ---------------------------------------------------------------- launch
 
+// The HTTPS front is bound first. Only if that succeeds is the backend started,
+// so a refused port 443 stops the launcher before any install or build work.
 // The child runs in its own process group so that stopping the launcher also
 // stops everything it started (the backend is a grandchild of this process).
-const child = spawn(
-    process.execPath,
-    [path.join(rootDir, 'tools', 'start.mjs'), ...args],
-    {
-        stdio: 'inherit',
-        cwd: rootDir,
-        detached: true,
-        // The backend listens on loopback only, so the HTTPS front above is
-        // the single way in. Docker deployments do not run this launcher.
-        env: { ...process.env, MIXT_BIND_HOST: '127.0.0.1' },
-    },
-);
 
+let child = null;
 let front = null;
 let shuttingDown = false;
+let failed = false;
 
 const killGroup = (signal) => {
+    if ( !child ) return;
     try {
         process.kill(-child.pid, signal);
     } catch {
@@ -165,30 +161,46 @@ const shutdown = (signal) => {
     if ( shuttingDown ) return;
     shuttingDown = true;
     if ( front ) front.close();
-    if ( child.exitCode === null && child.signalCode === null ) killGroup(signal);
+    if ( child && child.exitCode === null && child.signalCode === null ) killGroup(signal);
+    else if ( !child ) process.exit(failed ? 1 : 0);
 };
 
 process.on('SIGINT', () => shutdown('SIGINT'));
 process.on('SIGTERM', () => shutdown('SIGTERM'));
 
-let failed = false;
-
-child.on('exit', (code, signal) => {
-    if ( front ) front.close();
-    // Make sure nothing started by the child outlives it.
-    killGroup('SIGTERM');
-    if ( signal && !failed ) process.kill(process.pid, signal);
-    else process.exitCode = failed ? 1 : (code ?? 1);
-});
+const launchBackend = () => {
+    child = spawn(
+        process.execPath,
+        [path.join(rootDir, 'tools', 'start.mjs'), ...args],
+        {
+            stdio: 'inherit',
+            cwd: rootDir,
+            detached: true,
+            // The backend listens on loopback only, so the HTTPS front is the
+            // single way in. Docker deployments do not run this launcher.
+            env: { ...process.env, MIXT_BIND_HOST: '127.0.0.1' },
+        },
+    );
+    child.on('exit', (code, signal) => {
+        if ( front ) front.close();
+        // Make sure nothing started by the child outlives it.
+        killGroup('SIGTERM');
+        if ( signal && !failed ) process.kill(process.pid, signal);
+        else process.exitCode = failed ? 1 : (code ?? 1);
+    });
+};
 
 if ( isBackendMode ) {
     startHttpsFront().then((server) => {
         front = server;
         console.log(`\nHTTPS is listening. Open https://${HOST}/ once the desktop has booted.`);
         console.log('The browser will warn about the self-signed certificate; accept it for this local address.\n');
+        launchBackend();
     }).catch((err) => {
         console.error(err.message);
         failed = true;
-        shutdown('SIGTERM');
+        process.exitCode = 1;
     });
+} else {
+    launchBackend();
 }

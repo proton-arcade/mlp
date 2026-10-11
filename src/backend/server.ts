@@ -281,7 +281,14 @@ export class PuterServer {
         // `config.trust_proxy` to the hop count (e.g. `1` for a single
         // Cloudflare/nginx hop). Never `true` in prod: that trusts every hop
         // and makes XFF forgeable.
-        this.#app.set('trust proxy', this.#config.trust_proxy ?? false);
+        // Under `server.cjs` the only caller is the local HTTPS front, which
+        // overwrites X-Forwarded-For with the real client address, so exactly
+        // one hop is trusted. Otherwise the configured value applies.
+        const fronted = Boolean(process.env.MIXT_BIND_HOST);
+        this.#app.set(
+            'trust proxy',
+            this.#config.trust_proxy ?? (fronted ? 1 : false),
+        );
         // Every subdomain gate reads `req.subdomains`, which express derives by
         // dropping `subdomain offset` labels from the right of the hostname.
         // The offset is the root domain's own label count, so a deployment on
@@ -539,7 +546,7 @@ export class PuterServer {
             res.sendStatus(200);
         });
 
-        // -- Local Worker proxy (*.workers.puter.localhost) ----------
+        // -- Local Worker proxy (*.workers.localhost) ----------
         // Dev-only Miniflare dispatch, gated on `config.workers.localServer`.
         // Mounted BEFORE body parsing so the Worker receives the raw request
         // stream; no-op in production (real Cloudflare via WorkerDriver).

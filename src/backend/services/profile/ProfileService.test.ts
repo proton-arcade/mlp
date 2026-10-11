@@ -270,7 +270,7 @@ describe('ProfileService', () => {
         const ask = async (name: string, subdomain = PROFILES_SUBDOMAIN) => {
             const data = {
                 subdomain,
-                host: `${subdomain}.site.puter.localhost`,
+                host: `${subdomain}.site.localhost`,
                 requestPath: `/${name}`,
                 entry: { name, path: `${PROFILES_PATH_PREFIX}/${name}` },
                 result: { allowed: true },
@@ -299,8 +299,8 @@ describe('ProfileService', () => {
         await service.updateProfile(user, { picture: PICTURE });
         const middleware = createPuterSiteMiddleware(
             {
-                domain: 'puter.localhost',
-                static_hosting_domain: 'site.puter.localhost',
+                domain: 'localhost',
+                static_hosting_domain: 'site.localhost',
                 protocol: 'http',
             } as unknown as IConfig,
             {
@@ -330,7 +330,7 @@ describe('ProfileService', () => {
             res.cookie = chain;
             res.redirect = chain as never;
             const req = {
-                hostname: `${PROFILES_SUBDOMAIN}.site.puter.localhost`,
+                hostname: `${PROFILES_SUBDOMAIN}.site.localhost`,
                 path: `/${user.uuid}.profile`,
                 originalUrl: `/${user.uuid}.profile`,
                 protocol: 'http',
@@ -402,10 +402,10 @@ describe('ProfileService', () => {
 
     it('builds the hosted URL from the static hosting domain', async () => {
         const user = await makeUser();
-        // The default test config hosts sites under `site.puter.localhost`.
+        // The default test config hosts sites under `site.localhost`.
         expect(service.getPublicUrl(user)).toMatch(
             new RegExp(
-                `^https?://${PROFILES_SUBDOMAIN}\\.site\\.puter\\.localhost(:\\d+)?/${user.uuid}\\.profile$`,
+                `^https?://${PROFILES_SUBDOMAIN}\\.site\\.localhost(:\\d+)?/${user.uuid}\\.profile$`,
             ),
         );
     });

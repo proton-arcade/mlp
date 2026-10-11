@@ -45,8 +45,8 @@ if ( window.url_params.has('puter.domain') ) {
 
 // static hosting domain
 window.static_hosting_domain = 'puter.site';
-   if ( window.domain === 'puter.localhost' ) {
-       window.static_hosting_domain = 'site.puter.localhost';
+   if ( window.domain === 'localhost' ) {
+       window.static_hosting_domain = 'site.localhost';
    } else if ( window.domain && window.domain !== 'puter.com' ) {
        window.static_hosting_domain = `site.${window.domain}`;
    }

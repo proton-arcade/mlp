@@ -132,6 +132,7 @@ export default defineConfig(({ mode }) => ({
     },
     test: {
         globals: true,
+        setupFiles: ['src/backend/testLocalhostDns.ts'],
         ...(isPgmockMode
             ? {
                   testTimeout: pgmockTimeoutMs,

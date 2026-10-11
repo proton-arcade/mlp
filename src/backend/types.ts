@@ -625,7 +625,7 @@ interface IConfigOptional {
 
     /** Externally-visible protocol. Default 'http'. */
     protocol: string;
-    /** Primary domain for Puter (e.g., `puter.localhost`, `puter.com`). */
+    /** Primary domain for Puter (e.g., `localhost`, `puter.com`). */
     domain: string;
     /**
      * Externally-visible port. Defaults to `port`. Behind a reverse proxy, set
@@ -675,7 +675,7 @@ interface IConfigOptional {
     static_hosting_domain: string;
     /** Alt static hosting domain. */
     static_hosting_domain_alt: string;
-    /** Private app hosting domain (e.g., `app.puter.localhost`). */
+    /** Private app hosting domain (e.g., `app.localhost`). */
     private_app_hosting_domain: string;
     /** Alt private app hosting domain. */
     private_app_hosting_domain_alt: string;

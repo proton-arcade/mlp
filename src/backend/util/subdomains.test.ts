@@ -23,7 +23,10 @@ import { subdomainOffsetForDomain } from './subdomains.ts';
 describe('subdomainOffsetForDomain', () => {
     it('keeps express default for a two-label root domain', () => {
         expect(subdomainOffsetForDomain('puter.com')).toBe(2);
-        expect(subdomainOffsetForDomain('puter.localhost')).toBe(2);
+    });
+
+    it('counts the single label of a plain localhost root domain', () => {
+        expect(subdomainOffsetForDomain('localhost')).toBe(1);
     });
 
     it('counts every label of a deeper root domain', () => {

@@ -104,7 +104,7 @@ describe('isLoopbackTarget', () => {
         expect(isLoopbackTarget('http://127.0.0.1:4000/')).toBe(true);
         expect(isLoopbackTarget('http://127.1.2.3:4000/')).toBe(true);
         expect(isLoopbackTarget('http://[::1]:4000/')).toBe(true);
-        expect(isLoopbackTarget('http://puter.localhost:4100/')).toBe(true);
+        expect(isLoopbackTarget('http://localhost:4100/')).toBe(true);
     });
 
     // A hostname that merely starts or ends with something loopback-shaped is
@@ -307,7 +307,7 @@ describe('isRemoteBackendGui', () => {
     it('distinguishes scheme and port, not just host', () => {
         expect(isRemoteBackendGui('https://puter.com', 'http://puter.com'))
             .toBe(true);
-        expect(isRemoteBackendGui('http://puter.localhost:4100', 'http://puter.localhost:4000'))
+        expect(isRemoteBackendGui('http://localhost:4100', 'http://localhost:4000'))
             .toBe(true);
     });
 

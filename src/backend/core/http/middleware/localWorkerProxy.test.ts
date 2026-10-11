@@ -110,7 +110,7 @@ describe('createLocalWorkerProxyMiddleware', () => {
         );
 
         await middleware(
-            makeReq({ hostname: 'demo.workers.puter.localhost' }),
+            makeReq({ hostname: 'demo.workers.localhost' }),
             new FakeRes() as unknown as Response,
             next,
         );
@@ -120,10 +120,10 @@ describe('createLocalWorkerProxyMiddleware', () => {
     });
 
     it.each([
-        ['a host outside the worker zone', 'api.puter.localhost'],
-        ['the bare worker zone itself', 'workers.puter.localhost'],
-        ['a leading-dot bare zone', '.workers.puter.localhost'],
-        ['a lookalike suffix', 'evil-workers.puter.localhost'],
+        ['a host outside the worker zone', 'api.localhost'],
+        ['the bare worker zone itself', 'workers.localhost'],
+        ['a leading-dot bare zone', '.workers.localhost'],
+        ['a lookalike suffix', 'evil-workers.localhost'],
         ['an empty hostname', ''],
         ['a whitespace hostname', '   '],
     ])('passes %s through untouched', async (_label, hostname) => {
@@ -173,9 +173,9 @@ describe('createLocalWorkerProxyMiddleware', () => {
         );
 
         for (const hostname of [
-            'demo.workers.puter.localhost',
-            'DEMO.Workers.Puter.Localhost',
-            'demo.workers.puter.localhost:4100',
+            'demo.workers.localhost',
+            'DEMO.Workers.Localhost',
+            'demo.workers.localhost:4100',
         ]) {
             await middleware(
                 makeReq({ hostname }),
@@ -199,11 +199,11 @@ describe('createLocalWorkerProxyMiddleware', () => {
 
         await middleware(
             makeReq({
-                hostname: 'demo.workers.puter.localhost',
+                hostname: 'demo.workers.localhost',
                 method: 'post',
                 originalUrl: '/api/thing?x=1',
                 headers: {
-                    host: 'demo.workers.puter.localhost',
+                    host: 'demo.workers.localhost',
                     'x-custom': 'v',
                     'x-multi': ['a', 'b'],
                     'x-absent': undefined,
@@ -217,7 +217,7 @@ describe('createLocalWorkerProxyMiddleware', () => {
         const fetchRequest = received as unknown as globalThis.Request;
         expect(fetchRequest.method).toBe('POST');
         expect(fetchRequest.url).toBe(
-            'http://demo.workers.puter.localhost/api/thing?x=1',
+            'http://demo.workers.localhost/api/thing?x=1',
         );
         expect(fetchRequest.headers.get('x-custom')).toBe('v');
         expect(fetchRequest.headers.get('x-multi')).toBe('a, b');
@@ -238,7 +238,7 @@ describe('createLocalWorkerProxyMiddleware', () => {
         for (const method of ['GET', 'HEAD']) {
             await middleware(
                 makeReq({
-                    hostname: 'demo.workers.puter.localhost',
+                    hostname: 'demo.workers.localhost',
                     method,
                 }),
                 new FakeRes() as unknown as Response,
@@ -261,7 +261,7 @@ describe('createLocalWorkerProxyMiddleware', () => {
 
         await middleware(
             makeReq({
-                hostname: 'demo.workers.puter.localhost',
+                hostname: 'demo.workers.localhost',
                 originalUrl: '/x',
                 headers: {},
             }),
@@ -270,7 +270,7 @@ describe('createLocalWorkerProxyMiddleware', () => {
         );
 
         expect((received as unknown as globalThis.Request).url).toBe(
-            'http://workers.puter.localhost/x',
+            'http://workers.localhost/x',
         );
     });
 
@@ -294,7 +294,7 @@ describe('createLocalWorkerProxyMiddleware', () => {
 
         const next = vi.fn();
         await middleware(
-            makeReq({ hostname: 'demo.workers.puter.localhost' }),
+            makeReq({ hostname: 'demo.workers.localhost' }),
             res as unknown as Response,
             next,
         );
@@ -315,7 +315,7 @@ describe('createLocalWorkerProxyMiddleware', () => {
         );
 
         await middleware(
-            makeReq({ hostname: 'demo.workers.puter.localhost' }),
+            makeReq({ hostname: 'demo.workers.localhost' }),
             res as unknown as Response,
             vi.fn(),
         );
@@ -342,7 +342,7 @@ describe('createLocalWorkerProxyMiddleware', () => {
         );
 
         await middleware(
-            makeReq({ hostname: 'demo.workers.puter.localhost' }),
+            makeReq({ hostname: 'demo.workers.localhost' }),
             res as unknown as Response,
             vi.fn(),
         );
@@ -362,7 +362,7 @@ describe('createLocalWorkerProxyMiddleware', () => {
         );
 
         await middleware(
-            makeReq({ hostname: 'demo.workers.puter.localhost' }),
+            makeReq({ hostname: 'demo.workers.localhost' }),
             new FakeRes() as unknown as Response,
             next,
         );

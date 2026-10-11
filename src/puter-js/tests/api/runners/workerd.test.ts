@@ -27,7 +27,7 @@ const workerdCoverage: IstanbulCoverage[] = [];
 // bundle is deployed through the real workers pipeline (SDK
 // `workers.create` → WorkerDriver → LocalWorkerService), and each test is
 // dispatched over HTTP through the local worker proxy at
-// `<name>.workers.puter.localhost`, exactly like a production Puter worker.
+// `<name>.workers.localhost`, exactly like a production Puter worker.
 describe('puter.js API suites (workerd)', () => {
     let env: PuterTestEnv;
     let manifest: EnvManifest;
@@ -56,7 +56,7 @@ describe('puter.js API suites (workerd)', () => {
         await puter.workers.create(WORKER_NAME, sourcePath);
 
         const port = new URL(env.apiOrigin).port;
-        workerUrl = `http://${WORKER_NAME}.workers.puter.localhost:${port}/run`;
+        workerUrl = `http://${WORKER_NAME}.workers.localhost:${port}/run`;
     }, 120_000);
 
     afterAll(async () => {

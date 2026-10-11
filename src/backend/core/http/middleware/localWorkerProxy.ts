@@ -31,9 +31,9 @@ interface Layers {
 }
 
 // Local analogue of the production `<name>.puter.work` worker domain. Requests
-// to `<name>.workers.puter.localhost` are dispatched into a Miniflare instance
+// to `<name>.workers.localhost` are dispatched into a Miniflare instance
 // by `LocalWorkerService`, which mirrors the real Cloudflare dispatch path.
-const WORKER_HOST_SUFFIX = 'workers.puter.localhost';
+const WORKER_HOST_SUFFIX = 'workers.localhost';
 
 // Minimal WHATWG-Response shape we consume from Miniflare's `dispatchFetch`.
 // It isn't the Node global `Response`, so we type it structurally rather than
@@ -51,7 +51,7 @@ function normalizeHost(value: string | undefined | null): string | null {
     return trimmed.split(':')[0] || null;
 }
 
-// `<name>.workers.puter.localhost` → `name`. Returns null for the bare zone or
+// `<name>.workers.localhost` → `name`. Returns null for the bare zone or
 // any host outside it. Flip this if your dev DNS puts the name elsewhere.
 function workerNameFromHost(host: string): string | null {
     if (host === WORKER_HOST_SUFFIX) return null;
@@ -116,9 +116,9 @@ function sendFetchResponse(
 }
 
 /**
- * Serves local Workers on `*.workers.puter.localhost` by dispatching into
- * Miniflare via `LocalWorkerService`. No-op unless `config.workers.localServer`
- * is set — production keeps hitting real Cloudflare through `WorkerDriver`.
+ * Serves local Workers on `*.workers.localhost` by dispatching into Miniflare
+ * via `LocalWorkerService`. No-op unless `config.workers.localServer` is set —
+ * production keeps hitting real Cloudflare through `WorkerDriver`.
  *
  * Mount this BEFORE the body-parsing middleware in `server.ts` so the Worker
  * receives the raw request stream.

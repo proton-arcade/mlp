@@ -59,8 +59,8 @@ export interface PrivateHostingConfig {
     /**
      * Raw hosting domain values (preserving port, if configured). Used for
      * `index_url` candidate generation — the DB stores URLs exactly as the app
-     * was created, so dev setups with explicit ports like
-     * `app.puter.localhost:4100` must be matched verbatim.
+     * was created, so dev setups with explicit ports like `app.localhost:4100`
+     * must be matched verbatim.
      */
     staticDomainsRaw: string[];
     privateDomainsRaw: string[];
@@ -640,7 +640,7 @@ export function buildPrivateHostRedirect(
     config: PrivateHostingConfig,
 ): string | null {
     // Prefer the raw configured value so dev setups that include a port
-    // (`app.puter.localhost:4100`) produce a working redirect target.
+    // (`app.localhost:4100`) produce a working redirect target.
     const privateDomain =
         config.privateDomainsRaw[0] ?? config.privateDomains[0];
     if (!privateDomain) return null;

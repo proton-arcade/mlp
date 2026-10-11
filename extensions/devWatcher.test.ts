@@ -251,7 +251,7 @@ describe('devWatcher extension', () => {
 
         const service = makeService({
             env: 'dev',
-            origin: 'http://puter.localhost:4100',
+            origin: 'http://localhost:4100',
             devwatch: {
                 root: workdir,
                 commands: [
@@ -293,7 +293,7 @@ describe('devWatcher extension', () => {
             'env output',
         );
         const line = logLines(log).find((l) => l.includes('STATIC=literal'))!;
-        expect(line).toContain('ORIGIN=http://puter.localhost:4100');
+        expect(line).toContain('ORIGIN=http://localhost:4100');
         expect(line).toContain('MISSING=undefined');
 
         // A null-property read is expected noise and stays silent; any

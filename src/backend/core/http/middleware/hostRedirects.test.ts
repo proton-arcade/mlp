@@ -249,14 +249,14 @@ describe('createUserSubdomainNotFound', () => {
 
     it('matches the domain suffix with its port when one is configured', () => {
         const localConfig = {
-            domain: 'puter.localhost:4100',
-            static_hosting_domain: 'site.puter.localhost:4100',
+            domain: 'localhost:4100',
+            static_hosting_domain: 'site.localhost:4100',
         } as IConfig;
         const { next } = run(
             createUserSubdomainNotFound(localConfig),
             makeReq({
                 subdomains: ['localhost', 'puter', 'foo'],
-                host: 'foo.puter.localhost:4100',
+                host: 'foo.localhost:4100',
                 originalUrl: '/x',
                 protocol: 'http',
             }),
@@ -265,11 +265,11 @@ describe('createUserSubdomainNotFound', () => {
     });
 
     const selfHosted = {
-        domain: 'puter.localhost',
-        static_hosting_domain: 'site.puter.localhost',
-        static_hosting_domain_alt: 'host.puter.localhost',
-        private_app_hosting_domain: 'app.puter.localhost',
-        private_app_hosting_domain_alt: 'dev.puter.localhost',
+        domain: 'localhost',
+        static_hosting_domain: 'site.localhost',
+        static_hosting_domain_alt: 'host.localhost',
+        private_app_hosting_domain: 'app.localhost',
+        private_app_hosting_domain_alt: 'dev.localhost',
     } as IConfig;
 
     it('404s a bare subdomain on the main domain (self-hosted)', () => {
@@ -277,7 +277,7 @@ describe('createUserSubdomainNotFound', () => {
             createUserSubdomainNotFound(selfHosted),
             makeReq({
                 subdomains: ['localhost', 'puter', 'foo'],
-                host: 'foo.puter.localhost',
+                host: 'foo.localhost',
                 originalUrl: '/bar?x=1',
                 protocol: 'http',
             }),
@@ -290,7 +290,7 @@ describe('createUserSubdomainNotFound', () => {
             createUserSubdomainNotFound(selfHosted),
             makeReq({
                 subdomains: ['localhost', 'puter', 'site', 'foo'],
-                host: 'foo.site.puter.localhost',
+                host: 'foo.site.localhost',
                 originalUrl: '/',
             }),
         );
@@ -299,9 +299,9 @@ describe('createUserSubdomainNotFound', () => {
 
     it('passes through hosts on the alt / private-app hosting domains too', () => {
         for (const host of [
-            'foo.host.puter.localhost',
-            'foo.app.puter.localhost',
-            'foo.dev.puter.localhost',
+            'foo.host.localhost',
+            'foo.app.localhost',
+            'foo.dev.localhost',
         ]) {
             const { next } = run(
                 createUserSubdomainNotFound(selfHosted),
@@ -324,7 +324,7 @@ describe('createUserSubdomainNotFound', () => {
             createUserSubdomainNotFound(selfHosted),
             makeReq({
                 subdomains: ['localhost', 'puter', 'site'],
-                host: 'site.puter.localhost',
+                host: 'site.localhost',
             }),
         );
         expect(next).toHaveBeenCalledWith();
@@ -334,12 +334,12 @@ describe('createUserSubdomainNotFound', () => {
         // Hosts compare without their port, so a ported host can't slip past
         // the 404 that its port-less form gets.
         const portlessConfig = {
-            domain: 'puter.localhost',
-            static_hosting_domain: 'site.puter.localhost',
+            domain: 'localhost',
+            static_hosting_domain: 'site.localhost',
         } as IConfig;
         for (const host of [
-            'foo.puter.localhost:4100',
-            'foo.puter.localhost:443',
+            'foo.localhost:4100',
+            'foo.localhost:443',
         ]) {
             const { next } = run(
                 createUserSubdomainNotFound(portlessConfig),
@@ -361,7 +361,7 @@ describe('createUserSubdomainNotFound', () => {
     });
 
     it('passes through local worker hosts while the local worker server is on', () => {
-        const workerHost = 'hello.workers.puter.localhost:4100';
+        const workerHost = 'hello.workers.localhost:4100';
         const req = () =>
             makeReq({
                 subdomains: ['localhost', 'puter', 'workers', 'hello'],
@@ -625,8 +625,8 @@ describe('createUserSubdomainNotFound with claimed subdomains', () => {
 
     it('never shadows a hosting domain that shares the label', async () => {
         const selfHosted = {
-            domain: 'puter.localhost',
-            static_hosting_domain: 'site.puter.localhost',
+            domain: 'localhost',
+            static_hosting_domain: 'site.localhost',
         } as IConfig;
         const authorize = vi.fn(allow);
         const args = await runClaimed(
@@ -634,7 +634,7 @@ describe('createUserSubdomainNotFound with claimed subdomains', () => {
                 selfHosted,
                 lookup({ site: { authorize, handler: vi.fn() } }),
             ),
-            hostReq('site.puter.localhost', ['site']),
+            hostReq('site.localhost', ['site']),
         );
         expect(authorize).not.toHaveBeenCalled();
         expect(args).toEqual([]);
