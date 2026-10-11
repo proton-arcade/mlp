@@ -37,7 +37,7 @@
         "test:e2e:record": "MIXT_TEST_RECORD=1 playwright test",
         "test:e2e:report": "playwright show-report",
         "playwright:install": "playwright install chromium",
-        "build": "npm run build:types && webpack && { echo \"// Copyright 2024-present Puter Technologies Inc. All rights reserved.\"; echo \"// Generated on $(date '+%Y-%m-%d %H:%M')\n\"; cat ./dist/puter.js; } > temp && mv temp ./dist/puter.js",
+        "build": "npm run build:types && webpack && { echo \"// Copyright 2024-present Puter Technologies Inc. All rights reserved.\"; echo \"// Generated on $(date '+%Y-%m-%d %H:%M')\n\"; cat ./dist/mixt.js; } > temp && mv temp ./dist/mixt.js",
         "build:types": "tsc -p tsconfig.types.json",
         "build:coverage": "webpack --env coverage",
         "prepublishOnly": "npm run build && mv dist/mixt.js dist/mixt.cjs && npm version patch"

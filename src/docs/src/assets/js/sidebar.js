@@ -99,7 +99,7 @@ function fetchGitHubData () {
     }).fail(function (jqxhr, textStatus, error) {
         let err = `${textStatus }, ${ error}`;
         console.error(`Request Failed: ${ err}`);
-        $('.github-stars').text('Heyputer/Mixt');
+        $('.github-stars').text('proton-arcade/mlp');
     });
 }
 
