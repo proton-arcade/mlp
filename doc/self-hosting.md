@@ -4,10 +4,10 @@ This guide covers running your own Mixt server. For a quick start, see the [READ
 
 ## Requirements
 
-- Node.js 24 or newer.
-- For the first install only: Python 3, `make`, and a C++ compiler, because `better-sqlite3` is compiled from source. The Node headers are downloaded from nodejs.org during that build.
+- Node.js 18.19 or newer.
+- For the first install only: the SQLite driver (`better-sqlite3`) downloads a prebuilt binary. If none is available for your platform, it is compiled instead, which needs Python 3, `make`, and a C++ compiler, and internet access to nodejs.org for the Node headers.
 - Port 443 for the HTTPS front. On Linux and macOS, either run as administrator (`sudo node server.cjs`) or grant Node the low-port capability once with `sudo setcap 'cap_net_bind_service=+ep' "$(which node)"`.
-- A browser that accepts a self-signed certificate for `mixt.localhost`. The certificate is created in `volatile/tls/` on the first run.
+- A browser that accepts a self-signed certificate for `localhost`. The certificate is created in `volatile/tls/` on the first run.
 
 ## Start the server
 
@@ -24,7 +24,7 @@ On the first run the script:
 5. Builds the GUI and the Puter.js SDK.
 6. Starts the backend on an internal port, and the HTTPS front on port 443 in front of it.
 
-Open `https://mixt.localhost/`.
+Open `https://localhost/`.
 
 ## The administrator account
 
@@ -51,7 +51,7 @@ The Admin tab also shows the server's state: the live user count, every account 
 
 The defaults set:
 
-- `protocol`: `https`, `pub_port`: `443`, `domain`: `mixt.localhost`.
+- `protocol`: `https`, `pub_port`: `443`, `domain`: `localhost`.
 - `disable_user_signup`: `true`, so the sign-up page does not create accounts. Accounts are created by the administrator through the whitelist.
 
 ## Data and storage

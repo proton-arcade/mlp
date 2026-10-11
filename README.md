@@ -12,23 +12,19 @@ Mixt is a browser desktop styled after Linux Mint and Cinnamon: a dark bottom pa
 
 ## Quick start
 
-You need **Node.js 24 or newer**. The first install compiles the SQLite driver (`better-sqlite3`), so it also needs Python 3, `make`, and a C++ compiler (Xcode Command Line Tools on macOS, `build-essential` on Debian/Ubuntu, Visual Studio Build Tools on Windows), and internet access to npm and nodejs.org for the Node headers.
+You need **Node.js 18.19 or newer** (Node 20, 22, and 24 also work). The SQLite driver ships as a prebuilt binary that is downloaded on install. If no prebuilt binary is available for your platform, the install compiles it instead, which needs Python 3, `make`, and a C++ compiler (Xcode Command Line Tools on macOS, `build-essential` on Debian/Ubuntu, Visual Studio Build Tools on Windows).
+
+Run the project only with this command (`npm start` runs the same thing):
 
 ```bash
 node server.cjs
 ```
 
-or
-
-```bash
-npm start
-```
-
 The first run installs dependencies, writes `config.json` from `config.default.json`, builds the GUI and SDK, and starts the backend. Then open:
 
-**https://mixt.localhost/**
+**https://localhost/**
 
-The HTTPS front listens on port 443 and uses a self-signed certificate for `mixt.localhost`, which is created in `volatile/tls/` on first run. Your browser will ask you to accept it once.
+The HTTPS front on port 443 is the only way in: the backend listens on the loopback address only, and `server.cjs` is the only entry point. The self-signed certificate is created in `volatile/tls/` on first run. Your browser will ask you to accept it once.
 
 Port 443 needs administrator rights on Linux and macOS. Either run `sudo node server.cjs`, or allow Node to bind low ports once:
 
@@ -54,7 +50,7 @@ On its first boot the server creates the `admin` account with a temporary passwo
 - `config.json` is generated from it on first run. Local edits go there. It is git-ignored.
 - `config.template.jsonc` documents the available settings.
 
-The defaults set the domain to `mixt.localhost`, the HTTPS front to port 443, and disable public sign-up.
+The defaults set the domain to `localhost`, the HTTPS front to port 443, and disable public sign-up.
 
 ## Repository layout
 

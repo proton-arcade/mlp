@@ -28,7 +28,9 @@ import { npmSpawnArgs } from './npmSpawn.mjs';
 
 const rootDir = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 
-const MIN_NODE_MAJOR = 24;
+// Node 18.19+ (module.register for the node:sqlite shim; see
+// src/backend/util/nodeCompat.ts). Newer majors are supported as-is.
+const MIN_NODE = [18, 19];
 const SECRET_KEYS = ['jwt_secret_v2', 'url_signature_secret'];
 const SHIPPED_PLACEHOLDER = /change-me/;
 
@@ -69,10 +71,11 @@ const run = (cmd, args, opts = {}) => new Promise((resolve, reject) => {
 const runNpm = (args, opts) => run(...npmSpawnArgs(args, opts));
 
 const checkNodeVersion = () => {
-    const major = Number(process.versions.node.split('.')[0]);
-    if ( major < MIN_NODE_MAJOR ) {
+    const [major, minor] = process.versions.node.split('.').map(Number);
+    const tooOld = major < MIN_NODE[0] || (major === MIN_NODE[0] && minor < MIN_NODE[1]);
+    if ( tooOld ) {
         throw new Error(
-            `Mixt needs Node.js ${MIN_NODE_MAJOR} or newer (this is ${process.version}). ` +
+            `Mixt needs Node.js ${MIN_NODE[0]}.${MIN_NODE[1]} or newer (this is ${process.version}). ` +
             'Install a current Node.js from https://nodejs.org and run `npm start` again.',
         );
     }

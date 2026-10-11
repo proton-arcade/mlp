@@ -3,14 +3,14 @@
 //
 //     node server.cjs
 //
-// Then open https://mixt.localhost/
+// Then open https://localhost/
 //
 // This launcher does two things:
 //
 //   1. Runs tools/start.mjs, which installs dependencies, writes config.json,
 //      builds the bundles, and starts the backend on http://127.0.0.1:4100.
 //   2. Serves HTTPS on port 443 in front of that backend, using a local
-//      self-signed certificate for mixt.localhost and *.mixt.localhost.
+//      self-signed certificate for localhost and *.localhost.
 //
 // Port 443 needs administrator rights on Linux and macOS. If it cannot be
 // opened, the launcher stops with instructions instead of starting half-way.
@@ -30,7 +30,7 @@ const args = process.argv.slice(2);
 
 const BACKEND_PORT = 4100;
 const HTTPS_PORT = 443;
-const HOST = 'mixt.localhost';
+const HOST = 'localhost';
 const TLS_DIR = path.join(rootDir, 'volatile', 'tls');
 
 const isBackendMode = !args.some(a => a.startsWith('--server') || a === '--smtp') &&
@@ -140,7 +140,14 @@ const startHttpsFront = () => new Promise((resolve, reject) => {
 const child = spawn(
     process.execPath,
     [path.join(rootDir, 'tools', 'start.mjs'), ...args],
-    { stdio: 'inherit', cwd: rootDir, detached: true },
+    {
+        stdio: 'inherit',
+        cwd: rootDir,
+        detached: true,
+        // The backend listens on loopback only, so the HTTPS front above is
+        // the single way in. Docker deployments do not run this launcher.
+        env: { ...process.env, MIXT_BIND_HOST: '127.0.0.1' },
+    },
 );
 
 let front = null;

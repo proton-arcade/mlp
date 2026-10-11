@@ -6,7 +6,7 @@ Thanks for helping. Mixt is a Mint-styled desktop built on Puter's internals. Pl
 
 1. Install Node.js 24 or newer.
 2. Clone the repository and run `node server.cjs` (or `npm start`).
-3. Open `https://mixt.localhost/` and sign in as `admin` with the temporary password printed on the first boot.
+3. Open `https://localhost/` and sign in as `admin` with the temporary password printed on the first boot.
 
 ## Before you open a pull request
 

@@ -1584,7 +1584,12 @@ export class PuterServer {
             // Await 'listening' (and full boot below) so callers can rely on
             // the server being reachable once start() resolves — test
             // harnesses connect real clients immediately after.
-            this.#server = httpServer.listen(this.#config.port);
+            // `server.cjs` sets MIXT_BIND_HOST=127.0.0.1 so that the backend is
+            // reachable only through its HTTPS front. Unset: all interfaces.
+            const bindHost = process.env.MIXT_BIND_HOST || undefined;
+            this.#server = bindHost
+                ? httpServer.listen(this.#config.port, bindHost)
+                : httpServer.listen(this.#config.port);
             await new Promise<void>((resolve, reject) => {
                 const onError = (err: Error) => reject(err);
                 httpServer.once('error', onError);

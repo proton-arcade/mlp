@@ -17,6 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import './util/nodeCompat';
 import { isSpanContextValid, trace } from '@opentelemetry/api';
 import { setDefaultAutoSelectFamilyAttemptTimeout } from 'node:net';
 import { puterClients } from './clients';
