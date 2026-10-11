@@ -72,6 +72,18 @@ async function UIDashboard (options) {
     // eslint-disable-next-line no-unused-vars
     options = options ?? {};
 
+    // The dashboard (with the Administration tab) is the administrator's home.
+    // Everyone else lands on the desktop: `/` and `/dashboard` go to `/desktop`,
+    // and `/app/<name>` goes to `/desktop/app/<name>`. Signed-out visitors get
+    // the desktop too, which asks them to sign in. The query string and hash
+    // are kept. `/desktop` is not dashboard mode, so this can't loop.
+    if ( window.user?.username !== 'admin' ) {
+        const path = window.location.pathname;
+        const rest = path.startsWith('/app/') ? path : '';
+        window.location.replace(`/desktop${rest}${window.location.search}${window.location.hash}`);
+        return;
+    }
+
     // Mark dashboard mode on <body> so window chrome can adapt — e.g. app
     // windows keep their minimize button even though fullpage-mode hides it.
     $('body').addClass('dashboard-mode');
