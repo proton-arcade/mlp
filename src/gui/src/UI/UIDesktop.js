@@ -56,6 +56,25 @@ const ADMIN_DESKTOP_SHORTCUT_HTML =
     '<span class="desktop-admin-shortcut-label">Whitelist</span>' +
     '</div>';
 
+// Settings desktop shortcut for every signed-in user. Opens the same Settings
+// page as the user menu's Settings entry.
+const SETTINGS_DESKTOP_SHORTCUT_HTML =
+    '<div class="desktop-settings-shortcut" role="button" tabindex="0" title="Open settings">' +
+    '<span class="desktop-admin-shortcut-icon" aria-hidden="true">&#9881;</span>' +
+    '<span class="desktop-admin-shortcut-label">Settings</span>' +
+    '</div>';
+
+const openSettingsShortcut = (e) => {
+    const shortcut = e.target instanceof Element ? e.target.closest('.desktop-settings-shortcut') : null;
+    if ( ! shortcut ) return;
+    if ( e.type === 'keydown' && e.key !== 'Enter' ) return;
+    if ( e.type === 'click' ) return;
+    e.preventDefault();
+    window.open('/dashboard/#home', '_blank', 'noopener');
+};
+document.addEventListener('dblclick', openSettingsShortcut);
+document.addEventListener('keydown', openSettingsShortcut);
+
 const openAdminShortcut = (e) => {
     const shortcut = e.target instanceof Element ? e.target.closest('.desktop-admin-shortcut') : null;
     if ( ! shortcut ) return;
@@ -725,7 +744,7 @@ async function UIDesktop (options) {
                 data-sort_by="${!options.desktop_fsentry?.sort_by ? 'name' : options.desktop_fsentry.sort_by}"
                 data-sort_order="${!options.desktop_fsentry?.sort_order ? 'asc' : options.desktop_fsentry.sort_order}"
                 data-path="${html_encode(window.desktop_path)}"
-            >${window.user?.username === 'admin' ? ADMIN_DESKTOP_SHORTCUT_HTML : ''}`;
+            >${SETTINGS_DESKTOP_SHORTCUT_HTML}${window.user?.username === 'admin' ? ADMIN_DESKTOP_SHORTCUT_HTML : ''}`;
 
     // Get window sidebar width
     mixt.kv.get('window_sidebar_width').catch(() => null).then(async (val) => {

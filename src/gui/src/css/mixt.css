@@ -326,7 +326,8 @@ body {
 
 /* ----------------------- Administrator desktop shortcut -------------------- */
 
-.desktop-admin-shortcut {
+.desktop-admin-shortcut,
+.desktop-settings-shortcut {
     position: fixed;
     top: 16px;
     right: 16px;
@@ -344,6 +345,13 @@ body {
     user-select: none;
 }
 
+/* The administrator's shortcut sits beside the Settings shortcut. */
+.desktop-admin-shortcut {
+    right: 112px;
+}
+
+.desktop-settings-shortcut:hover,
+.desktop-settings-shortcut:focus-visible,
 .desktop-admin-shortcut:hover,
 .desktop-admin-shortcut:focus-visible {
     background-color: rgba(255, 255, 255, 0.12);
