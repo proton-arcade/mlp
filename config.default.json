@@ -175,6 +175,8 @@
         "point-of-sale": "./src/apps/point-of-sale",
         "hiring": "./src/apps/hiring",
         "signatures": "./src/apps/signatures",
+        "presentation": "./src/apps/presentation",
+        "terminal": "./src/apps/terminal",
         "mail": "./src/apps/mail",
         "contacts": "./src/apps/contacts",
         "chess": "./src/apps/chess",
