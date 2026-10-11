@@ -57,7 +57,7 @@ describe('getMixtHostedDomains', () => {
                 static_hosting_domain_alt: 'mixt.site',
                 private_app_hosting_domain: 'private.localhost:4100',
             }).sort(),
-        ).toEqual(['private.localhost', 'mixt.site']);
+        ).toEqual(['mixt.site', 'private.localhost']);
     });
 
     it('ignores absent and non-string config values', () => {

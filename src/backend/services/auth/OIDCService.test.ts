@@ -655,8 +655,13 @@ describe('OIDCService — authorization URLs', () => {
             'state-token',
             'bogus-flow',
         );
+        // The fallback is the callback under the configured API base URL
+        // (config.default.json sets it), so it is absolute, not a bare path.
+        const apiBase = (
+            server.services.oidc.config as { api_base_url?: string }
+        ).api_base_url;
         expect(new URL(url!).searchParams.get('redirect_uri')).toBe(
-            '/auth/oidc/callback',
+            `${apiBase}/auth/oidc/callback`,
         );
     });
 
