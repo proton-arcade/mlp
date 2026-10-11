@@ -31,6 +31,7 @@ import { fromNodeProviderChain } from '@aws-sdk/credential-providers';
 import { NodeHttpHandler } from '@smithy/node-http-handler';
 import type { FauxqsServer } from 'fauxqs';
 import { existsSync } from 'node:fs';
+import { Server as NetServer } from 'node:net';
 import fs from 'node:fs/promises';
 import { Agent as HttpsAgent } from 'node:https';
 import path from 'node:path';
@@ -44,6 +45,34 @@ const FAUXQS_SAFE_PUT_OBJECT_LIMIT_BYTES = 10 * 1024 * 1024;
 const LEGACY_STORAGE_BUCKET = 'puter-local';
 
 type S3CommandSender = Pick<AwsS3Client, 'send'>;
+
+/**
+ * Fauxqs 2.8 ignores its `host` option and always listens on 0.0.0.0, which
+ * would expose the local S3/SQS emulator (no credentials) to the whole network.
+ * While it starts, rewrite that one listen address to loopback and restore the
+ * original `listen` straight after. Node's http.Server inherits `listen` from
+ * net.Server, so patching the prototype covers fastify.
+ */
+const startLoopbackFauxqs = async <T>(
+    start: (options: any) => Promise<T>,
+    options: Record<string, unknown>,
+): Promise<T> => {
+    const originalListen = NetServer.prototype.listen;
+    const pin = (host: unknown) => (host === '0.0.0.0' ? '127.0.0.1' : host);
+    NetServer.prototype.listen = function (this: NetServer, ...args: any[]) {
+        if (args[0] && typeof args[0] === 'object' && 'host' in args[0]) {
+            args[0] = { ...args[0], host: pin(args[0].host) };
+        } else if (typeof args[1] === 'string') {
+            args[1] = pin(args[1]);
+        }
+        return (originalListen as any).apply(this, args);
+    } as typeof NetServer.prototype.listen;
+    try {
+        return await start(options);
+    } finally {
+        NetServer.prototype.listen = originalListen;
+    }
+};
 
 export class S3Client extends PuterClient {
     private clientMap = new Map<string, AwsS3Client>();
@@ -121,7 +150,7 @@ export class S3Client extends PuterClient {
 
             const { startFauxqs } =
                 await nativeImport<typeof import('fauxqs')>('fauxqs');
-            this.fauxqsServer = await startFauxqs({
+            this.fauxqsServer = await startLoopbackFauxqs(startFauxqs, {
                 host: fauxqsHost,
                 port: forceInMem ? 0 : (localConfig?.port ?? 4566),
                 logger: false,
