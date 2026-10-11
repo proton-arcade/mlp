@@ -159,6 +159,7 @@
         "dev-center": "./src/dev-center",
         "browser": "./src/browser-app",
         "app-center": "./src/app-center",
+        "admin-vault": "./src/apps/admin-vault",
         "mail": "./src/apps/mail",
         "contacts": "./src/apps/contacts",
         "chess": "./src/apps/chess",

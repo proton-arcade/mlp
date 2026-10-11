@@ -22,7 +22,10 @@
  * `godmode` (broad file access), so ordinary accounts must not get it in their
  * taskbar, launch grid, or recent list.
  */
-export const ADMIN_ONLY_APP_NAMES: ReadonlySet<string> = new Set(['dev-center']);
+export const ADMIN_ONLY_APP_NAMES: ReadonlySet<string> = new Set([
+    'dev-center',
+    'admin-vault',
+]);
 
 export const ADMIN_USERNAME = 'admin';
 

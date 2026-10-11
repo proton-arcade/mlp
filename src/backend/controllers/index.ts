@@ -40,6 +40,7 @@ import { WispController } from './wisp/WispController.js';
 import type { IMixtControllerRegistry } from './types.js';
 import { PeerController } from './peer/PeerController.js';
 import { MailController } from './mail/MailController.js';
+import { VaultController } from './vault/VaultController.js';
 import { ProfileController } from './profile/ProfileController.js';
 
 export const mixtControllers = {
@@ -65,6 +66,7 @@ export const mixtControllers = {
     wisp: WispController,
     peer: PeerController,
     mail: MailController,
+    vault: VaultController,
     // Last so its catch-all static fallback doesn't shadow earlier routes.
     homepage: HomepageController,
 } satisfies IMixtControllerRegistry;

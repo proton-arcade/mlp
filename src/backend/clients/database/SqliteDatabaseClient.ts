@@ -128,6 +128,7 @@ const AVAILABLE_MIGRATIONS: [number, string[]][] = [
     [90, ['0095_app-center.sql']],
     [91, ['0096_games.sql']],
     [92, ['0097_mail.sql']],
+    [93, ['0098_admin-vault.sql']],
 ];
 
 export class SqliteDatabaseClient extends AbstractDatabaseClient {
@@ -145,7 +146,6 @@ export class SqliteDatabaseClient extends AbstractDatabaseClient {
     // ------------------------------------------------------------------
 
     override async onServerStart(): Promise<void> {
-
         const dbPath = this.config.database?.inMemory
             ? ':memory:'
             : (this.config.database?.path ?? ':memory:');
