@@ -440,7 +440,7 @@ describe('AppFeedbackController POST /', () => {
         const { actor, userId } = await makeUser();
         const captured = await submit(actor, {
             app: app.uid,
-            message: '  Great\r\napp!   ',
+            message: '  Great\r\napp!\x00\x07  ',
             context: 'app',
         });
         expect(captured.body).toEqual({});
