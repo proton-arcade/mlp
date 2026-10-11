@@ -39,6 +39,9 @@ const GUI_PATH_PREFIXES = [
     '/fonts/',
     '/js/',
     '/app/',
+    // Built-in apps and the internet folder (MPLmit) are static files from the
+    // repository. Nothing private is served under this prefix.
+    '/builtin/',
 ];
 
 /** Sign-in endpoints a visitor needs before they have a session. */

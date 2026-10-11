@@ -243,6 +243,9 @@ const isStale = (bundle, sources) => {
 };
 
 const ensureBundles = async () => {
+    // MPLmit's index follows the internet folder, so it is rebuilt on every start.
+    // Adding or removing a site only needs a restart.
+    await run(process.execPath, [path.join(rootDir, 'tools', 'buildInternet.mjs')], { cwd: rootDir });
     if ( isStale(GUI_BUNDLE, GUI_SOURCES) ) {
         console.log('Building the desktop...');
         await run(process.execPath, ['build.js'], { cwd: path.join(rootDir, 'src', 'gui') });

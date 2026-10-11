@@ -156,7 +156,9 @@
     "gui_assets_root": "./src/gui",
     "gui_profile": "development",
     "builtin_apps": {
-        "dev-center": "./src/dev-center"
+        "dev-center": "./src/dev-center",
+        "browser": "./src/browser-app",
+        "internet": "./internet"
     },
     "use_bundled_gui": false,
     "gui_bundle": "/dist/bundle.min.js",
