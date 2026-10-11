@@ -41,6 +41,17 @@ const SDK_SOURCES = [
     path.join(rootDir, 'src', 'puter-js', 'src'),
     path.join(rootDir, 'src', 'puter-js', 'webpack.config.js'),
 ];
+// Worker runtime preambles, loaded by the backend's worker drivers.
+const WORKER_BUNDLES = [
+    path.join(rootDir, 'src', 'worker', 'dist', 'workerPreamble.js'),
+    path.join(rootDir, 'src', 'worker', 'dist', 'eventsWorkerPreamble.js'),
+];
+const WORKER_SOURCES = [
+    path.join(rootDir, 'src', 'worker', 'src'),
+    path.join(rootDir, 'src', 'worker', 'scripts'),
+    path.join(rootDir, 'src', 'worker', 'template'),
+    path.join(rootDir, 'src', 'worker', 'webpack.config.cjs'),
+];
 
 // `npm start --flag=x` arrives as the npm_config_<flag> env var;
 // `npm start -- --flag=x` arrives as a regular argument.
@@ -151,6 +162,10 @@ const ensureBundles = async () => {
     if ( isStale(SDK_BUNDLE, SDK_SOURCES) ) {
         console.log('Building the SDK...');
         await runNpm(['run', 'build'], { cwd: path.join(rootDir, 'src', 'puter-js') });
+    }
+    if ( WORKER_BUNDLES.some((bundle) => isStale(bundle, WORKER_SOURCES)) ) {
+        console.log('Building the worker runtimes...');
+        await runNpm(['run', 'build'], { cwd: path.join(rootDir, 'src', 'worker') });
     }
 };
 
