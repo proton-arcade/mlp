@@ -38,7 +38,6 @@ import changeLanguage from '../i18n/i18nChangeLanguage.js';
 import UIWindowTaskManager from './UIWindowTaskManager.js';
 import truncate_filename from '../helpers/truncateFilename.js';
 import UINotification from './UINotification.js';
-import UIWindowWelcome from './UIWindowWelcome.js';
 import launch_app from '../helpers/launchApp.js';
 import { urlFileLaunchOptions } from '../helpers/confirmUrlFileAccess.js';
 import item_icon from '../helpers/itemIcon.js';
@@ -71,6 +70,7 @@ document.addEventListener('keydown', openAdminShortcut);
 import apply_item_added_to_containers from '../helpers/applyItemAddedToContainers.js';
 import parse_item_metadata from '../helpers/parseItemMetadata.js';
 import UIWindowSearch from './UIWindowSearch.js';
+import { mountPanelClock } from '../helpers/panelClock.js';
 
 async function UIDesktop (options) {
     // start a transaction if we're not in embedded or fullpage mode
@@ -802,7 +802,8 @@ async function UIDesktop (options) {
     // nothing for the taskbar to do; skip building it entirely.
     // ---------------------------------------------------------------
     if ( !window.is_fullpage_mode ) {
-        UITaskbar();
+        await UITaskbar();
+        mountPanelClock();
     }
 
     // Update desktop dimensions after taskbar is initialized with position
@@ -1137,16 +1138,7 @@ async function UIDesktop (options) {
         // Show welcome window if user hasn't already seen it and hasn't directly navigated to an app
         if ( !window.url_paths[0]?.toLocaleLowerCase() === 'app' || !window.url_paths[1] ) {
             if ( !isMobile.phone && !isMobile.tablet ) {
-                setTimeout(() => {
-                    // The catch goes on the end of the chain, not on the read:
-                    // falling back to null would read as "never seen it" and
-                    // show the window to someone who has.
-                    mixt.kv.get('has_seen_welcome_window').then(async (val) => {
-                        if ( val === null ) {
-                            await UIWindowWelcome();
-                        }
-                    }).catch(err => console.warn('Could not check has_seen_welcome_window:', err));
-                }, 1000);
+                // Mint has no welcome window: the desktop opens straight away.
             }
         }
     }

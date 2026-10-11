@@ -372,3 +372,49 @@ body {
     background-size: 100px 100px;
     background-position: 10px 10px;
 }
+
+/* ----------------------- Panel: Mint layout ------------------------------- */
+
+/* Launcher and window icons sit at the left edge of the panel, not centred. */
+.taskbar.taskbar-position-bottom,
+.taskbar.taskbar-position-bottom .taskbar-sortable {
+    justify-content: flex-start !important;
+}
+
+/* No floating bar at the top: Mint has a single panel. The Mixt toolbar
+   (search, account) moves into the panel, just left of the clock. */
+.toolbar {
+    top: auto !important;
+    bottom: 0 !important;
+    left: auto !important;
+    right: 118px !important;
+    width: auto !important;
+    height: 40px !important;
+    transform: none !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+.mint-clock {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    width: 112px;
+    height: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: var(--mixt-panel-text);
+    font-size: 12px;
+    line-height: 1.25;
+    pointer-events: none;
+    user-select: none;
+    z-index: 100000;
+}
+
+.mint-clock-date {
+    font-size: 11px;
+    opacity: 0.8;
+}
