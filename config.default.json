@@ -179,6 +179,7 @@
         "terminal": "./src/apps/terminal",
         "pdf-editor": "./src/apps/pdf-editor",
         "meetings": "./src/apps/meetings",
+        "team-chat": "./src/apps/team-chat",
         "mail": "./src/apps/mail",
         "contacts": "./src/apps/contacts",
         "chess": "./src/apps/chess",

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Team Chat</title>
+<style>
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body { font: 14px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: #222; background: #fff; display: flex; flex-direction: column; }
+    button, input { font: inherit; }
+    button { padding: 6px 12px; border: 1px solid #888; border-radius: 6px; background: #fff; cursor: pointer; }
+    button:disabled { opacity: .45; cursor: default; }
+    button.on { background: #2f6fd6; color: #fff; border-color: #2f6fd6; }
+    input { padding: 6px 8px; border: 1px solid #aaa; border-radius: 6px; min-width: 0; }
+    header { padding: 10px 14px; background: #f3f4f6; border-bottom: 1px solid #ddd; font-weight: 600; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+    .status { font-weight: normal; color: #666; font-size: 12px; }
+    .wrap { flex: 1; display: flex; min-height: 0; }
+    aside { width: 220px; border-right: 1px solid #ddd; background: #fafafa; display: flex; flex-direction: column; min-height: 0; }
+    aside h3 { font-size: 12px; text-transform: uppercase; color: #666; margin: 12px 12px 6px; letter-spacing: .04em; }
+    #channels { list-style: none; margin: 0; padding: 0 6px; overflow: auto; flex: 1; }
+    #channels li button { width: 100%; text-align: left; border: 0; background: transparent; padding: 7px 10px; border-radius: 6px; }
+    #channels li button.active { background: #2f6fd6; color: #fff; }
+    #channels li button:hover:not(.active) { background: #e8edf7; }
+    .addch { display: flex; gap: 6px; padding: 8px; border-top: 1px solid #ddd; }
+    .addch input { flex: 1; }
+    main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+    #title { padding: 10px 14px; border-bottom: 1px solid #eee; font-weight: 600; }
+    #log { flex: 1; overflow: auto; padding: 12px 14px; }
+    .msg { margin-bottom: 10px; }
+    .msg .who { font-weight: 600; font-size: 13px; }
+    .msg .when { color: #888; font-size: 11px; margin-left: 6px; }
+    .msg p { margin: 2px 0 0; white-space: pre-wrap; word-wrap: break-word; }
+    .msg.mine .who { color: #2f6fd6; }
+    .empty { color: #888; font-style: italic; }
+    form.send { display: flex; gap: 8px; padding: 10px; border-top: 1px solid #ddd; }
+    form.send input { flex: 1; }
+    .err { color: #c62828; padding: 0 14px 8px; min-height: 1.2em; font-size: 12px; }
+    @media (max-width: 640px) { aside { width: 140px; } }
+</style>
+</head>
+<body>
+<header>
+    <span>Team Chat</span>
+    <span class="status" id="status">Connecting…</span>
+</header>
+<div class="wrap">
+    <aside>
+        <h3>Channels</h3>
+        <ul id="channels"></ul>
+        <form class="addch" id="addForm">
+            <input id="newChannel" maxlength="40" placeholder="new-channel" autocomplete="off">
+            <button type="submit">Add</button>
+        </form>
+    </aside>
+    <main>
+        <div id="title"></div>
+        <div id="log"></div>
+        <div class="err" id="err"></div>
+        <form class="send" id="sendForm">
+            <input id="text" maxlength="2000" placeholder="Message this channel" autocomplete="off">
+            <button type="submit" id="send" class="on">Send</button>
+        </form>
+    </main>
+</div>
+<script src="vendor/socket.io.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

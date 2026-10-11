@@ -19,6 +19,7 @@
 
 import { createAdapter } from '@socket.io/redis-streams-adapter';
 import type { Server as HttpServer } from 'node:http';
+import { randomUUID } from 'node:crypto';
 import { Server as SocketIOServer, type Socket } from 'socket.io';
 import type { Actor } from '../../core/actor.js';
 import {
@@ -293,6 +294,38 @@ function meetingLabel(requested: unknown, username: unknown): string {
             .trim()
             .slice(0, 40) || 'Guest'
     );
+}
+
+/** Team chat channels in this process: channel name -> recent messages. */
+const chatHistory = new Map<
+    string,
+    Array<{ id: string; from: string; text: string; at: number }>
+>();
+const CHAT_HISTORY_LIMIT = 200;
+const CHAT_MAX_CHARS = 2000;
+const CHAT_SEND_LIMIT = 120;
+const CHAT_ROOM_PREFIX = 'teamchat:';
+
+/** Channel names are lowercase letters, digits and hyphens, 2 to 40 long. */
+function parseChatChannel(msg: unknown): string | null {
+    const ch =
+        typeof msg === 'string' ? msg : (msg as { channel?: unknown })?.channel;
+    return typeof ch === 'string' && /^[a-z0-9-]{2,40}$/.test(ch) ? ch : null;
+}
+
+function chatRoomName(channel: string): string {
+    return CHAT_ROOM_PREFIX + channel;
+}
+
+function chatRoomOf(socket: Socket): string | undefined {
+    return (socket.data as { chatRoom?: string }).chatRoom;
+}
+
+function leaveChat(socket: Socket): void {
+    const room = chatRoomOf(socket);
+    if (!room) return;
+    socket.leave(room);
+    delete (socket.data as { chatRoom?: string }).chatRoom;
 }
 
 /** Meeting rooms in this process: room name -> socket id -> display name. */
@@ -921,6 +954,84 @@ export class SocketService extends MixtService {
                     });
                 });
                 socket.on('disconnect', () => leaveMeeting(io, socket));
+            }
+
+            // Team chat channels. Messages go to everyone joined to the channel
+            // and are kept in memory (the last 200 per channel) so people who
+            // join later see recent history. Author names come from the session.
+            if (io) {
+                const ackOf = (ack: unknown, body: unknown): void => {
+                    if (typeof ack === 'function')
+                        (ack as (b: unknown) => void)(body);
+                };
+                socket.on('chat.join', (msg: unknown, ack?: unknown) => {
+                    const channel = parseChatChannel(msg);
+                    if (!channel)
+                        return ackOf(ack, { ok: false, error: 'bad_channel' });
+                    void this.#allowSocketEvent(userId, 'chat.join').then(
+                        (ok) => {
+                            if (!ok)
+                                return ackOf(ack, {
+                                    ok: false,
+                                    error: 'rate_limited',
+                                });
+                            const room = chatRoomName(channel);
+                            if (chatRoomOf(socket) !== room) leaveChat(socket);
+                            socket.data.chatRoom = room;
+                            socket.join(room);
+                            ackOf(ack, {
+                                ok: true,
+                                channel,
+                                me: String(actor.user?.username ?? ''),
+                                history: chatHistory.get(channel) ?? [],
+                            });
+                        },
+                    );
+                });
+                socket.on('chat.leave', () => leaveChat(socket));
+                socket.on('chat.send', (msg: unknown, ack?: unknown) => {
+                    const room = chatRoomOf(socket);
+                    if (!room)
+                        return ackOf(ack, { ok: false, error: 'not_joined' });
+                    const text =
+                        typeof (msg as { text?: unknown })?.text === 'string'
+                            ? (msg as { text: string }).text
+                                  .replace(/\r/g, '')
+                                  .trim()
+                            : '';
+                    if (!text || text.length > CHAT_MAX_CHARS) {
+                        return ackOf(ack, { ok: false, error: 'bad_text' });
+                    }
+                    void checkRateLimit(
+                        `socket:chat.send:${socket.id}`,
+                        CHAT_SEND_LIMIT,
+                        SocketService.SOCKET_EVENT_WINDOW_MS,
+                    ).then((ok) => {
+                        if (!ok)
+                            return ackOf(ack, {
+                                ok: false,
+                                error: 'rate_limited',
+                            });
+                        const channel = room.slice(CHAT_ROOM_PREFIX.length);
+                        const entry = {
+                            id: randomUUID(),
+                            from: String(actor.user?.username ?? 'Unknown'),
+                            text,
+                            at: Date.now(),
+                        };
+                        const list = chatHistory.get(channel) ?? [];
+                        list.push(entry);
+                        if (list.length > CHAT_HISTORY_LIMIT)
+                            list.splice(0, list.length - CHAT_HISTORY_LIMIT);
+                        chatHistory.set(channel, list);
+                        io.to(room).emit('chat.message', {
+                            channel,
+                            message: entry,
+                        });
+                        ackOf(ack, { ok: true, id: entry.id });
+                    });
+                });
+                socket.on('disconnect', () => leaveChat(socket));
             }
 
             // Peer-echo: one tab notifies others that trash is empty.
