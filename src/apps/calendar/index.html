@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calendar</title>
+<link rel="stylesheet" href="/builtin/shared/apps.css">
+<style>
+    html, body { height: 100%; }
+    body { display: flex; flex-direction: column; }
+    .wrap { flex: 1; display: grid; grid-template-columns: 1fr 300px; min-height: 0; }
+    .month { display: flex; flex-direction: column; min-height: 0; padding: 12px 16px; }
+    .nav { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+    .nav h2 { margin: 0 auto 0 4px; font-size: 18px; font-weight: 600; }
+    .grid { flex: 1; display: grid; grid-template-columns: repeat(7, 1fr); grid-template-rows: auto repeat(6, minmax(70px, 1fr)); border-top: 1px solid #d6d6d4; border-left: 1px solid #d6d6d4; min-height: 0; }
+    .dow { font-size: 12px; color: #6b7174; padding: 6px; text-align: center; border-right: 1px solid #d6d6d4; border-bottom: 1px solid #d6d6d4; background: #f0f0ee; }
+    .day { border-right: 1px solid #d6d6d4; border-bottom: 1px solid #d6d6d4; padding: 4px 6px; cursor: pointer; background: #fff; overflow: hidden; display: flex; flex-direction: column; gap: 2px; }
+    .day:hover { background: #f4f4f2; }
+    .day.other { color: #aaa; background: #fafaf9; }
+    .day.today .num { background: #3d7fca; color: #fff; border-radius: 10px; padding: 0 6px; }
+    .day.selected { outline: 2px solid #68b723; outline-offset: -2px; }
+    .num { font-size: 13px; align-self: flex-start; }
+    .chip { font-size: 11px; background: #d9e8f7; color: #1d4f86; border-radius: 3px; padding: 1px 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .side { background: #fff; border-left: 1px solid #d6d6d4; padding: 14px; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; min-height: 0; }
+    .side h3 { margin: 0; font-size: 15px; }
+    .side ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 6px; }
+    .side li { padding: 8px; border: 1px solid #e3e3e1; border-radius: 4px; font-size: 13px; }
+    .side li .time { font-weight: 600; }
+    .side li button { float: right; font-size: 12px; border: 0; background: transparent; color: #a40000; cursor: pointer; }
+    .side label { display: block; font-size: 12px; color: #6b7174; margin-top: 4px; }
+    .side input, .side textarea { width: 100%; padding: 6px 8px; border: 1px solid #bbb; border-radius: 4px; font: inherit; background: #fff; color: inherit; }
+    .side textarea { min-height: 60px; resize: vertical; }
+    .msg { font-size: 13px; color: #a40000; min-height: 1.2em; }
+    .muted { color: #6b7174; font-size: 13px; }
+    @media (max-width: 760px) { .wrap { grid-template-columns: 1fr; } .side { border-left: 0; border-top: 1px solid #d6d6d4; } }
+    @media (prefers-color-scheme: dark) {
+        .dow { background: #2d2f31; border-color: #3a3d40; color: #aaa; }
+        .grid, .day { border-color: #3a3d40; }
+        .day { background: #232527; }
+        .day:hover { background: #2d2f31; }
+        .day.other { background: #1e2022; color: #666; }
+        .side { background: #2d2f31; border-color: #111; }
+        .side li { border-color: #3a3d40; }
+        .side input, .side textarea { background: #232527; border-color: #555; color: #eeeeec; }
+        .chip { background: #2d4459; color: #cfe3f8; }
+    }
+</style>
+</head>
+<body>
+<header class="toolbar">
+    <h1>Calendar</h1>
+</header>
+<div class="wrap">
+    <section class="month">
+        <div class="nav">
+            <button id="prev" class="btn" type="button" aria-label="Previous month">&lsaquo;</button>
+            <button id="next" class="btn" type="button" aria-label="Next month">&rsaquo;</button>
+            <button id="today" class="btn" type="button">Today</button>
+            <h2 id="title"></h2>
+        </div>
+        <div class="grid" id="grid" role="grid" aria-label="Month"></div>
+    </section>
+    <aside class="side">
+        <h3 id="day-title">Pick a day</h3>
+        <ul id="events"></ul>
+        <form id="form" hidden>
+            <label for="ev-title">Event</label>
+            <input id="ev-title" required maxlength="200">
+            <label for="ev-time">Time</label>
+            <input id="ev-time" type="time">
+            <label for="ev-note">Notes</label>
+            <textarea id="ev-note" maxlength="2000"></textarea>
+            <p><button class="btn primary" type="submit">Add event</button></p>
+        </form>
+        <div id="msg" class="msg" role="status"></div>
+    </aside>
+</div>
+<script src="/builtin/shared/localdb.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

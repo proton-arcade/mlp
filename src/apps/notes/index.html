@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Notes</title>
+<link rel="stylesheet" href="/builtin/shared/apps.css">
+<style>
+    html, body { height: 100%; }
+    body { display: flex; flex-direction: column; }
+    .wrap { flex: 1; display: grid; grid-template-columns: 240px 1fr; min-height: 0; }
+    .list { background: #fff; border-right: 1px solid #d6d6d4; display: flex; flex-direction: column; min-height: 0; }
+    .list header { padding: 10px; display: flex; gap: 6px; border-bottom: 1px solid #e3e3e1; }
+    .list input { flex: 1; min-width: 0; padding: 6px 8px; border: 1px solid #bbb; border-radius: 4px; font: inherit; }
+    .items { overflow-y: auto; flex: 1; }
+    .item { padding: 10px 12px; border-bottom: 1px solid #efefed; cursor: pointer; }
+    .item:hover { background: #f4f4f2; }
+    .item.active { background: #e6f1d9; }
+    .item .t { font-weight: 600; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .item .s { font-size: 12px; color: #6b7174; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .editor { display: flex; flex-direction: column; min-height: 0; background: #fbfbfa; }
+    .bar { display: flex; gap: 4px; padding: 8px 12px; border-bottom: 1px solid #e3e3e1; background: #fff; flex-wrap: wrap; align-items: center; }
+    .bar button { min-width: 32px; padding: 4px 8px; border: 1px solid #bbb; border-radius: 4px; background: #fff; font: inherit; cursor: pointer; color: inherit; }
+    .bar button:hover { background: #f0f0ef; }
+    .bar .sep { width: 1px; background: #ccc; margin: 0 4px; align-self: stretch; }
+    .bar .save { margin-left: auto; font-size: 12px; color: #6b7174; }
+    .title { font-size: 22px; font-weight: 600; border: 0; padding: 18px 28px 6px; background: transparent; color: inherit; font-family: inherit; outline: none; }
+    .body { flex: 1; overflow-y: auto; padding: 6px 28px 28px; font-size: 15px; line-height: 1.55; outline: none; min-height: 200px; }
+    .body:empty::before { content: 'Start writing...'; color: #9a9d9a; }
+    .body h2 { font-size: 19px; margin: 14px 0 6px; }
+    .body ul { padding-left: 22px; }
+    .empty { color: #888a85; text-align: center; padding: 24px; }
+    .hidden { display: none !important; }
+    @media (max-width: 680px) { .wrap { grid-template-columns: 1fr; } .list { max-height: 35%; } }
+    @media (prefers-color-scheme: dark) {
+        .list { background: #2d2f31; border-color: #111; }
+        .list header, .item, .bar { border-color: #3a3d40; }
+        .bar { background: #2d2f31; }
+        .bar button, .list input { background: #232527; border-color: #555; color: #eeeeec; }
+        .item:hover { background: #36393c; }
+        .item.active { background: #2f4a25; }
+        .editor { background: #232527; }
+        .item .s, .bar .save { color: #aaa; }
+    }
+</style>
+</head>
+<body>
+<header class="toolbar">
+    <h1>Notes</h1>
+    <button id="new" class="btn primary" type="button">New note</button>
+    <button id="delete" class="btn" type="button">Delete</button>
+</header>
+<div class="wrap">
+    <section class="list">
+        <header><input id="search" type="search" placeholder="Search notes" aria-label="Search notes"></header>
+        <div id="items" class="items" role="list"></div>
+    </section>
+    <section class="editor">
+        <div id="bar" class="bar hidden">
+            <button type="button" data-cmd="bold" title="Bold"><b>B</b></button>
+            <button type="button" data-cmd="italic" title="Italic"><i>I</i></button>
+            <button type="button" data-cmd="underline" title="Underline"><u>U</u></button>
+            <span class="sep"></span>
+            <button type="button" data-cmd="h2" title="Heading">H</button>
+            <button type="button" data-cmd="insertUnorderedList" title="Bulleted list">&bull; List</button>
+            <button type="button" data-cmd="removeFormat" title="Clear formatting">Clear</button>
+            <span class="sep"></span>
+            <button type="button" id="export" title="Download as text">Export .txt</button>
+            <span id="saved" class="save"></span>
+        </div>
+        <input id="title" class="title hidden" placeholder="Title" maxlength="200" aria-label="Note title">
+        <div id="body" class="body hidden" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Note body"></div>
+        <div id="none" class="empty">Choose a note, or create one.</div>
+    </section>
+</div>
+<script src="/builtin/shared/localdb.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
