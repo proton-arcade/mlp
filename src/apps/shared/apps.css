@@ -30,6 +30,7 @@ body {
 .btn:hover:not(:disabled) { background: #f0f0ef; }
 .btn:disabled { opacity: 0.5; cursor: default; }
 .btn.primary { background: #68b723; border-color: #4e8f17; color: #fff; }
+.btn.primary:hover:not(:disabled) { background: #5ea21d; }
 .status { padding: 8px 12px; min-height: 1.4em; font-size: 14px; }
 @media (prefers-color-scheme: dark) {
     body { background: #2d2f31; color: #eeeeec; }

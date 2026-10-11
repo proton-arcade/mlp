@@ -39,6 +39,7 @@ import { WebDAVController } from './webdav/WebDAVController.js';
 import { WispController } from './wisp/WispController.js';
 import type { IMixtControllerRegistry } from './types.js';
 import { PeerController } from './peer/PeerController.js';
+import { MailController } from './mail/MailController.js';
 import { ProfileController } from './profile/ProfileController.js';
 
 export const mixtControllers = {
@@ -63,6 +64,7 @@ export const mixtControllers = {
     oidc: OIDCController,
     wisp: WispController,
     peer: PeerController,
+    mail: MailController,
     // Last so its catch-all static fallback doesn't shadow earlier routes.
     homepage: HomepageController,
 } satisfies IMixtControllerRegistry;

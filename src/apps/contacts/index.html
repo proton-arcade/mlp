@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contacts</title>
+<link rel="stylesheet" href="/builtin/shared/apps.css">
+<style>
+    html, body { height: 100%; }
+    body { display: flex; flex-direction: column; }
+    .wrap { flex: 1; display: grid; grid-template-columns: 300px 1fr; min-height: 0; }
+    .list { background: #fff; border-right: 1px solid #d6d6d4; display: flex; flex-direction: column; min-height: 0; }
+    .list header { padding: 12px; display: flex; gap: 6px; border-bottom: 1px solid #e3e3e1; }
+    .list input { flex: 1; min-width: 0; padding: 6px 8px; border: 1px solid #bbb; border-radius: 4px; font: inherit; }
+    .items { overflow-y: auto; flex: 1; }
+    .item { padding: 10px 12px; border-bottom: 1px solid #efefed; cursor: pointer; }
+    .item:hover { background: #f4f4f2; }
+    .item.active { background: #e6f1d9; }
+    .item .name { font-weight: 600; font-size: 14px; }
+    .item .sub { font-size: 12px; color: #6b7174; }
+    .detail { padding: 20px; overflow-y: auto; }
+    .detail h2 { margin: 0 0 14px; font-size: 18px; font-weight: 600; }
+    .field { display: flex; flex-direction: column; gap: 4px; margin-bottom: 12px; max-width: 460px; }
+    .field label { font-size: 12px; color: #6b7174; }
+    .field input, .field textarea { padding: 7px 9px; border: 1px solid #bbb; border-radius: 4px; font: inherit; background: #fff; color: inherit; }
+    .field textarea { min-height: 90px; resize: vertical; }
+    .actions { display: flex; gap: 8px; margin-top: 4px; }
+    .btn.danger { color: #a40000; }
+    .msg { font-size: 13px; min-height: 1.3em; padding: 0 20px 8px; }
+    .msg.bad { color: #a40000; }
+    .empty { color: #888a85; padding: 24px; text-align: center; }
+    @media (max-width: 680px) { .wrap { grid-template-columns: 1fr; } .list { max-height: 40%; } }
+    @media (prefers-color-scheme: dark) {
+        .list { background: #2d2f31; border-color: #111; }
+        .list header, .item { border-color: #3a3d40; }
+        .item:hover { background: #36393c; }
+        .item.active { background: #2f4a25; }
+        .item .sub, .field label { color: #aaa; }
+        .field input, .field textarea, .list input { background: #232527; border-color: #555; color: #eeeeec; }
+    }
+</style>
+</head>
+<body>
+<header class="toolbar">
+    <h1>Contacts</h1>
+    <button id="new" class="btn primary" type="button">New contact</button>
+</header>
+<div class="wrap">
+    <section class="list">
+        <header><input id="search" type="search" placeholder="Search contacts" aria-label="Search contacts"></header>
+        <div id="items" class="items" role="list"></div>
+    </section>
+    <section class="detail">
+        <h2 id="heading">Choose a contact</h2>
+        <form id="form" hidden>
+            <div class="field"><label for="name">Name</label><input id="name" required maxlength="200"></div>
+            <div class="field"><label for="address">Mixt address</label><input id="address" placeholder="name@mixt.mpl" maxlength="120"></div>
+            <div class="field"><label for="phone">Phone</label><input id="phone" maxlength="60"></div>
+            <div class="field"><label for="note">Notes</label><textarea id="note" maxlength="2000"></textarea></div>
+            <div class="actions">
+                <button class="btn primary" type="submit">Save</button>
+                <button id="delete" class="btn danger" type="button" hidden>Delete</button>
+            </div>
+        </form>
+    </section>
+</div>
+<div id="msg" class="msg" role="status"></div>
+<script src="app.js"></script>
+</body>
+</html>

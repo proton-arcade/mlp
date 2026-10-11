@@ -159,6 +159,8 @@
         "dev-center": "./src/dev-center",
         "browser": "./src/browser-app",
         "app-center": "./src/app-center",
+        "mail": "./src/apps/mail",
+        "contacts": "./src/apps/contacts",
         "chess": "./src/apps/chess",
         "checkers": "./src/apps/checkers",
         "sudoku": "./src/apps/sudoku",
