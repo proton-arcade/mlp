@@ -81,10 +81,22 @@ const checkNodeVersion = () => {
     }
 };
 
+// better-sqlite3 13.x is the SQLite driver on Node 22.5+ (it segfaults on 18,
+// and 12.x crashes on 24). It is not in package.json, because npm would try to
+// compile it on Node 18 and fail the whole install there. Node 18 uses the
+// 12.x alias instead. Here it is added on Node 22.5+ with --no-save, and
+// checked on every start so a later plain `npm install` cannot drop it.
 const ensureDependencies = async () => {
-    if ( existsSync(path.join(rootDir, 'node_modules', '.package-lock.json')) ) return;
-    console.log('Installing dependencies (first run only)...');
-    await runNpm(['install']);
+    const [major, minor] = process.versions.node.split('.').map(Number);
+    const hasNodeSqlite = major > 22 || (major === 22 && minor >= 5);
+    if ( !existsSync(path.join(rootDir, 'node_modules', '.package-lock.json')) ) {
+        console.log('Installing dependencies (first run only)...');
+        await runNpm(['install']);
+    }
+    if ( hasNodeSqlite && !existsSync(path.join(rootDir, 'node_modules', 'better-sqlite3', 'package.json')) ) {
+        console.log('Installing the SQLite driver (better-sqlite3 13.x)...');
+        await runNpm(['install', '--no-save', 'better-sqlite3@^13.0.3']);
+    }
 };
 
 // Secrets are generated once and kept in config.json, which is git-ignored, so
