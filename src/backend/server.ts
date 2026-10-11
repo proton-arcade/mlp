@@ -741,6 +741,8 @@ export class MixtServer {
             'X-Expected-Entity-Length',
             'DAV',
             'stripe-signature',
+            // Step-up proof for admin/elevated API calls (see stepUpSession.ts).
+            'x-mixt-elevation',
         ].join(', ');
 
         // What a browser DAV client is allowed to read back off a response.
