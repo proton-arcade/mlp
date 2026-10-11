@@ -66,6 +66,8 @@ const attachClusterEventHandlers = (clusterClient: Cluster): void => {
     });
 };
 
+let mockRedisSeq = 0;
+
 const buildCluster = (config: IConfig): Cluster => {
     const redisConfig = config.redis ?? {};
     const startupNodes = redisConfig.startupNodes ?? [];
@@ -73,8 +75,13 @@ const buildCluster = (config: IConfig): Cluster => {
 
     if (useMock) {
         console.log('connected to local redis mock');
+        // ioredis-mock shares its data between instances with the same
+        // host:port, so each mock gets its own port: a new server in the same
+        // process starts with empty state instead of inheriting a previous
+        // server's cache (user ids repeat across fresh databases).
+        mockRedisSeq += 1;
         return new MockRedis.Cluster([
-            'redis://localhost:7001',
+            `redis://localhost:${7000 + mockRedisSeq}`,
         ]) as unknown as Cluster;
     }
 

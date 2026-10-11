@@ -48,6 +48,9 @@ describe('AppIconService.ensureIconsDirectory', () => {
                 migrationPaths: [POSTGRES_TEST_MIGRATIONS_PATH],
             },
         } as unknown as IConfig);
+        // Boot runs the icons-directory setup in the background and does not
+        // await it, so wait for it here before the test asserts on its row.
+        await server.services.appIcon.ensureIconsDirectory();
     }, 480_000); // pgmock boot + migrations is slow, and slower still under a loaded suite
 
     afterAll(async () => {

@@ -36,15 +36,17 @@ const usesPgMockPostgres = (config: IConfig): boolean => {
         return false;
     }
 
+    // config.default.json ships `port: 3306` and an object-valued `replica`
+    // even when no remote database is configured, so only real connection
+    // targets count as "remote" here.
     return !(
         database.connectionString ||
         database.url ||
         database.host ||
-        database.port ||
         database.user ||
         database.password ||
         database.database ||
-        database.replica
+        database.replica?.host
     );
 };
 
