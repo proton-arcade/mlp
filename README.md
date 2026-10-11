@@ -7,7 +7,7 @@ Mixt is a browser desktop styled after Linux Mint and Cinnamon: a dark bottom pa
 - **No AI features.** The AI drivers, the `mixt.ai` surface, the `/mixtai` routes, the AI SDK dependencies, and the AI documentation and examples are removed.
 - **Admin-only backend.** Only the `admin` account can use the server. The administrator can whitelist other users, and removing someone from the whitelist revokes their access.
 - **Administration app.** The Admin tab in the dashboard shows the live user count, every account with its creation time, username, email, the built-in `<username>@mixt.email` address and mailbox, whether a password is set, app counts, and other server data. Password hashes and plaintext passwords are never shown.
-- **Mint look.** The Mint-style panel, window chrome, palette, and fonts come from [webmpl](https://github.com/proton-arcade/webmpl). The stylesheet is `src/gui/src/css/mixt.css`.
+- **Mint look.** The Mint-style panel, window chrome, palette, and fonts are defined in `src/gui/src/css/mixt.css`.
 - **One run command.** `node server.cjs` does everything. `npm start` runs the same thing.
 
 ## Quick start
