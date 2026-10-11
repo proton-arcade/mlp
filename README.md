@@ -14,7 +14,7 @@ Mixt is a browser desktop styled after Linux Mint and Cinnamon: a dark bottom pa
 
 You need **Node.js 18.19 or newer**. **Tested only on Node 18.20.8 and Node 24.21.0.** Node 20 and 22 have not been tested.
 
-The SQLite driver is a native module. On Node 18 the install uses `better-sqlite3` 12.x; on Node 22.5 and newer the launcher adds `better-sqlite3` 13.x on first run. Each is a prebuilt binary downloaded on install. If no prebuilt binary is available for your platform, the install compiles it instead, which needs Python 3, `make`, and a C++ compiler (Xcode Command Line Tools on macOS, `build-essential` on Debian/Ubuntu, Visual Studio Build Tools on Windows).
+Dependencies ship inside the repository (`vendor/node-modules/`), so `node server.cjs` never downloads anything. SQLite uses the native `better-sqlite3` build when it loads on your Node version. If it does not, Mixt falls back to a bundled WebAssembly SQLite (`sql.js`), which works on any Node version. Set `MIXT_SQLITE_DRIVER=wasm` to force the fallback, or `native` to force the native driver.
 
 Run the project only with this command (`npm start` runs the same thing):
 
@@ -24,19 +24,15 @@ node server.cjs
 
 The first run installs dependencies, writes `config.json` from `config.default.json`, builds the GUI and SDK, and starts the backend. Then open:
 
-**https://localhost/**
+**https://localhost:8835/**
 
-The HTTPS front on port 443 is the only way in: the backend listens on the loopback address only, and `server.cjs` is the only entry point. The self-signed certificate is created in `volatile/tls/` on first run. Your browser will ask you to accept it once.
-
-Port 443 needs administrator rights on Linux and macOS. Either run `sudo node server.cjs`, or allow Node to bind low ports once:
-
-```bash
-sudo setcap 'cap_net_bind_service=+ep' "$(which node)"
-```
+The HTTPS front on port 8835 is the only way in: the backend listens on the loopback address only, and `server.cjs` is the only entry point. The self-signed certificate is created in `volatile/tls/` on first run. Your browser will ask you to accept it once.
 
 ## First sign-in
 
-On its first boot the server creates the `admin` account with a temporary password and prints it to the console. Sign in as `admin` with it, then change the password. Until you change it, the console prints the temporary password again on every start. Only `admin` can sign in until you add other users.
+On its first start the server creates `admin/admin.json`, which holds the password of the `admin` account, and it creates the `admin` account with that password. Open the file to read the password, sign in as `admin`, and keep the file private. Only `admin` can sign in until you add other users.
+
+To change the password, run `node admin/set-password.mjs "<new password>"` and restart the server. See [admin/README.md](admin/README.md).
 
 ## Access control
 
@@ -52,7 +48,7 @@ On its first boot the server creates the `admin` account with a temporary passwo
 - `config.json` is generated from it on first run. Local edits go there. It is git-ignored.
 - `config.template.jsonc` documents the available settings.
 
-The defaults set the domain to `localhost`, the HTTPS front to port 443, and disable public sign-up.
+The defaults set the domain to `localhost`, the HTTPS front to port 8835, and disable public sign-up.
 
 ## Repository layout
 

@@ -113,19 +113,19 @@ describe('AppIconService', () => {
     describe('canonical URLs', () => {
         it('serves sized and original icons off the app-icons subdomain', () => {
             expect(appIcon.getIconUrl('app-abc', 64)).toBe(
-                'http://mixt-app-icons.site.localhost/app-abc-64.png',
+                'http://mixt-app-icons.site.localhost:8835/app-abc-64.png',
             );
             expect(appIcon.getOriginalIconUrl('app-abc')).toBe(
-                'http://mixt-app-icons.site.localhost/app-abc.png',
+                'http://mixt-app-icons.site.localhost:8835/app-abc.png',
             );
         });
 
         it('normalizes a uid that is missing the app- prefix', () => {
             expect(appIcon.getIconUrl('abc', 16)).toBe(
-                'http://mixt-app-icons.site.localhost/app-abc-16.png',
+                'http://mixt-app-icons.site.localhost:8835/app-abc-16.png',
             );
             expect(appIcon.getOriginalIconUrl('abc')).toBe(
-                'http://mixt-app-icons.site.localhost/app-abc.png',
+                'http://mixt-app-icons.site.localhost:8835/app-abc.png',
             );
         });
 

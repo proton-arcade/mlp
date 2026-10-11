@@ -147,6 +147,9 @@ export const loadConfig = (): IConfig => {
     if (typeof config.mixtjs_root === 'string') {
         config.mixtjs_root = resolvePackage(config.mixtjs_root);
     }
+    if (typeof config.admin_dir === 'string') {
+        config.admin_dir = resolvePackage(config.admin_dir);
+    }
     if (isPlainObject(config.builtin_apps)) {
         for (const [k, v] of Object.entries(config.builtin_apps)) {
             if (typeof v === 'string') {

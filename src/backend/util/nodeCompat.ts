@@ -7,7 +7,9 @@
  *   - `File` global: Node 20+ provides it; undici ships a compatible class.
  *   - SQLite driver: Node 18 needs better-sqlite3 12.x (13.x segfaults there,
  *     12.x crashes on Node 24). Both are installed; on Node below 22.5 every
- *     `require('better-sqlite3')` is redirected to the 12.x alias.
+ *     `require('better-sqlite3')` is redirected to the 12.x alias. If its binary
+ *     does not load (another Node ABI), SqliteDatabaseClient uses the built-in
+ *     WebAssembly driver (clients/database/sqliteDriver).
  *   - `node:sqlite`: Node 22.5+ provides it. The local S3/SQS emulator
  *     (fauxqs) imports it at load time. On older runtimes a module-loader hook
  *     maps `node:sqlite` onto the same better-sqlite3 build.
@@ -15,6 +17,7 @@
  * This module must be the first import of the backend entry point.
  */
 import { createRequire, register } from 'node:module';
+import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { File as UndiciFile } from 'undici';
 
@@ -44,10 +47,15 @@ if (!hasNodeSqlite) {
     };
 
     // Same redirect for ESM importers such as fauxqs' persistence module.
+    // The S3/SQS emulator's DatabaseSync uses the WebAssembly driver, which
+    // loads on every Node version, not the native binary, which is tied to one
+    // module ABI.
+    const wasmDriverUrl = pathToFileURL(
+        path.join(__dirname, '../clients/database/wasmSqlite.js'),
+    ).href;
     const shimSource = [
-        'import { createRequire } from "node:module";',
-        `const require = createRequire(${JSON.stringify(__filename)});`,
-        `export const DatabaseSync = require(${JSON.stringify(sqliteOld)});`,
+        `const { loadDatabaseSync } = await import(${JSON.stringify(wasmDriverUrl)});`,
+        'export const DatabaseSync = await loadDatabaseSync();',
     ].join('\n');
     // The backend's `await import('better-sqlite3')` is a native dynamic import
     // (ESM loader), so the ESM hook must redirect it as well.

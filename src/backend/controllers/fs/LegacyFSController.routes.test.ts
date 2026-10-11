@@ -369,7 +369,7 @@ describe('LegacyFSController inline routes', () => {
         };
 
         const { protocol, static_hosting_domain } = controller.config;
-        const base = `${protocol}://mixt-app-icons.${static_hosting_domain}`;
+        const base = `${protocol}://mixt-app-icons.${static_hosting_domain}:${controller.config.pub_port}`;
 
         expect((await runWithIconSize({ icon_size: '64' })).iconCdnUrl).toBe(
             `${base}/${app.uid}-64.png`,

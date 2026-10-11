@@ -11,15 +11,9 @@ The suite started as a regression net and is structured to grow incrementally as
    cd /path/to/mixt
    npm start
    ```
-   On first launch this prints a credentials block:
-   ```
-   ************************************************************
-   * Your default login credentials are:
-   * Username: admin
-   * Password: <hex string>
-   ************************************************************
-   ```
-   Copy the password — it's stable across restarts.
+   On first launch the password is written to `admin/admin.json`
+   (git-ignored). Copy the `password` value from that file. It stays the
+   same across restarts until you change it.
 
 2. **Start the mixt-js dev server** (serves `dist/mixt.dev.js` and the test fixture on `localhost:8080`):
    ```sh
@@ -75,7 +69,7 @@ Add the `export` to your shell rc (`~/.zshrc`, `~/.bashrc`) to persist across se
 
 ### When the password changes
 
-The admin password is stored in Mixt OS's KV under `tmp_password` and survives restarts, so it changes rarely (typically only if you wipe the local Mixt OS database). When it does change, update your `.env` and force a fresh login:
+The admin password is the `password` value in `admin/admin.json`. It changes only when you edit that file or run `node admin/set-password.mjs <new password>`, followed by a server restart. When it does change, update your `.env` and force a fresh login:
 
 ```sh
 MIXT_TEST_RESET_AUTH=1 npm run test:e2e

@@ -23,6 +23,7 @@ import { createContext, runInContext } from 'vm';
 import type { IConfig } from '../../types';
 import { Span } from '../../util/span.js';
 import { AbstractDatabaseClient, type WriteResult } from './DatabaseClient';
+import { openSqliteDatabase, type SqliteDatabase } from './sqliteDriver';
 
 const MIGRATIONS_DIR = resolve(__dirname, './migrations/sqlite');
 
@@ -127,8 +128,8 @@ const AVAILABLE_MIGRATIONS: [number, string[]][] = [
 export class SqliteDatabaseClient extends AbstractDatabaseClient {
     override readonly engineName = 'sqlite';
 
-    // better-sqlite3 instance — set during onServerStart
-    private db!: InstanceType<typeof import('better-sqlite3')>;
+    // Native better-sqlite3, or the WebAssembly fallback — set during onServerStart
+    private db!: SqliteDatabase;
 
     constructor(config: IConfig) {
         super(config);
@@ -139,7 +140,6 @@ export class SqliteDatabaseClient extends AbstractDatabaseClient {
     // ------------------------------------------------------------------
 
     override async onServerStart(): Promise<void> {
-        const Database = (await import('better-sqlite3')).default;
 
         const dbPath = this.config.database?.inMemory
             ? ':memory:'
@@ -150,7 +150,7 @@ export class SqliteDatabaseClient extends AbstractDatabaseClient {
             mkdirSync(dirname(dbPath), { recursive: true });
         }
 
-        this.db = new Database(dbPath);
+        this.db = await openSqliteDatabase(dbPath);
 
         await this.runMigrations(isNew);
     }

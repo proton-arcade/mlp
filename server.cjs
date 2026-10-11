@@ -3,17 +3,18 @@
 //
 //     node server.cjs
 //
-// Then open https://localhost/
+// Then open https://localhost:8835/
 //
 // This launcher does two things:
 //
 //   1. Runs tools/start.mjs, which installs dependencies, writes config.json,
 //      builds the bundles, and starts the backend on http://127.0.0.1:4100.
-//   2. Serves HTTPS on port 443 in front of that backend, using a local
+//   2. Serves HTTPS on port 8835 in front of that backend, using a local
 //      self-signed certificate for localhost and *.localhost.
 //
-// Port 443 needs administrator rights on Linux and macOS. If it cannot be
-// opened, the launcher stops with instructions instead of starting half-way.
+// Port 8835 is above the privileged range, so no administrator rights are
+// needed. If it cannot be opened, the launcher stops instead of starting
+// half-way.
 //
 // Any arguments are passed through to tools/start.mjs, e.g.
 // `node server.cjs --server=mixt.mpl`. In those modes no HTTPS front is started.
@@ -29,7 +30,7 @@ const rootDir = __dirname;
 const args = process.argv.slice(2);
 
 const BACKEND_PORT = 4100;
-const HTTPS_PORT = 443;
+const HTTPS_PORT = 8835;
 const HOST = 'localhost';
 const TLS_DIR = path.join(rootDir, 'volatile', 'tls');
 
@@ -119,10 +120,8 @@ const startHttpsFront = () => new Promise((resolve, reject) => {
     server.once('error', (err) => {
         if ( err.code === 'EACCES' || err.code === 'EPERM' ) {
             reject(new Error(
-                `Port ${HTTPS_PORT} needs administrator rights.\n` +
-                '  Run:  sudo node server.cjs\n' +
-                '  or allow Node to bind low ports once:\n' +
-                '        sudo setcap \'cap_net_bind_service=+ep\' "$(which node)"',
+                `Port ${HTTPS_PORT} cannot be opened (permission denied). ` +
+                'Check that no firewall or security policy blocks it.',
             ));
         } else if ( err.code === 'EADDRINUSE' ) {
             reject(new Error(
@@ -139,7 +138,7 @@ const startHttpsFront = () => new Promise((resolve, reject) => {
 // ---------------------------------------------------------------- launch
 
 // The HTTPS front is bound first. Only if that succeeds is the backend started,
-// so a refused port 443 stops the launcher before any install or build work.
+// so a refused port 8835 stops the launcher before any install or build work.
 // The child runs in its own process group so that stopping the launcher also
 // stops everything it started (the backend is a grandchild of this process).
 
@@ -193,7 +192,7 @@ const launchBackend = () => {
 if ( isBackendMode ) {
     startHttpsFront().then((server) => {
         front = server;
-        console.log(`\nHTTPS is listening. Open https://${HOST}/ once the desktop has booted.`);
+        console.log(`\nHTTPS is listening. Open https://${HOST}:${HTTPS_PORT}/ once the desktop has booted.`);
         console.log('The browser will warn about the self-signed certificate; accept it for this local address.\n');
         launchBackend();
     }).catch((err) => {

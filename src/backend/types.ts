@@ -1030,6 +1030,8 @@ interface IConfigOptional {
     client_libs_root: string;
     /** Path to the mixt-js SDK root (serves `/sdk/*` and `/mixt.js/v{1,2}`). */
     mixtjs_root: string;
+    /** Directory holding `admin.json`, the administrator password file. */
+    admin_dir: string;
 
     // -- Extension-specific ------------------------------------------
 

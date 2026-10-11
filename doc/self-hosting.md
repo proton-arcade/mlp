@@ -5,8 +5,8 @@ This guide covers running your own Mixt server. For a quick start, see the [READ
 ## Requirements
 
 - Node.js 18.19 or newer.
-- For the first install only: the SQLite driver (`better-sqlite3`) downloads a prebuilt binary. If none is available for your platform, it is compiled instead, which needs Python 3, `make`, and a C++ compiler, and internet access to nodejs.org for the Node headers.
-- Port 443 for the HTTPS front. On Linux and macOS, either run as administrator (`sudo node server.cjs`) or grant Node the low-port capability once with `sudo setcap 'cap_net_bind_service=+ep' "$(which node)"`.
+- Nothing is downloaded at startup. Dependencies come from `vendor/node-modules/`, and the bundle runs on linux-x64. If the native SQLite driver does not load on your Node version, Mixt uses its bundled WebAssembly SQLite instead and logs one warning. `MIXT_SQLITE_DRIVER=wasm` forces that driver.
+- Port 8835 for the HTTPS front. No administrator rights are needed. Stop anything else listening on that port first.
 - A browser that accepts a self-signed certificate for `localhost`. The certificate is created in `volatile/tls/` on the first run.
 
 ## Start the server
@@ -22,13 +22,13 @@ On the first run the script:
 3. Writes `config.json` from `config.default.json`, if it is missing.
 4. Creates the local certificate, if it is missing.
 5. Builds the GUI and the Mixt.js SDK.
-6. Starts the backend on an internal port, and the HTTPS front on port 443 in front of it.
+6. Starts the backend on an internal port, and the HTTPS front on port 8835 in front of it.
 
-Open `https://localhost/`.
+Open `https://localhost:8835/`.
 
 ## The administrator account
 
-The `admin` account is created on the first boot, with a temporary password that is printed to the console. Sign in with it, then change the password. Until the password is changed, the console prints it on every start, and the server keeps it in the account metadata; changing the password clears both.
+The `admin` account's password is stored in `admin/admin.json` (git-ignored, readable only by its owner). The file is created on the first start with a random password. On every start the `admin` account is set to the password in that file, so to change it run `node admin/set-password.mjs "<new password>"` and restart the server. The password is not printed to the console and is not kept in the database.
 
 Only `admin` can use the server. Other accounts can sign in only after the administrator whitelists them.
 
@@ -51,7 +51,7 @@ The Admin tab also shows the server's state: the live user count, every account 
 
 The defaults set:
 
-- `protocol`: `https`, `pub_port`: `443`, `domain`: `localhost`.
+- `protocol`: `https`, `pub_port`: `8835`, `domain`: `localhost`.
 - `disable_user_signup`: `true`, so the sign-up page does not create accounts. Accounts are created by the administrator through the whitelist.
 
 ## Data and storage

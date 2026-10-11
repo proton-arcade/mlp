@@ -4,12 +4,12 @@
     "log_format": "text",
     "serverId": "node-1",
     "port": 4100,
-    "pub_port": 443,
+    "pub_port": 8835,
     "keep_alive_timeout": 620000,
     "protocol": "https",
     "domain": "localhost",
-    "origin": "https://localhost",
-    "api_base_url": "https://api.localhost",
+    "origin": "https://localhost:8835",
+    "api_base_url": "https://api.localhost:8835",
     "static_hosting_domain": "site.localhost",
     "static_hosting_domain_alt": "host.localhost",
     "private_app_hosting_domain": "app.localhost",
@@ -169,6 +169,7 @@
     },
     "native_apps_root": "",
     "client_libs_root": "",
+    "admin_dir": "./admin",
     "mixtjs_root": "./src/mixt-js/dist",
     "feature_flags": {
         "example_flag": false

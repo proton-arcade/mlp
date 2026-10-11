@@ -150,17 +150,15 @@ const restoreVendoredModules = () => {
     return existsSync(path.join(rootDir, 'node_modules', '.package-lock.json'));
 };
 
-// better-sqlite3 13.0.3 (prebuilt linux-x64 binary, runtime files only). Used on
-// Node 22.5+. Restored from vendor/node-modules, never downloaded.
-const SQLITE_ARCHIVE = 'better-sqlite3-13.0.3-linux-x64.tar.gz';
-
-const restoreVendoredSqlite = () => {
-    const archive = path.join(VENDOR_DIR, SQLITE_ARCHIVE);
-    if ( !isVendorPlatform() || !existsSync(archive) ) return false;
-    const expected = expectedVendorHash(SQLITE_ARCHIVE);
+// Restores one archive from vendor/node-modules into the repo. Returns false
+// when the archive is absent. Throws on a checksum or extraction failure.
+const restoreVendoredArchive = (archiveName) => {
+    const archive = path.join(VENDOR_DIR, archiveName);
+    if ( !existsSync(archive) ) return false;
+    const expected = expectedVendorHash(archiveName);
     const actual = createHash('sha256').update(readFileSync(archive)).digest('hex');
     if ( !expected || actual !== expected ) {
-        throw new Error('The vendored SQLite driver failed its checksum. Re-clone the repository.');
+        throw new Error(`The vendored archive ${archiveName} failed its checksum. Re-clone the repository.`);
     }
     const extracted = spawnSync(
         'tar',
@@ -168,16 +166,19 @@ const restoreVendoredSqlite = () => {
         { stdio: 'inherit' },
     );
     if ( extracted.status !== 0 ) {
-        throw new Error('Could not extract the vendored SQLite driver (is `tar` installed?).');
+        throw new Error(`Could not extract ${archiveName} (is \`tar\` installed?).`);
     }
-    return existsSync(path.join(rootDir, 'node_modules', 'better-sqlite3', 'package.json'));
+    return true;
 };
 
-// Mixt never downloads at startup. Everything it needs ships in vendor/node-modules.
-const OFFLINE_INSTALL_HELP =
-    'Mixt cannot find its bundled dependencies for this platform (the bundle is ' +
-    'linux-x64 only). Run `npm install` once on a machine with the vendored tree, ' +
-    'or copy node_modules from a supported checkout.';
+// sql.js: SQLite as WebAssembly. The database fallback on any Node version whose
+// native SQLite binary cannot load. Pure JS and WASM, so it is restored on every
+// platform.
+const SQLJS_ARCHIVE = 'sql.js-1.14.2.tar.gz';
+
+// better-sqlite3 13.0.3 (prebuilt linux-x64 binary) for Node 22.5+. Optional:
+// if it cannot be restored or loaded, the sql.js fallback is used.
+const SQLITE_ARCHIVE = 'better-sqlite3-13.0.3-linux-x64.tar.gz';
 
 const ensureDependencies = async () => {
     const [major, minor] = process.versions.node.split('.').map(Number);
@@ -187,10 +188,13 @@ const ensureDependencies = async () => {
             throw new Error(OFFLINE_INSTALL_HELP);
         }
     }
-    if ( hasNodeSqlite && !existsSync(path.join(rootDir, 'node_modules', 'better-sqlite3', 'package.json')) ) {
-        if ( !restoreVendoredSqlite() ) {
+    if ( !existsSync(path.join(rootDir, 'node_modules', 'sql.js', 'package.json')) ) {
+        if ( !restoreVendoredArchive(SQLJS_ARCHIVE) ) {
             throw new Error(OFFLINE_INSTALL_HELP);
         }
+    }
+    if ( hasNodeSqlite && isVendorPlatform() && !existsSync(path.join(rootDir, 'node_modules', 'better-sqlite3', 'package.json')) ) {
+        restoreVendoredArchive(SQLITE_ARCHIVE);
     }
 };
 

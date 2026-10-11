@@ -1,43 +1,78 @@
 import bcrypt from 'bcrypt';
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import path from 'node:path';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { MixtServer } from '../../server.ts';
 import { setupTestServer } from '../../testUtil.ts';
+import { ADMIN_PASSWORD_FILE } from './DefaultUserService.ts';
 
 let server: MixtServer;
+let adminDir: string;
+const adminFile = () => path.join(adminDir, ADMIN_PASSWORD_FILE);
+const filePassword = (): string =>
+    JSON.parse(readFileSync(adminFile(), 'utf8')).password;
 
 beforeAll(async () => {
+    adminDir = mkdtempSync(path.join(tmpdir(), 'mixt-admin-'));
     server = await setupTestServer({
         no_default_user: false,
+        admin_dir: adminDir,
     } as never);
 });
 
 afterAll(async () => {
     await server?.shutdown();
+    rmSync(adminDir, { recursive: true, force: true });
 });
 
-describe('DefaultUserService — bootstrap admin credentials', () => {
-    it('stashes the bootstrap password so rotation can be detected', async () => {
+describe('DefaultUserService — administrator password file', () => {
+    it('creates admin.json and sets the admin account to its password', async () => {
+        const password = filePassword();
+        expect(password.length).toBeGreaterThanOrEqual(8);
+
         const admin = await server.stores.user.getByUsername('admin');
         expect(admin).toBeTruthy();
-
-        const stashed = admin?.metadata?.tmp_password;
-        expect(typeof stashed).toBe('string');
-        expect(
-            await bcrypt.compare(String(stashed), String(admin?.password)),
-        ).toBe(true);
+        expect(await bcrypt.compare(password, String(admin?.password))).toBe(
+            true,
+        );
     });
 
-    it('drops the plaintext stash once the password is rotated', async () => {
+    it('does not keep the plaintext password in the account metadata', async () => {
         const admin = await server.stores.user.getByUsername('admin');
-        expect(admin).toBeTruthy();
-        await server.stores.user.update(admin!.id, {
-            password: await bcrypt.hash('rotated-password', 8),
-        });
+        expect(admin?.metadata?.tmp_password ?? null).toBeNull();
+    });
+
+    it('applies a changed password from the file on the next start', async () => {
+        writeFileSync(
+            adminFile(),
+            JSON.stringify({ password: 'a-new-admin-password' }),
+        );
 
         // Simulate the next boot.
         await server.services.defaultUser.onServerStart();
 
-        const fresh = await server.stores.user.getByUsername('admin');
-        expect(fresh?.metadata?.tmp_password ?? null).toBeNull();
+        const admin = await server.stores.user.getByUsername('admin');
+        expect(
+            await bcrypt.compare('a-new-admin-password', String(admin?.password)),
+        ).toBe(true);
+    });
+
+    it('keeps the account when the file already matches', async () => {
+        const before = await server.stores.user.getByUsername('admin');
+        await server.services.defaultUser.onServerStart();
+        const after = await server.stores.user.getByUsername('admin');
+        expect(after?.password).toBe(before?.password);
+    });
+
+    it('creates a new random password when the file is missing', async () => {
+        rmSync(adminFile());
+        await server.services.defaultUser.onServerStart();
+
+        const password = filePassword();
+        const admin = await server.stores.user.getByUsername('admin');
+        expect(await bcrypt.compare(password, String(admin?.password))).toBe(
+            true,
+        );
     });
 });

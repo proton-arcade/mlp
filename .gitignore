@@ -7,6 +7,9 @@ node_modules/
 *.zip
 *.tgz
 license.config.json
+
+# Administrator password (created on first start, see admin/README.md)
+admin/admin.json
 license-header.txt
 
 # Build Outputs

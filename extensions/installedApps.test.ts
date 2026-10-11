@@ -163,9 +163,9 @@ describe('installedApps extension — handleInstalledApps', () => {
         );
 
         const list = captured.body as Array<Record<string, unknown>>;
-        const { protocol, static_hosting_domain } = extension.config;
+        const { protocol, static_hosting_domain, pub_port } = extension.config;
         expect(list[0].iconCdnUrl).toBe(
-            `${protocol}://mixt-app-icons.${static_hosting_domain}/${app!.uid}-256.png`,
+            `${protocol}://mixt-app-icons.${static_hosting_domain}:${pub_port}/${app!.uid}-256.png`,
         );
     });
 

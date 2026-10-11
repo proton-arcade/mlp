@@ -19,6 +19,8 @@
 
 import bcrypt from 'bcrypt';
 import crypto from 'node:crypto';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import path from 'node:path';
 import { v4 as uuidv4 } from 'uuid';
 import { MixtService } from '../types.js';
 import type { UserRow } from '../../stores/user/UserStore.js';
@@ -30,18 +32,48 @@ const USERNAME = 'admin';
 export const ADMIN_GROUP_UID = 'ca342a5e-b13d-4dee-9048-58b11a57cc55';
 const ADMIN_STORAGE_BYTES = 10 * 1024 * 1024 * 1024;
 
+/** File name inside `config.admin_dir` that holds the administrator password. */
+export const ADMIN_PASSWORD_FILE = 'admin.json';
+
 /**
- * Bootstraps the `admin` user on first boot for self-hosted deployments.
+ * Reads the administrator password from `<dir>/admin.json`.
+ * Returns null when the file is missing or holds no password.
+ */
+export const readAdminPasswordFile = (file: string): string | null => {
+    if (!existsSync(file)) return null;
+    let parsed: unknown;
+    try {
+        parsed = JSON.parse(readFileSync(file, 'utf8'));
+    } catch (e) {
+        throw new Error(
+            `${file} is not valid JSON (${(e as Error).message}). ` +
+                'Fix it, or run `node admin/set-password.mjs <new password>`.',
+        );
+    }
+    const password = (parsed as { password?: unknown })?.password;
+    return typeof password === 'string' && password !== '' ? password : null;
+};
+
+/** Writes the administrator password file (owner-readable only). */
+export const writeAdminPasswordFile = (file: string, password: string): void => {
+    mkdirSync(path.dirname(file), { recursive: true });
+    writeFileSync(file, JSON.stringify({ password }, null, 4) + '\n', {
+        mode: 0o600,
+    });
+};
+
+/**
+ * Bootstraps the `admin` user for self-hosted deployments.
  *
- * If no admin exists, creates one with a random 8-char hex password, places
- * them in the admin group, and stashes the plaintext under
- * `metadata.tmp_password` so we can detect on later boots whether the operator
- * has rotated it yet.
+ * The administrator's password lives in `<config.admin_dir>/admin.json`
+ * (default `admin/admin.json`). On every start the `admin` account is made to
+ * match that file, so changing the password is: edit the file (or run
+ * `node admin/set-password.mjs <new password>`) and restart the server.
  *
- * Each boot where the current password hash still matches the stashed
- * plaintext, the credentials are re-printed to stdout (CI scrapes this line to
- * extract the default password). Once rotation is detected the stash is deleted
- * so the plaintext isn't retained longer than needed.
+ * If the file does not exist it is created with a random password. An account
+ * created by an older version is migrated: its password is kept, and it is
+ * written to the file. The plaintext is never stored in the database and is
+ * never printed.
  */
 export class DefaultUserService extends MixtService {
     override async onServerStart(): Promise<void> {
@@ -60,40 +92,56 @@ export class DefaultUserService extends MixtService {
         }
 
         if (this.config.no_default_user) return;
-        let user = await this.stores.user.getByUsername(USERNAME);
-        let tmpPassword: string;
 
-        if (!user) {
-            // 16 bytes (128 bits) — the old 4 bytes was only 32 bits,
-            // brute-forceable if the box is reachable before the admin
-            // rotates the printed bootstrap password.
-            tmpPassword = crypto.randomBytes(16).toString('hex');
-            user = await this.#createAdminUser(tmpPassword);
-        } else {
-            const metadata = (user.metadata ?? {}) as Record<string, unknown>;
-            const stashed = metadata.tmp_password;
-            if (typeof stashed !== 'string' || stashed === '') return;
-            tmpPassword = stashed;
+        const file = path.join(this.config.admin_dir, ADMIN_PASSWORD_FILE);
+        let user = await this.stores.user.getByUsername(USERNAME);
+
+        let password = readAdminPasswordFile(file);
+        if (password === null) {
+            // Migrate a password stored by an older version, else generate one.
+            const stashed = (user?.metadata as Record<string, unknown>)
+                ?.tmp_password;
+            password =
+                typeof stashed === 'string' && stashed !== ''
+                    ? stashed
+                    : crypto.randomBytes(16).toString('hex');
+            writeAdminPasswordFile(file, password);
+            console.log(`[admin] wrote the administrator password to ${file}`);
         }
 
-        if (!user.password) return;
-        const isDefault = await bcrypt.compare(
-            tmpPassword,
-            String(user.password),
-        );
-        if (!isDefault) {
-            // Password was rotated — stop retaining the plaintext stash.
+        if (!user) {
+            await this.#createAdminUser(password);
+            user = await this.stores.user.getByUsername(USERNAME);
+        } else {
+            const matches = await bcrypt.compare(
+                password,
+                String(user.password ?? ''),
+            );
+            if (!matches) {
+                await this.stores.user.update(user.id, {
+                    password: await bcrypt.hash(password, 8),
+                });
+                console.log(
+                    `[admin] administrator password updated from ${file}`,
+                );
+            }
+        }
+
+        // Older versions kept the plaintext in account metadata. Drop it.
+        if (user && (user.metadata as Record<string, unknown>)?.tmp_password) {
             await this.stores.user.updateMetadata(user.id, {
                 tmp_password: null,
             });
-            return;
         }
 
-        this.#printCredentials(tmpPassword);
+        console.log(
+            `[admin] sign in as "admin". The password is in ${file}; ` +
+                'to change it run `node admin/set-password.mjs <new password>` and restart.',
+        );
     }
 
-    async #createAdminUser(tmpPassword: string): Promise<UserRow> {
-        const passwordHash = await bcrypt.hash(tmpPassword, 8);
+    async #createAdminUser(password: string): Promise<UserRow> {
+        const passwordHash = await bcrypt.hash(password, 8);
 
         const created = await this.stores.user.create({
             username: USERNAME,
@@ -102,10 +150,6 @@ export class DefaultUserService extends MixtService {
             email: null,
             free_storage: ADMIN_STORAGE_BYTES,
             requires_email_confirmation: false,
-        });
-
-        await this.stores.user.updateMetadata(created.id, {
-            tmp_password: tmpPassword,
         });
 
         try {
@@ -131,19 +175,5 @@ export class DefaultUserService extends MixtService {
         }
 
         return (await this.stores.user.getById(created.id)) ?? created;
-    }
-
-    #printCredentials(tmpPassword: string): void {
-        console.log(`password for admin is: ${tmpPassword}`);
-        console.log(
-            '\n************************************************************',
-        );
-        console.log('* Your default login credentials are:');
-        console.log('* Username: admin');
-        console.log(`* Password: ${tmpPassword}`);
-        console.log('* (change the password to remove this message)');
-        console.log(
-            '************************************************************\n',
-        );
     }
 }
