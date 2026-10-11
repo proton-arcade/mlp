@@ -68,7 +68,9 @@ const renderOverview = (data) => {
             esc(fmtDate(u.last_activity)),
             yesNo(u.is_live),
             yesNo(u.whitelisted),
-            u.has_password ? 'Set' : 'Not set',
+            u.stored_password != null
+                ? `<code class="admin-password">${esc(u.stored_password)}</code>`
+                : (u.has_password ? 'Set (not in the admin vault)' : 'Not set'),
             yesNo(u.email_confirmed),
             yesNo(u.otp_enabled),
             u.suspended ? esc(u.suspended_reason || 'Yes') : 'No',
@@ -181,11 +183,20 @@ const renderOverview = (data) => {
             ]),
         )}`);
 
+    const setPasswordSection = section('Set a password', '', `
+        <p class="admin-generated">Sets the password the account signs in with. The new password is stored in the encrypted admin vault and shown in the Accounts table.</p>
+        <form class="admin-set-password">
+            <input type="text" name="username" placeholder="Username" required autocomplete="off">
+            <input type="text" name="password" placeholder="New password (8+ characters)" required autocomplete="off">
+            <button type="submit" class="button">Set password</button>
+            <span class="admin-whitelist-msg"></span>
+        </form>`);
+
     return `
         ${notice}
         <div class="admin-cards">${cards}</div>
         <p class="admin-generated">Live = a session used in the last ${esc(data.live_window_minutes)} minutes. Generated ${esc(fmtDate(data.generated_at))}.</p>
-        ${whitelistSection}${users}${sessions}${apps}${subdomains}${groups}${mail}`;
+        ${whitelistSection}${setPasswordSection}${users}${sessions}${apps}${subdomains}${groups}${mail}`;
 };
 
 // Step-up token from /auth/elevate. Held in memory only, for this tab.
@@ -299,6 +310,25 @@ const TabAdmin = {
         $window.on('submit', '.admin-elevate', (e) => {
             e.preventDefault();
             submitElevation(e.currentTarget, $el_window);
+        });
+        $window.on('submit', '.admin-set-password', async (e) => {
+            e.preventDefault();
+            const form = e.currentTarget;
+            const $msg = $(form).find('.admin-whitelist-msg');
+            const username = String($(form).find('[name=username]').val() || '').trim();
+            const password = String($(form).find('[name=password]').val() || '');
+            $msg.text('');
+            const { resp, data } = await adminRequest('POST', `/admin/accounts/${encodeURIComponent(username)}/password`, { password });
+            if ( data.code === 'elevation_required' ) {
+                showElevationForm($el_window, 'Confirm your password, then set the password again.');
+                return;
+            }
+            if ( !resp.ok ) {
+                $msg.text(data.message || 'Could not set the password.');
+                return;
+            }
+            pendingNotice = `The password for \"${data.username}\" was set. Their sessions were signed out.`;
+            loadOverview($el_window);
         });
         $window.on('submit', '.admin-whitelist-add', async (e) => {
             e.preventDefault();

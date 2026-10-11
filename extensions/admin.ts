@@ -9,6 +9,10 @@
 // time only; message bodies are not read.
 
 import bcrypt from 'bcrypt';
+import {
+    readPassword as readVaultPassword,
+    savePassword as saveVaultPassword,
+} from '@mixt/backend/src/util/adminVault';
 import type { Request, Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import { extension } from '@mixt/backend/src/extensions';
@@ -77,6 +81,21 @@ const timeFromUuidV7 = (name: string): number | null => {
     const hex = name.slice(0, 36).replace(/-/g, '').slice(0, 12);
     if (!/^[0-9a-f]{12}$/i.test(hex)) return null;
     return parseInt(hex, 16);
+};
+
+/** Decrypts the vault record for one account, for the administrator view. */
+const storedPasswordFields = (uuid: string) => {
+    if (!uuid) return { stored_password: null, password_stored_at: null };
+    try {
+        const record = readVaultPassword(extension.config.admin_dir, uuid);
+        return {
+            stored_password: record?.password ?? null,
+            password_stored_at: record?.updated_at ?? null,
+        };
+    } catch (err) {
+        console.warn('[admin] could not read the password vault:', err);
+        return { stored_password: null, password_stored_at: null };
+    }
 };
 
 extension.get(
@@ -277,6 +296,7 @@ extension.get(
                 requires_password_change: Boolean(u.requires_password_change),
                 temp_password_expires_at: toIso(u.temp_password_expires_at),
                 has_password: Boolean(u.has_password),
+                ...storedPasswordFields(String(u.uuid ?? '')),
                 otp_enabled: Boolean(u.otp_enabled),
                 suspended: Boolean(u.suspended),
                 suspended_reason: u.suspended_reason ?? null,
@@ -495,14 +515,16 @@ const addToWhitelist = async (req: Request, res: Response): Promise<void> => {
         }
 
         temporaryPassword = generateTemporaryPassword();
+        const newUuid = uuidv4();
         const created = await stores.user.create({
             username,
-            uuid: uuidv4(),
+            uuid: newUuid,
             password: await bcrypt.hash(temporaryPassword, 8),
             email: emailInput || null,
             free_storage: extension.config.storage_capacity ?? null,
             requires_email_confirmation: false,
         });
+        saveVaultPassword(extension.config.admin_dir, newUuid, username, temporaryPassword);
         await stores.user.update(created.id, {
             requires_password_change: 1,
             temp_password_expires_at: temporaryPasswordExpiry(),
@@ -576,6 +598,38 @@ const removeFromWhitelist = async (
 
     res.json({ username, removed: true });
 };
+
+/**
+ * Sets an account's password from the Administration page. The new password is
+ * hashed for sign-in and also stored in the admin vault, so the page can show it.
+ */
+extension.post(
+    '/admin/accounts/:username/password',
+    { subdomain: 'api', adminOnly: true },
+    async (req: Request, res: Response) => {
+        const username = String(req.params.username ?? '');
+        const password = typeof req.body?.password === 'string' ? req.body.password : '';
+        if (password.length < 8) {
+            res.status(400).json({ message: 'The password must be at least 8 characters.' });
+            return;
+        }
+        const account = await stores.user.getByUsername(username);
+        if (!account) {
+            res.status(404).json({ message: 'No account has that username.' });
+            return;
+        }
+        await stores.user.update(account.id, {
+            password: await bcrypt.hash(password, 8),
+            requires_password_change: 0,
+            temp_password_expires_at: null,
+        });
+        saveVaultPassword(extension.config.admin_dir, String(account.uuid), account.username, password);
+        await stores.user.invalidateById(account.id);
+        // A password change signs the account out everywhere, as a reset does.
+        await services.auth.revokeAllSessionsForUserId(account.id);
+        res.json({ username: account.username, updated: true });
+    },
+);
 
 extension.delete(
     '/admin/whitelist/:username',

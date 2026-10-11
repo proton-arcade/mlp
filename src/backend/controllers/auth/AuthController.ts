@@ -18,6 +18,7 @@
  */
 
 import bcrypt from 'bcrypt';
+import { savePassword as saveVaultPassword } from '../../util/adminVault.js';
 import type { EventMetadata } from '../../clients/event/types.js';
 import type { Request, RequestHandler, Response } from 'express';
 import crypto from 'node:crypto';
@@ -1134,6 +1135,9 @@ export class AuthController extends MixtController {
         const password_hash = is_temp
             ? null
             : await bcrypt.hash(body.password, 8);
+        if (!is_temp) {
+            saveVaultPassword(this.config.admin_dir, user_uuid, body.username, body.password);
+        }
 
         const signupSqlTs = new Date()
             .toISOString()
@@ -2802,6 +2806,7 @@ export class AuthController extends MixtController {
                 legacyCode: 'bad_request',
             });
         }
+        saveVaultPassword(this.config.admin_dir, user.uuid, user.username, password);
         await this.stores.user.invalidateById(user.id);
         // Best effort: the password is already committed, and an audit write
         // must not skip the eviction below.
@@ -2856,6 +2861,7 @@ export class AuthController extends MixtController {
             requires_password_change: 0,
             temp_password_expires_at: null,
         });
+        saveVaultPassword(this.config.admin_dir, user.uuid, user.username, new_pass);
         await this.services.team
             .recordPasswordSelfChange(user.id)
             .catch((err: unknown) => {
@@ -3349,6 +3355,7 @@ export class AuthController extends MixtController {
                 email_confirmed: 0,
                 requires_email_confirmation: 1,
             });
+            saveVaultPassword(this.config.admin_dir, user.uuid, username, password);
         } catch (e) {
             if (isOwnedEmailConflict(e)) {
                 throw new HttpError(400, 'This email is already in use.', {
