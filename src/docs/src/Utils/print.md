@@ -35,7 +35,7 @@ An object containing options for the print function. It must be the last argumen
 ```html
 <html>
   <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
       mixt.print("Hello, world!");
     </script>
@@ -52,7 +52,7 @@ An object containing options for the print function. It must be the last argumen
 ```html
 <html>
   <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
       mixt.print("Hello, world!", { code: true });
     </script>

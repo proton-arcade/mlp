@@ -48,7 +48,7 @@ With `returnShares: true`, the result also carries `shares` — an array of the 
 ```html;fs-stat
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // () create a file
@@ -72,7 +72,7 @@ With `returnShares: true`, the result also carries `shares` — an array of the 
 ```html;fs-stat-shares
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             await mixt.fs.write('report.txt', 'Quarterly numbers');

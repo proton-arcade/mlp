@@ -95,7 +95,7 @@ The encryption is done by [rustls-wasm](https://github.com/MercuryWorkshop/rustl
 ```html;net-tls
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
     const socket = new mixt.net.tls.TLSSocket("example.com", 443);
     socket.on("tlsopen", () => {

@@ -29,7 +29,7 @@ A `Promise` that will resolve to an object of the form `{ success: true, uid: <s
 ```html;hosting-delete
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // (1) Create a random website

@@ -30,7 +30,7 @@ A `Promise` that resolves to either one [`FSItem`](/Objects/fsitem) or an array 
 ```html
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
 
     <h1 id="file-name"></h1>
 

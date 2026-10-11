@@ -69,7 +69,7 @@ const page = `
             </article>
         </section>
     </main>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (() => {
             const codeEl = document.getElementById('code');

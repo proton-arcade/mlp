@@ -59,7 +59,7 @@ The app opens on the recipient's Mixt OS, and before it is handed the file Mixt 
 ```html;fs-getShareLink
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             await mixt.fs.write('notes.txt', 'Meeting notes');

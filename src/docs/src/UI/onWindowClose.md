@@ -22,7 +22,7 @@ A function to execute when the window is going to close.
 ```html
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         mixt.ui.onWindowClose(function(){
             alert('Window is about to close!')

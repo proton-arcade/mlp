@@ -302,8 +302,8 @@ function generateDocsHTML (filePath, rootDir, page, isIndex = false) {
     }
     // Social Media
     html += `<meta property="og:title" content="${docTitle}">`;
-    html += '<meta property="og:image" content="https://assets.mixt.site/twitter.png">';
-    html += '<meta name="twitter:image" content="https://assets.mixt.site/twitter.png">';
+    html += '<meta property="og:image" content="/assets/img/mixt-screenshot.png">';
+    html += '<meta name="twitter:image" content="/assets/img/mixt-screenshot.png">';
 
     // Robot tag
     html += '<meta name="robots" content="index, follow" />';
@@ -595,6 +595,13 @@ async function generateDocumentation (rootDir) {
     const distAssetsDir = path.join(rootDir, '..', 'dist', 'assets');
     createDirectoryRecursively(distAssetsDir);
     fs.copySync(assetsDir, distAssetsDir);
+
+    // Monaco (playground editor) ships as one archive to keep the repo small; unpack it into dist.
+    const { execFileSync } = require('child_process');
+    const monacoArchive = path.join(rootDir, '..', 'vendor', 'monaco-0.45.0-min-vs.tar.gz');
+    const monacoDir = path.join(distAssetsDir, 'vendor', 'monaco');
+    createDirectoryRecursively(monacoDir);
+    execFileSync('tar', ['-xzf', monacoArchive, '-C', monacoDir]);
 
     // recursively copy the playground directory and its contents to the dist directory
     const playgroundDir = path.join(rootDir, 'playground');

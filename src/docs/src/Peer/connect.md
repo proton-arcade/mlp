@@ -45,7 +45,7 @@ A `Promise` that resolves to a [`MixtPeerConnection`](/Objects/mixtpeerconnectio
 ```html
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             const inviteCode = prompt('Enter invite code');

@@ -55,7 +55,7 @@ A rejection carries an `Error` with a `code`:
 ```html;teams-list
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             const teams = await mixt.teams.list();

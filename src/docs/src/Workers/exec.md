@@ -37,7 +37,7 @@ A `Promise` that resolves to a `Response` object (similar to the Fetch API).
 ```html
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // Execute a worker and get the response

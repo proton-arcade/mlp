@@ -55,7 +55,7 @@ URL or data URI of an icon shown when the menu item is hovered or active. Falls 
 ```html;ui-set-menubar
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         mixt.ui.setMenubar({
             items: [

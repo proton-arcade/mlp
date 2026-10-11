@@ -45,7 +45,7 @@ An app can only end subscriptions it created. An account session can end any of 
 ```html;events-unsubscribe
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             const dir = mixt.randName();

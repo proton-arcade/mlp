@@ -49,7 +49,7 @@ Returns a `Promise` that resolves to the [`FSItem`](/Objects/fsitem) object of t
 ```html;fs-write
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         // Create a new file called "hello.txt" containing "Hello, world!"
         mixt.fs.write('hello.txt', 'Hello, world!').then(() => {
@@ -65,7 +65,7 @@ Returns a `Promise` that resolves to the [`FSItem`](/Objects/fsitem) object of t
 ```html;fs-write-from-input
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <input type="file" id="file-input">
     <script>
         // Example: Writing a file with input coming from a file input
@@ -86,7 +86,7 @@ Returns a `Promise` that resolves to the [`FSItem`](/Objects/fsitem) object of t
 ```html;fs-write-dedupe
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // create a file named 'hello.txt'
@@ -106,7 +106,7 @@ Returns a `Promise` that resolves to the [`FSItem`](/Objects/fsitem) object of t
 ```html;fs-write-create-missing-parents
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // create a file named 'hello.txt' in a directory that does not exist

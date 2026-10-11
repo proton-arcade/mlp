@@ -17,12 +17,10 @@ export class PTLSSocket extends PSocket {
         super(...args);
         super.on('open', (async () => {
             if ( ! rustls ) {
-                // Safari exists unfortunately without good ReadableStream support. Until that is fixed we need this.
-                if ( ! globalThis.ReadableByteStreamController ) {
-                    await import( /* webpackIgnore: true */ 'https://unpkg.com/web-streams-polyfill@3.0.2/dist/polyfill.js');
-                }
-                rustls = (await import( /* webpackIgnore: true */ 'https://mixt-net.b-cdn.net/rustls.js'));
-                await rustls.default('https://mixt-net.b-cdn.net/rustls.wasm');
+                // The TLS engine (rustls-wasm) is loaded from a third-party CDN,
+                // and Mixt does not reach the internet. Encrypted sockets are
+                // therefore unavailable; plain PSocket connections still work.
+                throw new Error('TLS sockets are unavailable: the TLS engine is not bundled with Mixt.');
             }
 
             let cancelled = false;

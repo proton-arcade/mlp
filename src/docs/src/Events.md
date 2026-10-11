@@ -44,7 +44,7 @@ With the [User-Pays Model](/user-pays-model/), deliveries are billed to the user
 ```html;events-watch-folder
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // (1) Create a directory to watch
@@ -80,7 +80,7 @@ With the [User-Pays Model](/user-pays-model/), deliveries are billed to the user
 ```html;events-watch-kv
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // (1) Exactly one key, and separately every key under a prefix.
@@ -116,7 +116,7 @@ With the [User-Pays Model](/user-pays-model/), deliveries are billed to the user
 ```html;events-watch-missing
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // (1) A directory to work in. `inbox/` below it does not exist yet.
@@ -153,7 +153,7 @@ With the [User-Pays Model](/user-pays-model/), deliveries are billed to the user
 ```html;events-persistent
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // (1) An app of your own to publish the handler under
@@ -201,7 +201,7 @@ With the [User-Pays Model](/user-pays-model/), deliveries are billed to the user
 ```html;events-list
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             const dir = mixt.randName();
@@ -232,7 +232,7 @@ With the [User-Pays Model](/user-pays-model/), deliveries are billed to the user
 ```html;events-fetch
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             let cursor;

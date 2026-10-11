@@ -31,7 +31,7 @@ A `Promise` that resolves to a [`MonthlyUsage`](/Objects/monthlyusage) object co
 ```html;auth-get-monthly-usage
 <html>
   <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
       mixt.auth.getMonthlyUsage().then(function (usage) {
         mixt.print(`<pre>${JSON.stringify(usage, null, 2)}</pre>`);

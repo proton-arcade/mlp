@@ -37,7 +37,7 @@ The promise rejects if the check itself cannot be made (for example when the cal
 ```html
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <button id="save">Save to Documents</button>
     <script>
         document.getElementById('save').addEventListener('click', async () => {
@@ -62,7 +62,7 @@ The promise rejects if the check itself cannot be made (for example when the cal
 ```html
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <button id="status">Check Setup</button>
     <script>
         document.getElementById('status').addEventListener('click', async () => {

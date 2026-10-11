@@ -1,9 +1,9 @@
-/* global require, monaco, clarity */
+/* global require, monaco */
 let editor;
 // on document load
 document.addEventListener('DOMContentLoaded', function () {
     // load monaco editor
-    require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs' } });
+    require.config({ paths: { 'vs': '/assets/vendor/monaco/vs' } });
     require(['vs/editor/editor.main'], function () {
         // get editor element
         var editorElement = document.getElementById('code');
@@ -31,7 +31,6 @@ document.addEventListener('DOMContentLoaded', function () {
     function fetchGitHubData () {
         // GitHub API fetching and handling
 
-        const url = 'https://api.github.com/repos/proton-arcade/mlp';
 
         function formatNumber (num) {
             if ( num < 1000 ) {
@@ -43,13 +42,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
-        $.getJSON(url, function (data) {
-            $('.github-stars').text(`${formatNumber(data.stargazers_count) }`);
-        }).fail(function (jqxhr, textStatus, error) {
-            let err = `${textStatus }, ${ error}`;
-            console.error(`Request Failed: ${ err}`);
-            $('.github-stars').text('proton-arcade/mlp');
-        });
+        $('.github-stars').text('proton-arcade/mlp'); // offline: no GitHub API call
     }
 
     fetchGitHubData();
@@ -335,7 +328,6 @@ document.addEventListener('click', function (e) {
             twitterDescriptionMeta.setAttribute('content', twitterDescription.getAttribute('content'));
         }
 
-        clarity('identify', (sessionStorage.cid ??= crypto.randomUUID()));
 
         // Update active sidebar item
         updateActiveSidebarItem();

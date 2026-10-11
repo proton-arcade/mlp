@@ -26,27 +26,15 @@ The quickest way to publish a website is to upload it on [mixt.mpl](https://mixt
 <ol>
     <li>
         Right-click on the desktop and create a new folder for your website's files.
-        <figure style="margin: 30px 0;">
-            <img src="https://developer.mixt.mpl/assets/img/free-hosting/create-directory.webp" style="width: 100%; max-width: 600px; margin: 0 auto; display: block; border-radius: 6px;">
-        </figure>
     </li>
     <li>
         Open the folder, right-click inside it, and choose <strong>Upload Here</strong> to upload your website's files (your <code>index.html</code> and any other assets).
-        <figure style="margin: 30px 0;">
-            <img src="https://developer.mixt.mpl/assets/img/free-hosting/upload-here.webp" style="width: 100%; max-width: 600px; margin: 0 auto; display: block; border-radius: 6px;">
-        </figure>
     </li>
     <li>
         Right-click the folder and choose <strong>Publish as Website</strong>.
-        <figure style="margin: 30px 0;">
-            <img src="https://developer.mixt.mpl/assets/img/free-hosting/publish-website.webp" style="width: 100%; max-width: 600px; margin: 0 auto; display: block; border-radius: 6px;">
-        </figure>
     </li>
     <li>
         Pick a subdomain and click <strong>Publish</strong>. Your site goes live instantly at <code>https://your-subdomain.mixt.site</code>.
-        <figure style="margin: 30px 0;">
-            <img src="https://developer.mixt.mpl/assets/img/free-hosting/published.webp" style="width: 100%; max-width: 600px; margin: 0 auto; display: block; border-radius: 6px;">
-        </figure>
     </li>
 </ol>
 

@@ -32,7 +32,7 @@ Mixt.js handles all the infrastructure for you, so you don't need to set up serv
 ```html;kv-set
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         mixt.kv.set('name', 'Mixt OS Smith').then((success) => {
             mixt.print(`Key-value pair created/updated: ${success}`);
@@ -51,7 +51,7 @@ Mixt.js handles all the infrastructure for you, so you don't need to set up serv
 ```html;kv-get
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // (1) Create a new key-value pair
@@ -76,7 +76,7 @@ Mixt.js handles all the infrastructure for you, so you don't need to set up serv
 ```html;kv-incr
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         mixt.kv.incr('testIncrKey').then((newValue) => {
             mixt.print(`New value: ${newValue}`);
@@ -95,7 +95,7 @@ Mixt.js handles all the infrastructure for you, so you don't need to set up serv
 ```html;kv-decr
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         mixt.kv.decr('testDecrKey').then((newValue) => {
             mixt.print(`New value: ${newValue}`);
@@ -114,7 +114,7 @@ Mixt.js handles all the infrastructure for you, so you don't need to set up serv
 ```html;kv-del
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // create a new key-value pair
@@ -143,7 +143,7 @@ Mixt.js handles all the infrastructure for you, so you don't need to set up serv
 ```html;kv-list
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // (1) Create a number of key-value pairs
@@ -182,7 +182,7 @@ Mixt.js handles all the infrastructure for you, so you don't need to set up serv
 ```html;kv-flush
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // (1) Create a number of key-value pairs

@@ -35,7 +35,7 @@ With Mixt.js, you don't need to worry about setting up storage infrastructure su
 ```html;fs-write
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         // Create a new file called "hello.txt" containing "Hello, world!"
         mixt.fs.write('hello.txt', 'Hello, world!').then(() => {
@@ -55,7 +55,7 @@ With Mixt.js, you don't need to worry about setting up storage infrastructure su
 ```html;fs-read
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // (1) Create a random text file
@@ -82,7 +82,7 @@ With Mixt.js, you don't need to worry about setting up storage infrastructure su
 ```html;fs-mkdir
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         // Create a directory with random name
         let dirName = mixt.randName();
@@ -105,7 +105,7 @@ With Mixt.js, you don't need to worry about setting up storage infrastructure su
 ```html;fs-readdir
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         mixt.fs.readdir('./').then((items) => {
             // print the path of each item in the directory
@@ -127,7 +127,7 @@ With Mixt.js, you don't need to worry about setting up storage infrastructure su
 ```html;fs-rename
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // Create hello.txt
@@ -152,7 +152,7 @@ With Mixt.js, you don't need to worry about setting up storage infrastructure su
 ```html;fs-copy
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
     (async () => {
         // (1) Create a random text file
@@ -186,7 +186,7 @@ With Mixt.js, you don't need to worry about setting up storage infrastructure su
 ```html;fs-move
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
     (async () => {
         // (1) Create a random text file
@@ -221,7 +221,7 @@ With Mixt.js, you don't need to worry about setting up storage infrastructure su
 ```html;fs-stat
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // () create a file
@@ -249,7 +249,7 @@ With Mixt.js, you don't need to worry about setting up storage infrastructure su
 ```html;fs-delete
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // (1) Create a random file
@@ -275,7 +275,7 @@ With Mixt.js, you don't need to worry about setting up storage infrastructure su
 ```html;fs-upload
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <input type="file" id="file-input" />
     <script>
         // File input

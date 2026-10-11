@@ -37,7 +37,7 @@ When requesting permissions, users will be prompted to grant or deny access. If 
 ```html
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <button id="request-email">Request Email Access</button>
     <script>
         document.getElementById('request-email').addEventListener('click', async () => {
@@ -62,7 +62,7 @@ When requesting permissions, users will be prompted to grant or deny access. If 
 ```html
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <button id="request-documents">Request Documents Write Access</button>
     <script>
         document.getElementById('request-documents').addEventListener('click', async () => {
@@ -90,7 +90,7 @@ When requesting permissions, users will be prompted to grant or deny access. If 
 ```html
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <button id="request-apps">Request Apps Read Access</button>
     <script>
         document.getElementById('request-apps').addEventListener('click', async () => {
@@ -120,7 +120,7 @@ Pass an array to ask for everything your app needs in one call. Anything already
 ```html
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <button id="setup">Set Up</button>
     <script>
         document.getElementById('setup').addEventListener('click', async () => {
@@ -147,7 +147,7 @@ Pass an array to ask for everything your app needs in one call. Anything already
 ```html
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // Never shows a dialog — it only reports what is already granted.
@@ -170,7 +170,7 @@ Pass an array to ask for everything your app needs in one call. Anything already
 ```html
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <button id="request-app-data">Use another app's data</button>
     <script>
         document.getElementById('request-app-data').addEventListener('click', async () => {

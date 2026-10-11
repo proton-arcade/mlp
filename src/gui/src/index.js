@@ -76,21 +76,14 @@ window.gui = async (options) => {
     else if ( window.gui_env === 'prod' ) {
         // This stuff is now handled in the backend in MixtHomepageService
 
-        await window.loadScript(options.mixtjs_bundle ?? 'https://js.mixt.mpl/v2/');
+        // Served by this backend, never fetched from the internet.
+        await window.loadScript(options.mixtjs_bundle ?? '/mixt.js/v2');
         // Load the minified bundles
         // await window.loadCSS('/dist/bundle.min.css');
     }
 
-    // Load the captcha script alongside the GUI rather than ahead of it.
-    // Nothing during boot needs it — the challenge modal polls for the
-    // global and the signup form is opened long after — so awaiting it here
-    // only put a third-party round trip in front of every page load. Skipped
-    // entirely when no site key is configured, since every consumer gates on
-    // one.
-    if ( options.turnstileSiteKey ) {
-        window.loadScript('https://challenges.cloudflare.com/turnstile/v0/api.js', { defer: true })
-            .catch(error => console.debug('Captcha script unavailable:', error));
-    }
+    // No captcha script is loaded: the Turnstile widget comes from the internet,
+    // which Mixt does not use. Signup runs without it.
 
     // 🚀 Launch the GUI 🚀
     window.initgui(options);

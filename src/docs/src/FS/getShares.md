@@ -65,7 +65,7 @@ If you cannot see the item at all, this rejects the same way a missing file woul
 ```html;fs-getShares
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             await mixt.fs.write('report.txt', 'Quarterly numbers');

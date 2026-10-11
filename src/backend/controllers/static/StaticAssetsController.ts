@@ -89,11 +89,10 @@ export class StaticAssetsController extends MixtController {
                 router.get('/mixt.js/v2', { subdomain: '*' }, (_req, res) => {
                     res.sendFile(mixtJsFile, { root: mixtjsRoot });
                 });
-                // GUI bundle hard-codes `https://js.mixt.mpl/v{1,2}` as the
-                // script source in prod mode. Setups that route `js.mixt.mpl`
-                // to a self-hosted instance (DNS flip, host rewrite) need the
-                // bare `/v1` and `/v2` paths on the `js` subdomain too — not
-                // just the `/mixt.js/*` prefix. Serve the same file.
+                // The GUI loads the SDK from `/mixt.js/v2` on this server. Older
+                // builds hard-coded `https://js.mixt.mpl/v{1,2}`; the bare `/v1`
+                // and `/v2` paths on the `js` subdomain keep those working when
+                // `js.mixt.mpl` is pointed at this instance. Serve the same file.
                 router.get('/v1', { subdomain: 'js' }, (_req, res) => {
                     res.sendFile(mixtJsFile, { root: mixtjsRoot });
                 });

@@ -62,7 +62,7 @@ A rejection carries an `Error` with a stable `code`:
 ```html;kv-update-root-array
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             await mixt.kv.set('players', [{ score: 1 }, { score: 2 }]);
@@ -79,7 +79,7 @@ A rejection carries an `Error` with a stable `code`:
 ```html;kv-update
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             await mixt.kv.set('profile', { name: 'Mixt OS', stats: { score: 10 } });

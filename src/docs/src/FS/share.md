@@ -151,7 +151,7 @@ if ( share.pending ) {
 ```html;fs-share
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // (1) create a file

@@ -25,7 +25,7 @@ A `Promise` that resolves once the user is authenticated with their Mixt OS acco
 ```html
 <html>
   <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
       // Presents a dialog to the user to authenticate with their Mixt OS account.
       mixt.ui

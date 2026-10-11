@@ -56,7 +56,7 @@ The promise may also reject with the failure response returned by the authentica
 ```html;auth-sign-in
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <button id="sign-in">Sign in</button>
     <script>
         // Because signIn() opens a popup window, it must be called from a user action.

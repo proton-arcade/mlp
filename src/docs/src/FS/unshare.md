@@ -67,7 +67,7 @@ Passing an email address that was **invited** but has not yet joined cancels the
 ```html;fs-unshare
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             await mixt.fs.write('report.txt', 'Quarterly numbers');

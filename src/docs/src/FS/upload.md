@@ -96,7 +96,7 @@ When using signed uploads, a separate thumbnail transfer that fails or exceeds f
 ```html;fs-upload
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <input type="file" id="file-input" />
     <script>
         // File input

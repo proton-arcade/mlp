@@ -28,7 +28,7 @@ A `Promise` that resolves to `true` if successful, or throws an `Error` if the o
 ```html
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // (1) Create a random worker

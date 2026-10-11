@@ -50,7 +50,7 @@ The promise rejects with `{ message, code }`: `auth_canceled` if nobody was sign
 ```html;events-list
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             const dir = mixt.randName();
@@ -77,7 +77,7 @@ The promise rejects with `{ message, code }`: `auth_canceled` if nobody was sign
 ```html;events-list-suspended
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             for await (const page of mixt.events.list({ stream: true })) {

@@ -88,7 +88,7 @@ mixt.workers.create('my-api', 'api-server.js')
 ```html;workers-create
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
     (async () => {
         // 1. Create a worker file in your Mixt OS account.

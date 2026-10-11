@@ -61,7 +61,7 @@ A `Promise` that will resolve to `true` when the key-value pair has been created
 ```html
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         mixt.kv.set('accessToken', 'secret-value', { disableSharing: true })
             .then(() => mixt.print('Stored privately'));
@@ -75,7 +75,7 @@ A `Promise` that will resolve to `true` when the key-value pair has been created
 ```html;kv-set
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         mixt.kv.set('name', 'Mixt OS Smith').then((success) => {
             mixt.print(`Key-value pair created/updated: ${success}`);
@@ -90,7 +90,7 @@ A `Promise` that will resolve to `true` when the key-value pair has been created
 ```html
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             await mixt.kv.set([

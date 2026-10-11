@@ -21,7 +21,7 @@ Hosting a session requires authentication — on websites, Mixt.js will prompt t
 ```html;peer-basic
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <h3>Peer Chat</h3>
     <p>Open this page in two tabs. Start a server in one tab, then connect from the other.</p>
 

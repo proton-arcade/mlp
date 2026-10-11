@@ -44,7 +44,7 @@ The profile belongs to the account, so the call must be made with a user session
 ```html;auth-update-profile
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <input id="display-name" placeholder="Display name">
     <button id="save">Save</button>
     <p id="status"></p>

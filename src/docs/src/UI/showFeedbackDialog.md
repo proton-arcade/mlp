@@ -35,7 +35,7 @@ On a website that is cross-origin isolated (COOP severs the popup's connection t
 <html>
 <body>
     <button id="feedback">Send us feedback</button>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         document.getElementById('feedback').addEventListener('click', async () => {
             const sent = await mixt.ui.showFeedbackDialog();

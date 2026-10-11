@@ -22,7 +22,7 @@ A `Promise` that resolves to a string containing the current language code (e.g.
 ```html
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         // Get the current language
         mixt.ui.getLanguage().then((language) => {

@@ -43,7 +43,7 @@ Returns a promise that resolves to the [`FSItem`](/Objects/fsitem) object of the
 ```html;fs-rename
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // Create hello.txt

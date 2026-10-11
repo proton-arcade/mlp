@@ -63,7 +63,7 @@ A rejection carries an `Error` with a stable `code`:
 ```html;kv-decr
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         mixt.kv.decr('testDecrKey').then((newValue) => {
             mixt.print(`New value: ${newValue}`);
@@ -78,7 +78,7 @@ A rejection carries an `Error` with a stable `code`:
 ```html;kv-decr-nested
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // If 'stats' contains: { user: { score: 10 } }

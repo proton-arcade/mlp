@@ -6,7 +6,7 @@ Companion docs: [architecture.md](architecture.md) (backend layering), [paginati
 
 ## Rule zero: don't break callers
 
-mixt.js is served live from `https://js.mixt.mpl/v2/` with no version pinning — every app in existence picks up your change the moment it deploys, and the backend endpoints underneath have the same property. Assume every observable behavior (parameter handling, response fields, error codes, ordering) has someone depending on it.
+mixt.js is served live from `/mixt.js/v2` by this server with no version pinning — every app in existence picks up your change the moment it deploys, and the backend endpoints underneath have the same property. Assume every observable behavior (parameter handling, response fields, error codes, ordering) has someone depending on it.
 
 Every change is backward compatible unless a maintainer has explicitly agreed to a break beforehand.
 

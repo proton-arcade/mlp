@@ -61,7 +61,7 @@ const mixt = init(authToken);
 #### Include the script
 
 ```html
-<script src="https://js.mixt.mpl/v2/"></script>
+<script src="/mixt.js/v2"></script>
 ```
 
 <br>
@@ -71,7 +71,7 @@ const mixt = init(authToken);
 ```html
 <html>
   <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
       mixt.print(`Hello from Mixt!`);
     </script>

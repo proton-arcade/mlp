@@ -29,7 +29,7 @@ A `Promise` that resolves to a [`WorkerInfo`](/Objects/workerinfo) object if the
 ```html;workers-get
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // Get a worker's information

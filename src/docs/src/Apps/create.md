@@ -62,7 +62,7 @@ A `Promise` that will resolve to the [`CreateAppResult`](/Objects/createappresul
 ```html;app-create
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // (1) Generate a random app name

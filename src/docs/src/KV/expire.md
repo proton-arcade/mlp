@@ -39,7 +39,7 @@ To remove a key's TTL instead of setting one, use [`mixt.kv.set()`](/KV/set/) or
 ```html;kv-expire
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // (1) Create a new key-value pair

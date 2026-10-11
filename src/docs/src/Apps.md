@@ -23,7 +23,7 @@ The Apps API allows you to create, manage, and interact with applications in the
 ```html;app-create
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // (1) Generate a random app name
@@ -50,7 +50,7 @@ The Apps API allows you to create, manage, and interact with applications in the
 ```html;app-list
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // (1) Generate 3 random app names
@@ -88,7 +88,7 @@ The Apps API allows you to create, manage, and interact with applications in the
 ```html;app-delete
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // (1) Generate a random app name to make sure it doesn't already exist
@@ -124,7 +124,7 @@ The Apps API allows you to create, manage, and interact with applications in the
 ```html;app-update
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // (1) Create a random app
@@ -153,7 +153,7 @@ The Apps API allows you to create, manage, and interact with applications in the
 ```html;app-get
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // (1) Generate a random app name to make sure it doesn't already exist

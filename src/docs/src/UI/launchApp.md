@@ -72,7 +72,7 @@ When private-access routing applies, the resolved connection may include
 ```html
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         // launches the Editor app
         mixt.ui.launchApp('editor');
@@ -87,7 +87,7 @@ appearing on screen:
 ```html
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             const service = await mixt.ui.launchApp({

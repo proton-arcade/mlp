@@ -42,7 +42,7 @@ A `Promise` that resolves to a [`MixtPeerServer`](/Objects/mixtpeerserver/) inst
 ```html
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             const server = await mixt.peer.serve();

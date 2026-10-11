@@ -27,7 +27,7 @@ With the [User-Pays Model](/user-pays-model/), the account making the call cover
 ```html
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             const page = await mixt.email.list({ limit: 10 });
@@ -49,7 +49,7 @@ With the [User-Pays Model](/user-pays-model/), the account making the call cover
 ```html
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             const { items } = await mixt.email.list({ limit: 1 });

@@ -39,7 +39,7 @@ Rejects if the caller isn't authenticated, or if the deployment doesn't offer gu
 ```html
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <h3>Host a session guests can join</h3>
     <button id="host">Start hosting</button>
     <pre id="out" style="background:#f4f4f4; padding:10px;"></pre>

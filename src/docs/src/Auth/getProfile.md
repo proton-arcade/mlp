@@ -30,7 +30,7 @@ When signed out with no `username`, it resolves to `null` without opening a sign
 ```html;auth-get-profile
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <button id="show-profile">Show my profile</button>
     <pre id="profile"></pre>
     <script>

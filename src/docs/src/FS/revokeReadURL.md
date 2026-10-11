@@ -44,7 +44,7 @@ A rejection carries an `Error` with a stable `code`:
 ```html
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             await mixt.fs.write('~/shared.txt', 'temporary contents');

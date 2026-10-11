@@ -34,7 +34,7 @@ A `Promise` that resolves to a window handle object with an `id` (String) proper
 ```html
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         // create the window
         mixt.ui.createWindow({

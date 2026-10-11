@@ -23,7 +23,7 @@ The default font to select when the font picker is opened.
 ```html;ui-show-font-picker
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <h1>A cool Font Picker demo!</h1>
 
     <script>

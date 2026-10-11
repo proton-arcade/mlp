@@ -20,7 +20,7 @@ A function to execute after items are opened by user action. The function will b
 ```html
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         mixt.ui.onLaunchedWithItems(function(items){
             document.body.innerHTML = JSON.stringify(items);

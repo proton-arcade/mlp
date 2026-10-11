@@ -78,7 +78,7 @@ You can use Mixt.js in Mixt OS Apps just as you would in any website. They have 
 - **Cloud desktop integration** - Apps run seamlessly in the Mixt OS desktop environment
 
 <figure style="margin: 40px 0;">
-    <img src="https://assets.mixt.site/mixt.mpl-screenshot-3.webp" style="width: 100%; max-width: 600px; margin: 0px auto; display:block;">
+    <img src="/assets/img/mixt-screenshot.png" style="width: 100%; max-width: 600px; margin: 0px auto; display:block;">
     <figcaption style="text-align: center; font-size: 13px; color: #777;">Mixt OS cloud desktop environment</figcaption>
 </figure>
 

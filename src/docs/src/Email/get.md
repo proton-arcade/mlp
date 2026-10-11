@@ -50,7 +50,7 @@ Rejects with an object carrying a `code`:
 ```html
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             const { items } = await mixt.email.list({ limit: 1 });
@@ -71,7 +71,7 @@ Rejects with an object carrying a `code`:
 ```html
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             const { items } = await mixt.email.list({ limit: 1 });
@@ -94,7 +94,7 @@ Rejects with an object carrying a `code`:
 ```html
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             const { items } = await mixt.email.list({ folder: 'sent', limit: 1 });

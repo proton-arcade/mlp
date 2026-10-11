@@ -77,7 +77,7 @@ for await (const page of mixt.kv.list({ pattern: 'log:*', stream: true })) {
 ```html;kv-list-reverse
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             await mixt.kv.set('reverse-demo:a', 1);
@@ -95,7 +95,7 @@ for await (const page of mixt.kv.list({ pattern: 'log:*', stream: true })) {
 ```html;kv-list
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // (1) Create a number of key-value pairs
@@ -130,7 +130,7 @@ for await (const page of mixt.kv.list({ pattern: 'log:*', stream: true })) {
 ```html;kv-list-pagination
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // Create sample data
@@ -177,7 +177,7 @@ for await (const page of mixt.kv.list({ pattern: 'log:*', stream: true })) {
 ```html;kv-list-sort
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             await mixt.kv.set('log:2025-03-15T10:00:00Z', { msg: 'third' });
@@ -203,7 +203,7 @@ for await (const page of mixt.kv.list({ pattern: 'log:*', stream: true })) {
 ```html;kv-list-padding
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // Wrong — will sort as 1, 10, 100, 2, 20
@@ -240,7 +240,7 @@ for await (const page of mixt.kv.list({ pattern: 'log:*', stream: true })) {
 ```html;kv-prefix-patterns
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             const orders = [

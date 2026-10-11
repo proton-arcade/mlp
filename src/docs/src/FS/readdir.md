@@ -68,7 +68,7 @@ for await (const page of mixt.fs.readdir({ path: './large-dir', stream: true }))
 ```html;fs-readdir
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         mixt.fs.readdir('./').then((items) => {
             // print the path of each item in the directory

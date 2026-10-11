@@ -25,7 +25,7 @@ A `Promise` that will resolve to `true` when the key has been removed.
 ```html;kv-del
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // create a new key-value pair

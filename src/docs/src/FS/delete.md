@@ -44,7 +44,7 @@ as deleting it here, and restoring it does not bring the shares back.
 ```html;fs-delete
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // (1) Create a random file
@@ -66,7 +66,7 @@ as deleting it here, and restoring it does not bring the shares back.
 ```html;fs-delete-directory
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // (1) Create a random directory

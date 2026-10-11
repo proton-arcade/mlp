@@ -52,7 +52,7 @@ Items shared with you appear at a **masked path**, `/<owner>/<uid>/<name>`, wher
 ```html;fs-listShared
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             const page = await mixt.fs.listShared({ includeTotal: true });

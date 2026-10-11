@@ -50,7 +50,7 @@ A rejection carries an `Error` with a stable `code`:
 ```html;kv-remove
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             await mixt.kv.set('profile', { name: 'Mixt OS', stats: { score: 10, level: 2 } });

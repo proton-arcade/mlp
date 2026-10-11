@@ -60,7 +60,7 @@ Sent when another app requests a connection to your app. The value passed to `ha
 ```html
 <html>
 <body>
-<script src="https://js.mixt.mpl/v2/"></script>
+<script src="/mixt.js/v2"></script>
 <script>
     mixt.ui.on('localeChanged', function(locale) {
         alert(`User's preferred language code is: ${locale.language}!`);

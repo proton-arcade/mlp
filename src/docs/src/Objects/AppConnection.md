@@ -53,7 +53,7 @@ In order:
     <title>Parent app</title>
 </head>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         // This app is the parent
         
@@ -82,7 +82,7 @@ In order:
     <title>Child app</title>
 </head>
 <body>
-<script src="https://js.mixt.mpl/v2/"></script>
+<script src="/mixt.js/v2"></script>
 <script>
     // This app is the child
     
@@ -122,7 +122,7 @@ In this example, a parent app (with the name `traffic-light`) launches three chi
 <html>
 <head>
     <title>Traffic light</title>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         const parent = mixt.ui.parentApp();
         if (parent) {
@@ -170,7 +170,7 @@ This example sends a one-megabyte buffer to a child app, which sends it straight
     <title>Parent app</title>
 </head>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         const child = await mixt.ui.launchApp('child');
 
@@ -197,7 +197,7 @@ This example sends a one-megabyte buffer to a child app, which sends it straight
     <title>Child app</title>
 </head>
 <body>
-<script src="https://js.mixt.mpl/v2/"></script>
+<script src="/mixt.js/v2"></script>
 <script>
     const parent = mixt.ui.parentApp();
 

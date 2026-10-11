@@ -41,7 +41,7 @@ Returns a `Promise` that resolves to the [`FSItem`](/Objects/fsitem) object of t
 ```html;fs-mkdir
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         // Create a directory with random name
         let dirName = mixt.randName();
@@ -60,7 +60,7 @@ Returns a `Promise` that resolves to the [`FSItem`](/Objects/fsitem) object of t
 ```html;fs-mkdir-dedupe
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // create a directory named 'hello'
@@ -80,7 +80,7 @@ Returns a `Promise` that resolves to the [`FSItem`](/Objects/fsitem) object of t
 ```html;fs-mkdir-create-missing-parents
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // Create a directory named 'hello' in a directory that does not exist

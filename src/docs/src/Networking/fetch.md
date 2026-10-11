@@ -29,7 +29,7 @@ A `Promise` to a `Response` object.
 ```html;net-fetch
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
     (async () => { 
         // Send a GET request to example.com

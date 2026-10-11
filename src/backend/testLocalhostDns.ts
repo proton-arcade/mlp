@@ -3,6 +3,7 @@
 // the RFC 6761 .localhost names, which made HTTP tests fail with ENOTFOUND.
 import dns from 'node:dns';
 import net from 'node:net';
+import { installOfflineNetworkGuard } from './util/offlineNetwork';
 
 const originalLookup = dns.lookup.bind(dns) as typeof dns.lookup;
 const isLocalhostName = (host: unknown): host is string =>
@@ -20,3 +21,6 @@ const patchedLookup = ((hostname: string, options: any, callback?: any) => {
 }) as typeof dns.lookup;
 
 (dns as any).lookup = patchedLookup;
+
+// Same offline guard as the backend, layered over the localhost mapping above.
+installOfflineNetworkGuard();

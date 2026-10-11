@@ -34,7 +34,7 @@ npm install @mixt/mixt.js
 Include Mixt.js directly in your HTML via CDN in the `<head>` section:
 
 ```html
-<script src="https://js.mixt.mpl/v2/"></script>
+<script src="/mixt.js/v2"></script>
 ```
 <br>
 

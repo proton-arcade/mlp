@@ -49,7 +49,10 @@ export function openerFaviconUrl(origin) {
         url: url.origin,
         size: String(FAVICON_SIZE),
     });
-    return `https://t3.gstatic.com/faviconV2?${params}`;
+    // Favicons come from a Google service on the internet. Mixt is fully local,
+    // so no icon is fetched and the caller shows its generic globe.
+    void params;
+    return '';
 }
 
 /**

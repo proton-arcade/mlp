@@ -141,7 +141,7 @@ const [documents, apps] = await mixt.perms.request([
 ```html
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <button id="request">Request Documents Access</button>
     <script>
         document.getElementById('request').addEventListener('click', async () => {
@@ -163,7 +163,7 @@ const [documents, apps] = await mixt.perms.request([
 ```html
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <button id="request">Request Email Access</button>
     <script>
         document.getElementById('request').addEventListener('click', async () => {
@@ -180,7 +180,7 @@ const [documents, apps] = await mixt.perms.request([
 ```html
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <button id="request">Set Up</button>
     <script>
         document.getElementById('request').addEventListener('click', async () => {
@@ -201,7 +201,7 @@ const [documents, apps] = await mixt.perms.request([
 ```html
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <button id="request">Request Permission</button>
     <script>
         document.getElementById('request').addEventListener('click', async () => {
@@ -221,7 +221,7 @@ const [documents, apps] = await mixt.perms.request([
 ```html
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <button id="request">Set Up Mail Folder</button>
     <script>
         document.getElementById('request').addEventListener('click', async () => {

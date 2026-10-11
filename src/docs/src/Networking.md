@@ -22,7 +22,7 @@ The Mixt.js Networking API lets you establish network connections directly from 
 ```html;net-fetch
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
     (async () => {
         // Send a GET request to example.com
@@ -48,7 +48,7 @@ The Mixt.js Networking API lets you establish network connections directly from 
 ```html;net-basic
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
     const socket = new mixt.net.Socket("example.com", 80);
     socket.on("open", () => {
@@ -78,7 +78,7 @@ The Mixt.js Networking API lets you establish network connections directly from 
 ```html;net-tls
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
     const socket = new mixt.net.tls.TLSSocket("example.com", 443);
     socket.on("tlsopen", () => {

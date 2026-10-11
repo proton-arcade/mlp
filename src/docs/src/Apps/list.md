@@ -62,7 +62,7 @@ for await (const page of mixt.apps.list({ stream: true })) {
 ```html;app-list
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // (1) Generate 3 random app names

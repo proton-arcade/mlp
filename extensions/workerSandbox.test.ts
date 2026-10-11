@@ -36,6 +36,6 @@ describe('workerSandbox extension — handleWorkerSandboxPage', () => {
         expect(captured.body).toContain('<!doctype html>');
         expect(captured.body).toContain('Mixt Worker Sandbox Playground');
         // The page is meant to load the public mixt SDK
-        expect(captured.body).toContain('https://js.mixt.mpl/v2/');
+        expect(captured.body).toContain('/mixt.js/v2');
     });
 });

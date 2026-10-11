@@ -24,7 +24,7 @@ The API provides comprehensive hosting management features including creating, r
 ```html;hosting-create
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // (1) Create a random directory
@@ -54,7 +54,7 @@ The API provides comprehensive hosting management features including creating, r
 ```html;hosting-list
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // (1) Generate 3 random subdomains
@@ -92,7 +92,7 @@ The API provides comprehensive hosting management features including creating, r
 ```html;hosting-delete
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // (1) Create a random website
@@ -126,7 +126,7 @@ The API provides comprehensive hosting management features including creating, r
 ```html;hosting-update
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // (1) Create a random website
@@ -160,7 +160,7 @@ The API provides comprehensive hosting management features including creating, r
 ```html;hosting-get
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // (1) Create a random website

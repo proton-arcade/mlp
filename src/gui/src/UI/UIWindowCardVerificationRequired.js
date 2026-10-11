@@ -47,11 +47,15 @@ import UIWindow from './UIWindow.js';
 // point, so `card_verified` is success on its own. The kill-switch short-circuit
 // still isn't — it verified nothing — and bounces back the same way.
 
-const STRIPE_JS_URL = 'https://js.stripe.com/v3/';
+// Stripe.js is loaded from the internet; Mixt is fully local, so it is disabled.
+const STRIPE_JS_URL = null;
 
 let stripe_js_promise = null;
 const loadStripeJs = () => {
     if (window.Stripe) return Promise.resolve();
+    // Card verification needs Stripe's servers, which Mixt does not reach.
+    // Rejecting here takes the same path as a failed script load.
+    if (!STRIPE_JS_URL) return Promise.reject(new Error('Card verification is unavailable offline'));
     if (!stripe_js_promise) {
         stripe_js_promise = window.loadScript(STRIPE_JS_URL);
         stripe_js_promise.catch((error) => {

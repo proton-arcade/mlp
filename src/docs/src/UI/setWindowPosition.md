@@ -28,7 +28,7 @@ Targets a specific window other than the app's main window. Accepts either a win
 ```html
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         // sets the position of the window to 100px from the left and 200px from the top
         mixt.ui.setWindowPosition(100, 200);

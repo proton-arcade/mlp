@@ -50,7 +50,7 @@ A `Promise` that will resolve to the [`FSItem`](/Objects/fsitem) object of the m
 ```html;fs-move
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
     (async () => {
         // (1) Create a random text file
@@ -81,7 +81,7 @@ A `Promise` that will resolve to the [`FSItem`](/Objects/fsitem) object of the m
 ```html;fs-move-create-missing-parents
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
     (async () => {
         // (1) Create a random file

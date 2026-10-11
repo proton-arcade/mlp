@@ -469,10 +469,10 @@ test.describe('mixt.ui.requestPermission (env=gui)', () => {
         // The popup flow is for third-party websites. The GUI's own SDK runs
         // with env='gui'; a permission-denied driver retry there must not pop
         // a window to the Mixt origin from the Mixt desktop itself.
-        // The prod-built GUI loads its SDK from the js.mixt.mpl CDN, so route
-        // that to the local build — otherwise this exercises the shipped SDK
-        // rather than the code under test.
-        await context.route('https://js.mixt.mpl/v2/**', route => route.fulfill({
+        // The prod-built GUI loads its SDK from /mixt.js/v2 on this server, so
+        // route that to the local build — otherwise this exercises the shipped
+        // SDK rather than the code under test.
+        await context.route('**/mixt.js/v2', route => route.fulfill({
             path: new URL('../../../dist/mixt.dev.js', import.meta.url).pathname,
             contentType: 'application/javascript',
         }));

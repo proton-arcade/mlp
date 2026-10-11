@@ -29,7 +29,7 @@ A `Promise` that resolves to the value of the input field when the user presses 
 ```html;ui-prompt
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         mixt.ui.prompt('Please enter your name:', 'John Doe').then((resp) => {
             // print user's response to console

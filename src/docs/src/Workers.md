@@ -157,21 +157,12 @@ The quickest way to publish a worker is to create it on [mixt.mpl](https://mixt.
 <ol>
     <li>
         Create a <code>.js</code> file containing your worker code.
-        <figure style="margin: 30px 0;">
-            <img src="https://developer.mixt.mpl/assets/img/workers/code.webp" style="width: 100%; max-width: 600px; margin: 0 auto; display: block; border-radius: 6px;">
-        </figure>
     </li>
     <li>
         Right-click the file and choose <strong>Publish as Worker</strong>.
-        <figure style="margin: 30px 0;">
-            <img src="https://developer.mixt.mpl/assets/img/workers/publish-workers.webp" style="width: 100%; max-width: 600px; margin: 0 auto; display: block; border-radius: 6px;">
-        </figure>
     </li>
     <li>
         Pick a name and click <strong>Publish</strong>. Your worker is live at <code>https://your-worker.mixt.work</code>.
-        <figure style="margin: 30px 0;">
-            <img src="https://developer.mixt.mpl/assets/img/workers/published.webp" style="width: 100%; max-width: 600px; margin: 0 auto; display: block; border-radius: 6px;">
-        </figure>
     </li>
 </ol>
 

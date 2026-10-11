@@ -28,7 +28,7 @@ A `Promise` that will resolve to an object with the following properties:
 ```html
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         // Retrieves the storage space capacity and usage for the current user, and prints them to the browser console
         mixt.space().then((space)=>{

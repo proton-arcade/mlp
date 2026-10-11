@@ -40,7 +40,7 @@ This method does not return a value. The context menu is displayed immediately a
 ```html;ui-context-menu
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
 
     <div id="right-click-area" style="width: 200px; height: 200px; border: 1px solid #ccc; padding: 20px;">
         Right-click me to show context menu
@@ -89,7 +89,7 @@ This method does not return a value. The context menu is displayed immediately a
 ```html
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     
     <div id="advanced-menu" style="padding: 20px; border: 1px solid #ddd; margin: 10px; cursor: pointer;">
         Right-click for advanced context menu with all features

@@ -40,7 +40,7 @@ A `Promise` that resolves to an [`FSItem`](/Objects/fsitem) describing the saved
 ```html
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <h1 id="file-name"></h1>
 
     <button id="save-file">Save file</button>

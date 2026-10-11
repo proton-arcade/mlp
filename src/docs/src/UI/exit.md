@@ -23,7 +23,7 @@ This value is reported to other apps as the reason that your app exited.
 ```html
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <button id="exit-button">Exit App</button>
     <script>
         const exit_button = document.getElementById('exit-button');

@@ -4,7 +4,7 @@
 // otherwise falls back to `npm install`. Cross-platform replacement for
 // the previous bash version.
 
-import { existsSync, readdirSync, statSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { spawnNpm } from './npmSpawn.mjs';
 
@@ -17,7 +17,14 @@ if (!existsSync(EXT_DIR)) {
 const dirs = readdirSync(EXT_DIR)
     .map((name) => join(EXT_DIR, name))
     .filter((p) => statSync(p).isDirectory())
-    .filter((p) => existsSync(join(p, 'package.json')));
+    .filter((p) => existsSync(join(p, 'package.json')))
+    // Mixt runs offline: an extension with no declared dependencies needs no npm call.
+    .filter((p) => {
+        const pkg = JSON.parse(readFileSync(join(p, 'package.json'), 'utf8'));
+        return ['dependencies', 'devDependencies', 'optionalDependencies'].some(
+            (k) => Object.keys(pkg[k] ?? {}).length > 0,
+        );
+    });
 
 if (dirs.length === 0) {
     process.exit(0);

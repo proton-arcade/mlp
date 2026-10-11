@@ -29,7 +29,7 @@ A `Promise` that will resolve to an object describing the name's availability.
 ```html
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             const appName = mixt.randName();

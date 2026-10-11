@@ -93,7 +93,7 @@ Fired when the socket encounters an error. The close event is fired shortly afte
 ```html;net-basic
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
     const socket = new mixt.net.Socket("example.com", 80);
     socket.on("open", () => {

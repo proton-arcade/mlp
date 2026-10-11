@@ -48,7 +48,7 @@ Items you own appear at their real path. An item you shared as a delegate (from 
 ```html;fs-listSharedByMe
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             const page = await mixt.fs.listSharedByMe({ includeTotal: true });

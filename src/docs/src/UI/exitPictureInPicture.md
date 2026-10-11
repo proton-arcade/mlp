@@ -19,7 +19,7 @@ A `Promise` that resolves to `true` if there was a window to close, `false` othe
 ```html
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <button id="exit">Exit picture-in-picture</button>
     <script>
         document.getElementById('exit').onclick = async () => {

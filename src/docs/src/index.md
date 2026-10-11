@@ -38,7 +38,7 @@ This is also what makes Mixt.js work so well as the backend for apps. There is n
                 <div  class="feature-line-top"></div><div></div>
             </div>
         </div>
-        <p class="script-tag">&lt;script src=&quot;<span class="url">https://js.mixt.mpl/v2/</span>&quot;&gt;&lt;/script&gt;</p>
+        <p class="script-tag">&lt;script src=&quot;<span class="url">/mixt.js/v2</span>&quot;&gt;&lt;/script&gt;</p>
         <div style="width: 620px; height: 120px; position: relative; font-weight: 500;">
             <div style="width: 150px; height: 100px; position: absolute; left:10px;">
                 <div>
@@ -100,7 +100,7 @@ Mixt.js is powered by [Mixt OS](https://github.com/proton-arcade/mlp), the open-
 ```html;intro-fs-write
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         // Create a new file called "hello.txt" containing "Hello, world!"
         mixt.fs.write('hello.txt', 'Hello, world!').then((file) => {
@@ -116,7 +116,7 @@ Mixt.js is powered by [Mixt OS](https://github.com/proton-arcade/mlp), the open-
 ```html;fs-read
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // (1) Create a random text file
@@ -143,7 +143,7 @@ Mixt.js is powered by [Mixt OS](https://github.com/proton-arcade/mlp), the open-
 ```html;intro-kv-set
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         // (1) Save user preference
         mixt.kv.set('userPreference', 'darkMode').then(() => {
@@ -166,7 +166,7 @@ Mixt.js is powered by [Mixt OS](https://github.com/proton-arcade/mlp), the open-
 ```html;intro-hosting
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // (1) Create a random directory
@@ -196,7 +196,7 @@ Mixt.js is powered by [Mixt OS](https://github.com/proton-arcade/mlp), the open-
 ```html;intro-auth
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <button id="sign-in">Sign in</button>
     <script>
         // Because signIn() opens a popup window, it must be called from a user action.
@@ -220,7 +220,7 @@ Mixt.js is powered by [Mixt OS](https://github.com/proton-arcade/mlp), the open-
 ```html;net-fetch
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
     (async () => {
         // Send a GET request to example.com

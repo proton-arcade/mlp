@@ -25,7 +25,7 @@ None
 ```html;auth-sign-out
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         mixt.auth.signOut();
     </script>

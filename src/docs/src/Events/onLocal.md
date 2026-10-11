@@ -299,7 +299,7 @@ If the connection is down when this happens, or drops before `onError` is called
 ```html;events-watch-folder
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // (1) Create a directory to watch
@@ -331,7 +331,7 @@ If the connection is down when this happens, or drops before `onError` is called
 ```html;events-watch-missing
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // (1) A directory to work in. `inbox/` below it does not exist yet.
@@ -364,7 +364,7 @@ If the connection is down when this happens, or drops before `onError` is called
 ```html;events-watch-kv
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // (1) Exactly one key, and separately every key under a prefix.

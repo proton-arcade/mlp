@@ -25,7 +25,7 @@ Returns `true` if the user is signed in, `false` otherwise.
 ```html;auth-is-signed-in
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         mixt.print(`Sign in status: ${mixt.auth.isSignedIn()}`);
     </script>

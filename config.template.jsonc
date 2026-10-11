@@ -421,7 +421,7 @@
     "use_bundled_gui": false,
     "gui_bundle": "/dist/bundle.min.js",
     "gui_css": "/dist/bundle.min.css",
-    "gui_mixtjs_bundle": "https://js.mixt.mpl/v2/",
+    "gui_mixtjs_bundle": "/mixt.js/v2",
     "gui_params": {
         "title": "Mixt",
         "short_description": "A complete desktop computer in your browser",

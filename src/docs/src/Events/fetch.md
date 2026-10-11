@@ -76,7 +76,7 @@ The promise rejects with `{ message, code }`: `auth_canceled` if nobody was sign
 ```html;events-fetch
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             let cursor;
@@ -105,7 +105,7 @@ The promise rejects with `{ message, code }`: `auth_canceled` if nobody was sign
 ```html;events-fetch-then-listen
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             const seen = new Set();

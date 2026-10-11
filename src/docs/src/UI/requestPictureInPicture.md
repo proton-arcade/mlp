@@ -46,7 +46,7 @@ A `Promise` that resolves once the window is up. It rejects with an error named 
 ```html
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <button id="pip">Picture-in-picture</button>
     <script>
         document.getElementById('pip').onclick = async () => {

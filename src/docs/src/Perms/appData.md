@@ -61,7 +61,7 @@ The promise rejects if the named app does not exist, or if a scope is misspelled
 ```html
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <button id="request">Use Contacts' data</button>
     <script>
         document.getElementById('request').addEventListener('click', async () => {
@@ -85,7 +85,7 @@ The promise rejects if the named app does not exist, or if a scope is misspelled
 ```html
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <button id="book">Book, then cancel</button>
     <script>
         document.getElementById('book').addEventListener('click', async () => {
@@ -113,7 +113,7 @@ The promise rejects if the named app does not exist, or if a scope is misspelled
 ```html
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <button id="files">List Contacts' files</button>
     <script>
         document.getElementById('files').addEventListener('click', async () => {

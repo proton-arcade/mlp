@@ -32,7 +32,7 @@ When signed out with no `username`, it resolves to `null` without opening a sign
 ```html;auth-get-profile-picture
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <button id="show-picture">Show my profile picture</button>
     <p id="status"></p>
     <img id="picture" alt="Your profile picture" width="96" height="96" hidden>

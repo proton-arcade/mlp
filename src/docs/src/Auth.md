@@ -23,7 +23,7 @@ This is essential for users to access the various Mixt.js APIs integrated into y
 ```html;auth-sign-in
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <button id="sign-in">Sign in</button>
     <script>
         // Because signIn() opens a popup window, it must be called from a user action.
@@ -47,7 +47,7 @@ This is essential for users to access the various Mixt.js APIs integrated into y
 ```html;auth-is-signed-in
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         mixt.print(`Sign in status: ${mixt.auth.isSignedIn()}`);
     </script>
@@ -64,7 +64,7 @@ This is essential for users to access the various Mixt.js APIs integrated into y
 ```html;auth-get-user
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         mixt.auth.getUser().then(function(user) {
             mixt.print(JSON.stringify(user));
@@ -83,7 +83,7 @@ This is essential for users to access the various Mixt.js APIs integrated into y
 ```html;auth-sign-out
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         mixt.auth.signOut();
     </script>

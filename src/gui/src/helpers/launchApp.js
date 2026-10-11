@@ -119,6 +119,19 @@ const fetchUserAppTokenForLaunch = async ({ appUid } = {}) => {
  *
  * @param {*} options.name - The name of the app to launch.
  */
+/**
+ * True when an app URL stays on this machine: the GUI's own origin, localhost,
+ * `*.localhost`, or a subdomain of the hosting domain.
+ */
+const isLocalAppUrl = (url) => {
+    const host = url.hostname.toLowerCase();
+    if ( url.origin === window.location.origin ) return true;
+    if ( host === 'localhost' || host.endsWith('.localhost') ) return true;
+    const appDomain = (window.app_domain ?? '').toLowerCase();
+    if ( appDomain && (host === appDomain || host.endsWith(`.${appDomain}`)) ) return true;
+    return false;
+};
+
 const launch_app = async (options) => {
     let transaction;
     // Ends once the app signals over IPC, i.e. when it can actually be used.
@@ -471,6 +484,11 @@ const launch_app = async (options) => {
             iframe_url = new URL(`${window.gui_origin}/builtin/${name}`);
         } else {
             iframe_url = new URL(app_info.index_url);
+            // Mixt is fully local. An app served from an external website would
+            // make the browser reach the internet, so it is refused here.
+            if ( ! isLocalAppUrl(iframe_url) ) {
+                throw new Error(`${app_info.name ?? options.name} is hosted on an external website, and Mixt does not reach the internet.`);
+            }
         }
 
         // add app_instance_id to URL

@@ -24,11 +24,9 @@ const playgroundHtml = `
 <html>
 
 <head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
-        integrity="sha512-NhSC1YmyruXifcj/KFRWoC561YpHpc5Jtzgvbuzx5VozKpWvQ+4nXhPdFgmx8xqexRcpAglTj9sIBWINXa8x5w=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="/assets/vendor/normalize-8.0.1.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://fonts.googleapis.com/css?family=Roboto:black,bold,medium,regular,light,thin" rel="stylesheet">
+    <link href="/assets/vendor/roboto.css" rel="stylesheet">
     <title>{{TITLE}}</title>
     <meta name="title" content="{{TITLE}}" />
     <meta name="description" content="{{DESCRIPTION}}" />
@@ -38,14 +36,14 @@ const playgroundHtml = `
     <meta property="og:title" content="{{TITLE}}">
     <meta property="og:description" content="{{DESCRIPTION}}" />
     <meta property="og:type" content="website" />
-    <meta name="og:image" content="https://assets.mixt.site/twitter.png">
+    <meta name="og:image" content="/assets/favicon/android-icon-192x192.png">
     <meta name="og:url" content="{{CANONICAL}}">
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@proton-arcade" />
     <meta name="twitter:title" content="{{TITLE}}">
     <meta name="twitter:description" content="{{DESCRIPTION}}" />
-    <meta name="twitter:image" content="https://assets.mixt.site/twitter.png">
+    <meta name="twitter:image" content="/assets/favicon/android-icon-192x192.png">
 
     <link rel="apple-touch-icon" sizes="57x57" href="/assets/favicon/apple-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="60x60" href="/assets/favicon/apple-icon-60x60.png">
@@ -68,11 +66,8 @@ const playgroundHtml = `
 </head>
 
 <body>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
-        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.min.js"
-        integrity="sha512-ZG31AN9z/CQD1YDDAK4RUAvogwbJHv6bHrumrnMLzdCrVu4HeAqrUX7Jsal/cbUwXGfaMUNmQU04tQ8XXl5Znw=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="/assets/vendor/jquery-3.7.1.min.js"></script>
+    <script src="/assets/vendor/monaco/vs/loader.js"></script>
     <script src="/mixt.js/v2"></script>
 
     <div style="height: 70px; padding: 10px; background-color: #474e5d; display: flex; flex-direction: row;">

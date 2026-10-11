@@ -38,7 +38,7 @@ A `Promise` that resolves to the value of the button pressed. If the `value` pro
 ```html;ui-alert
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         // display an alert with a message and three different types of buttons
         mixt.ui.alert('Please press a button!', [

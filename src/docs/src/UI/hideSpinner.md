@@ -16,7 +16,7 @@ mixt.ui.hideSpinner()
 ```html;ui-spinner
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         // show the spinner
         mixt.ui.showSpinner();

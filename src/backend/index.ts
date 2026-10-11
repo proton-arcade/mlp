@@ -18,6 +18,10 @@
  */
 
 import './util/nodeCompat';
+import { installOfflineNetworkGuard } from './util/offlineNetwork';
+
+// Mixt is fully local: refuse outbound connections to non-local addresses.
+installOfflineNetworkGuard();
 import { isSpanContextValid, trace } from '@opentelemetry/api';
 import { setDefaultAutoSelectFamilyAttemptTimeout } from 'node:net';
 import { mixtClients } from './clients';

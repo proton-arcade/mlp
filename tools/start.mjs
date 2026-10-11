@@ -107,12 +107,15 @@ const checkNodeVersion = () => {
 const VENDOR_DIR = path.join(rootDir, 'vendor', 'node-modules');
 const VENDOR_ARCHIVE = 'node_modules-linux-x64-node18.tar.gz';
 
+const isVendorPlatform = () => process.platform === 'linux' && process.arch === 'x64';
+
+const expectedVendorHash = (archiveName) => readFileSync(path.join(VENDOR_DIR, 'SHA256SUMS'), 'utf8')
+    .split('\n')
+    .find((line) => line.trim().endsWith(archiveName))
+    ?.split(/\s+/)[0];
+
 const restoreVendoredModules = () => {
-    const matches =
-        process.platform === 'linux' &&
-        process.arch === 'x64' &&
-        process.versions.modules === '108';
-    if ( !matches || !existsSync(path.join(VENDOR_DIR, 'SHA256SUMS')) ) return false;
+    if ( !isVendorPlatform() || !existsSync(path.join(VENDOR_DIR, 'SHA256SUMS')) ) return false;
 
     const parts = readdirSync(VENDOR_DIR)
         .filter((f) => f.startsWith('node_modules.tar.gz.part-'))
@@ -128,10 +131,7 @@ const restoreVendoredModules = () => {
         appendFileSync(archive, readFileSync(path.join(VENDOR_DIR, part)));
     }
 
-    const expected = readFileSync(path.join(VENDOR_DIR, 'SHA256SUMS'), 'utf8')
-        .split('\n')
-        .find((line) => line.trim().endsWith(VENDOR_ARCHIVE))
-        ?.split(/\s+/)[0];
+    const expected = expectedVendorHash(VENDOR_ARCHIVE);
     const actual = createHash('sha256').update(readFileSync(archive)).digest('hex');
     if ( !expected || actual !== expected ) {
         rmSync(archive, { force: true });
@@ -150,18 +150,47 @@ const restoreVendoredModules = () => {
     return existsSync(path.join(rootDir, 'node_modules', '.package-lock.json'));
 };
 
+// better-sqlite3 13.0.3 (prebuilt linux-x64 binary, runtime files only). Used on
+// Node 22.5+. Restored from vendor/node-modules, never downloaded.
+const SQLITE_ARCHIVE = 'better-sqlite3-13.0.3-linux-x64.tar.gz';
+
+const restoreVendoredSqlite = () => {
+    const archive = path.join(VENDOR_DIR, SQLITE_ARCHIVE);
+    if ( !isVendorPlatform() || !existsSync(archive) ) return false;
+    const expected = expectedVendorHash(SQLITE_ARCHIVE);
+    const actual = createHash('sha256').update(readFileSync(archive)).digest('hex');
+    if ( !expected || actual !== expected ) {
+        throw new Error('The vendored SQLite driver failed its checksum. Re-clone the repository.');
+    }
+    const extracted = spawnSync(
+        'tar',
+        ['-xzf', archive, '-C', rootDir, '--no-same-owner'],
+        { stdio: 'inherit' },
+    );
+    if ( extracted.status !== 0 ) {
+        throw new Error('Could not extract the vendored SQLite driver (is `tar` installed?).');
+    }
+    return existsSync(path.join(rootDir, 'node_modules', 'better-sqlite3', 'package.json'));
+};
+
+// Mixt never downloads at startup. Everything it needs ships in vendor/node-modules.
+const OFFLINE_INSTALL_HELP =
+    'Mixt cannot find its bundled dependencies for this platform (the bundle is ' +
+    'linux-x64 only). Run `npm install` once on a machine with the vendored tree, ' +
+    'or copy node_modules from a supported checkout.';
+
 const ensureDependencies = async () => {
     const [major, minor] = process.versions.node.split('.').map(Number);
     const hasNodeSqlite = major > 22 || (major === 22 && minor >= 5);
     if ( !existsSync(path.join(rootDir, 'node_modules', '.package-lock.json')) ) {
         if ( !restoreVendoredModules() ) {
-            console.log('Installing dependencies (first run only)...');
-            await runNpm(['install']);
+            throw new Error(OFFLINE_INSTALL_HELP);
         }
     }
     if ( hasNodeSqlite && !existsSync(path.join(rootDir, 'node_modules', 'better-sqlite3', 'package.json')) ) {
-        console.log('Installing the SQLite driver (better-sqlite3 13.x)...');
-        await runNpm(['install', '--no-save', 'better-sqlite3@^13.0.3']);
+        if ( !restoreVendoredSqlite() ) {
+            throw new Error(OFFLINE_INSTALL_HELP);
+        }
     }
 };
 

@@ -25,7 +25,7 @@ A promise that resolves to a [`User`](/Objects/user) object containing the user'
 ```html;auth-get-user
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         mixt.auth.getUser().then(function(user) {
             mixt.print(JSON.stringify(user));

@@ -26,7 +26,7 @@ With this API, your app can get the team the user currently belongs to and list 
 ```html;teams-list
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             const teams = await mixt.teams.list();
@@ -57,7 +57,7 @@ With this API, your app can get the team the user currently belongs to and list 
 ```html;teams-directory
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <select id="colleagues"><option>Loading…</option></select>
     <button id="pick">Pick</button>
     <script>

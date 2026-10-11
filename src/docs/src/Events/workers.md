@@ -70,7 +70,7 @@ Both methods reject with `{ message, code }`:
 ```html;events-workers
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             const name = `retired-${mixt.randName()}`;

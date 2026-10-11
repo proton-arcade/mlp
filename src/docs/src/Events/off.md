@@ -30,7 +30,7 @@ A `Promise` that resolves when the subscription is gone. It never rejects: calli
 ```html;events-off
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             const dir = mixt.randName();

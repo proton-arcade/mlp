@@ -60,7 +60,7 @@ A rejection carries an `Error` with a `code`:
 ```html;teams-directory
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <select id="colleagues"><option>Loading…</option></select>
     <button id="pick">Pick</button>
     <script>

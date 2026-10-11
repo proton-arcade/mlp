@@ -176,7 +176,7 @@ The promise rejects with `{ message, code }`:
 ```html;events-persistent
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // (1) An app of your own to publish the handler under
@@ -220,7 +220,7 @@ The promise rejects with `{ message, code }`:
 ```html;events-persistent-pinned
 <html>
 <body>
-    <script src="https://js.mixt.mpl/v2/"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             const name = `pinned-${mixt.randName()}`;

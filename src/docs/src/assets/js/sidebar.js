@@ -82,7 +82,6 @@ $('#sidebar').on('scroll', hideSidebarTooltip);
 function fetchGitHubData () {
     // GitHub API fetching and handling
 
-    const url = 'https://api.github.com/repos/proton-arcade/mlp';
 
     function formatNumber (num) {
         if ( num < 1000 ) {
@@ -94,13 +93,7 @@ function fetchGitHubData () {
         }
     }
 
-    $.getJSON(url, function (data) {
-        $('.github-stars').text(`${formatNumber(data.stargazers_count) }`);
-    }).fail(function (jqxhr, textStatus, error) {
-        let err = `${textStatus }, ${ error}`;
-        console.error(`Request Failed: ${ err}`);
-        $('.github-stars').text('proton-arcade/mlp');
-    });
+    $('.github-stars').text('proton-arcade/mlp'); // offline: no GitHub API call
 }
 
 $(document).on('change', '.dark-mode-toggle-checkbox', function () {
