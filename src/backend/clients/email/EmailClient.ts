@@ -147,7 +147,10 @@ export class EmailClient extends PuterClient {
 
     override onServerStart(): void {
         const emailConf = this.config.email;
-        if (!emailConf) {
+        // An empty host means no SMTP server is set up: nothing is sent, and
+        // the message is written to the server log instead.
+        // `jsonTransport` is in-process and never touches the network.
+        if (!emailConf?.host && !emailConf?.jsonTransport) {
             console.warn(
                 '[email] no email transport configured — send() will fail until configured',
             );

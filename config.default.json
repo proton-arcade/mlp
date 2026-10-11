@@ -119,7 +119,7 @@
     },
     "email": {
         "from": "\"Mixt\" <no-reply@localhost>",
-        "host": "smtp.example.com",
+        "host": "",
         "port": 587,
         "secure": false,
         "service": "",
