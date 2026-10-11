@@ -12,12 +12,15 @@
 //     npm start -- --extensions=<dir>           bundle out-of-tree GUI extensions (with --server)
 //     npm start -- --smtp                       run the inbound SMTP receiver instead
 
-import { spawn } from 'node:child_process';
-import { randomBytes } from 'node:crypto';
+import { spawn, spawnSync } from 'node:child_process';
+import { createHash, randomBytes } from 'node:crypto';
 import {
+    appendFileSync,
     existsSync,
+    mkdirSync,
     readFileSync,
     readdirSync,
+    rmSync,
     statSync,
     writeFileSync,
 } from 'node:fs';
@@ -97,12 +100,60 @@ const checkNodeVersion = () => {
 // compile it on Node 18 and fail the whole install there. Node 18 uses the
 // 12.x alias instead. Here it is added on Node 22.5+ with --no-save, and
 // checked on every start so a later plain `npm install` cannot drop it.
+// The dependency tree is shipped in vendor/node-modules as split gzip parts so
+// a fresh checkout needs no network access. It is built for Linux x64 on the
+// Node 18 ABI (module version 108); on any other platform or Node version the
+// normal npm install is used instead.
+const VENDOR_DIR = path.join(rootDir, 'vendor', 'node-modules');
+const VENDOR_ARCHIVE = 'node_modules-linux-x64-node18.tar.gz';
+
+const restoreVendoredModules = () => {
+    const matches =
+        process.platform === 'linux' &&
+        process.arch === 'x64' &&
+        process.versions.modules === '108';
+    if ( !matches || !existsSync(path.join(VENDOR_DIR, 'SHA256SUMS')) ) return false;
+
+    const parts = readdirSync(VENDOR_DIR)
+        .filter((f) => f.startsWith(`${VENDOR_ARCHIVE}.part-`))
+        .sort();
+    if ( parts.length === 0 ) return false;
+
+    console.log('Restoring dependencies from vendor/node-modules...');
+    const volatileDir = path.join(rootDir, 'volatile');
+    mkdirSync(volatileDir, { recursive: true });
+    const archive = path.join(volatileDir, VENDOR_ARCHIVE);
+    rmSync(archive, { force: true });
+    for ( const part of parts ) {
+        appendFileSync(archive, readFileSync(path.join(VENDOR_DIR, part)));
+    }
+
+    const expected = readFileSync(path.join(VENDOR_DIR, 'SHA256SUMS'), 'utf8')
+        .split('\n')
+        .find((line) => line.trim().endsWith(VENDOR_ARCHIVE))
+        ?.split(/\s+/)[0];
+    const actual = createHash('sha256').update(readFileSync(archive)).digest('hex');
+    if ( !expected || actual !== expected ) {
+        rmSync(archive, { force: true });
+        throw new Error('The vendored dependency archive failed its checksum. Re-clone the repository.');
+    }
+
+    const extracted = spawnSync('tar', ['-xzf', archive, '-C', rootDir], { stdio: 'inherit' });
+    rmSync(archive, { force: true });
+    if ( extracted.status !== 0 ) {
+        throw new Error('Could not extract the vendored dependencies (is `tar` installed?).');
+    }
+    return existsSync(path.join(rootDir, 'node_modules', '.package-lock.json'));
+};
+
 const ensureDependencies = async () => {
     const [major, minor] = process.versions.node.split('.').map(Number);
     const hasNodeSqlite = major > 22 || (major === 22 && minor >= 5);
     if ( !existsSync(path.join(rootDir, 'node_modules', '.package-lock.json')) ) {
-        console.log('Installing dependencies (first run only)...');
-        await runNpm(['install']);
+        if ( !restoreVendoredModules() ) {
+            console.log('Installing dependencies (first run only)...');
+            await runNpm(['install']);
+        }
     }
     if ( hasNodeSqlite && !existsSync(path.join(rootDir, 'node_modules', 'better-sqlite3', 'package.json')) ) {
         console.log('Installing the SQLite driver (better-sqlite3 13.x)...');
