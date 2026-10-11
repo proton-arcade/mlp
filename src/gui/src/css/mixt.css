@@ -151,8 +151,9 @@ body {
 }
 
 .admin-card {
-    background: #fff;
-    border: 1px solid rgba(0, 0, 0, 0.12);
+    background: var(--dashboard-hover);
+    color: var(--dashboard-text);
+    border: 1px solid var(--dashboard-border);
     border-radius: 8px;
     padding: 12px;
 }
@@ -185,7 +186,7 @@ body {
 
 .admin-table-wrap {
     overflow-x: auto;
-    border: 1px solid rgba(0, 0, 0, 0.12);
+    border: 1px solid var(--dashboard-border);
     border-radius: 6px;
 }
 
@@ -262,17 +263,24 @@ body {
     margin: 0;
 }
 
-/* The administration content is always a light panel with dark text, so it
-   reads the same whatever the surrounding window's theme is. */
+/* The administration content follows the theme: dark text on a light page in
+   light mode, light text on a dark page in dark mode. The colors come from the
+   dashboard tokens, so the text never sits on a background of its own color. */
 .admin-content {
-    background: #ffffff;
-    color: #1f1f1f;
+    background: var(--dashboard-background);
+    color: var(--dashboard-text);
     border-radius: 8px;
     padding: 12px;
 }
 
-.admin-content .admin-card {
-    background: #f7f7f8;
+/* Some global rules give paragraphs and headings a fixed dark color. Text in
+   the panel inherits the theme color instead. Error messages keep their own. */
+.admin-content p,
+.admin-content h3,
+.admin-content th,
+.admin-content td,
+.admin-content label {
+    color: inherit;
 }
 
 /* ------------------------- Mint polish (batch 1) --------------------------- */
