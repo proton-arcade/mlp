@@ -15,8 +15,9 @@
     .column { width: 72px; position: relative; border-radius: 8px; cursor: pointer; }
     .column.empty { border: 2px dashed rgba(127, 127, 127, 0.6); min-height: 100px; }
     .card { position: absolute; left: 0; width: 72px; height: 100px; border-radius: 8px; background: #fff; border: 1px solid #888; font-size: 20px; padding: 4px; box-sizing: border-box; color: #000; }
-    .slot .card, .column .card { position: absolute; }
-    .slot .card { position: static; }
+    /* Every card is absolutely placed inside its pile, so tableau cards
+       overlap down the column instead of stacking in normal flow. */
+    .slot .card, .column .card { position: absolute; top: 0; left: 0; }
     .card.down { background: repeating-linear-gradient(45deg, #2a6cb0, #2a6cb0 6px, #1d4f86 6px, #1d4f86 12px); }
     .card.red { color: #c0392b; }
     .card.black { color: #111; }
