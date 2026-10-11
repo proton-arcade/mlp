@@ -180,7 +180,7 @@ export const FS_SIGN_LIMIT = userWindow('fs:sign', 300, 150, 60);
 export const FS_HELPER_LIMIT = userWindow('fs:helper', 120, 60, 30);
 
 /**
- * Puter.js polls this on a timer to decide whether to purge its FS cache. Same
+ * Mixt.js polls this on a timer to decide whether to purge its FS cache. Same
  * ceiling for free and paid — it is a single cache read.
  */
 export const FS_POLL_LIMIT = userWindow('fs:poll', 240, 240, 120);
@@ -192,7 +192,7 @@ export const FS_POLL_LIMIT = userWindow('fs:poll', 240, 240, 120);
 // also a pending session and presigned URLs. Checked before any per-item work.
 
 /**
- * `startBatchWrite` / `completeBatchWrite` / `batchWrite`. Puter.js chunks
+ * `startBatchWrite` / `completeBatchWrite` / `batchWrite`. Mixt.js chunks
  * uploads at this size.
  */
 export const FS_BATCH_WRITE_MAX_ITEMS = 500;

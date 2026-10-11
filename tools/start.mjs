@@ -8,7 +8,7 @@
 //
 // Other modes, all optional:
 //
-//     npm start --server=puter.com              serve the GUI against a remote backend (no local server)
+//     npm start --server=mixt.mpl              serve the GUI against a remote backend (no local server)
 //     npm start -- --extensions=<dir>           bundle out-of-tree GUI extensions (with --server)
 //     npm start -- --smtp                       run the inbound SMTP receiver instead
 
@@ -38,11 +38,11 @@ const SECRET_KEYS = ['jwt_secret_v2', 'url_signature_secret'];
 const SHIPPED_PLACEHOLDER = /change-me/;
 
 const GUI_BUNDLE = path.join(rootDir, 'src', 'gui', 'dist', 'bundle.min.js');
-const SDK_BUNDLE = path.join(rootDir, 'src', 'puter-js', 'dist', 'puter.js');
+const SDK_BUNDLE = path.join(rootDir, 'src', 'mixt-js', 'dist', 'mixt.js');
 const GUI_SOURCES = [path.join(rootDir, 'src', 'gui')];
 const SDK_SOURCES = [
-    path.join(rootDir, 'src', 'puter-js', 'src'),
-    path.join(rootDir, 'src', 'puter-js', 'webpack.config.js'),
+    path.join(rootDir, 'src', 'mixt-js', 'src'),
+    path.join(rootDir, 'src', 'mixt-js', 'webpack.config.js'),
 ];
 // Worker runtime preambles, loaded by the backend's worker drivers.
 const WORKER_BUNDLES = [
@@ -216,7 +216,7 @@ const ensureBundles = async () => {
     }
     if ( isStale(SDK_BUNDLE, SDK_SOURCES) ) {
         console.log('Building the SDK...');
-        await runNpm(['run', 'build'], { cwd: path.join(rootDir, 'src', 'puter-js') });
+        await runNpm(['run', 'build'], { cwd: path.join(rootDir, 'src', 'mixt-js') });
     }
     if ( WORKER_BUNDLES.some((bundle) => isStale(bundle, WORKER_SOURCES)) ) {
         console.log('Building the worker runtimes...');

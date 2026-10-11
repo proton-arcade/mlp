@@ -36,7 +36,7 @@ const ERROR_VALUES = {
 };
 
 /**
- * Puter's own Contact Us form, delivered to support (UIWindowAppFeedback is the
+ * Mixt's own Contact Us form, delivered to support (UIWindowAppFeedback is the
  * one for third-party apps). Attachments are posted as multipart form data; the
  * client-side checks only fail fast, the server enforces the limits.
  */

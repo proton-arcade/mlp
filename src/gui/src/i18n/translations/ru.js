@@ -150,7 +150,7 @@ const ru = {
         forgot_pass_c2a: 'Забыли пароль?',
         from: 'От',
         general: 'Общее',
-        get_a_copy_of_on_puter: 'Получите копию \'%%\' на Mixt.com!',
+        get_a_copy_of_on_mixt: 'Получите копию \'%%\' на Mixt.com!',
         get_copy_link: 'Получить ссылку для копирования',
         hide_all_windows: 'Скрыть все окна',
         home: 'Домой',
@@ -222,7 +222,7 @@ const ru = {
         picture: 'Изображение',
         pictures: 'Изображения',
         plural_suffix: 's', //does not exist in Russian language
-        powered_by_puter_js: 'Создано на {{link=docs}}Puter.js{{/link}}',
+        powered_by_mixt_js: 'Создано на {{link=docs}}Mixt.js{{/link}}',
         preparing: 'Подготовка...',
         preparing_for_upload: 'Подготовка к загрузке...',
         print: 'Печать',
@@ -238,7 +238,7 @@ const ru = {
         publish: 'Опубликовать',
         public: 'Общий доступ',
         publish_as_website: 'Опубликовать как сайт',
-        puter_description: 'Mixt — это персональное облако, обеспечивающее конфиденциальность, позволяющее хранить все ваши файлы, приложения и игры в одном безопасном месте, доступном из любого места в любое время.',
+        mixt_description: 'Mixt — это персональное облако, обеспечивающее конфиденциальность, позволяющее хранить все ваши файлы, приложения и игры в одном безопасном месте, доступном из любого места в любое время.',
         reading_file: 'Чтение %strong%',
         recent: 'Недавнее',
         recommended: 'Рекоммендации',
@@ -255,7 +255,7 @@ const ru = {
         replace_all: 'Заменить все',
         resend_confirmation_code: 'Повторно отправить код подтверждения',
         reset_colors: 'Сбросить цвета',
-        restart_puter_confirm: 'Вы уверены, что хотите перезапустить Mixt?',
+        restart_mixt_confirm: 'Вы уверены, что хотите перезапустить Mixt?',
         restore: 'Восстановить',
         save: 'Сохранить',
         saturation: 'Насыщенность',
@@ -292,7 +292,7 @@ const ru = {
         shortcut_to: 'Ярлык для',
         show_all_windows: 'Показать Все Окна',
         show_hidden: 'Показать скрытые',
-        sign_in_with_puter: 'Войти с Mixt',
+        sign_in_with_mixt: 'Войти с Mixt',
         sign_up: 'Зарегистрироваться',
         signing_in: 'Вход в систему…',
         size: 'Размер',
@@ -302,7 +302,7 @@ const ru = {
         start: 'Начать',
         status: 'Статус',
         storage_usage: 'Использование хранилища',
-        storage_puter_used: 'использовано Mixt',
+        storage_mixt_used: 'использовано Mixt',
         taking_longer_than_usual:
       'Это занимает немного больше времени чем обычно, пожалуйста, подождите...',
         task_manager: 'Диспетчер задач',
@@ -337,7 +337,7 @@ const ru = {
         visibility: 'Видимость',
         yes: 'Да',
         yes_release_it: 'Да, освободить.',
-        you_have_been_referred_to_puter_by_a_friend:
+        you_have_been_referred_to_mixt_by_a_friend:
       'Вы были приглашены в Mixt другом!',
         zip: 'Добавить в архив',
         zipping_file: 'Добавление в архив %strong%',
@@ -507,7 +507,7 @@ const ru = {
         'window_title_public': 'Публичный', // In English: "Public"
         'window_title_videos': 'Видео', // In English: "Videos"
         'window_title_pictures': 'Изображения', // In English: "Pictures"
-        'window_title_puter': 'Путер', // In English: "Mixt"
+        'window_title_mixt': 'Путер', // In English: "Mixt"
         'window_folder_empty': 'Эта папка пуста', // In English: "This folder is empty"
         'manage_your_subdomains': 'Управление вашими поддоменами', // In English: "Manage Your Subdomains"
         'open_containing_folder': 'Открыть содержащую папку', // In English: "Open Containing Folder"

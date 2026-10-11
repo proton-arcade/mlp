@@ -35,10 +35,10 @@ const baseContext = {
 };
 
 const clientWith = (
-    listener: (data: EventMap['puter.signup-bonus.validate']) => void,
+    listener: (data: EventMap['mixt.signup-bonus.validate']) => void,
 ) => {
     const client = new EventClient({} as never);
-    client.on('puter.signup-bonus.validate', (_k, data) => listener(data));
+    client.on('mixt.signup-bonus.validate', (_k, data) => listener(data));
     return client;
 };
 
@@ -102,7 +102,7 @@ describe('validateSignupBonus', () => {
     });
 
     it('hands the listener the code and the current requirements', async () => {
-        let seen: EventMap['puter.signup-bonus.validate'] | null = null;
+        let seen: EventMap['mixt.signup-bonus.validate'] | null = null;
         const client = clientWith((data) => {
             seen = { ...data };
         });

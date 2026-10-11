@@ -1,5 +1,5 @@
 ---
-title: puter.apps.update()
+title: mixt.apps.update()
 description: Update app properties including name, title, icon, URL, and file associations
 platforms: [websites, apps, nodejs, workers]
 ---
@@ -8,7 +8,7 @@ Updates attributes of the app with the given name.
 
 ## Syntax
 ```js
-puter.apps.update(name, attributes)
+mixt.apps.update(name, attributes)
 ```
 
 ## Parameters
@@ -24,7 +24,7 @@ An object containing the attributes to update. The object can contain the follow
 - `icon` (optional): The new icon of the app.
 - `maximizeOnStart` (optional): Whether the app should be maximized when it is started. Defaults to `false`.
 - `background` (optional): Whether the app should run in the background. Defaults to `false`.
-- `feedbackEnabled` (optional): Whether users can send feedback to you through [`puter.ui.showFeedbackDialog()`](/UI/showFeedbackDialog/). Omitted leaves the app's current value unchanged.
+- `feedbackEnabled` (optional): Whether users can send feedback to you through [`mixt.ui.showFeedbackDialog()`](/UI/showFeedbackDialog/). Omitted leaves the app's current value unchanged.
 - `filetypeAssociations` (optional): An array of strings representing the filetypes that the app can open. Defaults to `[]`. File extentions and MIME types are supported; For example, `[".txt", ".md", "application/pdf"]` would allow the app to open `.txt`, `.md`, and PDF files. At most 200 entries, each at most 60 characters.
 - `metadata` (optional): An object containing custom metadata for the app. This can be used to store arbitrary key-value pairs associated with the app. At most 16 KiB when serialized as JSON.
 
@@ -38,20 +38,20 @@ A `Promise` that will resolve to the [`App`](/Objects/app/) object that was upda
 ```html;app-update
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
             // (1) Create a random app
-            let appName = puter.randName();
-            await puter.apps.create(appName, "https://example.com")
-            puter.print(`"${appName}" created<br>`);
+            let appName = mixt.randName();
+            await mixt.apps.create(appName, "https://example.com")
+            mixt.print(`"${appName}" created<br>`);
 
             // (2) Update the app
-            let updated_app = await puter.apps.update(appName, {title: "My Updated Test App!"})
-            puter.print(`Changed title to "${updated_app.title}"<br>`);
+            let updated_app = await mixt.apps.update(appName, {title: "My Updated Test App!"})
+            mixt.print(`Changed title to "${updated_app.title}"<br>`);
 
             // (3) Delete the app (cleanup)
-            await puter.apps.delete(appName)
+            await mixt.apps.delete(appName)
         })();
     </script>
 </body>

@@ -1,13 +1,13 @@
 ---
 title: Save User Settings
-description: "Learn how to save user settings with Puter.js so they follow the user to every device, with defaults and per-setting resets."
+description: "Learn how to save user settings with Mixt.js so they follow the user to every device, with defaults and per-setting resets."
 tags: [kv, data-modeling]
 order: 11
 ---
 
 Most apps have settings, like a theme, a font size, or which notifications to
 send. If you save them in `localStorage`, they only exist in that one browser.
-If you save them with [`puter.kv`](/KV/), they're stored in the user's Puter
+If you save them with [`mixt.kv`](/KV/), they're stored in the user's Mixt OS
 account and follow them to every device.
 
 This recipe keeps all settings in a single `settings` key and only saves what
@@ -40,11 +40,11 @@ function withDefaults (defaults, saved) {
     return result;
 }
 
-const settings = withDefaults(DEFAULTS, await puter.kv.get('settings'));
+const settings = withDefaults(DEFAULTS, await mixt.kv.get('settings'));
 ```
 
 If the user never changed anything, there's no `settings` key,
-[`puter.kv.get()`](/KV/get/) returns `null`, and they get the defaults.
+[`mixt.kv.get()`](/KV/get/) returns `null`, and they get the defaults.
 
 Only saving changes also means you can change a default later. Users who never
 touched that setting get the new default, and users who picked their own value
@@ -52,11 +52,11 @@ keep it.
 
 ## Change a Setting
 
-To change one setting, use the [`puter.kv.update()`](/KV/update/) method with a
+To change one setting, use the [`mixt.kv.update()`](/KV/update/) method with a
 path to it. A dot means "inside this group":
 
 ```js
-await puter.kv.update('settings', { 'editor.fontSize': 16 });
+await mixt.kv.update('settings', { 'editor.fontSize': 16 });
 ```
 
 Only that setting changes, and everything else in `editor` stays the same. If
@@ -66,7 +66,7 @@ To change several settings at once, put them in the same object. They're saved
 in one write:
 
 ```js
-await puter.kv.update('settings', {
+await mixt.kv.update('settings', {
     theme: 'dark',
     'notifications.push': true,
 });
@@ -76,15 +76,15 @@ Always use the full path to each setting, not the group object. Passing a group
 replaces the whole group and drops anything you left out:
 
 ```js
-await puter.kv.update('settings', { editor: { tabSize: 2 } });
+await mixt.kv.update('settings', { editor: { tabSize: 2 } });
 // editor is now just { tabSize: 2 }, and the saved fontSize is gone
 ```
 
-[`puter.kv.update()`](/KV/update/) returns the saved settings, so you can
+[`mixt.kv.update()`](/KV/update/) returns the saved settings, so you can
 re-render right away:
 
 ```js
-const saved = await puter.kv.update('settings', { theme: 'dark' });
+const saved = await mixt.kv.update('settings', { theme: 'dark' });
 render(withDefaults(DEFAULTS, saved));
 ```
 
@@ -104,31 +104,31 @@ form.addEventListener('change', async (event) => {
     const input = event.target;
     const value = input.type === 'checkbox' ? input.checked : Number(input.value);
 
-    await puter.kv.update('settings', { [input.dataset.setting]: value });
+    await mixt.kv.update('settings', { [input.dataset.setting]: value });
 });
 ```
 
 ## Reset to the Default
 
-To reset a setting, remove it with the [`puter.kv.remove()`](/KV/remove/)
+To reset a setting, remove it with the [`mixt.kv.remove()`](/KV/remove/)
 method. Once it's gone, the default from your code applies again:
 
 ```js
-await puter.kv.remove('settings', 'editor.fontSize');
+await mixt.kv.remove('settings', 'editor.fontSize');
 ```
 
 Removing a group resets everything in it, and you can pass several paths in one
 call:
 
 ```js
-await puter.kv.remove('settings', 'editor', 'notifications');
+await mixt.kv.remove('settings', 'editor', 'notifications');
 ```
 
 Removing something that was never saved does nothing. To reset everything,
-delete the key with [`puter.kv.del()`](/KV/del/):
+delete the key with [`mixt.kv.del()`](/KV/del/):
 
 ```js
-await puter.kv.del('settings');
+await mixt.kv.del('settings');
 ```
 
 ## Lists Inside Settings
@@ -140,8 +140,8 @@ item can be added or removed on its own:
 ```js
 const member = (value) => `["${ value.replace(/["\\]/g, '\\$&') }"]`;
 
-await puter.kv.update('settings', { [`mutedChannels.${ member(channel) }`]: true });   // mute
-await puter.kv.remove('settings', `mutedChannels.${ member(channel) }`);              // unmute
+await mixt.kv.update('settings', { [`mutedChannels.${ member(channel) }`]: true });   // mute
+await mixt.kv.remove('settings', `mutedChannels.${ member(channel) }`);              // unmute
 ```
 
 `member()` wraps the name in brackets and quotes, so a channel name with a dot
@@ -153,11 +153,11 @@ If a new version of your app moves or renames a setting, move the saved value
 when the app loads. This moves an old top-level `fontSize` into `editor`:
 
 ```js
-const saved = await puter.kv.get('settings') ?? {};
+const saved = await mixt.kv.get('settings') ?? {};
 
 if ( saved.fontSize !== undefined ) {
-    await puter.kv.update('settings', { 'editor.fontSize': saved.fontSize });
-    await puter.kv.remove('settings', 'fontSize');
+    await mixt.kv.update('settings', { 'editor.fontSize': saved.fontSize });
+    await mixt.kv.remove('settings', 'fontSize');
 }
 ```
 

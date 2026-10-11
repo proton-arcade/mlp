@@ -7,15 +7,15 @@ window.create_worker = async (name, filePath = null) => {
     let worker;
 
     // show spinner
-    puter.ui.showSpinner();
+    mixt.ui.showSpinner();
 
     // Use provided file path or default to the default worker file
     const workerFile = filePath;
 
     try {
-        worker = await puter.workers.create(name, workerFile);
+        worker = await mixt.workers.create(name, workerFile);
     } catch ( err ) {
-        puter.ui.alert(`Error creating worker: ${err.error?.message}`);
+        mixt.ui.alert(`Error creating worker: ${err.error?.message}`);
     }
 
     return worker;
@@ -24,12 +24,12 @@ window.create_worker = async (name, filePath = null) => {
 window.refresh_worker_list = async (show_loading = false) => {
     if ( show_loading )
     {
-        puter.ui.showSpinner();
+        mixt.ui.showSpinner();
     }
 
-    // puter.workers.list() returns an array of worker objects
+    // mixt.workers.list() returns an array of worker objects
     try {
-        window.workers = await puter.workers.list();
+        window.workers = await mixt.workers.list();
     } catch ( err ) {
         console.error('Error refreshing worker list:', err);
     }
@@ -50,18 +50,18 @@ window.refresh_worker_list = async (show_loading = false) => {
 
     count_workers();
 
-    puter.ui.hideSpinner();
+    mixt.ui.hideSpinner();
 };
 
 async function init_workers () {
-    window.workers = await puter.workers.list();
+    window.workers = await mixt.workers.list();
     count_workers();
 }
 
 $(document).on('click', '.create-a-worker-btn', async function (e) {
     // if user doesn't have an email, request it
     if ( !window.user?.email || !window.user?.email_confirmed ) {
-        const email_confirm_resp = await puter.ui.requestEmailConfirmation();
+        const email_confirm_resp = await mixt.ui.requestEmailConfirmation();
         if ( ! email_confirm_resp )
         {
             UIAlert('Email confirmation required to create a worker.');
@@ -70,12 +70,12 @@ $(document).on('click', '.create-a-worker-btn', async function (e) {
     }
 
     // refresh user data
-    window.user = await puter.auth.getUser();
+    window.user = await mixt.auth.getUser();
 
     // Step 1: Show file picker limited to .js files
     let selectedFile;
     try {
-        selectedFile = await puter.ui.showOpenFilePicker({
+        selectedFile = await mixt.ui.showOpenFilePicker({
             accept: '.js',
         });
     } catch ( err ) {
@@ -86,7 +86,7 @@ $(document).on('click', '.create-a-worker-btn', async function (e) {
 
     // Step 2: Ask for worker name
     if ( selectedFile && selectedFile.path ) {
-        let name = await puter.ui.prompt('Please enter a name for your worker:', 'my-awesome-worker');
+        let name = await mixt.ui.prompt('Please enter a name for your worker:', 'my-awesome-worker');
 
         // Step 3: Create worker with selected file
         if ( name ) {
@@ -95,7 +95,7 @@ $(document).on('click', '.create-a-worker-btn', async function (e) {
             await refresh_worker_list();
 
             // hide spinner
-            puter.ui.hideSpinner();
+            mixt.ui.hideSpinner();
         }
     }
 });
@@ -175,10 +175,10 @@ $(document).on('change', '.select-all-workers', function (e) {
 });
 
 $('.refresh-worker-list').on('click', function (e) {
-    puter.ui.showSpinner();
+    mixt.ui.showSpinner();
     refresh_worker_list();
 
-    puter.ui.hideSpinner();
+    mixt.ui.hideSpinner();
 });
 
 $('th.sort').on('click', function (e) {
@@ -358,7 +358,7 @@ function remove_worker_card (worker_name, callback = null) {
 
 $(document).on('click', '.delete-workers-btn', async function (e) {
     // show confirmation alert
-    let resp = await puter.ui.alert('Are you sure you want to delete the selected workers?', [
+    let resp = await mixt.ui.alert('Are you sure you want to delete the selected workers?', [
         {
             label: 'Delete',
             type: 'danger',
@@ -376,7 +376,7 @@ $(document).on('click', '.delete-workers-btn', async function (e) {
         $('.delete-workers-btn').addClass('disabled');
 
         // show 'deleting' modal
-        puter.ui.showSpinner();
+        mixt.ui.showSpinner();
 
         let start_ts = Date.now();
         const workers = $('.worker-checkbox:checked').toArray();
@@ -385,7 +385,7 @@ $(document).on('click', '.delete-workers-btn', async function (e) {
         for ( let worker of workers ) {
             let worker_name = $(worker).attr('data-worker-name');
             // delete worker
-            await puter.workers.delete(worker_name);
+            await mixt.workers.delete(worker_name);
 
             // remove worker card
             remove_worker_card(worker_name);
@@ -399,7 +399,7 @@ $(document).on('click', '.delete-workers-btn', async function (e) {
 
         // close 'deleting' modal
         setTimeout(() => {
-            puter.ui.hideSpinner();
+            mixt.ui.hideSpinner();
             if ( $('.worker-checkbox:checked').length === 0 ) {
                 // disable delete button
                 $('.delete-workers-btn').addClass('disabled');
@@ -415,7 +415,7 @@ $(document).on('click', '.options-icon-worker', function (e) {
     e.preventDefault();
     e.stopPropagation();
     e.stopImmediatePropagation();
-    puter.ui.contextMenu({
+    mixt.ui.contextMenu({
         items: [
             {
                 label: 'Delete',
@@ -430,7 +430,7 @@ $(document).on('click', '.options-icon-worker', function (e) {
 
 async function attempt_worker_deletion (worker_name) {
     // confirm delete
-    const alert_resp = await puter.ui.alert(`Are you sure you want to premanently delete <strong>${html_encode(worker_name)}</strong>?`,
+    const alert_resp = await mixt.ui.alert(`Are you sure you want to premanently delete <strong>${html_encode(worker_name)}</strong>?`,
                     [
                         {
                             label: 'Yes, delete permanently',
@@ -447,8 +447,8 @@ async function attempt_worker_deletion (worker_name) {
         remove_worker_card(worker_name);
 
         // delete worker
-        puter.workers.delete(worker_name).then().catch(async (err) => {
-            puter.ui.alert(err?.message, [
+        mixt.workers.delete(worker_name).then().catch(async (err) => {
+            mixt.ui.alert(err?.message, [
                 {
                     label: 'Ok',
                 },
@@ -465,7 +465,7 @@ $(document).on('click', '.worker-file-path', function (e) {
     const file_path = $(this).attr('data-worker-file-path');
 
     if ( file_path ) {
-        puter.ui.launchApp({
+        mixt.ui.launchApp({
             name: 'editor',
             file_paths: [file_path],
         });

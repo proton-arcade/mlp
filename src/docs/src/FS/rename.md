@@ -1,16 +1,16 @@
 ---
-title: puter.fs.rename()
-description: Rename files or directories in the user's own Puter file system.
+title: mixt.fs.rename()
+description: Rename files or directories in the user's own Mixt OS file system.
 platforms: [websites, apps, nodejs, workers]
 ---
 
-Renames a file or directory to a new name. This method allows you to change the name of a file or directory in the Puter cloud storage.
+Renames a file or directory to a new name. This method allows you to change the name of a file or directory in the Mixt OS cloud storage.
 
 ## Syntax
 
 ```js
-puter.fs.rename(path, newName)
-puter.fs.rename(options)
+mixt.fs.rename(path, newName)
+mixt.fs.rename(options)
 ```
 
 ## Parameters
@@ -43,16 +43,16 @@ Returns a promise that resolves to the [`FSItem`](/Objects/fsitem) object of the
 ```html;fs-rename
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
             // Create hello.txt
-            await puter.fs.write('hello.txt', 'Hello, world!');
-            puter.print(`"hello.txt" created<br>`);
+            await mixt.fs.write('hello.txt', 'Hello, world!');
+            mixt.print(`"hello.txt" created<br>`);
 
             // Rename hello.txt to hello-world.txt
-            await puter.fs.rename('hello.txt', 'hello-world.txt')
-            puter.print(`"hello.txt" renamed to "hello-world.txt"<br>`);
+            await mixt.fs.rename('hello.txt', 'hello-world.txt')
+            mixt.print(`"hello.txt" renamed to "hello-world.txt"<br>`);
         })();
     </script>
 </body>

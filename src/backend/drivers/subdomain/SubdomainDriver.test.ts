@@ -22,7 +22,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { makeActor } from '../../core/actor.js';
 import type { Actor } from '../../core/actor.js';
 import { runWithContext } from '../../core/context.js';
-import { PuterServer } from '../../server.js';
+import { MixtServer } from '../../server.js';
 import {
     APP_ICONS_SUBDOMAIN,
     PROFILES_SUBDOMAIN,
@@ -34,12 +34,12 @@ import type { SubdomainDriver } from './SubdomainDriver.js';
 
 // ── Test harness ────────────────────────────────────────────────────
 //
-// Boots one PuterServer (in-memory sqlite + dynamo + s3 + mock redis)
+// Boots one MixtServer (in-memory sqlite + dynamo + s3 + mock redis)
 // and exercises the live SubdomainDriver against the real wired stores.
 // Each test makes its own user via `makeUser` so subdomain rows / quota
 // counts don't leak across cases.
 
-let server: PuterServer;
+let server: MixtServer;
 let driver: SubdomainDriver;
 
 beforeAll(async () => {
@@ -164,7 +164,7 @@ describe('SubdomainDriver.create', () => {
         for (const subdomain of [
             APP_ICONS_SUBDOMAIN,
             PROFILES_SUBDOMAIN,
-            'Puter-Profiles',
+            'Mixt-Profiles',
         ]) {
             await expect(
                 withActor(actor, () =>
@@ -480,7 +480,7 @@ describe('SubdomainDriver.select pagination', () => {
         const { actor, subs } = await makeSubs(2);
         await server.stores.subdomain.create({
             userId: actor.user!.id as number,
-            subdomain: `workers.puter.wk-${Date.now()}`,
+            subdomain: `workers.mixt.wk-${Date.now()}`,
             rootDirId: null,
             associatedAppId: null,
             appOwner: null,
@@ -845,7 +845,7 @@ const createAppWithIndexUrl = async (
 // ── Launch-origin takeover on re-registration ──────────────────────
 //
 // Deleting a hosted subdomain leaves the app row's `index_url` pointing
-// at the freed name. The GUI launcher appends `puter.auth.token` to that
+// at the freed name. The GUI launcher appends `mixt.auth.token` to that
 // URL, so whoever registers the name next would receive launch tokens
 // for the original app. `create` therefore refuses a name an app still
 // references — while leaving the app's owner free to re-create it, though

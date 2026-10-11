@@ -47,7 +47,7 @@ import type {
 } from './s3Types.js';
 import { recordStorageOps } from '../../core/storageOps.js';
 import { Span } from '../../util/span.js';
-import { PuterStore } from '../types.js';
+import { MixtStore } from '../types.js';
 
 /**
  * Clamp a requested presign lifetime to 1 minute–1 hour; a bad value gets the
@@ -89,7 +89,7 @@ export function isIncompleteBodyError(err: unknown): boolean {
  * lifecycle, server-driven uploads, and object reads/copies/deletes. Wraps the
  * regional `S3Client` pool exposed by `clients.s3`.
  */
-export class S3ObjectStore extends PuterStore {
+export class S3ObjectStore extends MixtStore {
     #getClientForRegion(region: string): S3Client {
         return this.clients.s3.get(region);
     }
@@ -114,7 +114,7 @@ export class S3ObjectStore extends PuterStore {
     // Same story for `bucket`: older rows may be null. Fall back to the
     // configured default bucket.
     resolveBucket(bucket?: string | null): string {
-        return bucket || this.config.s3_bucket || 'puter-local';
+        return bucket || this.config.s3_bucket || 'mixt-local';
     }
 
     getMaxSingleUploadSize(): number {

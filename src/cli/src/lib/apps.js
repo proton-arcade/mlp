@@ -3,8 +3,8 @@
 
 import { CLIError } from './errors.js';
 
-export function appsApi(puter) {
-  const api = puter.apps ?? puter.app;
+export function appsApi(mixt) {
+  const api = mixt.apps ?? mixt.app;
   if (!api || typeof api.list !== 'function') {
     throw new CLIError('App commands are not available in this SDK build.');
   }

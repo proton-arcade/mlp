@@ -22,9 +22,9 @@
 -- Idempotent: the guarded procedure, as mig_36. The 1061 handler covers two
 -- nodes booting at once, where the loser finds the index already built.
 
-DROP PROCEDURE IF EXISTS _puter_add_apps_index_url_index;
+DROP PROCEDURE IF EXISTS _mixt_add_apps_index_url_index;
 DELIMITER //
-CREATE PROCEDURE _puter_add_apps_index_url_index()
+CREATE PROCEDURE _mixt_add_apps_index_url_index()
 BEGIN
   DECLARE CONTINUE HANDLER FOR 1061 BEGIN END;
   IF NOT EXISTS (
@@ -40,5 +40,5 @@ BEGIN
 END//
 DELIMITER ;
 
-CALL _puter_add_apps_index_url_index();
-DROP PROCEDURE IF EXISTS _puter_add_apps_index_url_index;
+CALL _mixt_add_apps_index_url_index();
+DROP PROCEDURE IF EXISTS _mixt_add_apps_index_url_index;

@@ -10,7 +10,7 @@ import {
 const ACME = { uid: 't-1', name: 'Acme', handle: 'acme' };
 const NAMELESS = { uid: 't-2', name: null, handle: 'ops' };
 
-const original_puter = globalThis.puter;
+const original_mixt = globalThis.mixt;
 
 // The helper runs in the browser; this suite does not, so the flag it reads
 // has to exist. Set on, since these cover what happens past the gate.
@@ -21,7 +21,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-    globalThis.puter = original_puter;
+    globalThis.mixt = original_mixt;
 });
 
 describe('teams_for_sharing', () => {
@@ -29,7 +29,7 @@ describe('teams_for_sharing', () => {
         // A team the SDK would happily return, so the flag is the only thing
         // deciding. Without this the catch returns [] and proves nothing.
         const list = vi.fn(async () => [ACME]);
-        globalThis.puter = { teams: { list } };
+        globalThis.mixt = { teams: { list } };
         window.teams_ui = false;
 
         expect(await teams_for_sharing()).toEqual([]);
@@ -37,14 +37,14 @@ describe('teams_for_sharing', () => {
     });
 
     it('returns the teams the user belongs to', async () => {
-        globalThis.puter = { teams: { list: vi.fn(async () => [ACME]) } };
+        globalThis.mixt = { teams: { list: vi.fn(async () => [ACME]) } };
         await expect(teams_for_sharing()).resolves.toEqual([ACME]);
     });
 
     it('offers nothing where the route does not exist, rather than surfacing the 404', async () => {
         // Teams off means no `/teams` route at all; the dialog must be
         // unchanged for that deployment, not show an error.
-        globalThis.puter = {
+        globalThis.mixt = {
             teams: {
                 list: vi.fn(async () => {
                     throw Object.assign(new Error('not found'), { code: 'not_found' });
@@ -55,12 +55,12 @@ describe('teams_for_sharing', () => {
     });
 
     it('offers nothing when the user has no team', async () => {
-        globalThis.puter = { teams: { list: vi.fn(async () => []) } };
+        globalThis.mixt = { teams: { list: vi.fn(async () => []) } };
         await expect(teams_for_sharing()).resolves.toEqual([]);
     });
 
     it('offers nothing against an SDK too old to have the module', async () => {
-        globalThis.puter = {};
+        globalThis.mixt = {};
         await expect(teams_for_sharing()).resolves.toEqual([]);
     });
 });
@@ -69,7 +69,7 @@ describe('colleagues_for_sharing', () => {
     const OTHER = { uid: 't-3', name: 'Ops', handle: 'ops' };
 
     it('names each colleague by the team they were found in', async () => {
-        globalThis.puter = {
+        globalThis.mixt = {
             teams: {
                 listMembers: vi.fn(async (uid) => (uid === 't-1'
                     ? [{ username: 'bob' }, { username: 'carol' }]
@@ -84,7 +84,7 @@ describe('colleagues_for_sharing', () => {
     });
 
     it('lists someone in two teams once, under the first', async () => {
-        globalThis.puter = {
+        globalThis.mixt = {
             teams: { listMembers: vi.fn(async () => [{ username: 'bob' }]) },
         };
         await expect(colleagues_for_sharing([ACME, OTHER])).resolves.toEqual([
@@ -93,7 +93,7 @@ describe('colleagues_for_sharing', () => {
     });
 
     it('keeps the teams it could read when another is out of reach', async () => {
-        globalThis.puter = {
+        globalThis.mixt = {
             teams: {
                 listMembers: vi.fn(async (uid) => {
                     if ( uid === 't-1' ) throw new Error('forbidden');
@@ -108,7 +108,7 @@ describe('colleagues_for_sharing', () => {
 
     it('asks once per set of teams, so reopening the dialog is free', async () => {
         const listMembers = vi.fn(async () => [{ username: 'bob' }]);
-        globalThis.puter = { teams: { listMembers } };
+        globalThis.mixt = { teams: { listMembers } };
 
         await colleagues_for_sharing([ACME]);
         await colleagues_for_sharing([ACME]);
@@ -121,14 +121,14 @@ describe('colleagues_for_sharing', () => {
 
     it('caps the roster at one page rather than walking every one', async () => {
         const listMembers = vi.fn(async () => []);
-        globalThis.puter = { teams: { listMembers } };
+        globalThis.mixt = { teams: { listMembers } };
         await colleagues_for_sharing([ACME]);
         expect(listMembers).toHaveBeenCalledWith('t-1', { limit: 200 });
     });
 
     it('does not remember a failure, so the next dialog tries again', async () => {
         const listMembers = vi.fn(async () => { throw new Error('offline'); });
-        globalThis.puter = { teams: { listMembers } };
+        globalThis.mixt = { teams: { listMembers } };
 
         await expect(colleagues_for_sharing([ACME])).resolves.toEqual([]);
         await colleagues_for_sharing([ACME]);
@@ -136,7 +136,7 @@ describe('colleagues_for_sharing', () => {
     });
 
     it('suggests nobody without a team, or against an SDK too old for it', async () => {
-        globalThis.puter = {};
+        globalThis.mixt = {};
         await expect(colleagues_for_sharing([])).resolves.toEqual([]);
         await expect(colleagues_for_sharing(undefined)).resolves.toEqual([]);
         await expect(colleagues_for_sharing([ACME])).resolves.toEqual([]);

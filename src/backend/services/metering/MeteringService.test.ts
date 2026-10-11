@@ -11,7 +11,7 @@ import {
 import murmurhash from 'murmurhash';
 import type { Actor } from '../../core/actor.ts';
 import { SYSTEM_ACTOR, makeActor as resolveActor } from '../../core/actor.ts';
-import { PuterServer } from '../../server.ts';
+import { MixtServer } from '../../server.ts';
 import { bucketTag } from '../../stores/metering/MeteringBufferStore.ts';
 import { setupTestServer } from '../../testUtil.ts';
 import {
@@ -61,7 +61,7 @@ const globalUsageKeyFor = (
     month: string,
     shardCount: number,
 ): string =>
-    `${METRICS_V2_PREFIX}:puter:${murmurhash.v3(`${userId}:${appId}`) % shardCount}:${month}`;
+    `${METRICS_V2_PREFIX}:mixt:${murmurhash.v3(`${userId}:${appId}`) % shardCount}:${month}`;
 
 /** `MeteringService`'s private `appUsageKey`, replicated for assertions. */
 const appUsageKeyFor = (
@@ -73,7 +73,7 @@ const appUsageKeyFor = (
     `${METRICS_V2_PREFIX}:app:${appId}:${murmurhash.v3(`${appId}${userId}`) % shardCount}:${month}`;
 
 describe('MeteringService', () => {
-    let server: PuterServer;
+    let server: MixtServer;
     let target: MeteringService;
     let originalShardCount: number;
 

@@ -19,14 +19,14 @@
 
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { v4 as uuidv4 } from 'uuid';
-import { PuterServer } from '../../server.js';
+import { MixtServer } from '../../server.js';
 import { setupTestServer } from '../../testUtil.js';
 import type { AppFeedbackStore } from './AppFeedbackStore.js';
 
 // Runs against the real in-memory database, so the SQL (and the engine's
 // boolean/bigint representations) is exercised rather than described.
 
-let server: PuterServer;
+let server: MixtServer;
 let store: AppFeedbackStore;
 
 beforeAll(async () => {

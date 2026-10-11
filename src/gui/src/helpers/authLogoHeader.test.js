@@ -46,7 +46,7 @@ describe('openerFaviconUrl', () => {
 });
 
 describe('authLogoHeader', () => {
-    it('renders only the Puter logo outside a popup', () => {
+    it('renders only the Mixt logo outside a popup', () => {
         const h = authLogoHeader({ logoSrc: LOGO });
         expect(h).toContain('class="auth-logo"');
         expect(h).not.toContain('auth-opener-logo');
@@ -58,14 +58,14 @@ describe('authLogoHeader', () => {
         expect(authLogoHeader({ logoSrc: LOGO, logoClickable: true })).toContain('cursor: pointer');
     });
 
-    it('pairs the opener favicon with the Puter logo through a connector', () => {
+    it('pairs the opener favicon with the Mixt logo through a connector', () => {
         const h = authLogoHeader({ logoSrc: LOGO, openerOrigin: 'https://example.com' });
         const opener = h.indexOf('auth-opener-logo');
         const connector = h.indexOf('auth-logo-connector');
-        const puter = h.indexOf('class="auth-logo"');
+        const mixt = h.indexOf('class="auth-logo"');
         expect(opener).toBeGreaterThan(-1);
         expect(connector).toBeGreaterThan(opener);
-        expect(puter).toBeGreaterThan(connector);
+        expect(mixt).toBeGreaterThan(connector);
         expect(h).toContain('url=https%3A%2F%2Fexample.com');
         expect(h).toContain('auth-logo-header-connected');
     });

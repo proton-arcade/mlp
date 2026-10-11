@@ -19,20 +19,20 @@
 
 import type { Request, Response } from 'express';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
-import { PuterServer } from '../../server.js';
+import { MixtServer } from '../../server.js';
 import { setupTestServer } from '../../testUtil.js';
 import type { BroadcastController } from './BroadcastController.js';
 
 // ── Test harness ────────────────────────────────────────────────────
 //
-// Boots one PuterServer and exercises the live BroadcastController
+// Boots one MixtServer and exercises the live BroadcastController
 // against the wired BroadcastService. The default test config has no
 // configured peers, so every signed-incoming path falls through to the
 // service's "unknown peer" gate (403). That's the right blast radius
 // for these tests — we cover header validation + error→HTTP wiring,
 // and trust BroadcastService's own tests for the crypto path.
 
-let server: PuterServer;
+let server: MixtServer;
 let controller: BroadcastController;
 
 beforeAll(async () => {

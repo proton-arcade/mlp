@@ -30,14 +30,14 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { EVENTS_COALESCE_WINDOW_MS } from '../../controllers/events/limits.js';
 import { makeActor, type Actor } from '../../core/actor.js';
 import { isHttpError } from '../../core/http/HttpError.js';
-import { setupPuterTestEnv, type PuterTestEnv } from '../../testUtil.js';
+import { setupMixtTestEnv, type MixtTestEnv } from '../../testUtil.js';
 import type { IConfig } from '../../types.js';
 import type { AclMode } from '../acl/ACLService.js';
 import type { DeliveryEnvelope } from './EventsService.js';
 
 const BOOT_TIMEOUT_MS = 120_000;
 
-let env: PuterTestEnv;
+let env: MixtTestEnv;
 let owner: { actor: Actor; username: string; token: string; id: number };
 let guest: { actor: Actor; username: string; token: string; id: number };
 let delivered: DeliveryEnvelope[];
@@ -107,7 +107,7 @@ const uniquePath = (base: string) =>
     `${base}/n-${Math.random().toString(36).slice(2, 8)}`;
 
 beforeAll(async () => {
-    env = await setupPuterTestEnv({ events: { enabled: true } } as IConfig);
+    env = await setupMixtTestEnv({ events: { enabled: true } } as IConfig);
 
     const ownerRow = await env.server.stores.user.getByUsername(
         env.users.user.username,

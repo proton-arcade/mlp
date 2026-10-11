@@ -10,9 +10,9 @@
 -- Idempotent: a stored procedure inspects INFORMATION_SCHEMA before
 -- adding the index, so re-running the migration directory is safe.
 
-DROP PROCEDURE IF EXISTS _puter_dedup_old_app_names;
+DROP PROCEDURE IF EXISTS _mixt_dedup_old_app_names;
 DELIMITER //
-CREATE PROCEDURE _puter_dedup_old_app_names()
+CREATE PROCEDURE _mixt_dedup_old_app_names()
 BEGIN
   DELETE oa FROM `old_app_names` oa
   JOIN `old_app_names` ob
@@ -23,13 +23,13 @@ BEGIN
 END//
 DELIMITER ;
 
-CALL _puter_dedup_old_app_names();
+CALL _mixt_dedup_old_app_names();
 
-DROP PROCEDURE IF EXISTS _puter_dedup_old_app_names;
+DROP PROCEDURE IF EXISTS _mixt_dedup_old_app_names;
 
-DROP PROCEDURE IF EXISTS _puter_add_unique_old_app_names;
+DROP PROCEDURE IF EXISTS _mixt_add_unique_old_app_names;
 DELIMITER //
-CREATE PROCEDURE _puter_add_unique_old_app_names()
+CREATE PROCEDURE _mixt_add_unique_old_app_names()
 BEGIN
   IF NOT EXISTS (
     SELECT 1 FROM INFORMATION_SCHEMA.STATISTICS
@@ -43,6 +43,6 @@ BEGIN
 END//
 DELIMITER ;
 
-CALL _puter_add_unique_old_app_names();
+CALL _mixt_add_unique_old_app_names();
 
-DROP PROCEDURE IF EXISTS _puter_add_unique_old_app_names;
+DROP PROCEDURE IF EXISTS _mixt_add_unique_old_app_names;

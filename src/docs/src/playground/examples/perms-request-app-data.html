@@ -1,21 +1,21 @@
 <html>
 <body>
-    <script src="/puter.js/v2"></script>
+    <script src="/mixt.js/v2"></script>
     <button id="request-app-data">Use another app's data</button>
     <script>
         document.getElementById('request-app-data').addEventListener('click', async () => {
             // Any app the signed-in user has; swap 'contacts' for your own.
-            const other = await puter.apps.get('contacts');
+            const other = await mixt.apps.get('contacts');
 
-            const granted = await puter.perms.request('appData', { app: other.uid, scopes: 'read' });
+            const granted = await mixt.perms.request('appData', { app: other.uid, scopes: 'read' });
             if (!granted) {
-                puter.print("Permission denied");
+                mixt.print("Permission denied");
                 return;
             }
 
             // Read from that app's key-value namespace.
-            const keys = await puter.kv.list({ appUuid: other.uid });
-            puter.print(`${other.title} has ${keys.length} key(s): ${keys.join(', ')}`);
+            const keys = await mixt.kv.list({ appUuid: other.uid });
+            mixt.print(`${other.title} has ${keys.length} key(s): ${keys.join(', ')}`);
         });
     </script>
 </body>

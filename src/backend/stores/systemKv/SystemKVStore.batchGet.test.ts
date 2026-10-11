@@ -23,7 +23,7 @@ import {
     KV_BATCH_GET_LIMIT,
     SystemKVStore,
 } from './SystemKVStore.ts';
-import { PUTER_KV_STORE_TABLE_NAME } from './tableDefinition.ts';
+import { MIXT_KV_STORE_TABLE_NAME } from './tableDefinition.ts';
 
 type BatchGetRequest = {
     table: string;
@@ -48,14 +48,14 @@ const makeBatchGet = (opts: { failOnCall?: number } = {}) => {
             }
             return {
                 Responses: {
-                    [PUTER_KV_STORE_TABLE_NAME]: reqs.map((r) => ({
+                    [MIXT_KV_STORE_TABLE_NAME]: reqs.map((r) => ({
                         key: r.items.key,
                         value: 'v:' + r.items.key,
                     })),
                 },
                 ConsumedCapacity: [
                     {
-                        TableName: PUTER_KV_STORE_TABLE_NAME,
+                        TableName: MIXT_KV_STORE_TABLE_NAME,
                         CapacityUnits: reqs.length * 0.5,
                     },
                 ],

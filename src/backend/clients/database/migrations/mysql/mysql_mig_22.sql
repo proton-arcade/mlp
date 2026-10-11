@@ -18,18 +18,18 @@
 -- Grow `share` from a pending-email-invite table into the index of active
 -- shares. See sqlite/0067_share_entries.sql for the column rationale.
 --
--- Idempotent: columns go through _puter_add_col (from mig_1), indexes and
+-- Idempotent: columns go through _mixt_add_col (from mig_1), indexes and
 -- foreign keys through the guarded procedure below. There is no per-file
 -- applied-state tracking, so every statement must tolerate a re-run.
 
-CALL _puter_add_col('share', 'holder_user_id', '`holder_user_id` int unsigned DEFAULT NULL');
-CALL _puter_add_col('share', 'fsentry_id', '`fsentry_id` int unsigned DEFAULT NULL');
-CALL _puter_add_col('share', 'mode', '`mode` varchar(20) DEFAULT NULL');
-CALL _puter_add_col('share', 'applied_at', '`applied_at` timestamp NULL DEFAULT NULL');
+CALL _mixt_add_col('share', 'holder_user_id', '`holder_user_id` int unsigned DEFAULT NULL');
+CALL _mixt_add_col('share', 'fsentry_id', '`fsentry_id` int unsigned DEFAULT NULL');
+CALL _mixt_add_col('share', 'mode', '`mode` varchar(20) DEFAULT NULL');
+CALL _mixt_add_col('share', 'applied_at', '`applied_at` timestamp NULL DEFAULT NULL');
 
-DROP PROCEDURE IF EXISTS _puter_add_share_index_constraints;
+DROP PROCEDURE IF EXISTS _mixt_add_share_index_constraints;
 DELIMITER //
-CREATE PROCEDURE _puter_add_share_index_constraints()
+CREATE PROCEDURE _mixt_add_share_index_constraints()
 BEGIN
   IF NOT EXISTS (
     SELECT 1 FROM INFORMATION_SCHEMA.STATISTICS
@@ -101,6 +101,6 @@ BEGIN
 END//
 DELIMITER ;
 
-CALL _puter_add_share_index_constraints();
+CALL _mixt_add_share_index_constraints();
 
-DROP PROCEDURE IF EXISTS _puter_add_share_index_constraints;
+DROP PROCEDURE IF EXISTS _mixt_add_share_index_constraints;

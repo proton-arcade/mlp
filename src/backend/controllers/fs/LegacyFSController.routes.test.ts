@@ -24,8 +24,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { makeActor, type Actor } from '../../core/actor.js';
 import { runWithContext } from '../../core/context.js';
-import { PuterRouter } from '../../core/http/PuterRouter.js';
-import { PuterServer } from '../../server.js';
+import { MixtRouter } from '../../core/http/MixtRouter.js';
+import { MixtServer } from '../../server.js';
 import { setupTestServer } from '../../testUtil.js';
 import { signFile } from '../../util/fileSigning.js';
 import { generateDefaultFsentries } from '../../util/userProvisioning.js';
@@ -35,14 +35,14 @@ import type { LegacyFSController } from './LegacyFSController.js';
 // `/batch` parser, and the small inline handlers registered straight onto
 // the router. `LegacyFSController.test.ts` covers the direct-handler core.
 
-let server: PuterServer;
+let server: MixtServer;
 let controller: LegacyFSController;
-let routes: PuterRouter['routes'];
+let routes: MixtRouter['routes'];
 
 beforeAll(async () => {
     server = await setupTestServer();
     controller = server.controllers.legacyFs as unknown as LegacyFSController;
-    const router = new PuterRouter();
+    const router = new MixtRouter();
     controller.registerRoutes(router);
     routes = router.routes;
 
@@ -346,7 +346,7 @@ describe('LegacyFSController inline routes', () => {
                 index_url: 'https://recent.example.test/',
                 // An http(s) icon column is what the resize pipeline leaves
                 // behind, so the sized PNG is on the icons subdomain.
-                icon: 'https://api.puter.com/app-icon/x',
+                icon: 'https://api.mixt.mpl/app-icon/x',
             },
             { ownerUserId: userId },
         ))!;
@@ -369,7 +369,7 @@ describe('LegacyFSController inline routes', () => {
         };
 
         const { protocol, static_hosting_domain } = controller.config;
-        const base = `${protocol}://puter-app-icons.${static_hosting_domain}`;
+        const base = `${protocol}://mixt-app-icons.${static_hosting_domain}`;
 
         expect((await runWithIconSize({ icon_size: '64' })).iconCdnUrl).toBe(
             `${base}/${app.uid}-64.png`,

@@ -25,7 +25,7 @@ import { whitelistTestUser } from '../testUtil.js';
 
 import { v4 as uuidv4 } from 'uuid';
 import type { IConfig } from '../types';
-import { setupPuterTestEnv, type PuterTestEnv } from '../testUtil.js';
+import { setupMixtTestEnv, type MixtTestEnv } from '../testUtil.js';
 
 /** An account that can call the API: verified, with a session token. */
 export type FixtureUser = {
@@ -45,7 +45,7 @@ export type FixtureTeam = {
 };
 
 export type TwoTeams = {
-    env: PuterTestEnv;
+    env: MixtTestEnv;
     a: FixtureTeam;
     b: FixtureTeam;
     /** Signed in, in no team at all. */
@@ -68,7 +68,7 @@ const SEATS_PER_TEAM = 2;
 export const setupTwoTeams = async (
     configOverrides: Partial<IConfig> = {},
 ): Promise<TwoTeams> => {
-    const env = await setupPuterTestEnv({
+    const env = await setupMixtTestEnv({
         teams_enabled: true,
         ...configOverrides,
     } as IConfig);

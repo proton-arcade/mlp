@@ -6,7 +6,7 @@ const { encode } = require('html-entities');
 const { parseFrontMatter } = require('./frontmatter');
 const recipeTags = require('./recipe-tags');
 
-const site = 'https://docs.puter.com';
+const site = 'https://docs.mixt.mpl';
 
 
 const RECIPES_SRC_DIR = path.join('src', 'recipes');
@@ -24,18 +24,18 @@ const headHTML = `
     <link rel="canonical" href="{{CANONICAL}}">
     <meta name="robots" content="index, follow" />
 
-    <meta property="og:site_name" content="Puter.js Docs" />
+    <meta property="og:site_name" content="Mixt.js Docs" />
     <meta property="og:title" content="{{TITLE}}">
     <meta property="og:description" content="{{DESCRIPTION}}" />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://assets.puter.site/twitter.png">
+    <meta property="og:image" content="https://assets.mixt.site/twitter.png">
     <meta property="og:url" content="{{CANONICAL}}">
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@HeyPuter" />
+    <meta name="twitter:site" content="@proton-arcade" />
     <meta name="twitter:title" content="{{TITLE}}">
     <meta name="twitter:description" content="{{DESCRIPTION}}" />
-    <meta name="twitter:image" content="https://assets.puter.site/twitter.png">
+    <meta name="twitter:image" content="https://assets.mixt.site/twitter.png">
 
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-icon-180x180.png">
     <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon/android-icon-192x192.png">
@@ -61,11 +61,11 @@ const githubIcon = '<svg role="img" width="17" height="17" viewBox="0 0 24 24" f
 
 const headerHTML = `
     <header class="recipes-header">
-        <a class="recipes-logo" href="/recipes/">Puter.js Recipes</a>
+        <a class="recipes-logo" href="/recipes/">Mixt.js Recipes</a>
         <nav class="recipes-nav">
             <a href="/">Docs</a>
             <a href="/playground/">Playground</a>
-            <a href="https://github.com/HeyPuter/puter/" target="_blank" rel="noopener">${githubIcon}<span>GitHub</span></a>
+            <a href="https://github.com/proton-arcade/mlp/" target="_blank" rel="noopener">${githubIcon}<span>GitHub</span></a>
         </nav>
     </header>
 `;
@@ -245,7 +245,7 @@ function renderIndexPage (recipes) {
             <main class="recipes-main">
                 <h1>Recipes</h1>
                 <p class="recipes-intro">
-                    Build specific Puter.js features with recipes from Puter
+                    Build specific Mixt.js features with recipes from Mixt
                     and the community.
                 </p>
                 ${renderCards(recipes)}
@@ -253,8 +253,8 @@ function renderIndexPage (recipes) {
         </div>`;
 
     return renderPage({
-        title: 'Recipes | Puter.js',
-        description: 'Build specific Puter.js features with recipes from Puter and the community.',
+        title: 'Recipes | Mixt.js',
+        description: 'Build specific Mixt.js features with recipes from Mixt and the community.',
         canonical: `${site}/recipes/`,
         body,
     });
@@ -276,7 +276,7 @@ function renderRecipePage (recipe, recipes) {
         </div>`;
 
     return renderPage({
-        title: `${recipe.title} | Puter.js Recipes`,
+        title: `${recipe.title} | Mixt.js Recipes`,
         description: recipe.description,
         canonical: `${site}/recipes/${recipe.slug}/`,
         body,
@@ -334,7 +334,7 @@ const generateRecipes = () => {
         fs.mkdirSync(outputDir, { recursive: true });
         fs.writeFileSync(path.join(outputDir, 'index.html'), renderRecipePage(recipe, recipes), 'utf8');
         // Raw markdown alongside the page, matching what build.js does for docs
-        // pages. This is what MCP's puter_docs_get("recipes/<slug>") fetches.
+        // pages. This is what MCP's mixt_docs_get("recipes/<slug>") fetches.
         fs.writeFileSync(path.join(outputDir, 'index.md'), recipe.markdown, 'utf8');
     }
 

@@ -10,7 +10,7 @@ import {
 } from 'vitest';
 import { makeActor, type Actor } from '../src/backend/core/actor.ts';
 import { runWithContext } from '../src/backend/core/context.ts';
-import { PuterServer } from '../src/backend/server.ts';
+import { MixtServer } from '../src/backend/server.ts';
 import { setupTestServer } from '../src/backend/testUtil.ts';
 import {
     handleMeteringAllCosts,
@@ -42,7 +42,7 @@ const makeRes = () => {
     return { res: res as unknown as Response, captured };
 };
 
-let server: PuterServer;
+let server: MixtServer;
 
 beforeAll(async () => {
     server = await setupTestServer();

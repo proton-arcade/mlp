@@ -26,7 +26,7 @@ import { encode } from 'hi-base32';
 export function createSecret(label) {
     const secret = genOtpSecret();
     const totp = new TOTP({
-        issuer: 'puter.com',
+        issuer: 'mixt.mpl',
         label,
         algorithm: 'SHA1',
         digits: 6,
@@ -42,7 +42,7 @@ export function createRecoveryCode() {
 
 export function verify(label, secret, code) {
     const totp = new TOTP({
-        issuer: 'puter.com',
+        issuer: 'mixt.mpl',
         label,
         algorithm: 'SHA1',
         digits: 6,

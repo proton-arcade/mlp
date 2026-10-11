@@ -1,12 +1,12 @@
 <html>
 <body>
-    <script src="/puter.js/v2"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         // (1) Save user preference
-        puter.kv.set('userPreference', 'darkMode').then(() => {
+        mixt.kv.set('userPreference', 'darkMode').then(() => {
             // (2) Get user preference
-            puter.kv.get('userPreference').then(value => {
-                puter.print(`User preference: ${value}`);
+            mixt.kv.get('userPreference').then(value => {
+                mixt.print(`User preference: ${value}`);
             });
         })
     </script>

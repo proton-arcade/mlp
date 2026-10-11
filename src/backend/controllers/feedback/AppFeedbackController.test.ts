@@ -29,23 +29,23 @@ import {
 } from 'vitest';
 import { v4 as uuidv4 } from 'uuid';
 import type { Actor } from '../../core/actor.js';
-import { PuterRouter } from '../../core/http/PuterRouter.js';
-import { PuterServer } from '../../server.js';
+import { MixtRouter } from '../../core/http/MixtRouter.js';
+import { MixtServer } from '../../server.js';
 import { AppFeedbackService } from '../../services/feedback/AppFeedbackService.js';
 import { setupTestServer } from '../../testUtil.js';
 
-// Boots one real PuterServer (in-memory sqlite + mocked externals) and
+// Boots one real MixtServer (in-memory sqlite + mocked externals) and
 // registers AppFeedbackController's decorated routes onto a fresh
-// PuterRouter. Tests drive the captured handlers with stub req/res; the
+// MixtRouter. Tests drive the captured handlers with stub req/res; the
 // stores/services underneath are the live wired ones, so rows land in the
 // real `app_feedback` table.
 
-let server: PuterServer;
-let router: PuterRouter;
+let server: MixtServer;
+let router: MixtRouter;
 
 beforeAll(async () => {
     server = await setupTestServer();
-    router = new PuterRouter();
+    router = new MixtRouter();
     server.controllers.appFeedback.registerRoutes(router);
 });
 

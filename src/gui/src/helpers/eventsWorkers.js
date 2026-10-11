@@ -18,7 +18,7 @@
  */
 
 /**
- * Page through `puter.events.workers.list({ limit, cursor })` until the
+ * Page through `mixt.events.workers.list({ limit, cursor })` until the
  * server stops handing back a cursor, returning every item collected.
  *
  * `maxPages` only guards against a cursor that never terminates. `deployable`

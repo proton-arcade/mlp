@@ -19,7 +19,7 @@
 
 import { extensionStore } from '../../extensions';
 import { withSpan } from '../../util/span.js';
-import { PuterClient } from '../types';
+import { MixtClient } from '../types';
 import {
     EventListener,
     EventMap,
@@ -28,7 +28,7 @@ import {
     MatchingEvents,
 } from './types';
 
-export class EventClient extends PuterClient {
+export class EventClient extends MixtClient {
     #eventListeners: Partial<Record<ListenKey, EventListener[]>> = {};
 
     onServerStart() {

@@ -19,11 +19,11 @@
 
 import { v4 as uuidv4 } from 'uuid';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
-import type { PuterServer } from '../../server.js';
+import type { MixtServer } from '../../server.js';
 import { setupTestServer } from '../../testUtil.js';
 import type { NotificationService } from './NotificationService.js';
 
-let server: PuterServer;
+let server: MixtServer;
 let notifications: NotificationService;
 
 /** Collect every emission of `key` until the returned stop() is called. */

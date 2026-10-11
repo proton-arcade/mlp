@@ -134,7 +134,7 @@ const nl = {
         forgot_pass_c2a: 'Wachtwoord vergeten?',
         from: 'Van',
         general: 'Algemeen',
-        get_a_copy_of_on_puter: 'Krijg een kopie van \'%%\' op Mixt.com!',
+        get_a_copy_of_on_mixt: 'Krijg een kopie van \'%%\' op Mixt.com!',
         get_copy_link: 'Krijg Kopieerlink',
         hide_all_windows: 'Alle Vensters Verbergen',
         home: 'Home',
@@ -201,7 +201,7 @@ const nl = {
         picture: 'Afbeelding',
         pictures: 'Afbeeldingen',
         plural_suffix: 'en',
-        powered_by_puter_js: 'Aangedreven door {{link=docs}}Puter.js{{/link}}',
+        powered_by_mixt_js: 'Aangedreven door {{link=docs}}Mixt.js{{/link}}',
         preparing: 'Voorbereiden...',
         preparing_for_upload: 'Voorbereiden voor upload...',
         print: 'Afdrukken',
@@ -217,7 +217,7 @@ const nl = {
         public: 'Openbaar',
         publish: 'Publiceren',
         publish_as_website: 'Publiceer als website',
-        puter_description: 'Mixt is een privacy-first persoonlijke cloud om al je bestanden, apps en games op één veilige plek te bewaren, overal en altijd toegankelijk.',
+        mixt_description: 'Mixt is een privacy-first persoonlijke cloud om al je bestanden, apps en games op één veilige plek te bewaren, overal en altijd toegankelijk.',
         reading_file: 'Lezen %strong%',
         recent: 'Recent',
         recommended: 'Aanbevolen',
@@ -233,7 +233,7 @@ const nl = {
         replace_all: 'Alles vervangen',
         resend_confirmation_code: 'Bevestigingscode opnieuw verzenden',
         reset_colors: 'Kleuren resetten',
-        restart_puter_confirm: 'Weet je zeker dat je Mixt wilt herstarten?',
+        restart_mixt_confirm: 'Weet je zeker dat je Mixt wilt herstarten?',
         restore: 'Herstellen',
         save: 'Opslaan',
         saturation: 'Verzadiging',
@@ -263,7 +263,7 @@ const nl = {
         shortcut_to: 'Snelkoppeling naar',
         show_all_windows: 'Toon alle vensters',
         show_hidden: 'Toon verborgen',
-        sign_in_with_puter: 'Inloggen met Mixt',
+        sign_in_with_mixt: 'Inloggen met Mixt',
         sign_up: 'Aanmelden',
         signing_in: 'Inloggen…',
         size: 'Grootte',
@@ -273,7 +273,7 @@ const nl = {
         start: 'Start',
         status: 'Status',
         storage_usage: 'Opslaggebruik',
-        storage_puter_used: 'gebruikt door Mixt',
+        storage_mixt_used: 'gebruikt door Mixt',
         taking_longer_than_usual: 'Het duurt langer dan normaal. Even geduld alstublieft...',
         task_manager: 'Taakbeheer',
         taskmgr_header_name: 'Naam',
@@ -306,7 +306,7 @@ const nl = {
         visibility: 'Zichtbaarheid',
         yes: 'Ja',
         yes_release_it: 'Ja, vrijgeven',
-        you_have_been_referred_to_puter_by_a_friend: 'Je bent door een vriend doorverwezen naar Mixt!',
+        you_have_been_referred_to_mixt_by_a_friend: 'Je bent door een vriend doorverwezen naar Mixt!',
         zip: 'Zip',
         zipping_file: 'Bestand inpakken %strong%',
 
@@ -476,7 +476,7 @@ const nl = {
         'window_title_public': 'Openbaar', // In English: "Public"
         'window_title_videos': "Video's", // In English: "Videos"
         'window_title_pictures': 'Afbeeldingen', // In English: "Pictures"
-        'window_title_puter': 'Mixt', // In English: "Mixt"
+        'window_title_mixt': 'Mixt', // In English: "Mixt"
         'window_folder_empty': 'Deze map is leeg', // In English: "This folder is empty"
         'manage_your_subdomains': 'Beheer uw subdomeinen', // In English: "Manage Your Subdomains"
         'open_containing_folder': 'Bestandslocatie openen', // In English: "Open Containing Folder"

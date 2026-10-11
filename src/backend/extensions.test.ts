@@ -404,7 +404,7 @@ describe('extension.import', () => {
     it.each(['client', 'store', 'service', 'controller', 'driver'])(
         'resolves a %s captured before the layer was constructed',
         (layer) => {
-            // Extension modules are imported before PuterServer builds the
+            // Extension modules are imported before MixtServer builds the
             // layers (see server.ts), so a deep capture at module scope --
             // `const db = extension.import('client').db` in cfFileCache --
             // reads a name that is still absent. The placeholder has to

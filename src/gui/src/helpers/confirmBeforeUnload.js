@@ -48,7 +48,7 @@ export const confirm_before_unload = () => {
         activeUploadCount: Object.keys(window.active_uploads ?? {}).length,
         // Explorer windows hold nothing unsaved, so they don't warrant a prompt.
         openWindowCount: $('.window:not(.window[data-app="explorer"])').length,
-        promptOnOpenWindows: Boolean(window.feature_flags?.prompt_user_when_navigation_away_from_puter),
+        promptOnOpenWindows: Boolean(window.feature_flags?.prompt_user_when_navigation_away_from_mixt),
     });
 
     return confirm ? true : undefined;

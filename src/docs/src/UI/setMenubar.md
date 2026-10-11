@@ -1,5 +1,5 @@
 ---
-title: puter.ui.setMenubar()
+title: mixt.ui.setMenubar()
 description: Creates a menubar in the UI.
 platforms: [ websites, apps]
 ---
@@ -9,14 +9,14 @@ Creates a menubar in the UI. The menubar is a horizontal bar at the top of the w
 ## Syntax
 
 ```js
-puter.ui.setMenubar(options)
+mixt.ui.setMenubar(options)
 ```
 
 ## Parameters
 
 #### `options.theme` (String) (optional)
 
-Forces the menubar's color theme — `'dark'` or `'light'`. When unset, the menubar follows the system color-scheme preference. Only applies when running standalone (`puter.env === 'web'`); inside the Puter desktop the menubar is rendered by the desktop, which uses its own theme.
+Forces the menubar's color theme — `'dark'` or `'light'`. When unset, the menubar follows the system color-scheme preference. Only applies when running standalone (`mixt.env === 'web'`); inside the Mixt OS desktop the menubar is rendered by the desktop, which uses its own theme.
 
 #### `options.items` (Array)
 
@@ -55,9 +55,9 @@ URL or data URI of an icon shown when the menu item is hovered or active. Falls 
 ```html;ui-set-menubar
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
-        puter.ui.setMenubar({
+        mixt.ui.setMenubar({
             items: [
                 {
                     label: 'File',

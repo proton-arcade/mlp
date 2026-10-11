@@ -21,18 +21,18 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { v4 as uuidv4 } from 'uuid';
 import type { Actor } from '../../core/actor.js';
 import { runWithContext } from '../../core/context.js';
-import { PuterServer } from '../../server.js';
+import { MixtServer } from '../../server.js';
 import { setupTestServer } from '../../testUtil.js';
 import { decodeCursor } from '../../util/pagination.js';
 
 // ── Test harness ────────────────────────────────────────────────────
 //
-// Boots one PuterServer (in-memory sqlite + dynamo + s3 + mock redis)
-// and exercises the live AppDriver (`puter-apps`) against the real
+// Boots one MixtServer (in-memory sqlite + dynamo + s3 + mock redis)
+// and exercises the live AppDriver (`mixt-apps`) against the real
 // AppStore. Each test makes its own user via `makeUser` so app rows
 // from one test don't pollute another's `select` results.
 
-let server: PuterServer;
+let server: MixtServer;
 // AppDriver is a JS module without an exported class type; treat as a
 // generic CRUD-Q surface so we don't fight TS over private internals.
 type CrudQDriver = {
@@ -145,14 +145,14 @@ describe('AppDriver.create', () => {
     });
 
     // App iframes get `allow-same-origin allow-scripts`, so an index_url
-    // on a Puter system host would run third-party code same-origin with
+    // on a Mixt system host would run third-party code same-origin with
     // the GUI. The test server's domain is `localhost` (from
     // config.default.json).
     it.each([
         ['the GUI host', 'https://localhost/evil.html'],
         ['the GUI host on another port/scheme', 'http://localhost:4100/evil.html'],
         ['the API host', 'https://api.localhost/evil.html'],
-        ['the builtin sentinel host', 'https://builtins.namespaces.puter.com/emulator'],
+        ['the builtin sentinel host', 'https://builtins.namespaces.mixt.mpl/emulator'],
     ])('rejects an index_url on %s with 400', async (_label, index_url) => {
         const { actor } = await makeUser();
         await expect(
@@ -171,7 +171,7 @@ describe('AppDriver.create', () => {
         });
     });
 
-    it('rejects updating an index_url to a Puter system host with 400', async () => {
+    it('rejects updating an index_url to a Mixt system host with 400', async () => {
         const { actor } = await makeUser();
         const created = await withActor(actor, () =>
             driver.create({
@@ -1503,7 +1503,7 @@ describe('AppDriver.isNameAvailable additional branches', () => {
 // ── alias-group custom domains (`app_origin_aliases`) ──────────────
 //
 // Custom hosts claimed by an alias group get the same bootstrap-stub
-// merge treatment as puter-hosted subdomains: creating or repointing
+// merge treatment as mixt-hosted subdomains: creating or repointing
 // an app at an aliased host absorbs the unowned origin-bootstrap row
 // instead of rejecting with `app_index_url_already_in_use`.
 
@@ -1512,7 +1512,7 @@ describe('AppDriver alias-group index_url merge', () => {
     const aliasHostB = `alias-b-${Math.random().toString(36).slice(2, 10)}.test`;
     const aliasHostC = `alias-c-${Math.random().toString(36).slice(2, 10)}.test`;
 
-    // `config` is protected on PuterDriver; reach in to toggle the alias
+    // `config` is protected on MixtDriver; reach in to toggle the alias
     // groups for this block only. `#getOriginAliasGroups` reads config at
     // call time, so runtime mutation takes effect immediately.
     const driverConfig = () =>
@@ -1655,7 +1655,7 @@ describe('AppDriver alias-group index_url merge', () => {
         const b = await makeUser();
         const sharedUrl = uniqueIndexUrl();
 
-        // Non-puter, non-aliased hosts keep their historical behavior:
+        // Non-mixt, non-aliased hosts keep their historical behavior:
         // no uniqueness enforcement, both creates succeed.
         const first = await withActor(a.actor, () =>
             driver.create({
@@ -1681,7 +1681,7 @@ describe('AppDriver alias-group index_url merge', () => {
 
 // ── hosted-subdomain ownership check ────────────────────────────────
 //
-// `#ensurePuterSiteSubdomainIsOwned` gates puter-hosted index_urls on a
+// `#ensureMixtSiteSubdomainIsOwned` gates mixt-hosted index_urls on a
 // subdomain row the caller owns. Deploy flows create that row and point
 // the app at it in back-to-back requests, so the check must tolerate a
 // replica/cache miss by confirming against the primary before refusing.
@@ -2031,7 +2031,7 @@ describe('AppDriver.select query-count regression', () => {
                     { userId },
                 );
             } else {
-                // External, with a path — not puter-hosted at all.
+                // External, with a path — not mixt-hosted at all.
                 await withActor(actor, () =>
                     driver.create({
                         object: {
@@ -2311,7 +2311,7 @@ describe('AppDriver.read prefetched-param isolation', () => {
                     name: uniqueName('sec-app'),
                     title: 't',
                     index_url: `https://${sub}.site.localhost/`,
-                    filetype_associations: ['.puter'],
+                    filetype_associations: ['.mixt'],
                 },
             }),
         );
@@ -2336,7 +2336,7 @@ describe('AppDriver.read prefetched-param isolation', () => {
         expect(result.index_url).toBeUndefined();
         // The spoofed `filetypes` doesn't override the DB-backed list.
         expect(result.filetype_associations).toEqual(
-            expect.arrayContaining(['puter']),
+            expect.arrayContaining(['mixt']),
         );
         expect(result.filetype_associations).not.toContain('x');
     });

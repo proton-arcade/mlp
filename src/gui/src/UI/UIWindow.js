@@ -655,7 +655,7 @@ async function UIWindow (options) {
         // advertise and hand out an instance the user never asked for. The
         // item is what the window earns the moment it first becomes visible
         // — makeWindowVisible calls this, whether the app showed itself with
-        // puter.ui.showWindow() or something else revealed it. An app that is
+        // mixt.ui.showWindow() or something else revealed it. An app that is
         // ALWAYS windowless never reaches here: launch_app leaves
         // show_in_taskbar false for it, so it keeps having no item at all.
         if ( options.launched_hidden ) el_window._add_taskbar_item = add_taskbar_item;
@@ -938,7 +938,7 @@ async function UIWindow (options) {
                 }
 
                 // sign items
-                selected_files = await puter.fs.sign(options.initiating_app_uuid, items_to_sign);
+                selected_files = await mixt.fs.sign(options.initiating_app_uuid, items_to_sign);
                 selected_files = selected_files.items;
                 selected_files = Array.isArray(selected_files) ? selected_files : [selected_files];
 
@@ -1002,7 +1002,7 @@ async function UIWindow (options) {
             // No item selected, return current directory
             // ------------------------------------------------
             if ( selected_els.length === 0 ) {
-                selected_dirs = await puter.fs.sign(options.initiating_app_uuid, { uid: $(el_window).attr('data-uid'), action: 'write', path: $(el_window).attr('data-path') });
+                selected_dirs = await mixt.fs.sign(options.initiating_app_uuid, { uid: $(el_window).attr('data-uid'), action: 'write', path: $(el_window).attr('data-path') });
                 selected_dirs = selected_dirs.items;
             }
 
@@ -1021,7 +1021,7 @@ async function UIWindow (options) {
                 }
 
                 // sign items
-                selected_dirs = await puter.fs.sign(options.initiating_app_uuid, items_to_sign);
+                selected_dirs = await mixt.fs.sign(options.initiating_app_uuid, items_to_sign);
                 selected_dirs = selected_dirs.items;
                 selected_dirs = Array.isArray(selected_dirs) ? selected_dirs : [selected_dirs];
 
@@ -1248,7 +1248,7 @@ async function UIWindow (options) {
         // --------------------------------------------------------
         $(el_window_navbar_up_btn).on('click', function (e) {
             // The Shared view has no parent — and `path.resolve` would mangle
-            // its `puter://` form into a navigable-looking garbage path.
+            // its `mixt://` form into a navigable-looking garbage path.
             const current_path = $(el_window).attr('data-path');
             if ( current_path === window.shared_path ) return;
             // Above a shared item is its owner's folder, which is not ours to
@@ -1608,7 +1608,7 @@ async function UIWindow (options) {
                 }
 
                 // sign items
-                let signatures = await puter.fs.sign(options.app_uuid, items_to_sign);
+                let signatures = await mixt.fs.sign(options.app_uuid, items_to_sign);
                 signatures = signatures.items;
                 signatures = Array.isArray(signatures) ? signatures : [signatures];
 
@@ -2271,7 +2271,7 @@ async function UIWindow (options) {
             $('.window').css('pointer-events', 'initial');
             const new_width = $(el_window_sidebar).width();
             // save new width in the cloud, to user's settings
-            puter.kv.set({ key: 'window_sidebar_width', value: new_width })
+            mixt.kv.set({ key: 'window_sidebar_width', value: new_width })
                 .catch(err => console.warn('Could not save window_sidebar_width:', err));
             // save new width locally, to window object
             window.window_sidebar_width = new_width;
@@ -3471,7 +3471,7 @@ window.update_window_path = async function (el_window, target_path) {
     }
     else if ( target_path !== '/' ) {
         try {
-            puter.fs.stat({ path: target_path, consistency: 'eventual' }).then(fsentry => {
+            mixt.fs.stat({ path: target_path, consistency: 'eventual' }).then(fsentry => {
                 $(el_window).removeClass(`window-${ $(el_window).attr('data-uid')}`);
                 $(el_window).addClass(`window-${ fsentry.id}`);
                 $(el_window).attr('data-uid', fsentry.id);
@@ -3757,7 +3757,7 @@ $.fn.close = async function (options) {
                 }
                 // only reset title if no other window took focus
                 if ( !next_window_focused || window.window_stack.length === 0 ) {
-                    document.title = i18n('window_title_puter');
+                    document.title = i18n('window_title_mixt');
                 }
             }
             // close child windows
@@ -4021,7 +4021,7 @@ $.fn.makeWindowInvisible = async function (options) {
             // It would keep the keyboard and — because focusWindow() disables
             // pointer events on every OTHER app's iframe — leave the app the
             // user was actually working in unclickable until they clicked it
-            // again. That is what an app calling puter.ui.hideWindow() on
+            // again. That is what an app calling mixt.ui.hideWindow() on
             // itself did to whoever launched it. Hand activation back the way
             // closing a window does: to the top of the window stack.
             if ( $(this).hasClass('window-active') ) {
@@ -4051,7 +4051,7 @@ $.fn.makeWindowInvisible = async function (options) {
 $.fn.showWindow = async function (options) {
     $(this).each(async function () {
         if ( $(this).hasClass('window') ) {
-            // A window hidden by puter.ui.hideWindow() is not minimized: it
+            // A window hidden by mixt.ui.hideWindow() is not minimized: it
             // kept its geometry and has no data-orig-* to restore, so every
             // path below (all of which un-minimize) would leave it hidden —
             // and stamp NaN geometry on it from the absent attributes. Simply
@@ -4743,7 +4743,7 @@ function parse_drawer_intro_count (raw) {
 function read_drawer_intro_count () {
     if ( ! drawer_intro_read ) {
         drawer_intro_read = Promise.resolve()
-            .then(() => puter.kv.get(DRAWER_INTRO_SEEN_KV_KEY))
+            .then(() => mixt.kv.get(DRAWER_INTRO_SEEN_KV_KEY))
             .then(raw => {
                 // Merge, never overwrite: a flash this session may have
                 // bumped the local count before the read resolved.
@@ -4765,7 +4765,7 @@ function record_drawer_intro_seen () {
     drawer_intro_count = (drawer_intro_count ?? 0) + 1;
     read_drawer_intro_count().then(() => {
         if ( drawer_intro_count > DRAWER_INTRO_TEACH_COUNT ) return;
-        return puter.kv.incr(DRAWER_INTRO_SEEN_KV_KEY);
+        return mixt.kv.incr(DRAWER_INTRO_SEEN_KV_KEY);
     }).catch(err => {
         console.error('Failed to record the drawer intro exposure:', err);
     });
@@ -5490,7 +5490,7 @@ $.fn.hideWindow = async function (options) {
             // rewrite it on the desktop) — only if this window owned it
             const update_window_url = $(this).attr('data-update_window_url');
             if ( ! window.is_dashboard_mode && (update_window_url === 'true' || update_window_url === null) ) {
-                document.title = i18n('window_title_puter');
+                document.title = i18n('window_title_mixt');
             }
         }
     });
@@ -5621,7 +5621,7 @@ document.addEventListener('scroll', function (event) {
 // Function to save sidebar order to user preferences
 async function saveSidebarOrder (order) {
     try {
-        await puter.kv.set({
+        await mixt.kv.set({
             key: 'sidebar_items',
             value: JSON.stringify(order),
         });

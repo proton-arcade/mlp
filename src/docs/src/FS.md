@@ -1,17 +1,17 @@
 ---
 title: FS
-description: Store and manage data in the user's own cloud drive with Puter.js file system API.
+description: Store and manage data in the user's own cloud drive with Mixt.js file system API.
 ---
 
 The Cloud Storage API lets you store and manage data in the cloud.
 
-Local [uploads](/FS/upload/) can optionally generate browser image thumbnails or use a custom thumbnail callback. The callback can delegate to the built-in image generator and respond to upload cancellation. The Puter desktop additionally provides PDF previews without adding a PDF renderer to the SDK.
+Local [uploads](/FS/upload/) can optionally generate browser image thumbnails or use a custom thumbnail callback. The callback can delegate to the built-in image generator and respond to upload cancellation. The Mixt OS desktop additionally provides PDF previews without adding a PDF renderer to the SDK.
 
 It comes with a comprehensive but familiar file system operations including write, read, delete, move, and copy for files, plus powerful directory management features like creating directories, listing contents, and much more.
 
-With Puter.js, you don't need to worry about setting up storage infrastructure such as configuring buckets, managing CDNs, or ensuring availability, since everything is handled for you. Additionally, with the [User-Pays Model](/user-pays-model/), you don't have to worry about storage or bandwidth costs, as users of your application cover their own usage.
+With Mixt.js, you don't need to worry about setting up storage infrastructure such as configuring buckets, managing CDNs, or ensuring availability, since everything is handled for you. Additionally, with the [User-Pays Model](/user-pays-model/), you don't have to worry about storage or bandwidth costs, as users of your application cover their own usage.
 
-<div class="info"><strong>Need to share data across users?</strong> Each user's files live in their own account, so one user can't read another's by default. To hand specific items to specific people, use <a href="/FS/share/"><code>puter.fs.share()</code></a>. To keep centralized files that every user reads from and writes to, use a <a href="/Workers/">Serverless Worker</a> — its code can act on the worker owner's resources, giving all users one shared backend.</div>
+<div class="info"><strong>Need to share data across users?</strong> Each user's files live in their own account, so one user can't read another's by default. To hand specific items to specific people, use <a href="/FS/share/"><code>mixt.fs.share()</code></a>. To keep centralized files that every user reads from and writes to, use a <a href="/Workers/">Serverless Worker</a> — its code can act on the worker owner's resources, giving all users one shared backend.</div>
 
 ## Features
 
@@ -35,11 +35,11 @@ With Puter.js, you don't need to worry about setting up storage infrastructure s
 ```html;fs-write
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         // Create a new file called "hello.txt" containing "Hello, world!"
-        puter.fs.write('hello.txt', 'Hello, world!').then(() => {
-            puter.print('File written successfully');
+        mixt.fs.write('hello.txt', 'Hello, world!').then(() => {
+            mixt.print('File written successfully');
         })
     </script>
 </body>
@@ -55,18 +55,18 @@ With Puter.js, you don't need to worry about setting up storage infrastructure s
 ```html;fs-read
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
             // (1) Create a random text file
-            let filename = puter.randName() + ".txt";
-            await puter.fs.write(filename, "Hello world! I'm a file!");
-            puter.print(`"${filename}" created<br>`);
+            let filename = mixt.randName() + ".txt";
+            await mixt.fs.write(filename, "Hello world! I'm a file!");
+            mixt.print(`"${filename}" created<br>`);
 
             // (2) Read the file and print its contents
-            let blob = await puter.fs.read(filename);
+            let blob = await mixt.fs.read(filename);
             let content = await blob.text();
-            puter.print(`"${filename}" read (content: "${content}")<br>`);
+            mixt.print(`"${filename}" read (content: "${content}")<br>`);
         })();
     </script>
 </body>
@@ -82,14 +82,14 @@ With Puter.js, you don't need to worry about setting up storage infrastructure s
 ```html;fs-mkdir
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         // Create a directory with random name
-        let dirName = puter.randName();
-        puter.fs.mkdir(dirName).then((directory) => {
-            puter.print(`"${dirName}" created at ${directory.path}`);
+        let dirName = mixt.randName();
+        mixt.fs.mkdir(dirName).then((directory) => {
+            mixt.print(`"${dirName}" created at ${directory.path}`);
         }).catch((error) => {
-            puter.print('Error creating directory:', error);
+            mixt.print('Error creating directory:', error);
         });
     </script>
 </body>
@@ -105,13 +105,13 @@ With Puter.js, you don't need to worry about setting up storage infrastructure s
 ```html;fs-readdir
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
-        puter.fs.readdir('./').then((items) => {
+        mixt.fs.readdir('./').then((items) => {
             // print the path of each item in the directory
-            puter.print(`Items in the directory:<br>${items.map((item) => item.path)}<br>`);
+            mixt.print(`Items in the directory:<br>${items.map((item) => item.path)}<br>`);
         }).catch((error) => {
-            puter.print(`Error reading directory: ${error}`);
+            mixt.print(`Error reading directory: ${error}`);
         });
     </script>
 </body>
@@ -127,16 +127,16 @@ With Puter.js, you don't need to worry about setting up storage infrastructure s
 ```html;fs-rename
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
             // Create hello.txt
-            await puter.fs.write('hello.txt', 'Hello, world!');
-            puter.print(`"hello.txt" created<br>`);
+            await mixt.fs.write('hello.txt', 'Hello, world!');
+            mixt.print(`"hello.txt" created<br>`);
 
             // Rename hello.txt to hello-world.txt
-            await puter.fs.rename('hello.txt', 'hello-world.txt')
-            puter.print(`"hello.txt" renamed to "hello-world.txt"<br>`);
+            await mixt.fs.rename('hello.txt', 'hello-world.txt')
+            mixt.print(`"hello.txt" renamed to "hello-world.txt"<br>`);
         })();
     </script>
 </body>
@@ -152,24 +152,24 @@ With Puter.js, you don't need to worry about setting up storage infrastructure s
 ```html;fs-copy
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
     (async () => {
         // (1) Create a random text file
-        let filename = puter.randName() + '.txt';
-        await puter.fs.write(filename, 'Hello, world!');
-        puter.print(`Created file: "${filename}"<br>`);
+        let filename = mixt.randName() + '.txt';
+        await mixt.fs.write(filename, 'Hello, world!');
+        mixt.print(`Created file: "${filename}"<br>`);
 
         // (2) create a random directory
-        let dirname = puter.randName();
-        await puter.fs.mkdir(dirname);
-        puter.print(`Created directory: "${dirname}"<br>`);
+        let dirname = mixt.randName();
+        await mixt.fs.mkdir(dirname);
+        mixt.print(`Created directory: "${dirname}"<br>`);
 
         // (3) Copy the file into the directory
-        puter.fs.copy(filename, dirname).then((file)=>{
-            puter.print(`Copied file: "${filename}" to directory "${dirname}"<br>`);
+        mixt.fs.copy(filename, dirname).then((file)=>{
+            mixt.print(`Copied file: "${filename}" to directory "${dirname}"<br>`);
         }).catch((error)=>{
-            puter.print(`Error copying file: "${error}"<br>`);
+            mixt.print(`Error copying file: "${error}"<br>`);
         });
     })()
     </script>
@@ -186,26 +186,26 @@ With Puter.js, you don't need to worry about setting up storage infrastructure s
 ```html;fs-move
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
     (async () => {
         // (1) Create a random text file
-        let filename = puter.randName() + '.txt';
-        await puter.fs.write(filename, 'Hello, world!');
-        puter.print(`Created file: ${filename}<br>`);
+        let filename = mixt.randName() + '.txt';
+        await mixt.fs.write(filename, 'Hello, world!');
+        mixt.print(`Created file: ${filename}<br>`);
 
         // (2) create a random directory
-        let dirname = puter.randName();
-        await puter.fs.mkdir(dirname);
-        puter.print(`Created directory: ${dirname}<br>`);
+        let dirname = mixt.randName();
+        await mixt.fs.mkdir(dirname);
+        mixt.print(`Created directory: ${dirname}<br>`);
 
         // (3) Move the file into the directory
-        await puter.fs.move(filename, dirname);
-        puter.print(`Moved file: ${filename} to directory ${dirname}<br>`);
+        await mixt.fs.move(filename, dirname);
+        mixt.print(`Moved file: ${filename} to directory ${dirname}<br>`);
 
         // (4) Delete the file and directory (cleanup)
-        await puter.fs.delete(dirname + '/' + filename);
-        await puter.fs.delete(dirname);
+        await mixt.fs.delete(dirname + '/' + filename);
+        await mixt.fs.delete(dirname);
     })();
     </script>
 </body>
@@ -221,19 +221,19 @@ With Puter.js, you don't need to worry about setting up storage infrastructure s
 ```html;fs-stat
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
             // () create a file
-            await puter.fs.write('hello.txt', 'Hello, world!');
-            puter.print('hello.txt created<br>');
+            await mixt.fs.write('hello.txt', 'Hello, world!');
+            mixt.print('hello.txt created<br>');
 
             // (2) get information about hello.txt
-            const file = await puter.fs.stat('hello.txt');
-            puter.print(`hello.txt name: ${file.name}<br>`);
-            puter.print(`hello.txt path: ${file.path}<br>`);
-            puter.print(`hello.txt size: ${file.size}<br>`);
-            puter.print(`hello.txt created: ${file.created}<br>`);
+            const file = await mixt.fs.stat('hello.txt');
+            mixt.print(`hello.txt name: ${file.name}<br>`);
+            mixt.print(`hello.txt path: ${file.path}<br>`);
+            mixt.print(`hello.txt size: ${file.size}<br>`);
+            mixt.print(`hello.txt created: ${file.created}<br>`);
         })()
     </script>
 </body>
@@ -249,17 +249,17 @@ With Puter.js, you don't need to worry about setting up storage infrastructure s
 ```html;fs-delete
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
             // (1) Create a random file
-            let filename = puter.randName();
-            await puter.fs.write(filename, 'Hello, world!');
-            puter.print('File created successfully<br>');
+            let filename = mixt.randName();
+            await mixt.fs.write(filename, 'Hello, world!');
+            mixt.print('File created successfully<br>');
 
             // (2) Delete the file
-            await puter.fs.delete(filename);
-            puter.print('File deleted successfully');
+            await mixt.fs.delete(filename);
+            mixt.print('File deleted successfully');
         })();
     </script>
 </body>
@@ -275,7 +275,7 @@ With Puter.js, you don't need to worry about setting up storage infrastructure s
 ```html;fs-upload
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <input type="file" id="file-input" />
     <script>
         // File input
@@ -283,8 +283,8 @@ With Puter.js, you don't need to worry about setting up storage infrastructure s
 
         // Upload the file when the user selects it
         fileInput.onchange = () => {
-            puter.fs.upload(fileInput.files).then((file) => {
-                puter.print(`File uploaded successfully to: ${file.path}`);
+            mixt.fs.upload(fileInput.files).then((file) => {
+                mixt.print(`File uploaded successfully to: ${file.path}`);
             })
         };
     </script>
@@ -296,30 +296,30 @@ With Puter.js, you don't need to worry about setting up storage infrastructure s
 
 ## Functions
 
-These cloud storage features are supported out of the box when using Puter.js:
+These cloud storage features are supported out of the box when using Mixt.js:
 
-- **[`puter.fs.write()`](/FS/write/)** - Write data to a file
-- **[`puter.fs.read()`](/FS/read/)** - Read data from a file
-- **[`puter.fs.mkdir()`](/FS/mkdir/)** - Create a directory
-- **[`puter.fs.readdir()`](/FS/readdir/)** - List contents of a directory
-- **[`puter.fs.rename()`](/FS/rename/)** - Rename a file or directory
-- **[`puter.fs.copy()`](/FS/copy/)** - Copy a file or directory
-- **[`puter.fs.move()`](/FS/move/)** - Move a file or directory
-- **[`puter.fs.stat()`](/FS/stat/)** - Get information about a file or directory
-- **[`puter.fs.delete()`](/FS/delete/)** - Delete a file or directory
-- **[`puter.fs.upload()`](/FS/upload/)** - Upload a file from the local system
-- **[`puter.fs.getReadURL()`](/FS/getReadURL/)** - Generate a URL that can be used to read a file
-- **[`puter.fs.revokeReadURL()`](/FS/revokeReadURL/)** - Revoke a URL created by `getReadURL()`
-- **[`puter.fs.share()`](/FS/share/)** - Give another user access to a file or directory
-- **[`puter.fs.unshare()`](/FS/unshare/)** - Withdraw a user's access
-- **[`puter.fs.listShared()`](/FS/listShared/)** - List what others have shared with you
-- **[`puter.fs.listSharedByMe()`](/FS/listSharedByMe/)** - List everything you have shared out
-- **[`puter.fs.getShares()`](/FS/getShares/)** - List who has access to an item
-- **[`puter.fs.getShareLink()`](/FS/getShareLink/)** - Build a link that opens a file in an app
+- **[`mixt.fs.write()`](/FS/write/)** - Write data to a file
+- **[`mixt.fs.read()`](/FS/read/)** - Read data from a file
+- **[`mixt.fs.mkdir()`](/FS/mkdir/)** - Create a directory
+- **[`mixt.fs.readdir()`](/FS/readdir/)** - List contents of a directory
+- **[`mixt.fs.rename()`](/FS/rename/)** - Rename a file or directory
+- **[`mixt.fs.copy()`](/FS/copy/)** - Copy a file or directory
+- **[`mixt.fs.move()`](/FS/move/)** - Move a file or directory
+- **[`mixt.fs.stat()`](/FS/stat/)** - Get information about a file or directory
+- **[`mixt.fs.delete()`](/FS/delete/)** - Delete a file or directory
+- **[`mixt.fs.upload()`](/FS/upload/)** - Upload a file from the local system
+- **[`mixt.fs.getReadURL()`](/FS/getReadURL/)** - Generate a URL that can be used to read a file
+- **[`mixt.fs.revokeReadURL()`](/FS/revokeReadURL/)** - Revoke a URL created by `getReadURL()`
+- **[`mixt.fs.share()`](/FS/share/)** - Give another user access to a file or directory
+- **[`mixt.fs.unshare()`](/FS/unshare/)** - Withdraw a user's access
+- **[`mixt.fs.listShared()`](/FS/listShared/)** - List what others have shared with you
+- **[`mixt.fs.listSharedByMe()`](/FS/listSharedByMe/)** - List everything you have shared out
+- **[`mixt.fs.getShares()`](/FS/getShares/)** - List who has access to an item
+- **[`mixt.fs.getShareLink()`](/FS/getShareLink/)** - Build a link that opens a file in an app
 
 ## Examples
 
-You can see various Puter.js Cloud Storage features in action from the following examples:
+You can see various Mixt.js Cloud Storage features in action from the following examples:
 
 - Write
   - [Write File](/playground/fs-write/)
@@ -345,4 +345,4 @@ You can see various Puter.js Cloud Storage features in action from the following
 
 ## Tutorials
 
-- [Add Upload to Your Website for Free](https://developer.puter.com/tutorials/add-upload-to-your-website-for-free/)
+- [Add Upload to Your Website for Free](https://developer.mixt.mpl/tutorials/add-upload-to-your-website-for-free/)

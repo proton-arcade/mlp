@@ -37,7 +37,7 @@
 
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { io as ioClient, type Socket as ClientSocket } from 'socket.io-client';
-import type { PuterServer } from '../../server.js';
+import type { MixtServer } from '../../server.js';
 import {
     allocateEphemeralPort,
     createTestUser,
@@ -73,7 +73,7 @@ const broadcastConfig = {
 };
 
 describe('the concurrency-slot renew timer touching presence', () => {
-    let server: PuterServer;
+    let server: MixtServer;
     let port: number;
     let origin: string;
     const openSockets: ClientSocket[] = [];

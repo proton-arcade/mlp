@@ -39,7 +39,7 @@ interface AuthProbeOptions {
 }
 
 /**
- * Non-enforcing auth probe. Runs globally (installed by `PuterServer`) on every
+ * Non-enforcing auth probe. Runs globally (installed by `MixtServer`) on every
  * request, tries to locate a token in the usual places, and — if one is present
  * and valid — attaches an `Actor` to `req.actor`.
  *
@@ -218,7 +218,7 @@ const extractToken = (
     // credentialed API CORS surface; bearer/body/x-api-key tokens remain
     // available for cross-origin SDK requests.
     //
-    // `puter_token_v2` was the cookie companion to app-under-user tokens
+    // `mixt_token_v2` was the cookie companion to app-under-user tokens
     // handed out by the retired token migration. Nothing issues it any more;
     // values still sitting in browsers are honored (under the same
     // same-origin gate as the primary session cookie) until they expire, and
@@ -230,7 +230,7 @@ const extractToken = (
                 return { token: stripBearer(cookieToken), source: 'cookie' };
             }
         }
-        const v2Token = req.cookies?.puter_token_v2;
+        const v2Token = req.cookies?.mixt_token_v2;
         if (typeof v2Token === 'string' && v2Token.length > 0) {
             return { token: stripBearer(v2Token), source: 'cookie' };
         }

@@ -59,7 +59,7 @@ const entry = {
     path: '/alice/Documents/report.png',
     name: 'report.png',
     isDir: false,
-    bucket: 'puter-local',
+    bucket: 'mixt-local',
     bucketRegion: 'us-east-1',
     publicToken: null,
     fileRequestToken: null,

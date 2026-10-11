@@ -17,9 +17,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { PuterStore } from '../types';
+import { MixtStore } from '../types';
 import type { LayerInstances } from '../../types';
-import type { puterStores } from '../index';
+import type { mixtStores } from '../index';
 import { PermissionUtil } from '../../services/permission/permissionUtil';
 import {
     PERM_KEY_PREFIX,
@@ -157,8 +157,8 @@ const subtreeClause = (
  * It does NOT own semantics — rewriters, implicators, exploders, and the
  * `scan()` algorithm all live on PermissionService. This store is just I/O.
  */
-export class PermissionStore extends PuterStore {
-    declare protected stores: LayerInstances<typeof puterStores>;
+export class PermissionStore extends MixtStore {
+    declare protected stores: LayerInstances<typeof mixtStores>;
 
     override onServerStart(): void {
         this.#subscribeRemoteGenerationBumps();

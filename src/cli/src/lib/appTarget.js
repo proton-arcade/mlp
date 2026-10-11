@@ -1,18 +1,18 @@
 // Resolving "which app" from something a person can type: an app name, a
-// worker name, a worker URL, or a uid. Shared by `puter kv connect` and
-// `puter fs --app`, so both accept the same identifiers.
+// worker name, a worker URL, or a uid. Shared by `mixt kv connect` and
+// `mixt fs --app`, so both accept the same identifiers.
 
 import { appsApi } from './apps.js';
 import { WORKER_DOMAIN } from './env.js';
 import { CLIError, messageOf } from './errors.js';
 
-const APPS_HINT = "Run 'puter app list' to see your apps.";
-const WORKERS_HINT = "Run 'puter worker list' to see your workers.";
+const APPS_HINT = "Run 'mixt app list' to see your apps.";
+const WORKERS_HINT = "Run 'mixt worker list' to see your workers.";
 const TARGET_HINT =
-  "Run 'puter app list' or 'puter worker list' to see what you can connect to.";
+  "Run 'mixt app list' or 'mixt worker list' to see what you can connect to.";
 
 // A worker URL identifies a worker as well as its name does — copy one out of
-// `puter worker list` or the browser and it resolves. Returns the worker name,
+// `mixt worker list` or the browser and it resolves. Returns the worker name,
 // or null when the argument isn't a worker URL.
 export function workerNameFromUrl(arg) {
   const host = String(arg)
@@ -25,7 +25,7 @@ export function workerNameFromUrl(arg) {
   const suffix = `.${WORKER_DOMAIN.toLowerCase()}`;
   if (!host.endsWith(suffix)) return null;
   const name = host.slice(0, -suffix.length);
-  // Only the flat `<name>.puter.work` form — a deeper host isn't one of ours.
+  // Only the flat `<name>.mixt.work` form — a deeper host isn't one of ours.
   return name && !name.includes('.') ? name : null;
 }
 
@@ -38,10 +38,10 @@ const isNotFound = (err) =>
 // with it a key-value store and AppData directory of its own — so a worker
 // name resolves to the uid of that app. Returns null when the account has no
 // worker by that name.
-async function resolveWorker(puter, nameArg) {
+async function resolveWorker(mixt, nameArg) {
   let worker;
   try {
-    worker = await puter.workers.get(nameArg);
+    worker = await mixt.workers.get(nameArg);
   } catch (err) {
     throw new CLIError(
       `Could not fetch worker '${nameArg}': ${messageOf(err)}`,
@@ -62,14 +62,14 @@ async function resolveWorker(puter, nameArg) {
 }
 
 // Accept an app name, a worker name, a worker URL, or the uid itself, so a uid
-// pasted from `puter app list` (or the MCP tools) doesn't need a lookup. An app
+// pasted from `mixt app list` (or the MCP tools) doesn't need a lookup. An app
 // name wins a tie with a worker of the same name — the worker's own URL is the
 // way to ask for the worker instead.
-export async function resolveTarget(puter, identifier) {
+export async function resolveTarget(mixt, identifier) {
   // A URL says which namespace it belongs to, so it never falls back to an app.
   const fromUrl = workerNameFromUrl(identifier);
   if (fromUrl) {
-    const worker = await resolveWorker(puter, fromUrl);
+    const worker = await resolveWorker(mixt, fromUrl);
     if (!worker) {
       throw new CLIError(`Worker '${fromUrl}' not found.`, {
         hint: WORKERS_HINT,
@@ -84,7 +84,7 @@ export async function resolveTarget(puter, identifier) {
 
   let app;
   try {
-    app = await appsApi(puter).get(identifier);
+    app = await appsApi(mixt).get(identifier);
   } catch (err) {
     if (!isNotFound(err)) {
       throw new CLIError(`Could not fetch '${identifier}': ${messageOf(err)}`, {
@@ -94,7 +94,7 @@ export async function resolveTarget(puter, identifier) {
   }
   if (app?.uid) return { name: app.name ?? identifier, uid: app.uid };
 
-  const worker = await resolveWorker(puter, identifier);
+  const worker = await resolveWorker(mixt, identifier);
   if (worker) return worker;
 
   throw new CLIError(`No app or worker named '${identifier}'.`, {

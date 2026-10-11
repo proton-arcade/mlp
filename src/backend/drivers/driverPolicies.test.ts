@@ -40,7 +40,7 @@ import {
 // every other driver-mechanic concern (providers, stores, …) is
 // covered by that driver's own test file.
 
-// PuterDriver's constructor signature is (config, clients, stores, services).
+// MixtDriver's constructor signature is (config, clients, stores, services).
 // Casting empty objects is fine here because field initializers don't read them.
 const fake = () => [{}, {}, {}, {}] as [any, any, any, any];
 

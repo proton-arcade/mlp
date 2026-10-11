@@ -1,9 +1,9 @@
 import bcrypt from 'bcrypt';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { PuterServer } from '../../server.ts';
+import { MixtServer } from '../../server.ts';
 import { setupTestServer } from '../../testUtil.ts';
 
-let server: PuterServer;
+let server: MixtServer;
 
 beforeAll(async () => {
     server = await setupTestServer({

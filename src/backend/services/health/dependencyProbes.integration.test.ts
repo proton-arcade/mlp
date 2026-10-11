@@ -21,7 +21,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { DDBClient } from '../../clients/dynamodb/DDBClient';
 import { RedisClient } from '../../clients/redis/RedisClient';
 import { S3Client } from '../../clients/s3/S3Client';
-import { PUTER_KV_STORE_TABLE_DEFINITION } from '../../stores/systemKv/tableDefinition';
+import { MIXT_KV_STORE_TABLE_DEFINITION } from '../../stores/systemKv/tableDefinition';
 import type { IConfig } from '../../types';
 import { ServerHealthService } from './ServerHealthService';
 
@@ -36,7 +36,7 @@ const config = {
     dynamo: { inMemory: true },
     redis: { useMock: true },
     s3: { localConfig: { inMemory: true } },
-    s3_bucket: 'puter-local',
+    s3_bucket: 'mixt-local',
 } as unknown as IConfig;
 
 let dynamo: DDBClient;
@@ -55,7 +55,7 @@ const makeService = (): ServerHealthService => {
 
 beforeAll(async () => {
     dynamo = new DDBClient(config);
-    await dynamo.createTableIfNotExists(PUTER_KV_STORE_TABLE_DEFINITION, 'ttl');
+    await dynamo.createTableIfNotExists(MIXT_KV_STORE_TABLE_DEFINITION, 'ttl');
 
     redis = new RedisClient(config);
 

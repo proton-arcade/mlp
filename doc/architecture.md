@@ -1,6 +1,6 @@
 # Backend Architecture
 
-Loosely inspired by the Controller–Service–Repository pattern with dependency injection. The backend is organized as a stack of layers where each layer only depends on the layers beneath it, and `PuterServer` ([src/backend/server.ts](../src/backend/server.ts)) instantiates each layer in order and hands the instances down to the next.
+Loosely inspired by the Controller–Service–Repository pattern with dependency injection. The backend is organized as a stack of layers where each layer only depends on the layers beneath it, and `MixtServer` ([src/backend/server.ts](../src/backend/server.ts)) instantiates each layer in order and hands the instances down to the next.
 
 ## Layers
 
@@ -31,26 +31,26 @@ block-beta
     style CFG fill:#334155,stroke:#1e293b,color:#fff
 ```
 
-Each layer only depends on the layers beneath it, and every dependency is injected through the constructor by `PuterServer`. Extensions sit alongside this stack and can register into any layer — see [Extensions](#extensions) below.
+Each layer only depends on the layers beneath it, and every dependency is injected through the constructor by `MixtServer`. Extensions sit alongside this stack and can register into any layer — see [Extensions](#extensions) below.
 
 | Layer | Lives in | Responsibility |
 | --- | --- | --- |
 | **Controllers** | [src/backend/controllers/](../src/backend/controllers/) | Route handlers. Parse + validate input, apply per-route gates (auth, subdomain, rate limit, body parsers — see `RouteOptions`), call into services, format responses. |
-| **Drivers** | [src/backend/drivers/](../src/backend/drivers/) | Optional. RPC-style handlers exposed over the `/drivers/*` surface (`puter-kvstore`, `puter-chat-completion`, …). A driver is a thin shell that validates RPC inputs and calls into services/stores; controllers can hold a typed reference to drivers when they need the same logic over HTTP. |
+| **Drivers** | [src/backend/drivers/](../src/backend/drivers/) | Optional. RPC-style handlers exposed over the `/drivers/*` surface (`mixt-kvstore`, `mixt-chat-completion`, …). A driver is a thin shell that validates RPC inputs and calls into services/stores; controllers can hold a typed reference to drivers when they need the same logic over HTTP. |
 | **Services** | [src/backend/services/](../src/backend/services/) | Business logic. Assume the caller is already authenticated/authorized — services do not run auth gates themselves. |
 | **Stores** | [src/backend/stores/](../src/backend/stores/) | Persistence and storage logic. Wraps clients with the domain shape services consume (rows, entities, KV namespaces). |
 | **Clients** | [src/backend/clients/](../src/backend/clients/) | Adapters for external/internal services (sql, redis, s3, dynamodb, email, event bus, …). Knows protocols, not domain concepts. |
 | **Config** | `config.*.json` → `IConfig` | The flat, typed config object every layer receives at construction. |
 
-Each layer receives the layers beneath it through its constructor, so dependencies are explicit and traceable from `PuterServer`. A controller does not reach into a client directly; if it needs one, the right move is usually a service.
+Each layer receives the layers beneath it through its constructor, so dependencies are explicit and traceable from `MixtServer`. A controller does not reach into a client directly; if it needs one, the right move is usually a service.
 
-## Entry point: `PuterServer`
+## Entry point: `MixtServer`
 
-`PuterServer` is the bootstrap. It:
+`MixtServer` is the bootstrap. It:
 
 1. Loads any configured extension directories (`config.extensions`) so extensions can register before instantiation begins.
 2. Instantiates each layer in order — clients → stores → services → drivers → controllers — merging in anything extensions have registered for that layer.
-3. Wires global middleware, mounts controller routes through `PuterRouter` (which translates `RouteOptions` into the gate/parser middleware chain), and mounts extension routes through the same materializer.
+3. Wires global middleware, mounts controller routes through `MixtRouter` (which translates `RouteOptions` into the gate/parser middleware chain), and mounts extension routes through the same materializer.
 4. Fires `onServerStart` hooks across every layer once HTTP is listening, and `onServerPrepareShutdown` / `onServerShutdown` on the way down.
 
 ## Context (ALS)
@@ -71,7 +71,7 @@ An [`Actor`](../src/backend/core/actor.ts) is who a request is acting as. It has
 
 ## Extensions
 
-Extensions live alongside core ([packages/puter/extensions/](../extensions/)) and parallel the layered stack. They are meant for **non-crucial parts of the system** — things Puter still works without if removed.
+Extensions live alongside core ([packages/mixt/extensions/](../extensions/)) and parallel the layered stack. They are meant for **non-crucial parts of the system** — things Mixt OS still works without if removed.
 
 - **Good extensions**: [thumbnails](../extensions/thumbnails.ts), [serverInfo](../extensions/serverInfo.ts), [devWatcher](../extensions/devWatcher.ts) — opt-in features cleanly bolted on.
 - **Should probably be core**: [metering](../extensions/metering.ts), [appTelemetry](../extensions/appTelemetry.ts) — clients now expect these to be present, so the "extension" framing is misleading.
@@ -93,7 +93,7 @@ The `extension` global ([src/backend/extensions.ts](../src/backend/extensions.ts
 - **Cross-layer access**: `extension.import('client' | 'store' | 'service' | 'controller' | 'driver')` returns a lazy proxy to instantiated objects, and `extension.config` exposes the live config.
 
 ```ts
-import { extension } from '@heyputer/backend/src/extensions';
+import { extension } from '@mixt/backend/src/extensions';
 
 const services = extension.import('service');
 

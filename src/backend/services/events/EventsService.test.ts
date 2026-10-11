@@ -159,7 +159,7 @@ const actorFor = (id = userId): Actor =>
         effectiveApp: null,
     }) as unknown as Actor;
 
-/** The same account, acting as an app — what a `puter.js` call inside one is. */
+/** The same account, acting as an app — what a `mixt.js` call inside one is. */
 const appActorFor = (appUid: string, id = userId): Actor =>
     ({
         user: { id, uuid: `user-${id}`, username: `u${id}` },

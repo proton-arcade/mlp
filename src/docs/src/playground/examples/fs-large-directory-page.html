@@ -1,6 +1,6 @@
 <html>
 <body>
-    <script src="/puter.js/v2"></script>
+    <script src="/mixt.js/v2"></script>
     <button id="next" disabled>Load next page</button>
     <div id="output"></div>
     <script>
@@ -11,7 +11,7 @@
 
         // Read one page of 3 items and pass the cursor to get the next one
         async function loadNextPage() {
-            const page = await puter.fs.readdir({ path: 'reports', cursor, limit: 3 });
+            const page = await mixt.fs.readdir({ path: 'reports', cursor, limit: 3 });
             pageNumber++;
             output.innerHTML += `Page ${pageNumber}: ${page.items.map(item => item.name).join(', ')}<br>`;
 
@@ -28,7 +28,7 @@
         (async () => {
             // Create 7 files so there is something to page through
             for (let i = 1; i <= 7; i++) {
-                await puter.fs.write(`reports/report-${i}.txt`, `Report ${i}`, { createMissingParents: true });
+                await mixt.fs.write(`reports/report-${i}.txt`, `Report ${i}`, { createMissingParents: true });
             }
             output.innerHTML += 'Created 7 files in reports<br><br>';
 

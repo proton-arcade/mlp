@@ -15,7 +15,7 @@
 -- You should have received a copy of the GNU Affero General Public License
 -- along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
--- Worker session uniqueness. Each Puter worker is a separately-deployed
+-- Worker session uniqueness. Each Mixt worker is a separately-deployed
 -- code unit (its own subdomain), so one user can have many workers under
 -- the same app — distinguished by `meta.worker_name`. The natural unique
 -- key for an active worker session is therefore
@@ -34,9 +34,9 @@
 -- Idempotent: each ADD COLUMN / ADD INDEX is guarded so the migration
 -- directory can be replayed safely.
 
-DROP PROCEDURE IF EXISTS _puter_sessions_worker_unique;
+DROP PROCEDURE IF EXISTS _mixt_sessions_worker_unique;
 DELIMITER //
-CREATE PROCEDURE _puter_sessions_worker_unique()
+CREATE PROCEDURE _mixt_sessions_worker_unique()
 BEGIN
   IF NOT EXISTS (
     SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS
@@ -65,6 +65,6 @@ BEGIN
 END//
 DELIMITER ;
 
-CALL _puter_sessions_worker_unique();
+CALL _mixt_sessions_worker_unique();
 
-DROP PROCEDURE IF EXISTS _puter_sessions_worker_unique;
+DROP PROCEDURE IF EXISTS _mixt_sessions_worker_unique;

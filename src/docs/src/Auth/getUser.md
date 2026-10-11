@@ -1,5 +1,5 @@
 ---
-title: puter.auth.getUser()
+title: mixt.auth.getUser()
 description: Retrieve the authenticated user basic information.
 platforms: [websites, apps, nodejs, workers]
 ---
@@ -9,7 +9,7 @@ Returns the user's basic information.
 ## Syntax
 
 ```js
-puter.auth.getUser()
+mixt.auth.getUser()
 ```
 
 ## Parameters
@@ -25,10 +25,10 @@ A promise that resolves to a [`User`](/Objects/user) object containing the user'
 ```html;auth-get-user
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
-        puter.auth.getUser().then(function(user) {
-            puter.print(JSON.stringify(user));
+        mixt.auth.getUser().then(function(user) {
+            mixt.print(JSON.stringify(user));
         });
     </script>
 </body>

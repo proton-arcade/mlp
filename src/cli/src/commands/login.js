@@ -6,7 +6,7 @@ import { CLIError } from '../lib/errors.js';
 import * as ui from '../lib/ui.js';
 
 const BETA_NOTICE =
-  ui.dim('Note: the Puter CLI is in beta (0.x) — behavior may change.');
+  ui.dim('Note: the Mixt CLI is in beta (0.x) — behavior may change.');
 
 export async function loginCommand(opts) {
   let token;
@@ -17,7 +17,7 @@ export async function loginCommand(opts) {
     if (canPrompt()) {
       throw new CLIError(
         'No token piped in.',
-        { hint: 'Usage: echo $TOKEN | puter login --with-token' },
+        { hint: 'Usage: echo $TOKEN | mixt login --with-token' },
       );
     }
     token = await readStdin();
@@ -29,15 +29,15 @@ export async function loginCommand(opts) {
   } else {
     throw new CLIError(
       'Cannot log in non-interactively without a token.',
-      { hint: 'Pipe one in: echo $TOKEN | puter login --with-token' },
+      { hint: 'Pipe one in: echo $TOKEN | mixt login --with-token' },
     );
   }
 
   // Verify the token before persisting it.
-  const puter = makeClient(token);
+  const mixt = makeClient(token);
   let user;
   try {
-    user = await puter.auth.getUser();
+    user = await mixt.auth.getUser();
   } catch (err) {
     throw new CLIError(`Token rejected: ${err.message}`);
   }

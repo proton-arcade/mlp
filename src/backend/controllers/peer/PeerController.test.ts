@@ -2,14 +2,14 @@ import type { Request, Response } from 'express';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { v4 as uuidv4 } from 'uuid';
 import { makeActor } from '../../core/actor.js';
-import { PuterRouter } from '../../core/http/PuterRouter.js';
-import { PuterServer } from '../../server.js';
+import { MixtRouter } from '../../core/http/MixtRouter.js';
+import { MixtServer } from '../../server.js';
 import { setupTestServer } from '../../testUtil.js';
 import { PEER_COSTS } from './costs.js';
 import { signGuestGrant, verifyGuestGrant } from './guestGrant.js';
 import type { PeerController } from './PeerController.js';
 
-let server: PuterServer;
+let server: MixtServer;
 let controller: PeerController;
 
 beforeAll(async () => {
@@ -94,7 +94,7 @@ describe('PeerController', () => {
             const { res, captured } = makeRes();
             const req = makeReq({ method: 'GET' });
 
-            const router = new PuterRouter();
+            const router = new MixtRouter();
             controller.registerRoutes(router);
 
             const signallerRoute = router.routes.find(
@@ -114,7 +114,7 @@ describe('PeerController', () => {
             const minimalController = minimalServer.controllers
                 .peer as unknown as PeerController;
             try {
-                const router = new PuterRouter();
+                const router = new MixtRouter();
                 minimalController.registerRoutes(router);
                 const route = router.routes.find(
                     (r) => r.path === '/peer/signaller-info',
@@ -139,7 +139,7 @@ describe('PeerController', () => {
             const minimalController = minimalServer.controllers
                 .peer as unknown as PeerController;
             try {
-                const router = new PuterRouter();
+                const router = new MixtRouter();
                 minimalController.registerRoutes(router);
                 const route = router.routes.find(
                     (r) => r.path === '/peer/generate-turn',
@@ -164,7 +164,7 @@ describe('PeerController', () => {
         let ingestHandler: Function;
 
         beforeAll(() => {
-            const router = new PuterRouter();
+            const router = new MixtRouter();
             controller.registerRoutes(router);
             const route = router.routes.find(
                 (r) => r.path === '/turn/ingest-usage',
@@ -175,7 +175,7 @@ describe('PeerController', () => {
         it('rejects requests without valid internal auth secret', async () => {
             const req = makeReq({
                 body: { records: [] },
-                headers: { 'x-puter-internal-auth': 'wrong-secret' },
+                headers: { 'x-mixt-internal-auth': 'wrong-secret' },
             });
             await expect(
                 ingestHandler(req, makeRes().res),
@@ -192,7 +192,7 @@ describe('PeerController', () => {
         it('rejects when records is not an array', async () => {
             const req = makeReq({
                 body: { records: 'not-array' },
-                headers: { 'x-puter-internal-auth': 'test-secret' },
+                headers: { 'x-mixt-internal-auth': 'test-secret' },
             });
             await expect(
                 ingestHandler(req, makeRes().res),
@@ -203,7 +203,7 @@ describe('PeerController', () => {
             const { res, captured } = makeRes();
             const req = makeReq({
                 body: { records: [] },
-                headers: { 'x-puter-internal-auth': 'test-secret' },
+                headers: { 'x-mixt-internal-auth': 'test-secret' },
             });
             await ingestHandler(req, res);
             expect(captured.body).toEqual({ ok: true });
@@ -219,7 +219,7 @@ describe('PeerController', () => {
                         { userId: 'AAAAAAAAAAAAAAAAAAAAAA' },
                     ],
                 },
-                headers: { 'x-puter-internal-auth': 'test-secret' },
+                headers: { 'x-mixt-internal-auth': 'test-secret' },
             });
             await ingestHandler(req, res);
             expect(captured.body).toEqual({ ok: true });
@@ -235,7 +235,7 @@ describe('PeerController', () => {
                         { egressBytes: 100, userId: 'not-valid-b64' },
                     ],
                 },
-                headers: { 'x-puter-internal-auth': 'test-secret' },
+                headers: { 'x-mixt-internal-auth': 'test-secret' },
             });
             await ingestHandler(req, res);
             expect(captured.body).toEqual({ ok: true });
@@ -247,7 +247,7 @@ describe('PeerController', () => {
                 body: {
                     records: [null, undefined, 42, 'string'],
                 },
-                headers: { 'x-puter-internal-auth': 'test-secret' },
+                headers: { 'x-mixt-internal-auth': 'test-secret' },
             });
             await ingestHandler(req, res);
             expect(captured.body).toEqual({ ok: true });
@@ -256,7 +256,7 @@ describe('PeerController', () => {
         it('rejects when body is missing entirely', async () => {
             const req = makeReq({
                 body: undefined,
-                headers: { 'x-puter-internal-auth': 'test-secret' },
+                headers: { 'x-mixt-internal-auth': 'test-secret' },
             });
             await expect(
                 ingestHandler(req, makeRes().res),
@@ -266,7 +266,7 @@ describe('PeerController', () => {
 
     describe('route registration', () => {
         it('registers every expected route', () => {
-            const router = new PuterRouter();
+            const router = new MixtRouter();
             controller.registerRoutes(router);
 
             const paths = router.routes.map((r) => r.path);
@@ -278,7 +278,7 @@ describe('PeerController', () => {
         });
 
         it('keeps minting credentials behind auth and redeeming open', () => {
-            const router = new PuterRouter();
+            const router = new MixtRouter();
             controller.registerRoutes(router);
             const optionsFor = (path: string) =>
                 router.routes.find((r) => r.path === path)!.options;
@@ -301,7 +301,7 @@ describe('PeerController', () => {
 // against the real user store and metering service.
 
 describe('PeerController TURN', () => {
-    let turnServer: PuterServer;
+    let turnServer: MixtServer;
     let generateTurn: Function;
     let ingestUsage: Function;
 
@@ -317,7 +317,7 @@ describe('PeerController TURN', () => {
                 },
             },
         } as never);
-        const router = new PuterRouter();
+        const router = new MixtRouter();
         (
             turnServer.controllers.peer as unknown as PeerController
         ).registerRoutes(router);
@@ -443,7 +443,7 @@ describe('PeerController TURN', () => {
                     body: {
                         records: [{ egressBytes: 2048, userId: encodedUserId }],
                     },
-                    headers: { 'x-puter-internal-auth': 'turn-secret' },
+                    headers: { 'x-mixt-internal-auth': 'turn-secret' },
                 }),
                 res,
             );
@@ -487,7 +487,7 @@ describe('PeerController TURN', () => {
                             },
                         ],
                     },
-                    headers: { 'x-puter-internal-auth': 'turn-secret' },
+                    headers: { 'x-mixt-internal-auth': 'turn-secret' },
                 }),
                 res,
             );
@@ -526,7 +526,7 @@ describe('PeerController TURN', () => {
                             { egressBytes: 20, userId: encodedUserId },
                         ],
                     },
-                    headers: { 'x-puter-internal-auth': 'turn-secret' },
+                    headers: { 'x-mixt-internal-auth': 'turn-secret' },
                 }),
                 res,
             );
@@ -541,7 +541,7 @@ describe('PeerController TURN', () => {
     it('rejects usage ingest when no internal secret is configured', async () => {
         const openServer = await setupTestServer();
         try {
-            const router = new PuterRouter();
+            const router = new MixtRouter();
             (
                 openServer.controllers.peer as unknown as PeerController
             ).registerRoutes(router);
@@ -552,7 +552,7 @@ describe('PeerController TURN', () => {
                 handler(
                     makeReq({
                         body: { records: [] },
-                        headers: { 'x-puter-internal-auth': 'anything' },
+                        headers: { 'x-mixt-internal-auth': 'anything' },
                     }),
                     makeRes().res,
                 ),
@@ -572,7 +572,7 @@ describe('PeerController TURN', () => {
 // anything the host didn't sign.
 
 describe('PeerController guest TURN', () => {
-    let guestServer: PuterServer;
+    let guestServer: MixtServer;
     let generateTurn: Function;
     let createTurnGrant: Function;
     let guestTurn: Function;
@@ -603,7 +603,7 @@ describe('PeerController guest TURN', () => {
                 },
             },
         } as never);
-        const router = new PuterRouter();
+        const router = new MixtRouter();
         (
             guestServer.controllers.peer as unknown as PeerController
         ).registerRoutes(router);
@@ -784,7 +784,7 @@ describe('PeerController guest TURN', () => {
             } as never);
             const fetchSpy = stubCloudflare();
             try {
-                const router = new PuterRouter();
+                const router = new MixtRouter();
                 (
                     shortServer.controllers.peer as unknown as PeerController
                 ).registerRoutes(router);
@@ -935,7 +935,7 @@ describe('PeerController guest TURN', () => {
             } as never);
             const fetchSpy = stubCloudflare();
             try {
-                const router = new PuterRouter();
+                const router = new MixtRouter();
                 (
                     defaultsServer.controllers.peer as unknown as PeerController
                 ).registerRoutes(router);
@@ -982,7 +982,7 @@ describe('PeerController guest TURN', () => {
                 },
             } as never);
             try {
-                const router = new PuterRouter();
+                const router = new MixtRouter();
                 (
                     noGuestServer.controllers.peer as unknown as PeerController
                 ).registerRoutes(router);
@@ -1012,7 +1012,7 @@ describe('PeerController guest TURN', () => {
                 peers: { guest_turn: { grant_secret: GRANT_SECRET } },
             } as never);
             try {
-                const router = new PuterRouter();
+                const router = new MixtRouter();
                 (
                     noTurnServer.controllers.peer as unknown as PeerController
                 ).registerRoutes(router);

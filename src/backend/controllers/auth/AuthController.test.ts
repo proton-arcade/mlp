@@ -54,7 +54,7 @@ import {
     type CollectedRoute,
     type TokenSource,
 } from '../../core/http/types.js';
-import { PuterServer } from '../../server.js';
+import { MixtServer } from '../../server.js';
 import { createSecret as otpCreateSecret } from '../../services/auth/OTPUtil.js';
 import { kvSharePermission } from '../../services/events/kvShares.js';
 import { FULL_API_ACCESS } from '../../services/permission/consts.js';
@@ -64,7 +64,7 @@ import { FS_READ_LIMIT } from '../fs/limits.js';
 
 // ── Test harness ────────────────────────────────────────────────────
 
-let server: PuterServer;
+let server: MixtServer;
 let controller: any;
 let eventClient: EventClient;
 
@@ -115,21 +115,21 @@ let cardSetupOverride: CardSetupOverride | null = null;
 let cardConfirmOverride: CardConfirmOverride | null = null;
 
 const installSharedListeners = () => {
-    eventClient.on('puter.signup.validate', (_k: unknown, data: unknown) => {
+    eventClient.on('mixt.signup.validate', (_k: unknown, data: unknown) => {
         if (signupValidateOverride) {
             signupValidateOverride(
                 data as Parameters<SignupValidateOverride>[0],
             );
         }
     });
-    eventClient.on('puter.signup.success', (_k: unknown, data: unknown) => {
+    eventClient.on('mixt.signup.success', (_k: unknown, data: unknown) => {
         heardSignupSuccess.push(data as Record<string, unknown>);
     });
     eventClient.on('user.delete', (_k: unknown, data: unknown) => {
         heardUserDelete.push(data as Record<string, unknown>);
     });
     eventClient.on(
-        'puter.card-verification.setup',
+        'mixt.card-verification.setup',
         (_k: unknown, data: unknown) => {
             if (cardSetupOverride) {
                 cardSetupOverride(data as Parameters<CardSetupOverride>[0]);
@@ -137,7 +137,7 @@ const installSharedListeners = () => {
         },
     );
     eventClient.on(
-        'puter.card-verification.confirm',
+        'mixt.card-verification.confirm',
         (_k: unknown, data: unknown) => {
             if (cardConfirmOverride) {
                 cardConfirmOverride(data as Parameters<CardConfirmOverride>[0]);
@@ -288,7 +288,7 @@ const isCompleteLoginResponse = (
 
 // ── Existing event-shape sanity check (unchanged) ───────────────────
 
-describe('puter.signup.validate event', () => {
+describe('mixt.signup.validate event', () => {
     it('supports code in the validate event when allow is false', async () => {
         await withSignupValidateOverride(
             (event) => {
@@ -310,7 +310,7 @@ describe('puter.signup.validate event', () => {
                 };
 
                 await eventClient.emitAndWait(
-                    'puter.signup.validate',
+                    'mixt.signup.validate',
                     validateEvent,
                     {},
                 );
@@ -662,7 +662,7 @@ describe('AuthController.handleSignup', () => {
         expect(body.token.length).toBeGreaterThan(20);
 
         // Session cookie set with the configured cookie name.
-        expect(res.cookies['puter_auth_token']).toBeDefined();
+        expect(res.cookies['mixt_auth_token']).toBeDefined();
 
         // Persisted with a bcrypt-hashed password (NOT plaintext).
         const persisted = await server.stores.user.getByUsername(username);
@@ -963,7 +963,7 @@ describe('AuthController.handleSignup', () => {
         await controller.handleSignup(req, res);
         expect(res.body).toEqual({});
         // No cookie was set — honeypot path bails before completeLogin.
-        expect(res.cookies['puter_auth_token']).toBeUndefined();
+        expect(res.cookies['mixt_auth_token']).toBeUndefined();
     });
 
     it('temp user signup auto-fills username/email/password and is_temp=true on response', async () => {
@@ -1051,7 +1051,7 @@ describe('AuthController.handleSignup', () => {
         }
     });
 
-    it('emits puter.signup.success on successful signup', async () => {
+    it('emits mixt.signup.success on successful signup', async () => {
         const baseline = heardSignupSuccess.length;
         const username = `s_${uniq()}`;
         await controller.handleSignup(
@@ -1239,7 +1239,7 @@ describe('AuthController.handleSignup device signals', () => {
             );
             // Signup completes exactly as before when the fields are absent.
             expect(isCompleteLoginResponse(res.body)).toBe(true);
-            expect(res.cookies['puter_auth_token']).toBeDefined();
+            expect(res.cookies['mixt_auth_token']).toBeDefined();
         });
 
         expect(seen).toHaveLength(1);
@@ -1389,8 +1389,8 @@ describe('AuthController.handleLogin', () => {
         };
         expect(decoded.type).toBe('gui');
         // Session cookie carries the (different) session token.
-        expect(res.cookies['puter_auth_token'].value).toBeTruthy();
-        expect(res.cookies['puter_auth_token'].value).not.toBe(token);
+        expect(res.cookies['mixt_auth_token'].value).toBeTruthy();
+        expect(res.cookies['mixt_auth_token'].value).not.toBe(token);
     });
 
     it('also accepts email instead of username', async () => {
@@ -1573,7 +1573,7 @@ describe('AuthController.handleLogin', () => {
         expect(decoded.purpose).toBe('otp-login');
         expect(decoded.user_uid).toBe(seeded!.uuid);
         // No session cookie set yet — login isn't complete.
-        expect(res.cookies['puter_auth_token']).toBeUndefined();
+        expect(res.cookies['mixt_auth_token']).toBeUndefined();
     });
 
     it('rejects with 400 (not a TypeError) when the request has no body', async () => {
@@ -1820,8 +1820,8 @@ describe('AuthController.handleElevate', () => {
             res,
         );
         expect(res.body).toMatchObject({ elevated: true });
-        expect(res.cookies.puter_elevated).toBeDefined();
-        expect(res.cookies.puter_elevated.opts).toMatchObject({
+        expect(res.cookies.mixt_elevated).toBeDefined();
+        expect(res.cookies.mixt_elevated.opts).toMatchObject({
             httpOnly: true,
         });
 
@@ -1830,7 +1830,7 @@ describe('AuthController.handleElevate', () => {
             await import('../../core/http/middleware/stepUpSession.js');
         const ok = verifyStepUpSession(
             {
-                cookies: { puter_elevated: res.cookies.puter_elevated.value },
+                cookies: { mixt_elevated: res.cookies.mixt_elevated.value },
                 actor: { user: { uuid: actor.user.uuid } },
             } as never,
             { tokenService: server.services.token },
@@ -1866,7 +1866,7 @@ describe('AuthController.handleElevate', () => {
         } as never;
 
         const totp = new TOTP({
-            issuer: 'puter.com',
+            issuer: 'mixt.mpl',
             label: user.username,
             algorithm: 'SHA1',
             digits: 6,
@@ -1879,7 +1879,7 @@ describe('AuthController.handleElevate', () => {
             res,
         );
         expect(res.body).toMatchObject({ elevated: true });
-        expect(res.cookies.puter_elevated).toBeDefined();
+        expect(res.cookies.mixt_elevated).toBeDefined();
 
         await expect(
             controller.handleElevate(
@@ -1917,15 +1917,15 @@ describe('AuthController.handleElevate', () => {
         const { actor } = await makeUserAndActor();
         const res = makeRes();
         // Mimic the browser: the resolved token IS the session cookie value.
-        // Cookie name must match `config.cookie_name` (puter_auth_token).
+        // Cookie name must match `config.cookie_name` (mixt_auth_token).
         const req = {
             ...makeReq({ password: 'correct-horse-battery' }, { actor }),
             token: 'session-cookie-value',
-            cookies: { puter_auth_token: 'session-cookie-value' },
+            cookies: { mixt_auth_token: 'session-cookie-value' },
         };
         await controller.handleElevate(req, res);
         expect(res.body).toEqual({ elevated: true });
-        expect(res.cookies.puter_elevated).toBeDefined();
+        expect(res.cookies.mixt_elevated).toBeDefined();
     });
 
     it('the elevation token is never honored as a main auth token', async () => {
@@ -1987,7 +1987,7 @@ describe('AuthController.handleLogout', () => {
             ),
             res,
         );
-        expect(res.clearedCookies).toContain('puter_auth_token');
+        expect(res.clearedCookies).toContain('mixt_auth_token');
         expect(res.sent).toBe('logged out');
     });
 });
@@ -1995,13 +1995,13 @@ describe('AuthController.handleLogout', () => {
 describe('AuthController account-lifecycle route gating', () => {
     const routeOptions = (method: string, path: string) => {
         const proto = Object.getPrototypeOf(controller) as {
-            __puterRoutes?: Array<{
+            __mixtRoutes?: Array<{
                 method: string;
                 path: string;
                 options?: Record<string, unknown>;
             }>;
         };
-        const route = (proto.__puterRoutes ?? []).find(
+        const route = (proto.__mixtRoutes ?? []).find(
             (r) =>
                 r.method.toLowerCase() === method.toLowerCase() &&
                 r.path === path,
@@ -2167,7 +2167,7 @@ describe('AuthController grant flows', () => {
     });
 
     it('grant-user-app: resolves `origin` to the app when app_uid is omitted', async () => {
-        // The GUI permission dialog and puter.perms.grantOrigin() identify
+        // The GUI permission dialog and mixt.perms.grantOrigin() identify
         // third-party sites by origin rather than app uid.
         const appName = `tg-origin-${uuidv4()}`;
         const origin = `https://${appName}.example.test`;
@@ -3555,7 +3555,7 @@ describe('AuthController.handleGetUserAppToken + handleCheckApp', () => {
         expect(typeof body.token).toBe('string');
     });
 
-    // What decides whether a cancelled "Sign in with Puter" still hands over a token.
+    // What decides whether a cancelled "Sign in with Mixt" still hands over a token.
     it('check-app reports an app the user never opened as unauthorized, with no token', async () => {
         const untouched = await (
             server.stores.app.create as unknown as (
@@ -4307,8 +4307,8 @@ describe('AuthController.handleSendConfirmEmail', () => {
 // The per-account / per-number SMS send caps used to live here as a hardcoded
 // `MAX_PHONE_VERIFY_SENDS` in the backend. They now live entirely in the abuse
 // extension (no abuse thresholds in the OSS repo): the backend only asks via
-// `puter.phone-verification.check` and reports sends via
-// `puter.phone-verification.sent`. The cap behavior is covered by the
+// `mixt.phone-verification.check` and reports sends via
+// `mixt.phone-verification.sent`. The cap behavior is covered by the
 // extension's phoneVerification / phoneSendLog tests; the backend side (it
 // forwards a veto, and emits `sent` only on success) is covered below.
 
@@ -4629,7 +4629,7 @@ describe('AuthController phone verification — staging & reuse', () => {
                 name: string,
                 ev: { allowed: boolean; reason: string | null },
             ) => {
-                if (name === 'puter.phone-verification.check') {
+                if (name === 'mixt.phone-verification.check') {
                     ev.allowed = false;
                     ev.reason = 'phone_already_used';
                 }
@@ -4664,7 +4664,7 @@ describe('AuthController phone verification — staging & reuse', () => {
         expect(staged ?? null).toBeNull();
     });
 
-    it('emits puter.phone-verification.sent after a successful send', async () => {
+    it('emits mixt.phone-verification.sent after a successful send', async () => {
         const { actor } = await makeUserAndActor();
         const emit = vi.fn();
         const emitAndWait = vi.fn(async () => {}); // no veto
@@ -4678,7 +4678,7 @@ describe('AuthController phone verification — staging & reuse', () => {
             },
         );
         expect(emit).toHaveBeenCalledWith(
-            'puter.phone-verification.sent',
+            'mixt.phone-verification.sent',
             expect.objectContaining({
                 phone: '+14155550123',
                 dispatch_id: null,
@@ -4704,7 +4704,7 @@ describe('AuthController phone verification — staging & reuse', () => {
             },
         );
         expect(emit).toHaveBeenCalledWith(
-            'puter.phone-verification.sent',
+            'mixt.phone-verification.sent',
             expect.objectContaining({ dispatch_id: 'disp-123' }),
             expect.anything(),
         );
@@ -4733,7 +4733,7 @@ describe('AuthController phone verification — staging & reuse', () => {
             },
         );
         const sentCalls = emit.mock.calls.filter(
-            (c) => c[0] === 'puter.phone-verification.sent',
+            (c) => c[0] === 'mixt.phone-verification.sent',
         );
         expect(sentCalls).toHaveLength(0);
     });
@@ -5445,7 +5445,7 @@ describe('AuthController SMS → card fallback', () => {
                 key: string,
                 event: Record<string, unknown>,
             ) => {
-                if (key === 'puter.card-verification.status') {
+                if (key === 'mixt.card-verification.status') {
                     if (enabled !== null) event.enabled = enabled;
                 }
             },
@@ -6851,7 +6851,7 @@ describe('AuthController user-protected mutations (validation paths)', () => {
 
     it('change-email: accepts an address that resolves back to the caller', async () => {
         // `foo+tag@gmail.com` canonicalizes to the caller's own row, so the
-        // collision check has to exclude them — otherwise Puter reports your
+        // collision check has to exclude them — otherwise Mixt reports your
         // own address as already in use and there's no way to set it.
         const local = `ch_${uniq()}`;
         const { user, actor } = await makeUserAndActor();
@@ -8000,7 +8000,7 @@ describe('AuthController.handleAppUidFromOrigin', () => {
 /** The code an authenticator app would show right now for `secret`. */
 const liveTotp = (username: string, secret: string) =>
     new TOTP({
-        issuer: 'puter.com',
+        issuer: 'mixt.mpl',
         label: username,
         algorithm: 'SHA1',
         digits: 6,
@@ -8334,7 +8334,7 @@ describe('AuthController.handleGetGuiToken + handleSessionSyncCookie', () => {
             r2,
         );
         expect(r2.statusCode).toBe(204);
-        expect(r2.cookies['puter_auth_token']).toBeDefined();
+        expect(r2.cookies['mixt_auth_token']).toBeDefined();
     });
 
     it('session/sync-cookie: refuses a token that arrived anywhere but the Authorization header', async () => {
@@ -8364,7 +8364,7 @@ describe('AuthController.handleGetGuiToken + handleSessionSyncCookie', () => {
                     res,
                 ),
             ).rejects.toMatchObject({ statusCode: 401 });
-            expect(res.cookies['puter_auth_token']).toBeUndefined();
+            expect(res.cookies['mixt_auth_token']).toBeUndefined();
         }
     });
 });
@@ -8377,8 +8377,8 @@ describe('AuthController.handleDeleteOwnUser', () => {
         const res = makeRes();
         await controller.handleDeleteOwnUser(makeReq({}, { actor }), res);
         expect(res.body).toEqual({ success: true });
-        expect(res.clearedCookies).toContain('puter_auth_token');
-        expect(res.clearedCookies).toContain('puter_revalidation');
+        expect(res.clearedCookies).toContain('mixt_auth_token');
+        expect(res.clearedCookies).toContain('mixt_revalidation');
         // Row is gone.
         const after = await server.stores.user.getById(user.id, {
             force: true,

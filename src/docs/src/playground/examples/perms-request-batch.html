@@ -1,19 +1,19 @@
 <html>
 <body>
-    <script src="/puter.js/v2"></script>
+    <script src="/mixt.js/v2"></script>
     <button id="setup">Set Up</button>
     <script>
         document.getElementById('setup').addEventListener('click', async () => {
             // One prompt for the set; the dialog lists only what is missing.
-            const [documents, apps, email] = await puter.perms.request([
+            const [documents, apps, email] = await mixt.perms.request([
                 { resource: 'folder', name: 'Documents', access: 'write' },
                 { resource: 'apps' },
                 { resource: 'email' },
             ]);
 
-            puter.print(`Documents: ${documents ?? 'denied'}`);
-            puter.print(`Apps: ${apps ? 'granted' : 'denied'}`);
-            puter.print(`Email: ${email ?? 'denied'}`);
+            mixt.print(`Documents: ${documents ?? 'denied'}`);
+            mixt.print(`Apps: ${apps ? 'granted' : 'denied'}`);
+            mixt.print(`Email: ${email ?? 'denied'}`);
         });
     </script>
 </body>

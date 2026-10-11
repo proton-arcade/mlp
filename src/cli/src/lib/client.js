@@ -1,7 +1,7 @@
-// Puter.js SDK bootstrap for Node.
+// Mixt.js SDK bootstrap for Node.
 //
 // The SDK ships a CommonJS entry (`init.cjs`); we're an ESM package, so it's
-// loaded via createRequire. `init(token)` returns a configured `puter` object
+// loaded via createRequire. `init(token)` returns a configured `mixt` object
 // exposing .auth / .fs / .hosting / .workers, etc.
 
 import { createRequire } from 'node:module';
@@ -12,10 +12,10 @@ let sdk;
 function loadSdk() {
   if (sdk) return sdk;
   try {
-    sdk = require('@heyputer/puter.js/src/init.cjs');
+    sdk = require('@mixt/mixt.js/src/init.cjs');
   } catch (err) {
     throw new Error(
-      `Could not load the Puter.js SDK (@heyputer/puter.js). ` +
+      `Could not load the Mixt.js SDK (@mixt/mixt.js). ` +
         `Run \`npm install\` in the CLI directory.\n${err.message}`,
     );
   }
@@ -30,7 +30,7 @@ function loadSdk() {
 // the fast upload path working. Idempotent. Remove once the SDK null-guards it.
 function patchHeadersContentType() {
   if (typeof Headers === 'undefined') return;
-  if (Headers.prototype.__puterCliContentTypePatched) return;
+  if (Headers.prototype.__mixtCliContentTypePatched) return;
   const original = Headers.prototype.get;
   Headers.prototype.get = function (name) {
     const value = original.call(this, name);
@@ -39,7 +39,7 @@ function patchHeadersContentType() {
     }
     return value;
   };
-  Headers.prototype.__puterCliContentTypePatched = true;
+  Headers.prototype.__mixtCliContentTypePatched = true;
 }
 
 // Build an authenticated client from a token.
@@ -63,10 +63,10 @@ export async function getAuthTokenViaBrowser() {
 const ADJ = ['swift', 'brave', 'lucky', 'calm', 'bright', 'bold', 'sunny', 'cosmic'];
 const NOUN = ['otter', 'falcon', 'maple', 'comet', 'harbor', 'cedar', 'pixel', 'delta'];
 
-export async function randName(puter) {
+export async function randName(mixt) {
   try {
-    if (puter && typeof puter.randName === 'function') {
-      const n = puter.randName();
+    if (mixt && typeof mixt.randName === 'function') {
+      const n = mixt.randName();
       return n && typeof n.then === 'function' ? await n : n;
     }
   } catch {

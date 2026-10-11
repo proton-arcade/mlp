@@ -1,7 +1,7 @@
 import { Readable } from 'node:stream';
 import { v4 as uuidv4 } from 'uuid';
 import { afterAll, beforeAll, describe, expect, test } from 'vitest';
-import type { PuterServer } from '../../server.js';
+import type { MixtServer } from '../../server.js';
 import type { UserRow } from '../../stores/user/UserStore.js';
 import { createTestUser, setupTestServer } from '../../testUtil.js';
 import {
@@ -9,14 +9,14 @@ import {
     copyIntoInbox,
     findMailboxOwner,
     hasMailbox,
-    isPuterEmailAddress,
+    isMixtEmailAddress,
     isTempUser,
     mailDay,
     mailFolderPath,
     mailObjectName,
     mailboxPath,
-    puterEmailAddressesOf,
-    puterEmailUsername,
+    mixtEmailAddressesOf,
+    mixtEmailUsername,
     storeInboxMessage,
 } from './mailbox.js';
 
@@ -26,7 +26,7 @@ const UUID_V7 =
 // A real in-memory backend rather than stand-in services: these functions
 // hand their arguments straight to the filesystem, so a fake would only prove
 // which methods were called.
-let server: PuterServer;
+let server: MixtServer;
 let dan: UserRow;
 
 // `frankfurt` is wired to the same bucket the test server already has, so a
@@ -38,7 +38,7 @@ beforeAll(async () => {
     server = await setupTestServer({
         servers: {
             frankfurt: {
-                bucket: 'puter-local',
+                bucket: 'mixt-local',
                 bucketRegion: FRANKFURT_REGION,
             },
         },
@@ -52,22 +52,22 @@ afterAll(async () => {
 });
 
 describe('addresses', () => {
-    test('both Puter domains are internal, case-insensitively', () => {
-        expect(isPuterEmailAddress('dan@puter.email')).toBe(true);
-        expect(isPuterEmailAddress('Dan@PuterStaging.Email')).toBe(true);
-        expect(isPuterEmailAddress('dan@apps.puter.email')).toBe(false);
-        expect(isPuterEmailAddress('dan@example.com')).toBe(false);
-        expect(isPuterEmailAddress('not-an-address')).toBe(false);
+    test('both Mixt domains are internal, case-insensitively', () => {
+        expect(isMixtEmailAddress('dan@mixt.email')).toBe(true);
+        expect(isMixtEmailAddress('Dan@MixtStaging.Email')).toBe(true);
+        expect(isMixtEmailAddress('dan@apps.mixt.email')).toBe(false);
+        expect(isMixtEmailAddress('dan@example.com')).toBe(false);
+        expect(isMixtEmailAddress('not-an-address')).toBe(false);
     });
 
     test('the local part is the username', () => {
-        expect(puterEmailUsername('dan@puter.email')).toBe('dan');
+        expect(mixtEmailUsername('dan@mixt.email')).toBe('dan');
     });
 
-    test('an account answers at every Puter domain', () => {
-        expect(puterEmailAddressesOf('dan')).toEqual([
-            'dan@puter.email',
-            'dan@puterstaging.email',
+    test('an account answers at every Mixt domain', () => {
+        expect(mixtEmailAddressesOf('dan')).toEqual([
+            'dan@mixt.email',
+            'dan@mixtstaging.email',
         ]);
     });
 });
@@ -92,14 +92,14 @@ describe('account eligibility', () => {
 
         const owner = await findMailboxOwner(
             server.stores.user,
-            'dan@puter.email',
+            'dan@mixt.email',
         );
         expect(owner?.username).toBe('dan');
         expect(
-            await findMailboxOwner(server.stores.user, 'tmp@puter.email'),
+            await findMailboxOwner(server.stores.user, 'tmp@mixt.email'),
         ).toBeNull();
         expect(
-            await findMailboxOwner(server.stores.user, 'nobody@puter.email'),
+            await findMailboxOwner(server.stores.user, 'nobody@mixt.email'),
         ).toBeNull();
     });
 

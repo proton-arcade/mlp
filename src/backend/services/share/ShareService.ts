@@ -51,7 +51,7 @@ import {
 } from '../metering/enforcement.js';
 import { MANAGE_PERM_PREFIX } from '../permission/consts';
 import { PermissionUtil } from '../permission/permissionUtil.js';
-import { PuterService } from '../types';
+import { MixtService } from '../types';
 
 // -- Types ------------------------------------------------------------
 
@@ -389,7 +389,7 @@ const maskedPathVia = (root: FSEntry, realPath: string): string | null => {
  * satisfies it through the `is-owner` implicator, a delegate through an
  * explicit `manage:fs:<uid>` grant.
  */
-export class ShareService extends PuterService {
+export class ShareService extends MixtService {
     /** Entries awaiting the next retire flush, deduped by uuid. */
     #pendingRetire = new Map<string, FSEntry>();
     /** The in-flight flush, shared by everything buffered for it. */

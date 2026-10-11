@@ -27,13 +27,13 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { v4 as uuidv4 } from 'uuid';
 import { EVENTS_HANDLER_SOURCE_MAX_BYTES } from '../../controllers/events/limits.js';
 import { isHttpError } from '../../core/http/HttpError.js';
-import { setupPuterTestEnv, type PuterTestEnv } from '../../testUtil.js';
+import { setupMixtTestEnv, type MixtTestEnv } from '../../testUtil.js';
 import type { IConfig } from '../../types.js';
 import { hashContent } from './EventHandlerStore.js';
 
 const BOOT_TIMEOUT_MS = 120_000;
 
-let env: PuterTestEnv;
+let env: MixtTestEnv;
 let appUid: string;
 let otherAppUid: string;
 let ownerUserId: number;
@@ -58,7 +58,7 @@ const makeApp = async (owner: number): Promise<string> => {
 };
 
 beforeAll(async () => {
-    env = await setupPuterTestEnv({ events: { enabled: true } } as IConfig);
+    env = await setupMixtTestEnv({ events: { enabled: true } } as IConfig);
     appUid = `app-${uuidv4()}`;
     otherAppUid = `app-${uuidv4()}`;
 

@@ -118,7 +118,7 @@ describe('isLoopbackTarget', () => {
 
     it('rejects remote and LAN destinations', () => {
         expect(isLoopbackTarget('https://evil.example/')).toBe(false);
-        expect(isLoopbackTarget('https://puter.com')).toBe(false);
+        expect(isLoopbackTarget('https://mixt.mpl')).toBe(false);
         expect(isLoopbackTarget('http://192.168.1.5:4000/')).toBe(false);
     });
 
@@ -198,7 +198,7 @@ describe('confirmationSatisfied', () => {
 // dropped. Both directions now go through the builders here, and this closes
 // the loop over the whole contract without needing a browser.
 describe('the AuthMe URL contract, round-tripped', () => {
-    const GUI = 'https://puter.com';
+    const GUI = 'https://mixt.mpl';
     const DEV = 'http://localhost:4000/';
 
     it('survives request → approval → return → sign-in', () => {
@@ -270,7 +270,7 @@ describe('urlTokenParam', () => {
         expect(urlTokenParam(params('token=abc'), true)).toBe('token');
     });
 
-    // Not on a normal deployment: puter.com keeps exactly one URL-token entry
+    // Not on a normal deployment: mixt.mpl keeps exactly one URL-token entry
     // point, so a link can't push a session at it under the other name.
     it('ignores `token` on a normal deployment', () => {
         expect(urlTokenParam(params('token=abc'), false)).toBe(null);
@@ -295,17 +295,17 @@ describe('urlTokenParam', () => {
 
 describe('isRemoteBackendGui', () => {
     it('is false on a normal deployment (GUI served by its own backend)', () => {
-        expect(isRemoteBackendGui('https://puter.com', 'https://puter.com'))
+        expect(isRemoteBackendGui('https://mixt.mpl', 'https://mixt.mpl'))
             .toBe(false);
     });
 
     it('is true for a locally served GUI pointed at a remote backend', () => {
-        expect(isRemoteBackendGui('https://puter.com', 'http://localhost:4000'))
+        expect(isRemoteBackendGui('https://mixt.mpl', 'http://localhost:4000'))
             .toBe(true);
     });
 
     it('distinguishes scheme and port, not just host', () => {
-        expect(isRemoteBackendGui('https://puter.com', 'http://puter.com'))
+        expect(isRemoteBackendGui('https://mixt.mpl', 'http://mixt.mpl'))
             .toBe(true);
         expect(isRemoteBackendGui('http://localhost:4100', 'http://localhost:4000'))
             .toBe(true);
@@ -315,21 +315,21 @@ describe('isRemoteBackendGui', () => {
     // that would redirect a normal page load out to AuthMe.
     it('is false when either origin is missing', () => {
         expect(isRemoteBackendGui(undefined, 'http://localhost:4000')).toBe(false);
-        expect(isRemoteBackendGui('https://puter.com', undefined)).toBe(false);
+        expect(isRemoteBackendGui('https://mixt.mpl', undefined)).toBe(false);
         expect(isRemoteBackendGui('', '')).toBe(false);
     });
 });
 
 describe('shouldUseRemoteAuthme', () => {
     it('is true for the supported setup: a locally served GUI, remote backend', () => {
-        expect(shouldUseRemoteAuthme('https://puter.com', 'http://localhost:4000'))
+        expect(shouldUseRemoteAuthme('https://mixt.mpl', 'http://localhost:4000'))
             .toBe(true);
-        expect(shouldUseRemoteAuthme('https://puter.com', 'http://127.0.0.1:4000'))
+        expect(shouldUseRemoteAuthme('https://mixt.mpl', 'http://127.0.0.1:4000'))
             .toBe(true);
     });
 
     it('is false on a normal deployment', () => {
-        expect(shouldUseRemoteAuthme('https://puter.com', 'https://puter.com'))
+        expect(shouldUseRemoteAuthme('https://mixt.mpl', 'https://mixt.mpl'))
             .toBe(false);
     });
 
@@ -337,17 +337,17 @@ describe('shouldUseRemoteAuthme', () => {
     // alias, `www.`, a staging name — differs from `gui_origin` but must not
     // start accepting `?token=` or auto-redirecting into a grant.
     it('is false for a deployment served under a non-canonical hostname', () => {
-        expect(shouldUseRemoteAuthme('https://puter.com', 'https://www.puter.com'))
+        expect(shouldUseRemoteAuthme('https://mixt.mpl', 'https://www.mixt.mpl'))
             .toBe(false);
-        expect(shouldUseRemoteAuthme('https://puter.com', 'https://staging.puter.com'))
+        expect(shouldUseRemoteAuthme('https://mixt.mpl', 'https://staging.mixt.mpl'))
             .toBe(false);
-        expect(shouldUseRemoteAuthme('https://puter.com', 'http://puter.com'))
+        expect(shouldUseRemoteAuthme('https://mixt.mpl', 'http://mixt.mpl'))
             .toBe(false);
     });
 
     it('is false when either origin is missing', () => {
         expect(shouldUseRemoteAuthme(undefined, 'http://localhost:4000'))
             .toBe(false);
-        expect(shouldUseRemoteAuthme('https://puter.com', undefined)).toBe(false);
+        expect(shouldUseRemoteAuthme('https://mixt.mpl', undefined)).toBe(false);
     });
 });

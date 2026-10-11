@@ -21,10 +21,10 @@
 -- mysql_mig_1 declares. Guarded procedure as mysql_mig_34: a replay sees
 -- DELETE_RULE already CASCADE and does nothing.
 
-DROP PROCEDURE IF EXISTS _puter_subdomains_app_owner_cascade;
+DROP PROCEDURE IF EXISTS _mixt_subdomains_app_owner_cascade;
 
 DELIMITER //
-CREATE PROCEDURE _puter_subdomains_app_owner_cascade()
+CREATE PROCEDURE _mixt_subdomains_app_owner_cascade()
 BEGIN
   DECLARE fk_name VARCHAR(64) DEFAULT NULL;
 
@@ -71,5 +71,5 @@ BEGIN
 END//
 DELIMITER ;
 
-CALL _puter_subdomains_app_owner_cascade();
-DROP PROCEDURE IF EXISTS _puter_subdomains_app_owner_cascade;
+CALL _mixt_subdomains_app_owner_cascade();
+DROP PROCEDURE IF EXISTS _mixt_subdomains_app_owner_cascade;

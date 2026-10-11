@@ -1,9 +1,9 @@
 ---
 title: MonthlyUsage
-description: Object containing user's monthly resource usage information in the Puter ecosystem.
+description: Object containing user's monthly resource usage information in the Mixt OS ecosystem.
 ---
 
-Object containing user's monthly resource usage information in the Puter ecosystem.
+Object containing user's monthly resource usage information in the Mixt OS ecosystem.
 
 ## Attributes
 
@@ -18,7 +18,7 @@ Information about the user's resource allowance and consumption.
 
 Total usage by application. Each key is an application id, and the value is an object with:
 
-- `count` (Number) - Number of Puter API calls per application.
+- `count` (Number) - Number of Mixt OS API calls per application.
 - `total` (Number) - Total resources consumed per application.
 
 #### `usage` (Object)
@@ -31,7 +31,7 @@ Usage information per API. Each key is an API name, and the value is an object w
 
 <div class="info">
 
-Resources in Puter are measured in microcents (e.g., $0.01 = 1,000,000).
+Resources in Mixt OS are measured in microcents (e.g., $0.01 = 1,000,000).
 
 </div>
 

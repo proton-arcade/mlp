@@ -45,7 +45,7 @@ const create_access_token = async ({ label = null, expiresIn = null } = {}) => {
     const resp = await fetch(`${window.api_origin}/auth/create-access-token`, {
         method: 'POST',
         headers: {
-            Authorization: `Bearer ${puter.authToken || window.auth_token}`,
+            Authorization: `Bearer ${mixt.authToken || window.auth_token}`,
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(body),

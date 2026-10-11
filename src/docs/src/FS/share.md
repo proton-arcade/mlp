@@ -1,10 +1,10 @@
 ---
-title: puter.fs.share()
-description: Give another Puter user access to a file or directory in your own storage.
+title: mixt.fs.share()
+description: Give another Mixt OS user access to a file or directory in your own storage.
 platforms: [websites, apps, nodejs, workers]
 ---
 
-This method gives another Puter user access to a file or directory you own, or one you have been given `manage` access to.
+This method gives another Mixt OS user access to a file or directory you own, or one you have been given `manage` access to.
 
 > **What an app can share.** An app never gets more reach than it was given. It
 > can share its own AppData, and files the user specifically granted it, at up
@@ -19,9 +19,9 @@ This method gives another Puter user access to a file or directory you own, or o
 ## Syntax
 
 ```js
-puter.fs.share(path, recipient)
-puter.fs.share(path, recipient, mode)
-puter.fs.share(options)
+mixt.fs.share(path, recipient)
+mixt.fs.share(path, recipient, mode)
+mixt.fs.share(options)
 ```
 
 ## Parameters
@@ -74,7 +74,7 @@ A `Promise` that resolves to an array of share objects, one per recipient/item p
 - `holder` (String) - Username of whoever received it. `null` for a team share and for a link share.
 - `anyone` (Boolean) - Present and `true` on the item's "anyone with the link" share. See below.
 - `inheritedFrom` (String) - Path of the shared ancestor this access comes from, or `null` when the share is on the item itself.
-- `pending` (Boolean) - Present and `true` when the recipient's email has no confirmed Puter account. See below.
+- `pending` (Boolean) - Present and `true` when the recipient's email has no confirmed Mixt OS account. See below.
 - `recipientEmail` (String) - Address a pending share was sent to. Only set when `pending`.
 - `modified` (Number) - Last-modified time of the item, in unix seconds.
 - `size` (Number) - Size of the item in bytes; `null` for a directory.
@@ -88,7 +88,7 @@ If some recipients succeed and others fail, the promise resolves with the ones t
 
 A rejection carries `{ message, code }`. Because each recipient/item pair succeeds or fails on its own, these are the codes of the *pairs* that failed — you only see one as a rejection when every pair failed.
 
-One refusal applies to the whole call instead: handing out access requires a verified phone number or a verified card on the account, on deployments that can verify either. An account on a paid plan is never asked — its card is already on file. The rejection is `phone_verification_required` (or `card_verification_required` where only a card can be verified) and carries `factors`, the verifications the deployment accepts, in the order to offer them. Inside the Puter desktop the user is walked through it and the call is retried on its own. Withdrawing and listing shares never ask for this.
+One refusal applies to the whole call instead: handing out access requires a verified phone number or a verified card on the account, on deployments that can verify either. An account on a paid plan is never asked — its card is already on file. The rejection is `phone_verification_required` (or `card_verification_required` where only a card can be verified) and carries `factors`, the verifications the deployment accepts, in the order to offer them. Inside the Mixt OS desktop the user is walked through it and the call is retried on its own. Withdrawing and listing shares never ask for this.
 
 | `code` | Meaning |
 | --- | --- |
@@ -106,16 +106,16 @@ One refusal applies to the whole call instead: handing out access requires a ver
 
 ## Sharing with anyone with the link
 
-`{ anyone: true }` opens the item to **every signed-in Puter account** that can name it — by the link the desktop offers, by one built with [`getShareLink()`](/FS/getShareLink/), or by its path. It takes `read` or `write`, never `manage`: a link hands out access, not the authority to share onward. An item inside a folder opened this way is reachable the same way.
+`{ anyone: true }` opens the item to **every signed-in Mixt OS account** that can name it — by the link the desktop offers, by one built with [`getShareLink()`](/FS/getShareLink/), or by its path. It takes `read` or `write`, never `manage`: a link hands out access, not the authority to share onward. An item inside a folder opened this way is reachable the same way.
 
 ```js
 // Anyone signed in who has the link can read it.
-const [share] = await puter.fs.share('report.txt', { anyone: true }, 'read');
+const [share] = await mixt.fs.share('report.txt', { anyone: true }, 'read');
 share.anyone;   // true
 share.holder;   // null — there is no one person
 
 // Close it again.
-await puter.fs.unshare('report.txt', { anyone: true });
+await mixt.fs.unshare('report.txt', { anyone: true });
 ```
 
 Three things set it apart from sharing with a person:
@@ -128,19 +128,19 @@ The share shows in [`getShares()`](/FS/getShares/) with `anyone: true` and a `nu
 
 ## Sharing with someone who has no account
 
-A **well-formed** email address with no confirmed Puter account is **invited** rather than refused. The share is recorded and the recipient is emailed, but it grants nothing yet — the returned share carries `pending: true` and a `null` `holder`. An address that could never receive that invite is rejected with `email_not_allowed` instead of becoming an invite nobody can claim.
+A **well-formed** email address with no confirmed Mixt OS account is **invited** rather than refused. The share is recorded and the recipient is emailed, but it grants nothing yet — the returned share carries `pending: true` and a `null` `holder`. An address that could never receive that invite is rejected with `email_not_allowed` instead of becoming an invite nobody can claim.
 
 Access is written when they create an account with that address **and confirm it**. Signing up alone is not enough: until the address is confirmed it is a claim rather than an identity, and honouring it would hand the share to whoever registered it first.
 
 An invite shows up in [`getShares()`](/FS/getShares/) with `pending: true`, and [`unshare()`](/FS/unshare/) cancels it.
 
 ```js
-const [share] = await puter.fs.share('report.txt', 'newcomer@example.com');
+const [share] = await mixt.fs.share('report.txt', 'newcomer@example.com');
 
 if ( share.pending ) {
-    puter.print(`Invited ${share.recipientEmail} — access starts when they join`);
+    mixt.print(`Invited ${share.recipientEmail} — access starts when they join`);
 } else {
-    puter.print(`Shared with ${share.holder}`);
+    mixt.print(`Shared with ${share.holder}`);
 }
 ```
 
@@ -151,15 +151,15 @@ if ( share.pending ) {
 ```html;fs-share
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
             // (1) create a file
-            await puter.fs.write('report.txt', 'Quarterly numbers');
+            await mixt.fs.write('report.txt', 'Quarterly numbers');
 
             // (2) share it, read-only
-            const shares = await puter.fs.share('report.txt', 'friend@example.com');
-            puter.print(`Shared with ${shares[0].holder} as ${shares[0].mode}<br>`);
+            const shares = await mixt.fs.share('report.txt', 'friend@example.com');
+            mixt.print(`Shared with ${shares[0].holder} as ${shares[0].mode}<br>`);
         })()
     </script>
 </body>
@@ -170,16 +170,16 @@ if ( share.pending ) {
 
 ```js
 // An editor can change the file but cannot pass it on.
-await puter.fs.share('report.txt', 'editor@example.com', 'write');
+await mixt.fs.share('report.txt', 'editor@example.com', 'write');
 
 // A manager can edit it AND share it with other people.
-await puter.fs.share('report.txt', 'manager@example.com', 'manage');
+await mixt.fs.share('report.txt', 'manager@example.com', 'manage');
 ```
 
 <strong class="example-title">Share one item with several people</strong>
 
 ```js
-await puter.fs.share({
+await mixt.fs.share({
     path: 'report.txt',
     recipient: ['a@example.com', 'b@example.com'],
     mode: 'read',
@@ -233,6 +233,6 @@ Trash does not bring them back; share it again.
 
 ## Related
 
-- [`puter.fs.unshare()`](/FS/unshare/) - Withdraw access
-- [`puter.fs.getShares()`](/FS/getShares/) - See who can reach an item
-- [`puter.fs.listShared()`](/FS/listShared/) - See what others have shared with you
+- [`mixt.fs.unshare()`](/FS/unshare/) - Withdraw access
+- [`mixt.fs.getShares()`](/FS/getShares/) - See who can reach an item
+- [`mixt.fs.listShared()`](/FS/listShared/) - See what others have shared with you

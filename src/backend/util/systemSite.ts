@@ -25,8 +25,8 @@ import type { UserStore } from '../stores/user/UserStore.js';
 import { isUniqueViolation } from './dbError.js';
 
 // The system sites, reserved from user registration.
-export const APP_ICONS_SUBDOMAIN = 'puter-app-icons';
-export const PROFILES_SUBDOMAIN = 'puter-profiles';
+export const APP_ICONS_SUBDOMAIN = 'mixt-app-icons';
+export const PROFILES_SUBDOMAIN = 'mixt-profiles';
 
 /**
  * Ensure `dirPath` and every directory above it exist and belong to the system

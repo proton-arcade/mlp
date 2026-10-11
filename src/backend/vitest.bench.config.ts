@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// vitest.bench.config.ts - Vitest benchmark configuration for Puter backend
+// vitest.bench.config.ts - Vitest benchmark configuration for Mixt backend
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({

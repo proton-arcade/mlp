@@ -19,14 +19,14 @@
 
 import { v4 as uuidv4 } from 'uuid';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { PuterServer } from '../../server.ts';
+import { MixtServer } from '../../server.ts';
 import { setupTestServer } from '../../testUtil.ts';
 import { decodeCursor } from '../../util/pagination.ts';
 import { checkHandle } from './TeamStore.ts';
 
 describe('TeamStore', () => {
-    let server: PuterServer;
-    let store: PuterServer['stores']['team'];
+    let server: MixtServer;
+    let store: MixtServer['stores']['team'];
     let owner: { id: number };
 
     const makeUser = async (): Promise<{ id: number }> => {
@@ -70,8 +70,8 @@ describe('TeamStore', () => {
         expect(checkHandle('acme-')).toBe('malformed');
         expect(checkHandle('acme--design')).toBe('malformed');
         expect(checkHandle('café')).toBe('malformed');
-        // The point of the list: these read like Puter itself.
-        expect(checkHandle('puter-support')).toBe('reserved');
+        // The point of the list: these read like Mixt itself.
+        expect(checkHandle('mixt-support')).toBe('reserved');
         expect(checkHandle('security')).toBe('reserved');
         expect(checkHandle('admin')).toBe('reserved');
     });

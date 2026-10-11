@@ -30,7 +30,7 @@ import { HttpError, isHttpError } from '../../core/http/HttpError.js';
 import { isOwnHomePath, parseFsPathPermission } from './fsPathPermission.js';
 import { isMissingParentViolation } from '../../util/dbError.js';
 import { Span } from '../../util/span.js';
-import { PuterService } from '../types';
+import { MixtService } from '../types';
 import {
     FLAT_PERM_WARM_TTL_SECONDS,
     MANAGE_PERM_PREFIX,
@@ -99,7 +99,7 @@ export interface GrantMeta {
  *
  * All persistence is delegated to PermissionStore.
  */
-export class PermissionService extends PuterService {
+export class PermissionService extends MixtService {
     private readonly rewriters: PermissionRewriter[] = [];
     private readonly implicators: PermissionImplicator[] = [];
     private readonly exploders: PermissionExploder[] = [];

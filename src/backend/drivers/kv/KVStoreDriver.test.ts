@@ -9,7 +9,7 @@ import {
 } from 'vitest';
 import { Actor, makeActor as buildActor } from '../../core/actor.ts';
 import { runWithContext } from '../../core/context.ts';
-import { PuterServer } from '../../server.ts';
+import { MixtServer } from '../../server.ts';
 import {
     APP_DATA_KV_METHOD_OPS,
     appDataPermission,
@@ -24,7 +24,7 @@ import {
 } from './limits.ts';
 
 describe('KVStoreDriver', () => {
-    let server: PuterServer;
+    let server: MixtServer;
     let target: KVStoreDriver;
 
     beforeAll(async () => {
@@ -63,13 +63,13 @@ describe('KVStoreDriver', () => {
             await target.set({ key, value: [{ score: 2, tags: [] }, 'keep'] });
             await target.update({
                 key,
-                pathAndValueMap: { '[0].name': 'Puter' },
+                pathAndValueMap: { '[0].name': 'Mixt' },
             });
             await target.incr({ key, pathAndAmountMap: { '[0].score': 3 } });
             await target.decr({ key, pathAndAmountMap: { '[0].score': 1 } });
             await target.add({ key, pathAndValueMap: { '[0].tags': ['new'] } });
             expect(await target.get({ key })).toEqual([
-                { name: 'Puter', score: 4, tags: ['new'] },
+                { name: 'Mixt', score: 4, tags: ['new'] },
                 'keep',
             ]);
             expect(await target.remove({ key, paths: ['[0]'] })).toEqual(['keep']);
@@ -694,10 +694,10 @@ describe('KVStoreDriver', () => {
             const res = await inCtx(() =>
                 target.update({
                     key: 'doc',
-                    pathAndValueMap: { name: 'puter' },
+                    pathAndValueMap: { name: 'mixt' },
                 }),
             );
-            expect(res).toMatchObject({ name: 'puter' });
+            expect(res).toMatchObject({ name: 'mixt' });
         });
 
         it('writes nested paths and creates intermediate maps', async () => {

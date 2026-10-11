@@ -1,5 +1,5 @@
 ---
-title: puter.ui.showSaveFilePicker()
+title: mixt.ui.showSaveFilePicker()
 description: Presents a file picker dialog for specifying where and with what name to save a file.
 platforms: [websites, apps]
 ---
@@ -9,9 +9,9 @@ Presents the user with a file picker dialog allowing them to specify where and w
 ## Syntax
 
 ```js
-puter.ui.showSaveFilePicker()
-puter.ui.showSaveFilePicker(content, suggestedName)
-puter.ui.showSaveFilePicker(content, suggestedName, type)
+mixt.ui.showSaveFilePicker()
+mixt.ui.showSaveFilePicker(content, suggestedName)
+mixt.ui.showSaveFilePicker(content, suggestedName, type)
 ```
 
 ## Parameters
@@ -40,7 +40,7 @@ A `Promise` that resolves to an [`FSItem`](/Objects/fsitem) describing the saved
 ```html
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <h1 id="file-name"></h1>
 
     <button id="save-file">Save file</button>
@@ -48,7 +48,7 @@ A `Promise` that resolves to an [`FSItem`](/Objects/fsitem) describing the saved
 
     <script>
         document.getElementById('save-file').addEventListener('click', ()=>{
-            puter.ui.showSaveFilePicker("Hello world! I'm the content of this file.", 'Untitled.txt').then(async (file)=>{
+            mixt.ui.showSaveFilePicker("Hello world! I'm the content of this file.", 'Untitled.txt').then(async (file)=>{
                 // print file name
                 document.getElementById('file-name').innerHTML = file.name;
                 // print file content

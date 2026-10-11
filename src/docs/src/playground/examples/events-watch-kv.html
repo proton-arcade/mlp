@@ -1,25 +1,25 @@
 <html>
 <body>
-    <script src="/puter.js/v2"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // (1) Exactly one key, and separately every key under a prefix.
-            const one = await puter.events.onLocal('kv:cart', ({ event }) =>
-                puter.print(`${event.op}: ${event.key}<br>`));
-            const many = await puter.events.onLocal(
-                `kv:${puter.appID}:cart:*`,
-                ({ event }) => puter.print(`under cart: ${event.key}<br>`));
+            const one = await mixt.events.onLocal('kv:cart', ({ event }) =>
+                mixt.print(`${event.op}: ${event.key}<br>`));
+            const many = await mixt.events.onLocal(
+                `kv:${mixt.appID}:cart:*`,
+                ({ event }) => mixt.print(`under cart: ${event.key}<br>`));
 
             // (2) `cart` reaches the first, `cart:items` only the second.
-            await puter.kv.set('cart', { total: 0 });
-            await puter.kv.set('cart:items', ['apple']);
+            await mixt.kv.set('cart', { total: 0 });
+            await mixt.kv.set('cart:items', ['apple']);
 
             // (3) Cleanup
             setTimeout(async () => {
                 await one.off();
                 await many.off();
-                await puter.kv.del('cart');
-                await puter.kv.del('cart:items');
+                await mixt.kv.del('cart');
+                await mixt.kv.del('cart:items');
             }, 2000);
         })();
     </script>

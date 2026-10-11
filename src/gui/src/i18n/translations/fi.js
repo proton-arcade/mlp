@@ -177,7 +177,7 @@ const fi = {
         // "general (about something)" => "Yleistä" or
         // "military general" => "Kenraali"
 
-        get_a_copy_of_on_puter: 'Hanki \'%%\' -kopio Mixt.com-sivustolta!', // TODO: Very difficult ambiguity due to different case suffix for any possible word that you can substitue here. Can stay as is, but it's not exactly correct.
+        get_a_copy_of_on_mixt: 'Hanki \'%%\' -kopio Mixt.com-sivustolta!', // TODO: Very difficult ambiguity due to different case suffix for any possible word that you can substitue here. Can stay as is, but it's not exactly correct.
 
         get_copy_link: 'Hanki kopiolinkki', // TODO: Ambiguous meaning
         // 'get a copy of a link' => 'Ota Kopio Linkkiin' or
@@ -266,7 +266,7 @@ const fi = {
         picture: 'Kuva',
         pictures: 'Kuvat',
         plural_suffix: 't',
-        powered_by_puter_js: 'Palvelun tarjoaa {{link=docs}}Puter.js{{/link}}',
+        powered_by_mixt_js: 'Palvelun tarjoaa {{link=docs}}Mixt.js{{/link}}',
         preparing: 'Valmistellaan...',
         preparing_for_upload: 'Valmistellaan latausta...',
         print: 'Tulosta',
@@ -282,13 +282,13 @@ const fi = {
         public: 'Julkinen',
         publish: 'Julkaise',
         publish_as_website: 'Julkaise verkkosivustona',
-        puter_description: 'Mixt on yksityisyyttä korostava henkilökohtainen pilvipalvelu, jossa voit säilyttää kaikki tiedostosi, sovelluksesi ja pelisi yhdessä turvallisessa paikassa, ja jotka ovat saatavilla mistä tahansa milloin tahansa.',
+        mixt_description: 'Mixt on yksityisyyttä korostava henkilökohtainen pilvipalvelu, jossa voit säilyttää kaikki tiedostosi, sovelluksesi ja pelisi yhdessä turvallisessa paikassa, ja jotka ovat saatavilla mistä tahansa milloin tahansa.',
         reading_file: 'Luetaan %strong%',
         recent: 'Viimeisimmät',
         recommended: 'Suositellut',
         recover_password: 'Palauta salasanasi',
         refer_friends_c2a:
-      'Saat 1 Gt ilmaista tallennustilaa jokaisesta ystävästä, joka luo ja vahvistaa tilin Puterissa. Myös ystäväsi saa 1 Gt:n ilmaista tallennustilaa!',
+      'Saat 1 Gt ilmaista tallennustilaa jokaisesta ystävästä, joka luo ja vahvistaa tilin Mixtissa. Myös ystäväsi saa 1 Gt:n ilmaista tallennustilaa!',
         refer_friends_social_media_c2a: 'Hanki 1 Gt ilmaista tallennustilaa Mixt.comista!',
         refresh: 'Päivitä',
 
@@ -303,7 +303,7 @@ const fi = {
         replace_all: 'Korvaa kaikki',
         resend_confirmation_code: 'Lähetä vahvistuskoodi Uudelleen',
         reset_colors: 'Palauta värit',
-        restart_puter_confirm: 'Haluatko varmasti käynnistää Puterin uudelleen?',
+        restart_mixt_confirm: 'Haluatko varmasti käynnistää Mixtin uudelleen?',
         restore: 'Palauta',
         save: 'Tallenna',
         saturation: 'Kylläisyys',
@@ -340,7 +340,7 @@ const fi = {
         shortcut_to: 'Pikakuvake',
         show_all_windows: 'Näytä kaikki ikkunat',
         show_hidden: 'Näytä piilotetut',
-        sign_in_with_puter: 'Kirjaudu sisään Puterilla',
+        sign_in_with_mixt: 'Kirjaudu sisään Mixtilla',
         sign_up: 'Rekisteröidy',
         signing_in: 'Kirjaudutaan sisään…',
         size: 'Koko',
@@ -350,7 +350,7 @@ const fi = {
         start: 'Käynnistä',
         status: 'Tila',
         storage_usage: 'Tallennustilan käyttö',
-        storage_puter_used: 'Puterin käyttämä',
+        storage_mixt_used: 'Mixtin käyttämä',
         taking_longer_than_usual:
       'Kestää hieman tavallista kauemmin. Ole hyvä ja odota...',
         task_manager: 'Tehtävienhallinta',
@@ -359,7 +359,7 @@ const fi = {
         taskmgr_header_type: 'Tyyppi',
         terms: 'Ehdot',
         text_document: 'Tekstiasiakirja',
-        tos_fineprint: 'Klikkaamalla \'Luo ilmainen tili\' hyväksyt Puterin {{link=terms}}käyttöehdot{{/link}} ja {{link=privacy}}tietosuojakäytännön{{/link}}.',
+        tos_fineprint: 'Klikkaamalla \'Luo ilmainen tili\' hyväksyt Mixtin {{link=terms}}käyttöehdot{{/link}} ja {{link=privacy}}tietosuojakäytännön{{/link}}.',
         transparency: 'Läpinäkyvyys',
 
         trash: 'Roskakori', // TODO: Ambiguous meaning
@@ -392,8 +392,8 @@ const fi = {
         visibility: 'Näkyvyys',
         yes: 'Kyllä',
         yes_release_it: 'Kyllä, julkaise se',
-        you_have_been_referred_to_puter_by_a_friend:
-      'Kaverisi on kutsunut sinut Puteriin!',
+        you_have_been_referred_to_mixt_by_a_friend:
+      'Kaverisi on kutsunut sinut Mixtiin!',
         zip: 'Zip',
         zipping_file: 'Zipataan %strong%',
 
@@ -564,7 +564,7 @@ const fi = {
         'window_title_public': 'Julkinen',
         'window_title_videos': 'Videot',
         'window_title_pictures': 'Kuvat',
-        'window_title_puter': 'Mixt',
+        'window_title_mixt': 'Mixt',
         'window_folder_empty': 'Tämä kansio on tyhjä',
         'manage_your_subdomains': 'Hallitse aliverkkotunnuksiasi',
         'open_containing_folder': 'Avaa sisältävä kansio',

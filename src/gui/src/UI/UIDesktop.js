@@ -61,7 +61,7 @@ async function UIDesktop (options) {
     let h = '';
 
     // Set up the desktop channel for communication between different tabs in the same browser
-    window.channel = new BroadcastChannel('puter-desktop-channel');
+    window.channel = new BroadcastChannel('mixt-desktop-channel');
     channel.onmessage = function (e) {
     };
 
@@ -76,13 +76,13 @@ async function UIDesktop (options) {
     // Preferences are best-effort: a KV read that fails (offline, rate
     // limited, no usage left on the account) leaves the default in place
     // rather than stopping the desktop from rendering.
-    let toolbar_auto_hide_enabled_val = await puter.kv.get('toolbar_auto_hide_enabled').catch(() => null);
+    let toolbar_auto_hide_enabled_val = await mixt.kv.get('toolbar_auto_hide_enabled').catch(() => null);
     if ( toolbar_auto_hide_enabled_val === 'false' || toolbar_auto_hide_enabled_val === false ) {
         window.toolbar_auto_hide_enabled = false;
     }
 
     // Give Camera and Recorder write permissions to Desktop
-    puter.kv.get('has_set_default_app_user_permissions').then(async (user_permissions) => {
+    mixt.kv.get('has_set_default_app_user_permissions').then(async (user_permissions) => {
         if ( ! user_permissions ) {
             // Camera
             try {
@@ -119,7 +119,7 @@ async function UIDesktop (options) {
             }
 
             // Set flag to true
-            await puter.kv.set('has_set_default_app_user_permissions', true);
+            await mixt.kv.set('has_set_default_app_user_permissions', true);
         }
     // Awaited above so a failed write reaches this: it leaves the flag unset
     // and the whole thing is retried next boot, which is what we want.
@@ -156,7 +156,7 @@ async function UIDesktop (options) {
 
     window.socket.on('connect', function () {
         // console.log('GUI Socket: Connected', window.socket.id);
-        window.socket.emit('puter_is_actually_open');
+        window.socket.emit('mixt_is_actually_open');
     });
 
     window.socket.on('reconnect', function () {
@@ -706,7 +706,7 @@ async function UIDesktop (options) {
             >`;
 
     // Get window sidebar width
-    puter.kv.get('window_sidebar_width').catch(() => null).then(async (val) => {
+    mixt.kv.get('window_sidebar_width').catch(() => null).then(async (val) => {
         let value = parseInt(val);
         // if value is a valid number
         if ( !isNaN(value) && value > 0 ) {
@@ -715,7 +715,7 @@ async function UIDesktop (options) {
     });
 
     // load window sidebar items from KV
-    puter.kv.get('sidebar_items').then(async (val) => {
+    mixt.kv.get('sidebar_items').then(async (val) => {
         window.sidebar_items = val;
     // Catch on the chain rather than the read, so a failure leaves whatever is
     // already there instead of overwriting it with a fallback.
@@ -729,7 +729,7 @@ async function UIDesktop (options) {
     //show_hidden_files
     let show_hidden_files = false;
     try {
-        show_hidden_files = JSON.parse(await puter.kv.get('user_preferences.show_hidden_files'));
+        show_hidden_files = JSON.parse(await mixt.kv.get('user_preferences.show_hidden_files'));
     } catch (e) {
         console.error('Error loading show_hidden_files', e);
     }
@@ -737,7 +737,7 @@ async function UIDesktop (options) {
     // language
     let language = 'en';
     try {
-        language = await puter.kv.get('user_preferences.language');
+        language = await mixt.kv.get('user_preferences.language');
     } catch (e) {
         console.error('Error loading language', e);
     }
@@ -750,7 +750,7 @@ async function UIDesktop (options) {
 
     // update default apps
     {
-        const entries = await puter.kv.list('user_preferences.default_apps.*', true).catch(() => []);
+        const entries = await mixt.kv.list('user_preferences.default_apps.*', true).catch(() => []);
         for ( const entry of entries ) {
             user_preferences[entry.key.substring(17)] = entry.value;
         }
@@ -765,7 +765,7 @@ async function UIDesktop (options) {
     $('.desktop').css('height', `calc(100vh - ${window.taskbar_height + window.toolbar_height}px)`);
 
     // Initialize the preference early
-    puter.kv.get('desktop_icons_hidden').then(async (val) => {
+    mixt.kv.get('desktop_icons_hidden').then(async (val) => {
         window.desktop_icons_hidden = (val === 'true' || val === true);
 
         // Apply the setting immediately if needed
@@ -1110,7 +1110,7 @@ async function UIDesktop (options) {
         // perform readdirs for caching purposes
 
         // home directory
-        puter.fs.readdir({ path: window.home_path, consistency: 'strong' });
+        mixt.fs.readdir({ path: window.home_path, consistency: 'strong' });
 
         // Show welcome window if user hasn't already seen it and hasn't directly navigated to an app
         if ( !window.url_paths[0]?.toLocaleLowerCase() === 'app' || !window.url_paths[1] ) {
@@ -1119,7 +1119,7 @@ async function UIDesktop (options) {
                     // The catch goes on the end of the chain, not on the read:
                     // falling back to null would read as "never seen it" and
                     // show the window to someone who has.
-                    puter.kv.get('has_seen_welcome_window').then(async (val) => {
+                    mixt.kv.get('has_seen_welcome_window').then(async (val) => {
                         if ( val === null ) {
                             await UIWindowWelcome();
                         }
@@ -1213,7 +1213,7 @@ async function UIDesktop (options) {
     // Toolbar
     // ----------------------------------------------------
     // Has user seen the toolbar animation?
-    window.has_seen_toolbar_animation = await puter.kv.get('has_seen_toolbar_animation').catch(() => null) ?? false;
+    window.has_seen_toolbar_animation = await mixt.kv.get('has_seen_toolbar_animation').catch(() => null) ?? false;
 
     let ht = '';
     let style = '';
@@ -1227,7 +1227,7 @@ async function UIDesktop (options) {
 
     ht += `<div class="toolbar hide-scrollbar ${class_name}" style="${style}">`;
     // logo
-    ht += `<div class="toolbar-btn toolbar-puter-logo" title="Mixt" style="margin-left: 10px;"><img src="${(window.gui_env === 'prod') ? '/dist/images/mixt-logo.svg' : '/src/images/mixt-logo.svg'}" draggable="false" style="display:block; width:17px; height:17px"></div>`;
+    ht += `<div class="toolbar-btn toolbar-mixt-logo" title="Mixt" style="margin-left: 10px;"><img src="${(window.gui_env === 'prod') ? '/dist/images/mixt-logo.svg' : '/src/images/mixt-logo.svg'}" draggable="false" style="display:block; width:17px; height:17px"></div>`;
 
     // spacer to push items to the right
     ht += '<div class="toolbar-spacer"></div>';
@@ -1285,7 +1285,7 @@ async function UIDesktop (options) {
 
     //--------------------------------------------------------------------------------------
     // Determine if an app was launched from URL
-    // i.e. https://puter.com/app/<app_name>
+    // i.e. https://mixt.mpl/app/<app_name>
     //--------------------------------------------------------------------------------------
     if ( window.url_paths[0]?.toLocaleLowerCase() === 'app' && window.url_paths[1] ) {
         // If app metadata was already fetched early (for fullpage detection), reuse it
@@ -1293,17 +1293,17 @@ async function UIDesktop (options) {
             window.app_launched_from_url = window.url_paths[1];
             // get app metadata
             try {
-                window.app_launched_from_url = await puter.apps.get(window.url_paths[1], { icon_size: 64 });
+                window.app_launched_from_url = await mixt.apps.get(window.url_paths[1], { icon_size: 64 });
                 window.is_fullpage_mode = window.app_launched_from_url.metadata?.fullpage_on_landing ?? window.is_fullpage_mode ?? false;
             } catch (e) {
                 console.error('UIDesktop app path launch error', e);
             }
         }
 
-        // get query params, any param that doesn't start with 'puter.' will be passed to the app
+        // get query params, any param that doesn't start with 'mixt.' will be passed to the app
         window.app_query_params = {};
         for ( let [key, value] of window.url_query_params ) {
-            if ( ! key.startsWith('puter.') )
+            if ( ! key.startsWith('mixt.') )
             {
                 window.app_query_params[key] = value;
             }
@@ -1433,7 +1433,7 @@ async function UIDesktop (options) {
         }
 
         if ( ! window.has_seen_toolbar_animation ) {
-            puter.kv.set({
+            mixt.kv.set({
                 key: 'has_seen_toolbar_animation',
                 value: true,
             }).catch(err => console.warn('Could not save has_seen_toolbar_animation:', err));
@@ -1716,7 +1716,7 @@ async function UIDesktop (options) {
 
     //--------------------------------------------------------------------------------------
     // Trying to view a user's public folder?
-    // i.e. https://puter.com/@<username>
+    // i.e. https://mixt.mpl/@<username>
     //--------------------------------------------------------------------------------------
     const url_paths = window.location.pathname.split('/').filter(element => element);
     if ( window.url_paths[0]?.startsWith('@') ) {
@@ -1738,7 +1738,7 @@ async function UIDesktop (options) {
 
         let stat;
         try {
-            stat = await puter.fs.stat({ path: item_path, consistency: 'eventual' });
+            stat = await mixt.fs.stat({ path: item_path, consistency: 'eventual' });
         } catch ( e ) {
             window.history.replaceState(null, document.title, '/desktop');
             UIAlert({
@@ -1797,7 +1797,7 @@ async function UIDesktop (options) {
             });
 
             // Note: I'm not adding unzipping logic here. We'll wait until
-            //       we've refactored open_item so that Puter can have a
+            //       we've refactored open_item so that Mixt can have a
             //       properly-reusable open function.
             if ( suggested_apps.length !== 0 ) {
                 launch_app({
@@ -1831,7 +1831,7 @@ async function UIDesktop (options) {
 
     /** Open an item somebody shared, addressed as `/<owner>/<uuid>/<name>`. */
     async function open_shared_item (shared_path) {
-        const stat = await resolve_shared_item(puter.fs, shared_path);
+        const stat = await resolve_shared_item(mixt.fs, shared_path);
         if ( ! stat ) {
             UIAlert({
                 message: i18n('error_user_or_path_not_found'),
@@ -1856,7 +1856,7 @@ async function UIDesktop (options) {
      */
     async function handle_shared_link (shared_path) {
         if ( window.user?.is_temp ) {
-            const stat = await resolve_shared_item(puter.fs, shared_path);
+            const stat = await resolve_shared_item(mixt.fs, shared_path);
             if ( stat ) {
                 clear_shared_param();
                 await open_path_target(stat.path ?? shared_path, stat);
@@ -1876,7 +1876,7 @@ async function UIDesktop (options) {
 
     //--------------------------------------------------------------------------------------
     // Opening an item someone shared, on the desktop
-    // i.e. https://puter.com/desktop?shared=%2F<owner>%2F<uuid>%2F<name>
+    // i.e. https://mixt.mpl/desktop?shared=%2F<owner>%2F<uuid>%2F<name>
     // (the same link at the root lands in the dashboard's Shared view instead)
     //--------------------------------------------------------------------------------------
     if ( window.url_query_params.has(SHARED_PATH_PARAM) ) {
@@ -1885,7 +1885,7 @@ async function UIDesktop (options) {
 
     //--------------------------------------------------------------------------------------
     // Direct download link
-    // i.e. https://puter.com/?download=<file_url> or https://puter.com/desktop?download=<file_url>
+    // i.e. https://mixt.mpl/?download=<file_url> or https://mixt.mpl/desktop?download=<file_url>
     //--------------------------------------------------------------------------------------
     const is_bare_desktop_path = window.url_paths.length === 0
         || (window.url_paths.length === 1 && window.url_paths[0]?.toLocaleLowerCase() === 'desktop');
@@ -1930,7 +1930,7 @@ async function UIDesktop (options) {
         (async () => {
             try {
                 // download the file
-                const response = await puter.net.fetch(url, {
+                const response = await mixt.net.fetch(url, {
                     signal: abort_controller.signal,
                 });
 
@@ -1972,7 +1972,7 @@ async function UIDesktop (options) {
                 progwin?.set_status(i18n('uploading_file', file_name));
 
                 // upload to user's desktop
-                await puter.fs.write(`~/Desktop/${file_name}`, blob, {
+                await mixt.fs.write(`~/Desktop/${file_name}`, blob, {
                     dedupeName: true,
                     progress: (_, percent) => {
                         // update progressbar
@@ -2097,7 +2097,7 @@ $(document).on('contextmenu taphold', '.toolbar', function (event) {
                     window.toolbar_auto_hide_enabled = !window.toolbar_auto_hide_enabled;
 
                     // Save the preference
-                    puter.kv.set('toolbar_auto_hide_enabled', window.toolbar_auto_hide_enabled.toString())
+                    mixt.kv.set('toolbar_auto_hide_enabled', window.toolbar_auto_hide_enabled.toString())
                         .catch(err => console.warn('Could not save toolbar_auto_hide_enabled:', err));
 
                     // If auto-hide was just disabled and toolbar is currently hidden, show it
@@ -2325,7 +2325,7 @@ $(document).on('click', '.search-btn', function () {
     UIWindowSearch();
 });
 
-$(document).on('click', '.toolbar-puter-logo', function () {
+$(document).on('click', '.toolbar-mixt-logo', function () {
     window.open('/dashboard/#home', '_blank');
 });
 
@@ -2576,7 +2576,7 @@ window.toggleDesktopIcons = function () {
     }
 
     // Save preference
-    puter.kv.set('desktop_icons_hidden', window.desktop_icons_hidden.toString())
+    mixt.kv.set('desktop_icons_hidden', window.desktop_icons_hidden.toString())
         .catch(err => console.warn('Could not save desktop_icons_hidden:', err));
 };
 

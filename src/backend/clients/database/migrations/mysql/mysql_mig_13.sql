@@ -20,16 +20,16 @@
 -- `requires_phone_verification` gates account use for low-reputation signups
 -- (not indexed, mirroring `requires_email_confirmation`).
 --
--- Idempotent: column adds use _puter_add_col (defined in mig_1, which leaves it
+-- Idempotent: column adds use _mixt_add_col (defined in mig_1, which leaves it
 -- resident for later migrations); the index add is guarded against
 -- INFORMATION_SCHEMA.STATISTICS so the directory replays safely.
 
-CALL _puter_add_col('user', 'phone', '`phone` varchar(20) DEFAULT NULL');
-CALL _puter_add_col('user', 'requires_phone_verification', '`requires_phone_verification` tinyint(1) NOT NULL DEFAULT ''0''');
+CALL _mixt_add_col('user', 'phone', '`phone` varchar(20) DEFAULT NULL');
+CALL _mixt_add_col('user', 'requires_phone_verification', '`requires_phone_verification` tinyint(1) NOT NULL DEFAULT ''0''');
 
-DROP PROCEDURE IF EXISTS _puter_add_user_phone_index;
+DROP PROCEDURE IF EXISTS _mixt_add_user_phone_index;
 DELIMITER //
-CREATE PROCEDURE _puter_add_user_phone_index()
+CREATE PROCEDURE _mixt_add_user_phone_index()
 BEGIN
   IF NOT EXISTS (
     SELECT 1 FROM INFORMATION_SCHEMA.STATISTICS
@@ -42,6 +42,6 @@ BEGIN
 END//
 DELIMITER ;
 
-CALL _puter_add_user_phone_index();
+CALL _mixt_add_user_phone_index();
 
-DROP PROCEDURE IF EXISTS _puter_add_user_phone_index;
+DROP PROCEDURE IF EXISTS _mixt_add_user_phone_index;

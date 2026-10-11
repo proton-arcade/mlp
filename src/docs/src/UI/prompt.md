@@ -1,16 +1,16 @@
 ---
-title: puter.ui.prompt()
-description: Displays a prompt dialog by Puter.
+title: mixt.ui.prompt()
+description: Displays a prompt dialog by Mixt OS.
 platforms: [ websites, apps]
 ---
 
-Displays a prompt dialog by Puter. This will block the parent window until the user responds by pressing a button.
+Displays a prompt dialog by Mixt OS. This will block the parent window until the user responds by pressing a button.
 
 ## Syntax
 ```js
-puter.ui.prompt()
-puter.ui.prompt(message)
-puter.ui.prompt(message, placeholder)
+mixt.ui.prompt()
+mixt.ui.prompt(message)
+mixt.ui.prompt(message, placeholder)
 ```
 
 ## Parameters
@@ -29,9 +29,9 @@ A `Promise` that resolves to the value of the input field when the user presses 
 ```html;ui-prompt
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
-        puter.ui.prompt('Please enter your name:', 'John Doe').then((resp) => {
+        mixt.ui.prompt('Please enter your name:', 'John Doe').then((resp) => {
             // print user's response to console
             console.log(resp);
         });

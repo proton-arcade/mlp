@@ -20,8 +20,8 @@
 import type { Actor } from '../../core/actor.js';
 import { runWithContext } from '../../core/context.js';
 import { HttpError } from '../../core/http/HttpError.js';
-import type { puterClients } from '../../clients/index.js';
-import type { puterDrivers } from '../../drivers/index.js';
+import type { mixtClients } from '../../clients/index.js';
+import type { mixtDrivers } from '../../drivers/index.js';
 import {
     INTERNAL_ADMISSION_BYPASS,
     INTERNAL_DEPLOY_TARGET,
@@ -31,14 +31,14 @@ import {
     EVENTS_HANDLED_HEADER,
     EVENTS_INVOKE_PATH,
 } from '../../clients/events/EventsWorkerInvokerClient.js';
-import type { puterServices } from '../../services/index.js';
+import type { mixtServices } from '../../services/index.js';
 import {
     eventsInvokeKey,
     eventsWorkerScope,
     eventsWorkerScript,
 } from '../../services/events/workerRuntime.js';
 import { generateEventsWorkerSource } from '../../services/events/workerSource.js';
-import type { puterStores } from '../../stores/index.js';
+import type { mixtStores } from '../../stores/index.js';
 import type { IConfig, LayerInstances } from '../../types.js';
 import { EVENTS_WORKER_DEPLOYS_PER_HOUR } from './limits.js';
 
@@ -58,10 +58,10 @@ export type EventsDeployOutcome =
 
 interface DeployLayers {
     config: IConfig;
-    clients: LayerInstances<typeof puterClients>;
-    stores: LayerInstances<typeof puterStores>;
-    services: LayerInstances<typeof puterServices>;
-    drivers: LayerInstances<typeof puterDrivers>;
+    clients: LayerInstances<typeof mixtClients>;
+    stores: LayerInstances<typeof mixtStores>;
+    services: LayerInstances<typeof mixtServices>;
+    drivers: LayerInstances<typeof mixtDrivers>;
 }
 
 /**
@@ -301,7 +301,7 @@ export class LocalEventsInvokeTransport {
                     method: 'POST',
                     headers: {
                         'content-type': 'application/json',
-                        'x-puter-events-key': call.key,
+                        'x-mixt-events-key': call.key,
                     },
                     body: call.body,
                 },

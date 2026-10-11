@@ -36,7 +36,7 @@ import {
 } from '../../controllers/events/limits.js';
 import { DEFAULT_FREE_SUBSCRIPTION } from '../metering/consts.js';
 import { makeActor } from '../../core/actor.js';
-import { setupPuterTestEnv, type PuterTestEnv } from '../../testUtil.js';
+import { setupMixtTestEnv, type MixtTestEnv } from '../../testUtil.js';
 import type { IConfig } from '../../types.js';
 import { appSocketRoom } from '../socket/SocketService.js';
 import { EVENTS_BACKGROUND_PERMISSION } from './authorization.js';
@@ -45,7 +45,7 @@ import type { DeliveryEnvelope } from './EventsService.js';
 const BOOT_TIMEOUT_MS = 120_000;
 const TABLE = 'event_subscriptions';
 
-let env: PuterTestEnv;
+let env: MixtTestEnv;
 let userId: number;
 let username: string;
 let anchor: string;
@@ -188,7 +188,7 @@ const quiet = () =>
     );
 
 beforeAll(async () => {
-    env = await setupPuterTestEnv({
+    env = await setupMixtTestEnv({
         events: { enabled: true },
         // Seeded accounts carry no email, which the plan machinery reads as a
         // temporary account — and a temporary account holds no durable rows.
@@ -895,10 +895,10 @@ describe('a durable row across a share', () => {
 });
 
 describe('with events switched off', () => {
-    let off: PuterTestEnv;
+    let off: MixtTestEnv;
 
     beforeAll(async () => {
-        off = await setupPuterTestEnv();
+        off = await setupMixtTestEnv();
     }, BOOT_TIMEOUT_MS);
 
     afterAll(async () => {
@@ -946,7 +946,7 @@ describe('with events switched off', () => {
  * it wants to be a registered one.
  */
 describe('what a plan lets an account hold', () => {
-    let tiered: PuterTestEnv;
+    let tiered: MixtTestEnv;
     let tieredUserId: number;
     let tieredAnchor: string;
     let tieredApp: { uid: string; token: string };
@@ -986,7 +986,7 @@ describe('what a plan lets an account hold', () => {
     };
 
     beforeAll(async () => {
-        tiered = await setupPuterTestEnv({
+        tiered = await setupMixtTestEnv({
             events: { enabled: true },
         } as IConfig);
         const user = await tiered.server.stores.user.getByUsername(

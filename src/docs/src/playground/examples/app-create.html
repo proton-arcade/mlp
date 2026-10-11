@@ -1,17 +1,17 @@
 <html>
 <body>
-    <script src="/puter.js/v2"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // (1) Generate a random app name
-            let appName = puter.randName();
+            let appName = mixt.randName();
 
             // (2) Create the app and prints its UID to the page
-            let app = await puter.apps.create(appName, "https://example.com");
-            puter.print(`Created app "${app.name}". UID: ${app.uid}`);
+            let app = await mixt.apps.create(appName, "https://example.com");
+            mixt.print(`Created app "${app.name}". UID: ${app.uid}`);
 
             // (3) Delete the app (cleanup)
-            await puter.apps.delete(appName);
+            await mixt.apps.delete(appName);
         })();
     </script>
 </body>

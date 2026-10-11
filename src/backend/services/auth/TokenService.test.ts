@@ -308,7 +308,7 @@ describe('TokenService.verify — retired v1 tokens', () => {
 
 describe('TokenService.verify — algorithm pinning', () => {
     // jsonwebtoken has always defaulted to HS256 for string secrets, so every
-    // token Puter mints is HS256 — pinning `algorithms: ['HS256']` must not
+    // token Mixt mints is HS256 — pinning `algorithms: ['HS256']` must not
     // invalidate a live token.
     it('existing tokens keep working: minted tokens are HS256 and verify', () => {
         const svc = createTokenService();

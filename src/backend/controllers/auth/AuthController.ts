@@ -50,7 +50,7 @@ import {
     createUserProtectedGate,
     createWebSessionActorGate,
 } from '../../core/http/middleware/userProtected.js';
-import type { PuterRouter } from '../../core/http/PuterRouter.js';
+import type { MixtRouter } from '../../core/http/MixtRouter.js';
 import {
     ROUTES_METADATA_KEY,
     type CollectedRoute,
@@ -125,7 +125,7 @@ import type { AclMode } from '../../services/acl/ACLService';
 import type { ReauthReason } from '../../services/auth/AuthService';
 import { normalizeAbsolutePath } from '../../services/fs/resolveNode.js';
 import type { FSEntry } from '../../stores/fs/FSEntry.js';
-import { PuterController } from '../types.js';
+import { MixtController } from '../types.js';
 import { isServerUserAllowed } from '../../util/serverWhitelist';
 
 export const USERNAME_REGEX = /^\w{1,}$/;
@@ -319,7 +319,7 @@ const SMS_SEND_ERROR_TTL_SECONDS = 7 * 24 * 60 * 60;
  * so the rest of the routes register normally.
  */
 @Controller('')
-export class AuthController extends PuterController {
+export class AuthController extends MixtController {
     @Post('/login/wait', {
         subdomain: ['api'],
         rateLimit: [
@@ -458,7 +458,7 @@ export class AuthController extends PuterController {
     @Post('/login', {
         // Returns a full session token in the response body. Reflected CORS
         // would otherwise let any page trade a password for that token and
-        // read it — third-party sign-in goes through `puter.auth.signIn()`,
+        // read it — third-party sign-in goes through `mixt.auth.signIn()`,
         // whose popup runs on this origin and yields an app-scoped token.
         guiOriginOnly: true,
         captcha: true,
@@ -902,7 +902,7 @@ export class AuthController extends PuterController {
         }
 
         // Only the shape is judged here; whether the code is honored is up to
-        // `puter.signup-bonus.validate`, after the abuse checks below.
+        // `mixt.signup-bonus.validate`, after the abuse checks below.
         let bonusCode: string | null = null;
         if (!is_temp && !isAbsentBonusCode(body.bonusCode)) {
             if (typeof body.bonusCode !== 'string')
@@ -1056,7 +1056,7 @@ export class AuthController extends PuterController {
         const validateMeta: EventMetadata = {};
         try {
             await this.clients.event?.emitAndWait(
-                'puter.signup.validate',
+                'mixt.signup.validate',
                 validateEvent,
                 validateMeta,
             );
@@ -1362,7 +1362,7 @@ export class AuthController extends PuterController {
         // consumers (mailchimp sync, welcome email, etc.) key off it.
         try {
             this.clients.event?.emit(
-                'puter.signup.success' as never,
+                'mixt.signup.success' as never,
                 {
                     user_id: user!.id,
                     user_uuid: user!.uuid,
@@ -1466,12 +1466,12 @@ export class AuthController extends PuterController {
         rateLimit: SESSION_LIMIT,
     })
     async handleLogout(req: Request, res: Response): Promise<void> {
-        // Clear the session cookie + `puter_token_v2`. Nothing issues the
+        // Clear the session cookie + `mixt_token_v2`. Nothing issues the
         // latter any more (it came from the retired token migration), but
         // authProbe still reads it as a fallback, so a value left in a
         // browser would re-authenticate the next request.
-        res.clearCookie(this.config.cookie_name ?? 'puter_token');
-        res.clearCookie('puter_token_v2');
+        res.clearCookie(this.config.cookie_name ?? 'mixt_token');
+        res.clearCookie('mixt_token_v2');
         // Drop any step-up elevation too, so it can't reactivate on a shared
         // machine.
         res.clearCookie(STEP_UP_COOKIE_NAME, {
@@ -1951,7 +1951,7 @@ export class AuthController extends PuterController {
             : {};
 
         // Abuse caps live ENTIRELY in a listening abuse extension, consulted
-        // via `puter.phone-verification.check`. The backend ships no thresholds
+        // via `mixt.phone-verification.check`. The backend ships no thresholds
         // or detection of its own (so none of it is readable in the open-source
         // repo): it forwards the user / number / ip, and the extension decides
         // `allowed` plus an opaque `reason` (per-account + per-number send
@@ -1970,7 +1970,7 @@ export class AuthController extends PuterController {
         };
         try {
             await this.clients.event?.emitAndWait(
-                'puter.phone-verification.check',
+                'mixt.phone-verification.check',
                 abuseCheck,
                 {},
             );
@@ -2100,7 +2100,7 @@ export class AuthController extends PuterController {
         // successful send, so an upstream error never burns quota.
         try {
             this.clients.event?.emit(
-                'puter.phone-verification.sent' as never,
+                'mixt.phone-verification.sent' as never,
                 {
                     user_id: user.id,
                     user_uid: user.uuid,
@@ -2240,7 +2240,7 @@ export class AuthController extends PuterController {
 
     /**
      * Start card verification for the calling user. Pure mechanism: the
-     * endpoint emits `puter.card-verification.setup` and a payments extension
+     * endpoint emits `mixt.card-verification.setup` and a payments extension
      * fills in the client credentials — the OSS backend holds no provider
      * knowledge or config. Phone verification (when required) must be completed
      * first; the ordering is enforced here so a client can't skip the cheaper
@@ -2306,7 +2306,7 @@ export class AuthController extends PuterController {
         };
         try {
             await this.clients.event?.emitAndWait(
-                'puter.card-verification.setup',
+                'mixt.card-verification.setup',
                 setupEvent,
                 {},
             );
@@ -2363,7 +2363,7 @@ export class AuthController extends PuterController {
      * Complete card verification. The client confirms the setup intent with the
      * payment provider directly, then posts the resulting id here; the payments
      * extension checks it (and applies its own abuse limits) via
-     * `puter.card-verification.confirm`. On success the gate clears exactly
+     * `mixt.card-verification.confirm`. On success the gate clears exactly
      * like `/confirm-phone` clears the phone gate.
      */
     @Post('/card-verification/confirm', {
@@ -2426,7 +2426,7 @@ export class AuthController extends PuterController {
         };
         try {
             await this.clients.event?.emitAndWait(
-                'puter.card-verification.confirm',
+                'mixt.card-verification.confirm',
                 confirmEvent,
                 {},
             );
@@ -3082,7 +3082,7 @@ export class AuthController extends PuterController {
                         }
                     ).sendRaw({
                         to: user.email,
-                        subject: 'Your Puter email change was requested',
+                        subject: 'Your Mixt email change was requested',
                         text: `A change to ${new_email} was requested on your account. If this wasn't you, please contact support.`,
                     });
                 } catch (e) {
@@ -3870,7 +3870,7 @@ export class AuthController extends PuterController {
     // -- Permission revokes ------------------------------------------
 
     /**
-     * @deprecated Use `puter.fs.unshare()`. Kept for direct HTTP callers:
+     * @deprecated Use `mixt.fs.unshare()`. Kept for direct HTTP callers:
      *   access left behind by an older client has to stay withdrawable.
      */
     @Post('/auth/revoke-user-user', {
@@ -3988,7 +3988,7 @@ export class AuthController extends PuterController {
                 legacyCode: 'bad_request',
             });
         }
-        // As grant and revoke; `puter.perms.check` splits a longer list.
+        // As grant and revoke; `mixt.perms.check` splits a longer list.
         if (permissions.length > MAX_PERMISSIONS_PER_REQUEST) {
             throw new HttpError(400, 'Too many `permissions`', {
                 legacyCode: 'bad_request',
@@ -4441,7 +4441,7 @@ export class AuthController extends PuterController {
                 name?: string | null;
             };
             this.clients.event?.emit(
-                'puter.app.authenticated' as never,
+                'mixt.app.authenticated' as never,
                 {
                     app_uid,
                     app: {
@@ -4908,7 +4908,7 @@ export class AuthController extends PuterController {
             user,
             req.actor.session.uid,
         );
-        res.cookie(this.config.cookie_name ?? 'puter_token', sessionToken, {
+        res.cookie(this.config.cookie_name ?? 'mixt_token', sessionToken, {
             ...sessionCookieFlags(this.config),
             httpOnly: true,
         });
@@ -4990,9 +4990,9 @@ export class AuthController extends PuterController {
         // A browser reads its elevation back from the httpOnly cookie and never
         // needs the raw value; handing it to page JS would put the second factor
         // within reach of an XSS. API clients have no cookie jar, so they get the
-        // token to send back as `x-puter-elevation`. Both paths proved the same
+        // token to send back as `x-mixt-elevation`. Both paths proved the same
         // password/TOTP — this only avoids needless exposure, it isn't a gate.
-        const cookieName = this.config.cookie_name ?? 'puter_token';
+        const cookieName = this.config.cookie_name ?? 'mixt_token';
         const usedSessionCookie =
             !!req.token && req.token === req.cookies?.[cookieName];
         res.json(
@@ -5037,9 +5037,9 @@ export class AuthController extends PuterController {
                 { legacyCode: 'forbidden' },
             );
         }
-        res.clearCookie(this.config.cookie_name ?? 'puter_token');
-        res.clearCookie('puter_token_v2');
-        res.clearCookie('puter_revalidation');
+        res.clearCookie(this.config.cookie_name ?? 'mixt_token');
+        res.clearCookie('mixt_token_v2');
+        res.clearCookie('mixt_revalidation');
         res.clearCookie(STEP_UP_COOKIE_NAME, {
             ...(this.config.domain ? { domain: this.config.domain } : {}),
         });
@@ -5050,7 +5050,7 @@ export class AuthController extends PuterController {
     // -- registerRoutes override -------------------------------------
     //
     // The `@Controller('')` decorator would normally install a default
-    // `registerRoutes` walker that iterates `prototype[__puterRoutes]`.
+    // `registerRoutes` walker that iterates `prototype[__mixtRoutes]`.
     // We override it here so we can ALSO wire the
     // `/user-protected/*` (and `/user-protected/delete-own-user`) routes
     // whose `middleware: createUserProtectedGate(...)` argument is
@@ -5060,7 +5060,7 @@ export class AuthController extends PuterController {
     // The first half of this method is a transcription of the default
     // walker (see core/http/decorators.ts → Controller). The second
     // half adds the imperative routes that need the per-instance gate.
-    override registerRoutes(router: PuterRouter): void {
+    override registerRoutes(router: MixtRouter): void {
         const proto = Object.getPrototypeOf(this) as {
             [ROUTES_METADATA_KEY]?: CollectedRoute[];
         };
@@ -5086,7 +5086,7 @@ export class AuthController extends PuterController {
                 path: RoutePath,
                 options: RouteOptions,
                 handler: RequestHandler,
-            ) => PuterRouter;
+            ) => MixtRouter;
             routerMethod.call(router, r.path, r.options, bound);
         }
 
@@ -5599,7 +5599,7 @@ export class AuthController extends PuterController {
             await this.services.auth.createSessionToken(user as never, meta);
 
         // HTTP-only cookie gets the session token
-        res.cookie(this.config.cookie_name ?? 'puter_token', sessionToken, {
+        res.cookie(this.config.cookie_name ?? 'mixt_token', sessionToken, {
             ...sessionCookieFlags(this.config),
             httpOnly: true,
         });

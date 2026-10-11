@@ -38,7 +38,7 @@ vi.mock('../../util/serverWhitelist.js', async (importOriginal) => ({
 import { makeActor, type Actor } from '../../core/actor.js';
 import { runWithContext } from '../../core/context.js';
 import { FULL_API_ACCESS } from '../permission/consts.js';
-import type { PuterServer } from '../../server.js';
+import type { MixtServer } from '../../server.js';
 import {
     allocateEphemeralPort,
     createTestUser,
@@ -327,7 +327,7 @@ describe('socketRoomsFor', () => {
 // -- Live socket.io integration --------------------------------------
 
 describe('SocketService (live socket.io)', () => {
-    let server: PuterServer;
+    let server: MixtServer;
     let socketService: SocketService;
     let serverUrl: string;
     let port: number;
@@ -559,7 +559,7 @@ describe('SocketService (live socket.io)', () => {
             server.clients.event.on('web.socket.user-connected', handler);
         });
 
-        socket.emit('puter_is_actually_open');
+        socket.emit('mixt_is_actually_open');
         await announced;
         socket.disconnect();
     });
@@ -822,7 +822,7 @@ describe('SocketService (live socket.io)', () => {
 // -- Event-bus fan-out ------------------------------------------------
 
 describe('SocketService — outer.gui fan-out', () => {
-    let server: PuterServer;
+    let server: MixtServer;
     let socketService: SocketService;
 
     beforeAll(async () => {

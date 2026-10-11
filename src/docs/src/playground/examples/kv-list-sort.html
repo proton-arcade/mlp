@@ -1,20 +1,20 @@
 <html>
 <body>
-    <script src="/puter.js/v2"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
-            await puter.kv.set('log:2025-03-15T10:00:00Z', { msg: 'third' });
-            await puter.kv.set('log:2025-01-01T00:00:00Z', { msg: 'first' });
-            await puter.kv.set('log:2025-02-14T08:00:00Z', { msg: 'second' });
+            await mixt.kv.set('log:2025-03-15T10:00:00Z', { msg: 'third' });
+            await mixt.kv.set('log:2025-01-01T00:00:00Z', { msg: 'first' });
+            await mixt.kv.set('log:2025-02-14T08:00:00Z', { msg: 'second' });
 
-            const logs = await puter.kv.list('log:*');
-            puter.print('Sorted keys: <br/>');
-            puter.print(logs.join('<br/>'));
+            const logs = await mixt.kv.list('log:*');
+            mixt.print('Sorted keys: <br/>');
+            mixt.print(logs.join('<br/>'));
 
             // Cleanup
-            await puter.kv.del('log:2025-03-15T10:00:00Z');
-            await puter.kv.del('log:2025-01-01T00:00:00Z');
-            await puter.kv.del('log:2025-02-14T08:00:00Z');
+            await mixt.kv.del('log:2025-03-15T10:00:00Z');
+            await mixt.kv.del('log:2025-01-01T00:00:00Z');
+            await mixt.kv.del('log:2025-02-14T08:00:00Z');
         })();
     </script>
 </body>

@@ -1,16 +1,16 @@
 ---
-title: puter.auth.getProfilePicture()
+title: mixt.auth.getProfilePicture()
 description: Read a user's profile picture, returning null when unavailable.
 platforms: [websites, apps, nodejs, workers]
 ---
 
-Returns the `picture` field of a user's profile (see [`puter.auth.getProfile()`](/Auth/getProfile/)). A user can always read their own picture. Another user's picture is available only while that user is on a paid plan.
+Returns the `picture` field of a user's profile (see [`mixt.auth.getProfile()`](/Auth/getProfile/)). A user can always read their own picture. Another user's picture is available only while that user is on a paid plan.
 
 ## Syntax
 
 ```js
-puter.auth.getProfilePicture();
-puter.auth.getProfilePicture(username);
+mixt.auth.getProfilePicture();
+mixt.auth.getProfilePicture(username);
 ```
 
 ## Parameters
@@ -32,14 +32,14 @@ When signed out with no `username`, it resolves to `null` without opening a sign
 ```html;auth-get-profile-picture
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <button id="show-picture">Show my profile picture</button>
     <p id="status"></p>
     <img id="picture" alt="Your profile picture" width="96" height="96" hidden>
     <script>
         document.getElementById('show-picture').addEventListener('click', async () => {
-            if (!puter.auth.isSignedIn()) await puter.auth.signIn();
-            const picture = await puter.auth.getProfilePicture();
+            if (!mixt.auth.isSignedIn()) await mixt.auth.signIn();
+            const picture = await mixt.auth.getProfilePicture();
             const image = document.getElementById('picture');
             image.hidden = !picture;
             if (picture) image.src = picture;

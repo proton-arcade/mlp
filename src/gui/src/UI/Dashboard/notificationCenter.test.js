@@ -125,7 +125,7 @@ describe('toEntry', () => {
     });
 
     it('leaves out worker notifications, listed or pushed', () => {
-        const worker = { title: 'Successfully deployed https://x.puter.work', type: 'app.worker.deployed' };
+        const worker = { title: 'Successfully deployed https://x.mixt.work', type: 'app.worker.deployed' };
         expect(toEntry({ uid: 'a', value: worker, created_at: '2026-08-27 12:00:00' }, NOW)).toBeNull();
         expect(toEntry({ uid: 'b', notification: worker }, NOW)).toBeNull();
         expect(toEntry({ uid: 'c', notification: { title: 'Failed to deploy x!', type: 'app.worker.deployFailed' } }, NOW)).toBeNull();
@@ -133,7 +133,7 @@ describe('toEntry', () => {
     });
 
     it('still leaves out worker notifications written before the type registry', () => {
-        const worker = { title: 'Successfully deployed https://x.puter.work', source: 'worker', template: 'user-requesting-share' };
+        const worker = { title: 'Successfully deployed https://x.mixt.work', source: 'worker', template: 'user-requesting-share' };
         expect(toEntry({ uid: 'a', value: worker, created_at: '2026-08-27 12:00:00' }, NOW)).toBeNull();
         expect(toEntry({ uid: 'b', notification: worker }, NOW)).toBeNull();
         expect(toEntry({ uid: 'c', notification: { ...worker, source: 'sharing' } }, NOW)).not.toBeNull();
@@ -372,17 +372,17 @@ describe('badgeLabel', () => {
 
 describe('titleWithBadge', () => {
     it('prefixes the count', () => {
-        expect(titleWithBadge('Puter', 3)).toBe('(3) Puter');
+        expect(titleWithBadge('Mixt', 3)).toBe('(3) Mixt');
     });
 
     it('replaces an existing count instead of stacking', () => {
-        expect(titleWithBadge('(2) Puter', 5)).toBe('(5) Puter');
-        expect(titleWithBadge('(99+) Puter', 1)).toBe('(1) Puter');
+        expect(titleWithBadge('(2) Mixt', 5)).toBe('(5) Mixt');
+        expect(titleWithBadge('(99+) Mixt', 1)).toBe('(1) Mixt');
     });
 
     it('clears the prefix at zero', () => {
-        expect(titleWithBadge('(2) Puter', 0)).toBe('Puter');
-        expect(titleWithBadge('Puter', 0)).toBe('Puter');
+        expect(titleWithBadge('(2) Mixt', 0)).toBe('Mixt');
+        expect(titleWithBadge('Mixt', 0)).toBe('Mixt');
     });
 
     it('leaves a parenthesised title that is not a badge alone', () => {

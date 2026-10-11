@@ -19,7 +19,7 @@
 
 import { EVENTS_SESSION_SUBSCRIPTIONS_PER_SOCKET } from '../../controllers/events/limits.js';
 import { HttpError } from '../../core/http/HttpError.js';
-import { PuterStore } from '../types.js';
+import { MixtStore } from '../types.js';
 import type {
     DispatchSubscription,
     DurableSubscription,
@@ -284,7 +284,7 @@ export interface ReanchorResult {
     bumps: GenerationBump[];
 }
 
-export class EventSubscriptionStore extends PuterStore {
+export class EventSubscriptionStore extends MixtStore {
     #definedScripts = false;
 
     #scripts(): ReanchorScripts {

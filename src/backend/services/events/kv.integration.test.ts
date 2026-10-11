@@ -30,7 +30,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { EVENTS_COALESCE_WINDOW_MS } from '../../controllers/events/limits.js';
 import { runWithContext } from '../../core/context.js';
-import { setupPuterTestEnv, type PuterTestEnv } from '../../testUtil.js';
+import { setupMixtTestEnv, type MixtTestEnv } from '../../testUtil.js';
 import type { IConfig } from '../../types.js';
 import { appDataPermission } from '../permission/appDataScopes.js';
 import { EVENTS_BACKGROUND_PERMISSION } from './authorization.js';
@@ -40,7 +40,7 @@ const BOOT_TIMEOUT_MS = 120_000;
 const SOCKET_ID = 'kv-integration-socket';
 const TABLE = 'event_subscriptions';
 
-let env: PuterTestEnv;
+let env: MixtTestEnv;
 let userId: number;
 let ownAppUid: string;
 let ownAppToken: string;
@@ -192,7 +192,7 @@ const clearRows = async () => {
 };
 
 beforeAll(async () => {
-    env = await setupPuterTestEnv({
+    env = await setupMixtTestEnv({
         events: { enabled: true, crossAppKv: true },
         // Seeded accounts carry no email, which the plan machinery reads as a
         // temporary account — and a temporary account holds no durable rows.

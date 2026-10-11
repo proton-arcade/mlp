@@ -21,13 +21,13 @@ import { v4 as uuidv4 } from 'uuid';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import type { IConfig } from '../../types';
 import {
-    setupPuterTestEnv,
-    type PuterTestEnv,
+    setupMixtTestEnv,
+    type MixtTestEnv,
     whitelistTestUser,
 } from '../../testUtil.ts';
 
 describe('teams email-domain allowlist', () => {
-    let env: PuterTestEnv;
+    let env: MixtTestEnv;
 
     const makeUser = async (email: string) => {
         const username = `dg_${Math.random().toString(36).slice(2, 10)}`;
@@ -63,9 +63,9 @@ describe('teams email-domain allowlist', () => {
         });
 
     beforeAll(async () => {
-        env = await setupPuterTestEnv({
+        env = await setupMixtTestEnv({
             teams_enabled: true,
-            teams_allowed_email_domains: ['puter.com'],
+            teams_allowed_email_domains: ['mixt.mpl'],
             max_teams_per_user: 10,
         } as IConfig);
     }, 180_000);
@@ -75,13 +75,13 @@ describe('teams email-domain allowlist', () => {
     });
 
     it('lets an allowed domain create and list', async () => {
-        const staff = await makeUser(`${uuidv4().slice(0, 8)}@puter.com`);
+        const staff = await makeUser(`${uuidv4().slice(0, 8)}@mixt.mpl`);
         expect((await create(staff.token)).status).toBe(200);
         expect((await call('GET', '/teams', staff.token)).status).toBe(200);
     });
 
     it('matches the domain case-insensitively', async () => {
-        const staff = await makeUser(`${uuidv4().slice(0, 8)}@PUTER.COM`);
+        const staff = await makeUser(`${uuidv4().slice(0, 8)}@MIXT.MPL`);
         expect((await create(staff.token)).status).toBe(200);
     });
 
@@ -97,7 +97,7 @@ describe('teams email-domain allowlist', () => {
     });
 
     it('lets a provisioned seat through on membership alone', async () => {
-        const staff = await makeUser(`${uuidv4().slice(0, 8)}@puter.com`);
+        const staff = await makeUser(`${uuidv4().slice(0, 8)}@mixt.mpl`);
         const created = await create(staff.token);
         const team = (await created.json()) as { uid: string };
 

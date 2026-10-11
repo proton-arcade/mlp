@@ -134,7 +134,7 @@ const ja = {
         forgot_pass_c2a: 'パスワードを忘れましたか？',
         from: '送信者',
         general: '一般',
-        get_a_copy_of_on_puter: 'Mixt.comで \'%%\' のコピーを取得！',
+        get_a_copy_of_on_mixt: 'Mixt.comで \'%%\' のコピーを取得！',
         get_copy_link: 'コピーリンクを取得',
         hide_all_windows: 'すべてのウィンドウを隠す',
         home: 'ホーム',
@@ -200,7 +200,7 @@ const ja = {
         picture: '写真',
         pictures: '写真',
         plural_suffix: '',
-        powered_by_puter_js: '{{link=docs}}Puter.js{{/link}} によって提供されています',
+        powered_by_mixt_js: '{{link=docs}}Mixt.js{{/link}} によって提供されています',
         preparing: '準備中...',
         preparing_for_upload: 'アップロードの準備中...',
         print: '印刷',
@@ -216,12 +216,12 @@ const ja = {
         public: '公開',
         publish: '公開',
         publish_as_website: 'ウェブサイトとして公開',
-        puter_description: 'Puterは、すべてのファイル、アプリ、およびゲームを一か所に安全に保管し、いつでもどこからでもアクセスできるプライバシー重視の個人用クラウドです。',
+        mixt_description: 'Mixtは、すべてのファイル、アプリ、およびゲームを一か所に安全に保管し、いつでもどこからでもアクセスできるプライバシー重視の個人用クラウドです。',
         reading_file: '読み込み中 %strong%',
         recent: '最近',
         recommended: 'おすすめ',
         recover_password: 'パスワードを回復',
-        refer_friends_c2a: '友達がPuterでアカウントを作成して確認すると、1GBを獲得できます。友達も1GBを獲得できます！',
+        refer_friends_c2a: '友達がMixtでアカウントを作成して確認すると、1GBを獲得できます。友達も1GBを獲得できます！',
         refer_friends_social_media_c2a: 'Mixt.comで1GBの無料ストレージを手に入れよう！',
         refresh: '更新',
         release_address_confirmation: 'このアドレスを解放してもよろしいですか？',
@@ -232,7 +232,7 @@ const ja = {
         replace_all: 'すべて置換',
         resend_confirmation_code: '確認コードを再送信',
         reset_colors: '色をリセット',
-        restart_puter_confirm: 'Puterを再起動してもよろしいですか？',
+        restart_mixt_confirm: 'Mixtを再起動してもよろしいですか？',
         restore: '復元',
         save: '保存',
         saturation: '彩度',
@@ -262,7 +262,7 @@ const ja = {
         shortcut_to: 'ショートカット先',
         show_all_windows: 'すべてのウィンドウを表示',
         show_hidden: '隠しファイルを表示',
-        sign_in_with_puter: 'Puterでサインイン',
+        sign_in_with_mixt: 'Mixtでサインイン',
         sign_up: 'サインアップ',
         signing_in: 'サインイン中…',
         size: 'サイズ',
@@ -272,7 +272,7 @@ const ja = {
         start: '開始',
         status: 'ステータス',
         storage_usage: 'ストレージ使用量',
-        storage_puter_used: 'Puterで使用中',
+        storage_mixt_used: 'Mixtで使用中',
         taking_longer_than_usual: 'いつもより少し時間がかかっています。お待ちください...',
         task_manager: 'タスクマネージャー',
         taskmgr_header_name: '名前',
@@ -280,7 +280,7 @@ const ja = {
         taskmgr_header_type: 'タイプ',
         terms: '利用規約',
         text_document: 'テキスト文書',
-        tos_fineprint: '「無料アカウントを作成」をクリックすることで、Puterの{{link=terms}}利用規約{{/link}}および{{link=privacy}}プライバシーポリシー{{/link}}に同意するものとします。',
+        tos_fineprint: '「無料アカウントを作成」をクリックすることで、Mixtの{{link=terms}}利用規約{{/link}}および{{link=privacy}}プライバシーポリシー{{/link}}に同意するものとします。',
         transparency: '透明度',
         trash: 'ゴミ箱',
         two_factor: '二要素認証',
@@ -305,7 +305,7 @@ const ja = {
         visibility: '見え方',
         yes: 'はい',
         yes_release_it: 'はい、解放します',
-        you_have_been_referred_to_puter_by_a_friend: '友達からPuterに紹介されました！',
+        you_have_been_referred_to_mixt_by_a_friend: '友達からMixtに紹介されました！',
         zip: '圧縮',
         zipping_file: '圧縮中 %strong%',
 
@@ -477,7 +477,7 @@ const ja = {
         'window_title_public': 'パブリック', // In English: "Public"
         'window_title_videos': '動画', // In English: "Videos"
         'window_title_pictures': '写真', // In English: "Pictures"
-        'window_title_puter': 'Mixt', // In English: "Mixt"
+        'window_title_mixt': 'Mixt', // In English: "Mixt"
         'window_folder_empty': 'このフォルダーは空です', // In English: "This folder is empty"
         'manage_your_subdomains': 'サブドメインを管理する', // In English: "Manage Your Subdomains"
         'open_containing_folder': '保存先のフォルダーを開く', // In English: "Open Containing Folder"

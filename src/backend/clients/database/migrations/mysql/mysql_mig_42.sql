@@ -19,9 +19,9 @@
 -- of `{name, type, size}` (NULL when none). Guarded by a throwaway procedure,
 -- as in mysql_mig_21.
 
-DROP PROCEDURE IF EXISTS _puter_add_feedback_attachments;
+DROP PROCEDURE IF EXISTS _mixt_add_feedback_attachments;
 DELIMITER //
-CREATE PROCEDURE _puter_add_feedback_attachments()
+CREATE PROCEDURE _mixt_add_feedback_attachments()
 BEGIN
   IF NOT EXISTS (
     SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS
@@ -34,6 +34,6 @@ BEGIN
 END//
 DELIMITER ;
 
-CALL _puter_add_feedback_attachments();
+CALL _mixt_add_feedback_attachments();
 
-DROP PROCEDURE IF EXISTS _puter_add_feedback_attachments;
+DROP PROCEDURE IF EXISTS _mixt_add_feedback_attachments;

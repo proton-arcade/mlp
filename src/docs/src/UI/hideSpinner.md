@@ -1,5 +1,5 @@
 ---
-title: puter.ui.hideSpinner()
+title: mixt.ui.hideSpinner()
 description: Hides the active spinner instance.
 platforms: [ websites, apps]
 ---
@@ -8,7 +8,7 @@ Hides the active spinner instance.
 
 ## Syntax
 ```js
-puter.ui.hideSpinner()
+mixt.ui.hideSpinner()
 ```
 
 ## Examples
@@ -16,14 +16,14 @@ puter.ui.hideSpinner()
 ```html;ui-spinner
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         // show the spinner
-        puter.ui.showSpinner();
+        mixt.ui.showSpinner();
 
         // hide the spinner after 3 seconds
         setTimeout(()=>{
-            puter.ui.hideSpinner();
+            mixt.ui.hideSpinner();
         }, 3000);
     </script>
 </body>

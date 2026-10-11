@@ -1,11 +1,11 @@
 import type { Request, Response } from 'express';
-import { Context } from '@heyputer/backend/src/core';
-import { HttpError } from '@heyputer/backend/src/core/http';
-import { extension } from '@heyputer/backend/src/extensions';
+import { Context } from '@mixt/backend/src/core';
+import { HttpError } from '@mixt/backend/src/core/http';
+import { extension } from '@mixt/backend/src/extensions';
 import {
     getAppIconCdnUrl,
     getAppIconUrl,
-} from '@heyputer/backend/src/util/appIcon.js';
+} from '@mixt/backend/src/util/appIcon.js';
 
 const clients = extension.import('client');
 
@@ -68,7 +68,7 @@ export const handleInstalledApps = async (
     const apiBaseUrl = extension.config.api_base_url as string | undefined;
     res.json(
         installedApps.map((app) => {
-            // An app with no owner_user_id (null/empty) isn't owned by a Puter
+            // An app with no owner_user_id (null/empty) isn't owned by a Mixt
             // user — it's an "external" app. Derive a flag and don't leak the
             // raw owner id to the client.
             const { owner_user_id, ...rest } = app;

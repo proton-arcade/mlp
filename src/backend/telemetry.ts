@@ -71,7 +71,7 @@ const percentileViews: ViewOptions[] =
 
 const sdk = new NodeSDK({
     resource: resourceFromAttributes({
-        [ATTR_SERVICE_NAME]: process.env.OTEL_SERVICE_NAME ?? 'puter-backend',
+        [ATTR_SERVICE_NAME]: process.env.OTEL_SERVICE_NAME ?? 'mixt-backend',
         [ATTR_SERVICE_VERSION]: process.env.npm_package_version ?? '0.0.0',
         'deployment.environment': process.env.NODE_ENV ?? 'development',
     }),

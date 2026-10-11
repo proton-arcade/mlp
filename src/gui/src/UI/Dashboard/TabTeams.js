@@ -454,11 +454,11 @@ const loadSelected = async () => {
     // A fresh record starts at the top; auditSlice clamps a stale page anyway.
     state.auditPage = 0;
     state.audit = state.selected.isOwner
-        ? await puter.teams.listAudit(state.selected.uid)
-        : await puter.teams.listOwnAudit(state.selected.uid);
+        ? await mixt.teams.listAudit(state.selected.uid)
+        : await mixt.teams.listOwnAudit(state.selected.uid);
     // Members too: the roster is theirs to see, and the controller already
     // withholds from them what is not.
-    state.members = await puter.teams.listMembers(state.selected.uid);
+    state.members = await mixt.teams.listMembers(state.selected.uid);
     state.plan = state.selected.isOwner ? await loadPlan(state.selected.uid) : null;
 };
 
@@ -466,7 +466,7 @@ const loadSelected = async () => {
 const loadPlan = async (teamUid) => {
     const get = async (path) => {
         const resp = await fetch(`${window.api_origin}${path}`, {
-            headers: { Authorization: `Bearer ${puter.authToken}` },
+            headers: { Authorization: `Bearer ${mixt.authToken}` },
         });
         return resp.ok ? resp.json() : null;
     };
@@ -513,7 +513,7 @@ const load = async ($el_window) => {
         return paint($el_window);
     }
     try {
-        const teams = await puter.teams.list();
+        const teams = await mixt.teams.list();
         state.teams = teams;
         state.selected = teams.find(t => t.uid === state.selected?.uid) ?? teams[0] ?? null;
         await loadSelected();
@@ -624,7 +624,7 @@ const addAccount = async ($el_window) => {
     const $button = $el_window.find(`${SECTION} .teams-add-btn`);
     $button.prop('disabled', true).addClass('teams-busy');
     try {
-        const created = await puter.teams.createMember(state.selected.uid, {
+        const created = await mixt.teams.createMember(state.selected.uid, {
             username,
             ...(email ? { email } : {}),
         });
@@ -645,7 +645,7 @@ const resetTwoFactor = async ($el_window, username) => {
     );
     if ( ! ok ) return;
     try {
-        await puter.teams.resetTwoFactor(state.selected.uid, username);
+        await mixt.teams.resetTwoFactor(state.selected.uid, username);
         await refresh($el_window);
     } catch (e) {
         await showError($el_window, e);
@@ -660,7 +660,7 @@ const reissueCredential = async ($el_window, username) => {
     );
     if ( ! ok ) return;
     try {
-        const result = await puter.teams.resendActivation(state.selected.uid, username);
+        const result = await mixt.teams.resendActivation(state.selected.uid, username);
         await refresh($el_window);
         showCredential($el_window, result.username, result.temporaryPassword);
     } catch (e) {
@@ -679,8 +679,8 @@ const setMemberEnabled = async ($el_window, username, enabled) => {
     }
     try {
         await (enabled
-            ? puter.teams.enableMember(state.selected.uid, username)
-            : puter.teams.disableMember(state.selected.uid, username));
+            ? mixt.teams.enableMember(state.selected.uid, username)
+            : mixt.teams.disableMember(state.selected.uid, username));
         await refresh($el_window);
     } catch (e) {
         await showError($el_window, e);
@@ -699,7 +699,7 @@ const renameTeam = async ($el_window) => {
     });
     if ( name === false || name.trim() === '' ) return;
     try {
-        await puter.teams.update(state.selected.uid, { name: name.trim() });
+        await mixt.teams.update(state.selected.uid, { name: name.trim() });
         await refresh($el_window);
     } catch (e) {
         await showError($el_window, e);
@@ -714,7 +714,7 @@ const deleteMemberAccount = async ($el_window, username) => {
     );
     if ( ! ok ) return;
     try {
-        await puter.teams.deleteMemberAccount(state.selected.uid, username);
+        await mixt.teams.deleteMemberAccount(state.selected.uid, username);
         await refresh($el_window);
     } catch (e) {
         await showError($el_window, e);
@@ -734,7 +734,7 @@ const setRequire2fa = async ($el_window, enabled) => {
         if ( ! ok ) return paint($el_window);
     }
     try {
-        await puter.teams.update(state.selected.uid, { require2fa: enabled });
+        await mixt.teams.update(state.selected.uid, { require2fa: enabled });
         await refresh($el_window);
     } catch (e) {
         await showError($el_window, e);
@@ -757,7 +757,7 @@ const setDirectoryEnabled = async ($el_window, enabled) => {
         if ( ! ok ) return paint($el_window);
     }
     try {
-        await puter.teams.update(state.selected.uid, { directoryEnabled: enabled });
+        await mixt.teams.update(state.selected.uid, { directoryEnabled: enabled });
         await refresh($el_window);
     } catch (e) {
         await showError($el_window, e);
@@ -777,7 +777,7 @@ const createTeam = async ($el_window) => {
     });
     if ( name === false || name.trim() === '' ) return;
     try {
-        const created = await puter.teams.create({ name: name.trim() });
+        const created = await mixt.teams.create({ name: name.trim() });
         state.selected = created;
         await refresh($el_window);
     } catch (e) {
@@ -794,7 +794,7 @@ const deleteTeam = async ($el_window) => {
     );
     if ( ! ok ) return;
     try {
-        await puter.teams.delete(state.selected.uid);
+        await mixt.teams.delete(state.selected.uid);
         state.selected = null;
         await refresh($el_window);
     } catch (e) {

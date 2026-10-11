@@ -111,7 +111,7 @@ export const wantsFullToken = (params) =>
  * password, email, and 2FA settings, i.e. lock the owner out. Honoring
  * `token_type=session` for any destination makes a link like
  *
- *     https://puter.com/?action=authme&token_type=session&redirectURL=https://evil.example/
+ *     https://mixt.mpl/?action=authme&token_type=session&redirectURL=https://evil.example/
  *
  * a complete-account-takeover primitive on the real origin, behind nothing but
  * a fixed confirmation phrase that the page sending the victim there can tell
@@ -219,7 +219,7 @@ export const GUI_TOKEN_PARAM = 'auth_token';
  * listener in between, so `token` has to be understood on arrival.
  *
  * `token` is honored **only** in remote-backend mode. A normal deployment keeps
- * exactly one URL-token entry point, so this doesn't hand puter.com a second
+ * exactly one URL-token entry point, so this doesn't hand mixt.mpl a second
  * way to have a session pushed at it from a link.
  *
  * `auth_token` wins if both are present.
@@ -240,7 +240,7 @@ export const urlTokenParam = (params, isRemoteBackend) => {
  * Is this GUI served from somewhere other than the backend it talks to?
  *
  * True for `npm start --server=<remote>`, which serves the bundled GUI on
- * localhost while pointing `gui_origin` at a remote Puter. That GUI has no
+ * localhost while pointing `gui_origin` at a remote Mixt. That GUI has no
  * `/login` it can post to — the route accepts only its own origin, because it
  * answers with a session token — so it hands off to the remote's AuthMe flow
  * instead.

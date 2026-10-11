@@ -30,7 +30,7 @@ import {
     sealCursor,
     type PageResult,
 } from '../../util/pagination.js';
-import { PuterStore } from '../types.js';
+import { MixtStore } from '../types.js';
 import {
     assertColumnWidths,
     EVENT_SUBSCRIPTION_WIDTHS,
@@ -281,7 +281,7 @@ const SELECT_COLUMNS =
     '`handler_name`, `targets`, `context`, `permission`, `include_value`, ' +
     '`suspended_at`, `suspended_reason`, `expires_at`, `created_at`';
 
-export class DurableSubscriptionStore extends PuterStore {
+export class DurableSubscriptionStore extends MixtStore {
     // -- Writes ------------------------------------------------------
 
     /**

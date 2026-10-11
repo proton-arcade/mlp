@@ -20,7 +20,7 @@
 -- flag and `suspended_at` timestamp. Constrained at the application layer to a
 -- fixed set of reasons (see extensions/admin suspension_reasons.js).
 --
--- Idempotent: the column add uses _puter_add_col (defined in mig_1, which
+-- Idempotent: the column add uses _mixt_add_col (defined in mig_1, which
 -- leaves it resident for later migrations).
 
-CALL _puter_add_col('user', 'suspended_reason', '`suspended_reason` VARCHAR(64) DEFAULT NULL');
+CALL _mixt_add_col('user', 'suspended_reason', '`suspended_reason` VARCHAR(64) DEFAULT NULL');

@@ -27,14 +27,14 @@
 
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { isHttpError } from '../../core/http/HttpError.js';
-import { setupPuterTestEnv, type PuterTestEnv } from '../../testUtil.js';
+import { setupMixtTestEnv, type MixtTestEnv } from '../../testUtil.js';
 import type { IConfig } from '../../types.js';
 import { KV_SHARE_HANDLE_WIDTHS } from './columnWidths.js';
 import type { MintKvShareHandleInput } from './KvShareHandleStore.js';
 
 const BOOT_TIMEOUT_MS = 120_000;
 
-let env: PuterTestEnv;
+let env: MixtTestEnv;
 let ownerUserId: number;
 let granteeUserId: number;
 
@@ -55,7 +55,7 @@ const codeOf = (code: string) => (err: unknown) =>
     isHttpError(err) && err.legacyCode === code;
 
 beforeAll(async () => {
-    env = await setupPuterTestEnv({ events: { enabled: true } } as IConfig);
+    env = await setupMixtTestEnv({ events: { enabled: true } } as IConfig);
     const owner = await env.server.stores.user.getByUsername(
         env.users.user.username,
     );

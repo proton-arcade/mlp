@@ -21,10 +21,10 @@ import type { Request, Response } from 'express';
 import { Controller, Post } from '../../core/http/decorators.js';
 import type { BroadcastService } from '../../services/broadcast/BroadcastService.js';
 import type { ForwardBatch } from '../../services/events/forwardQueue.js';
-import { PuterController } from '../types.js';
+import { MixtController } from '../types.js';
 
 /**
- * Receive signed broadcast webhooks from peer Puter instances.
+ * Receive signed broadcast webhooks from peer Mixt instances.
  *
  * The route is intentionally a thin shell: parse the four custom
  * `X-Broadcast-*` headers, hand the raw body + parsed body off to
@@ -43,7 +43,7 @@ import { PuterController } from '../types.js';
  * preserving the raw bytes.
  */
 @Controller('/broadcast')
-export class BroadcastController extends PuterController {
+export class BroadcastController extends MixtController {
     @Post('/webhook', { subdomain: '*' })
     async webhook(req: Request, res: Response): Promise<void> {
         const broadcast = this.services.broadcast as unknown as

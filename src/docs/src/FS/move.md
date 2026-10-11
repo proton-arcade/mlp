@@ -1,6 +1,6 @@
 ---
-title: puter.fs.move()
-description: Move files or directories to new locations in the user's own Puter file system.
+title: mixt.fs.move()
+description: Move files or directories to new locations in the user's own Mixt OS file system.
 platforms: [websites, apps, nodejs, workers]
 ---
 
@@ -9,9 +9,9 @@ Moves a file or a directory from one location to another.
 ## Syntax
 
 ```js
-puter.fs.move(source, destination)
-puter.fs.move(source, destination, options)
-puter.fs.move(options)
+mixt.fs.move(source, destination)
+mixt.fs.move(source, destination, options)
+mixt.fs.move(options)
 ```
 
 ## Parameters
@@ -50,26 +50,26 @@ A `Promise` that will resolve to the [`FSItem`](/Objects/fsitem) object of the m
 ```html;fs-move
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
     (async () => {
         // (1) Create a random text file
-        let filename = puter.randName() + '.txt';
-        await puter.fs.write(filename, 'Hello, world!');
-        puter.print(`Created file: ${filename}<br>`);
+        let filename = mixt.randName() + '.txt';
+        await mixt.fs.write(filename, 'Hello, world!');
+        mixt.print(`Created file: ${filename}<br>`);
 
         // (2) create a random directory
-        let dirname = puter.randName();
-        await puter.fs.mkdir(dirname);
-        puter.print(`Created directory: ${dirname}<br>`);
+        let dirname = mixt.randName();
+        await mixt.fs.mkdir(dirname);
+        mixt.print(`Created directory: ${dirname}<br>`);
 
         // (3) Move the file into the directory
-        await puter.fs.move(filename, dirname);
-        puter.print(`Moved file: ${filename} to directory ${dirname}<br>`);
+        await mixt.fs.move(filename, dirname);
+        mixt.print(`Moved file: ${filename} to directory ${dirname}<br>`);
 
         // (4) Delete the file and directory (cleanup)
-        await puter.fs.delete(dirname + '/' + filename);
-        await puter.fs.delete(dirname);
+        await mixt.fs.delete(dirname + '/' + filename);
+        await mixt.fs.delete(dirname);
     })();
     </script>
 </body>
@@ -81,22 +81,22 @@ A `Promise` that will resolve to the [`FSItem`](/Objects/fsitem) object of the m
 ```html;fs-move-create-missing-parents
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
     (async () => {
         // (1) Create a random file
-        let filename = puter.randName() + '.txt';
-        await puter.fs.write(filename, 'Hello, world!');
-        puter.print('Created file: ' + filename + '<br>');
+        let filename = mixt.randName() + '.txt';
+        await mixt.fs.write(filename, 'Hello, world!');
+        mixt.print('Created file: ' + filename + '<br>');
 
         // (2) Move the file into a non-existent directory
-        let dirname = puter.randName();
-        await puter.fs.move(filename, dirname + '/' + filename, { createMissingParents: true });
-        puter.print(`Moved ${filename} to ${dirname}<br>`);
+        let dirname = mixt.randName();
+        await mixt.fs.move(filename, dirname + '/' + filename, { createMissingParents: true });
+        mixt.print(`Moved ${filename} to ${dirname}<br>`);
 
         // (3) Delete the file and directory (cleanup)
-        await puter.fs.delete('non-existent-directory/' + filename);
-        await puter.fs.delete('non-existent-directory');
+        await mixt.fs.delete('non-existent-directory/' + filename);
+        await mixt.fs.delete('non-existent-directory');
     })();
     </script>
 </body>

@@ -17,10 +17,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { PuterService } from '../types';
+import { MixtService } from '../types';
 import type { SocketService } from '../socket/SocketService';
 import { kv } from '../../util/kvSingleton';
-import { PUTER_KV_STORE_TABLE_NAME } from '../../stores/systemKv/tableDefinition';
+import { MIXT_KV_STORE_TABLE_NAME } from '../../stores/systemKv/tableDefinition';
 
 /**
  * Periodic liveness monitor for the backend. Other services register checks via
@@ -198,7 +198,7 @@ export interface GetStatusOptions {
     degrade?: string[];
 }
 
-export class ServerHealthService extends PuterService {
+export class ServerHealthService extends MixtService {
     #checks: RegisteredCheck[] = [];
     #healthStartedAt = Date.now();
     #lastCycleCompletedAt = 0;
@@ -392,7 +392,7 @@ export class ServerHealthService extends PuterService {
         const socket = this.services.socket as SocketService | undefined;
         if (socket) {
             this.addCheck('socket-initialized', () => {
-                // Attach happens in `attachHttpServer`, called by PuterServer
+                // Attach happens in `attachHttpServer`, called by MixtServer
                 // after http is ready. If the internal io hasn't been set
                 // by the time checks start running, something is wrong.
                 const check = socket as unknown as { hasIO?: () => boolean };
@@ -470,7 +470,7 @@ export class ServerHealthService extends PuterService {
                 defaultLatencyFailMs: DEFAULT_DYNAMO_LATENCY_FAIL_MS,
                 probe: async () => {
                     await dynamo.get(
-                        PUTER_KV_STORE_TABLE_NAME,
+                        MIXT_KV_STORE_TABLE_NAME,
                         DYNAMO_PROBE_KEY,
                     );
                 },

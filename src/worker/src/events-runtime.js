@@ -1,15 +1,15 @@
 /*
  * The events worker runtime: prepended to an app's generated handler code, and
  * the whole of what that code runs inside. Import-free so it can be inlined
- * into `template/puter-events.template` as-is.
+ * into `template/mixt-events.template` as-is.
  *
  * Unlike the router runtime it has no `router` and no `me` — no worker token
  * is deployed with an events worker, so a handler acts as the subscriber whose
  * delivery it is running, from the token on the invocation.
  *
- * Every answer carries `x-puter-events-handled: 1`, built from a `Response`
+ * Every answer carries `x-mixt-events-handled: 1`, built from a `Response`
  * captured before handler code can run — so a handler cannot spoof it — and,
- * on the runtime's own failure answers, a machine-readable `x-puter-events-error`
+ * on the runtime's own failure answers, a machine-readable `x-mixt-events-error`
  * naming which one: `bad-key`, `bad-body`, `handler-broken`, `unknown-handler`,
  * `no-token`, `handler-threw`, `handler-terminal`.
  *
@@ -26,14 +26,14 @@
     const NativeResponse = Response;
 
     const INVOKE_PATH = '/__events/invoke';
-    const HANDLED_HEADER = 'x-puter-events-handled';
-    const ERROR_HEADER = 'x-puter-events-error';
+    const HANDLED_HEADER = 'x-mixt-events-handled';
+    const ERROR_HEADER = 'x-mixt-events-error';
 
     const handlers = Object.create(null);
     const broken = Object.create(null);
 
     /** What generated code registers into. The only global the runtime adds. */
-    globalThis.__puterEvents = Object.freeze({
+    globalThis.__mixtEvents = Object.freeze({
         register(name, fn) {
             handlers[name] = fn;
         },
@@ -58,10 +58,10 @@
         globalThis.events_invoke_key = undefined;
     }
 
-    const apiOrigin = globalThis.puter_endpoint || 'https://api.puter.com';
+    const apiOrigin = globalThis.mixt_endpoint || 'https://api.mixt.mpl';
 
     // Deliveries arriving on the same token reuse one client rather than
-    // rebuilding puter.js each time. Keyed on the token itself so a client is
+    // rebuilding mixt.js each time. Keyed on the token itself so a client is
     // only ever handed back to the identity it was built for — the JWT carries
     // an `iat`, so this hits within a burst rather than across a quiet gap.
     // Bounded and insertion-ordered: a hit is re-inserted to mark it
@@ -76,7 +76,7 @@
             clientsByToken.set(token, cached);
             return cached;
         }
-        const client = init_puter_portable(token, apiOrigin, 'userPuter', {
+        const client = init_mixt_portable(token, apiOrigin, 'userMixt', {
             // No delivery room, no presence, no per-invocation socket: this
             // client only ever makes plain API calls on the handler's behalf.
             socket: false,
@@ -127,7 +127,7 @@
         }
         if (
             !keysEqual(
-                request.headers.get('x-puter-events-key') ?? '',
+                request.headers.get('x-mixt-events-key') ?? '',
                 invokeKey,
             )
         ) {

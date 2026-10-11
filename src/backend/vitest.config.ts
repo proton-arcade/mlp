@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// vite.config.ts - Vite configuration for Puter API tests (TypeScript)
+// vite.config.ts - Vite configuration for Mixt API tests (TypeScript)
 import { globSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { transform } from 'esbuild';
@@ -35,10 +35,10 @@ const repoRoot = path.resolve(backendDir, '../..');
 // only one pgmock VM runs at a time. Tests still race their own logic
 // internally; we only serialize the *files*.
 const isPgmockMode =
-    (process.env.PUTER_TEST_DB_ENGINE ?? '').toLowerCase() === 'postgres';
+    (process.env.MIXT_TEST_DB_ENGINE ?? '').toLowerCase() === 'postgres';
 const pgmockTimeoutMs = 600_000;
 
-// Tests that always boot pgmock regardless of PUTER_TEST_DB_ENGINE. Too slow
+// Tests that always boot pgmock regardless of MIXT_TEST_DB_ENGINE. Too slow
 // for CI; run locally or via `npm run test:backend:postgres`.
 const postgresOnlyTests = [
     'src/backend/clients/database/PostgresDatabaseClient.integration.test.ts',
@@ -49,7 +49,7 @@ const testInclude = [
     'src/backend/**/*.test.{js,ts}',
     'extensions/**/*.test.{js,ts}',
     // The MCP connector's signed-upload tools call the `/fs` HTTP API
-    // directly, so their tests need a booted backend (`setupPuterTestEnv`).
+    // directly, so their tests need a booted backend (`setupMixtTestEnv`).
     'src/mcp-connector/**/*.test.{js,ts}',
     // Root-level tools/ scripts are exercised through this suite.
     'tools/**/*.test.mjs',
@@ -80,7 +80,7 @@ const sharedWorkerTests = isPgmockMode
           const source = readFileSync(path.join(repoRoot, file), 'utf8');
           return (
               /\bsetupTestServer\(/.test(source) &&
-              !/\bsetupPuterTestEnv\(/.test(source) &&
+              !/\bsetupMixtTestEnv\(/.test(source) &&
               !/\bvi\.(mock|doMock)\(/.test(source)
           );
       });
@@ -91,9 +91,9 @@ const sharedWorkerTests = isPgmockMode
 // `.ts`/`.mts` source through esbuild — which DOES lower stage-3
 // decorators — locked to `es2024` to match `tsconfig.json`'s target.
 // Exported for other vitest configs that boot backend code (e.g. the
-// puter.js API test runners).
+// mixt.js API test runners).
 export const lowerDecoratorsPlugin = {
-    name: 'puter:lower-decorators',
+    name: 'mixt:lower-decorators',
     enforce: 'pre' as const,
     async transform(code: string, id: string) {
         if (id.includes('/node_modules/')) return null;
@@ -112,20 +112,20 @@ export const lowerDecoratorsPlugin = {
 export default defineConfig(({ mode }) => ({
     plugins: [lowerDecoratorsPlugin],
     resolve: {
-        // Mirror the `@heyputer/backend` path aliases declared in
+        // Mirror the `@mixt/backend` path aliases declared in
         // tsconfig.json so backend code under test can use the same
         // imports it does in production.
         alias: [
             {
-                find: /^@heyputer\/backend\/src\/(.*)$/,
+                find: /^@mixt\/backend\/src\/(.*)$/,
                 replacement: path.join(backendDir, '$1'),
             },
             {
-                find: /^@heyputer\/backend\/(.*)$/,
+                find: /^@mixt\/backend\/(.*)$/,
                 replacement: path.join(backendDir, '$1'),
             },
             {
-                find: /^@heyputer\/backend$/,
+                find: /^@mixt\/backend$/,
                 replacement: path.join(backendDir, 'exports.ts'),
             },
         ],
@@ -154,7 +154,7 @@ export default defineConfig(({ mode }) => ({
             ],
             reportsDirectory: path.join(backendDir, 'coverage'),
         },
-        env: loadEnv(mode, '', 'PUTER_'),
+        env: loadEnv(mode, '', 'MIXT_'),
         // Root is the repo root so that the file transformer (which
         // applies `lowerDecoratorsPlugin`) sees both src/backend and
         // extensions/ — vitest skips transform for files outside root.

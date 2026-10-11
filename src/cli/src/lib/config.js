@@ -12,7 +12,7 @@
 import fs from 'node:fs';
 import Conf from 'conf';
 
-const config = new Conf({ projectName: 'puter-cli' });
+const config = new Conf({ projectName: 'mixt-cli' });
 
 export const configPath = config.path;
 
@@ -41,9 +41,9 @@ export function getStoredToken() {
 }
 
 // Full resolution order for authenticated commands (spec §4.2):
-//   1. PUTER_AUTH_TOKEN  2. stored token
+//   1. MIXT_AUTH_TOKEN  2. stored token
 export function getToken() {
-  return process.env.PUTER_AUTH_TOKEN ?? getStoredToken();
+  return process.env.MIXT_AUTH_TOKEN ?? getStoredToken();
 }
 
 export function clearToken() {

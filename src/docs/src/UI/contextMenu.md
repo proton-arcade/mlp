@@ -1,5 +1,5 @@
 ---
-title: puter.ui.contextMenu()
+title: mixt.ui.contextMenu()
 description: Displays a context menu at the current cursor position.
 platforms: [ websites, apps]
 ---
@@ -8,7 +8,7 @@ Displays a context menu at the current cursor position. Context menus provide a 
 
 ## Syntax
 ```js
-puter.ui.contextMenu(options)
+mixt.ui.contextMenu(options)
 ```
 
 ## Parameters
@@ -30,7 +30,7 @@ An object that configures the context menu.
 * `x` (Number, optional): X position of the menu, in pixels. Defaults to the cursor position.
 * `y` (Number, optional): Y position of the menu, in pixels. Defaults to the cursor position.
 
-`theme`, `x`, and `y` only apply when running standalone (`puter.env === 'web'`). Inside the Puter desktop (`puter.env === 'app'`) the menu is rendered by the desktop, which places it at the cursor and uses its own theme.
+`theme`, `x`, and `y` only apply when running standalone (`mixt.env === 'web'`). Inside the Mixt OS desktop (`mixt.env === 'app'`) the menu is rendered by the desktop, which places it at the cursor and uses its own theme.
 
 ## Return value 
 This method does not return a value. The context menu is displayed immediately and menu item actions are executed when clicked.
@@ -40,7 +40,7 @@ This method does not return a value. The context menu is displayed immediately a
 ```html;ui-context-menu
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
 
     <div id="right-click-area" style="width: 200px; height: 200px; border: 1px solid #ccc; padding: 20px;">
         Right-click me to show context menu
@@ -50,7 +50,7 @@ This method does not return a value. The context menu is displayed immediately a
         document.getElementById('right-click-area').addEventListener('contextmenu', (e) => {
             e.preventDefault(); // Prevent default browser context menu
             
-            puter.ui.contextMenu({
+            mixt.ui.contextMenu({
                 items: [
                     {
                         label: 'Edit Item',
@@ -89,7 +89,7 @@ This method does not return a value. The context menu is displayed immediately a
 ```html
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     
     <div id="advanced-menu" style="padding: 20px; border: 1px solid #ddd; margin: 10px; cursor: pointer;">
         Right-click for advanced context menu with all features
@@ -101,7 +101,7 @@ This method does not return a value. The context menu is displayed immediately a
             
             // Note: Icons must be base64-encoded data URIs starting with "data:image"
             // The examples below use simple SVG icons encoded as base64
-            puter.ui.contextMenu({
+            mixt.ui.contextMenu({
                 items: [
                     {
                         label: 'New File',

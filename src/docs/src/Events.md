@@ -44,24 +44,24 @@ With the [User-Pays Model](/user-pays-model/), deliveries are billed to the user
 ```html;events-watch-folder
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
             // (1) Create a directory to watch
-            const dir = puter.randName();
-            await puter.fs.mkdir(dir);
+            const dir = mixt.randName();
+            await mixt.fs.mkdir(dir);
 
             // (2) Subscribe to everything under it
-            const sub = await puter.events.onLocal(`fs:${dir}`, ({ event }) => {
+            const sub = await mixt.events.onLocal(`fs:${dir}`, ({ event }) => {
                 if (event.op === 'gap') {
-                    puter.print(`missed some changes (${event.reason})<br>`);
+                    mixt.print(`missed some changes (${event.reason})<br>`);
                     return;
                 }
-                puter.print(`${event.op}: ${event.path}<br>`);
+                mixt.print(`${event.op}: ${event.path}<br>`);
             });
 
             // (3) Change something — the handler runs
-            await puter.fs.write(`${dir}/hello.txt`, 'Hello!');
+            await mixt.fs.write(`${dir}/hello.txt`, 'Hello!');
 
             // (4) Stop listening (cleanup)
             setTimeout(() => sub.off(), 2000);
@@ -80,26 +80,26 @@ With the [User-Pays Model](/user-pays-model/), deliveries are billed to the user
 ```html;events-watch-kv
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
             // (1) Exactly one key, and separately every key under a prefix.
-            const one = await puter.events.onLocal('kv:cart', ({ event }) =>
-                puter.print(`${event.op}: ${event.key}<br>`));
-            const many = await puter.events.onLocal(
-                `kv:${puter.appID}:cart:*`,
-                ({ event }) => puter.print(`under cart: ${event.key}<br>`));
+            const one = await mixt.events.onLocal('kv:cart', ({ event }) =>
+                mixt.print(`${event.op}: ${event.key}<br>`));
+            const many = await mixt.events.onLocal(
+                `kv:${mixt.appID}:cart:*`,
+                ({ event }) => mixt.print(`under cart: ${event.key}<br>`));
 
             // (2) `cart` reaches the first, `cart:items` only the second.
-            await puter.kv.set('cart', { total: 0 });
-            await puter.kv.set('cart:items', ['apple']);
+            await mixt.kv.set('cart', { total: 0 });
+            await mixt.kv.set('cart:items', ['apple']);
 
             // (3) Cleanup
             setTimeout(async () => {
                 await one.off();
                 await many.off();
-                await puter.kv.del('cart');
-                await puter.kv.del('cart:items');
+                await mixt.kv.del('cart');
+                await mixt.kv.del('cart:items');
             }, 2000);
         })();
     </script>
@@ -116,24 +116,24 @@ With the [User-Pays Model](/user-pays-model/), deliveries are billed to the user
 ```html;events-watch-missing
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
             // (1) A directory to work in. `inbox/` below it does not exist yet.
-            const dir = puter.randName();
-            await puter.fs.mkdir(dir);
+            const dir = mixt.randName();
+            await mixt.fs.mkdir(dir);
 
             // (2) Subscribe anyway — the subscription anchors on `dir` and
             //     matches the rest of the path as it appears.
-            const sub = await puter.events.onLocal(
+            const sub = await mixt.events.onLocal(
                 `fs:${dir}/inbox/trigger.json:add`,
-                ({ event }) => puter.print(`appeared: ${event.path}<br>`),
-                { onError: (error) => puter.print(`subscription ended: ${error.code}<br>`) },
+                ({ event }) => mixt.print(`appeared: ${event.path}<br>`),
+                { onError: (error) => mixt.print(`subscription ended: ${error.code}<br>`) },
             );
-            puter.print(`anchored on ${sub.anchor.path}, matching ${sub.match}<br>`);
+            mixt.print(`anchored on ${sub.anchor.path}, matching ${sub.match}<br>`);
 
             // (3) Create it, several directories deep
-            await puter.fs.write(`${dir}/inbox/trigger.json`, '{}', {
+            await mixt.fs.write(`${dir}/inbox/trigger.json`, '{}', {
                 createMissingParents: true,
             });
 
@@ -153,16 +153,16 @@ With the [User-Pays Model](/user-pays-model/), deliveries are billed to the user
 ```html;events-persistent
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
             // (1) An app of your own to publish the handler under
-            const name = `ingest-${puter.randName()}`;
-            const app = await puter.apps.create(name, `https://example.com/${name}`);
+            const name = `ingest-${mixt.randName()}`;
+            const app = await mixt.apps.create(name, `https://example.com/${name}`);
 
             // (2) Publish the handler. It closes over nothing — everything it
             //     needs arrives as `ctx`.
-            await puter.events.handlers.publish(
+            await mixt.events.handlers.publish(
                 'ingestUpload',
                 async ({ event, ctx }) => {
                     await fetch(ctx.endpoint, {
@@ -174,18 +174,18 @@ With the [User-Pays Model](/user-pays-model/), deliveries are billed to the user
             );
 
             // (3) Subscribe. `context` is read now and never again.
-            const dir = puter.randName();
-            await puter.fs.mkdir(dir);
-            const sub = await puter.events.onPersistent({
+            const dir = mixt.randName();
+            await mixt.fs.mkdir(dir);
+            const sub = await mixt.events.onPersistent({
                 subject: `fs:${dir}`,
                 handlerName: 'ingestUpload',
                 context: { endpoint: 'https://example.com/ingest', apiKey: 'k-123' },
             });
 
-            puter.print(`watching ${dir} as ${sub.subId}<br>`);
+            mixt.print(`watching ${dir} as ${sub.subId}<br>`);
 
             // (4) It outlives this page. End it explicitly when you are done.
-            await puter.events.unsubscribe(sub.subId);
+            await mixt.events.unsubscribe(sub.subId);
         })();
     </script>
 </body>
@@ -201,22 +201,22 @@ With the [User-Pays Model](/user-pays-model/), deliveries are billed to the user
 ```html;events-list
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
-            const dir = puter.randName();
-            await puter.fs.mkdir(dir);
-            const sub = await puter.events.onPersistent({
+            const dir = mixt.randName();
+            await mixt.fs.mkdir(dir);
+            const sub = await mixt.events.onPersistent({
                 subject: `fs:${dir}`,
                 context: { label: 'inbox' },
             });
 
-            for (const row of await puter.events.list()) {
-                puter.print(`${row.subject} — ${row.delivery}`);
-                puter.print(` (context: ${row.contextKeys?.join(', ') ?? 'none'})<br>`);
+            for (const row of await mixt.events.list()) {
+                mixt.print(`${row.subject} — ${row.delivery}`);
+                mixt.print(` (context: ${row.contextKeys?.join(', ') ?? 'none'})<br>`);
             }
 
-            await puter.events.unsubscribe(sub.subId);
+            await mixt.events.unsubscribe(sub.subId);
         })();
     </script>
 </body>
@@ -232,24 +232,24 @@ With the [User-Pays Model](/user-pays-model/), deliveries are billed to the user
 ```html;events-fetch
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
             let cursor;
             let seen = 0;
             do {
-                const page = await puter.events.fetch({
+                const page = await mixt.events.fetch({
                     subject: 'notif:account',
                     cursor,
                 });
                 for (const event of page.items) {
-                    puter.print(`${event.type}: ${event.notification.title}<br>`);
+                    mixt.print(`${event.type}: ${event.notification.title}<br>`);
                     seen++;
                 }
                 cursor = page.cursor;
             } while (cursor);
 
-            if (!seen) puter.print('nothing missed<br>');
+            if (!seen) mixt.print('nothing missed<br>');
         })();
     </script>
 </body>
@@ -260,20 +260,20 @@ With the [User-Pays Model](/user-pays-model/), deliveries are billed to the user
 
 ## Functions
 
-These Events features are supported out of the box when using Puter.js:
+These Events features are supported out of the box when using Mixt.js:
 
-- **[`puter.events.onLocal()`](/Events/onLocal/)** - Subscribe for as long as this client is connected
+- **[`mixt.events.onLocal()`](/Events/onLocal/)** - Subscribe for as long as this client is connected
 - **[`subscription.off()`](/Events/off/)** - End a session subscription
-- **[`puter.events.onPersistent()`](/Events/onPersistent/)** - Subscribe with a subscription that keeps running when your app is closed
-- **[`puter.events.list()`](/Events/list/)** - List the persistent subscriptions this caller holds
-- **[`puter.events.unsubscribe()`](/Events/unsubscribe/)** - End a persistent subscription
-- **[`puter.events.fetch()`](/Events/fetch/)** - Read what a subject recorded while nothing was listening
-- **[`puter.events.handlers`](/Events/handlers/)** - Publish, list and remove the named handlers persistent subscriptions run
-- **[`puter.events.workers`](/Events/workers/)** - List and destroy an app's events worker
+- **[`mixt.events.onPersistent()`](/Events/onPersistent/)** - Subscribe with a subscription that keeps running when your app is closed
+- **[`mixt.events.list()`](/Events/list/)** - List the persistent subscriptions this caller holds
+- **[`mixt.events.unsubscribe()`](/Events/unsubscribe/)** - End a persistent subscription
+- **[`mixt.events.fetch()`](/Events/fetch/)** - Read what a subject recorded while nothing was listening
+- **[`mixt.events.handlers`](/Events/handlers/)** - Publish, list and remove the named handlers persistent subscriptions run
+- **[`mixt.events.workers`](/Events/workers/)** - List and destroy an app's events worker
 
 ## Examples
 
-You can see various Puter.js Events features in action from the following examples:
+You can see various Mixt.js Events features in action from the following examples:
 
 - Session subscriptions
   - [Watch a Folder](/playground/events-watch-folder/)

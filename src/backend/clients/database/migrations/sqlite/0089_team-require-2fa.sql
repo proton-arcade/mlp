@@ -16,6 +16,6 @@
 -- along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 -- Whether every account this team provisioned must hold 2FA before it can
--- use Puter. Off until the owner turns it on, and the owner must hold 2FA
+-- use Mixt. Off until the owner turns it on, and the owner must hold 2FA
 -- themselves first, or enabling it would lock out the account that did so.
 ALTER TABLE `group` ADD COLUMN `require_2fa` INTEGER NOT NULL DEFAULT 0;

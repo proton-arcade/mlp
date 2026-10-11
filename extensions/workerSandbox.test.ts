@@ -34,8 +34,8 @@ describe('workerSandbox extension — handleWorkerSandboxPage', () => {
         expect(captured.contentType).toBe('html');
         expect(typeof captured.body).toBe('string');
         expect(captured.body).toContain('<!doctype html>');
-        expect(captured.body).toContain('Puter Worker Sandbox Playground');
-        // The page is meant to load the public puter SDK
-        expect(captured.body).toContain('https://js.puter.com/v2/');
+        expect(captured.body).toContain('Mixt Worker Sandbox Playground');
+        // The page is meant to load the public mixt SDK
+        expect(captured.body).toContain('https://js.mixt.mpl/v2/');
     });
 });

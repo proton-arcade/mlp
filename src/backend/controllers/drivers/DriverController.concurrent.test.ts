@@ -28,7 +28,7 @@ import { DriverController } from './DriverController.js';
 
 // Focused integration coverage for the concurrent-acquire path inside
 // `#handleCall`. The main DriverController.test.ts boots the full
-// PuterServer, but exercising concurrent-slot behaviour through real
+// MixtServer, but exercising concurrent-slot behaviour through real
 // drivers requires real provider machinery — too much for a unit test.
 // Here we instantiate the controller directly with a synthetic driver
 // that carries the only field we care about (`concurrent`), then drive

@@ -1,6 +1,6 @@
 <html>
 <body>
-    <script src="/puter.js/v2"></script>
+    <script src="/mixt.js/v2"></script>
     <h3>Brand assets</h3>
     <input id="who" placeholder="username or email">
     <select id="mode">
@@ -16,15 +16,15 @@
             if (!recipient) return;
             const mode = document.getElementById('mode').value;
 
-            await puter.fs.mkdir('assets', { createMissingParents: true }).catch(() => {});
+            await mixt.fs.mkdir('assets', { createMissingParents: true }).catch(() => {});
 
             try {
                 // Sharing again replaces their access, so changing a role is one call.
-                const [share] = await puter.fs.share('assets', recipient, mode);
-                puter.print(`${recipient} is now ${share.mode}<br>`);
-                puter.print(share.isNew ? 'newly added' : 'role changed');
+                const [share] = await mixt.fs.share('assets', recipient, mode);
+                mixt.print(`${recipient} is now ${share.mode}<br>`);
+                mixt.print(share.isNew ? 'newly added' : 'role changed');
             } catch (e) {
-                puter.print(`Could not share: ${e.code ?? e.message}`);
+                mixt.print(`Could not share: ${e.code ?? e.message}`);
             }
         });
     </script>

@@ -1,5 +1,5 @@
 ---
-title: puter.kv.decr()
+title: mixt.kv.decr()
 description: Decrement numeric values in the user's own key-value store by a specified amount.
 platforms: [websites, apps, nodejs, workers]
 ---
@@ -9,9 +9,9 @@ Decrements the value of a key. A missing or expired key starts from 0 and loses 
 ## Syntax
 
 ```js
-puter.kv.decr(key)
-puter.kv.decr(key, amount)
-puter.kv.decr(key, pathAndAmount)
+mixt.kv.decr(key)
+mixt.kv.decr(key, amount)
+mixt.kv.decr(key, pathAndAmount)
 ```
 
 ## Parameters
@@ -29,7 +29,7 @@ When `amount` is an object: Decrements a property within an object value stored 
 - Key: the path to the property (e.g., `"user.score"`)
 - Value: the amount to decrement by
 
-`amount` must be within **±9,007,199,254,740,991** (`Number.MAX_SAFE_INTEGER`); a larger one is applied clamped to that bound. A counter stays exact only while its total is inside the same range — store anything that has to count past it as a string with [`puter.kv.set()`](/KV/set/).
+`amount` must be within **±9,007,199,254,740,991** (`Number.MAX_SAFE_INTEGER`); a larger one is applied clamped to that bound. A counter stays exact only while its total is inside the same range — store anything that has to count past it as a string with [`mixt.kv.set()`](/KV/set/).
 
 Paths support dot notation, array indexes at any level (`[0]`, `items[0]`, or `some.path[1].to.value`), and quoted property names (`["key.with.dots"]`). An empty path (`""`) targets the whole stored value. Use non-negative integer indexes in brackets to address arrays. When a path continues through an array element (for example, `[0].score`), that element must already exist. Missing object parents are created automatically; sparse array elements are not created. A path may chain at most 31 levels; a deeper one rejects with `bad_request`. Quoted names can't be empty. All of a call's paths go into one write, so a call fits at most 1,500 path segments and, with short field names, about 60 paths; split larger changes across calls. See [Rate Limits and Quotas](/rate-limits-and-quotas/).
 
@@ -63,10 +63,10 @@ A rejection carries an `Error` with a stable `code`:
 ```html;kv-decr
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
-        puter.kv.decr('testDecrKey').then((newValue) => {
-            puter.print(`New value: ${newValue}`);
+        mixt.kv.decr('testDecrKey').then((newValue) => {
+            mixt.print(`New value: ${newValue}`);
         });
     </script>
 </body>
@@ -78,17 +78,17 @@ A rejection carries an `Error` with a stable `code`:
 ```html;kv-decr-nested
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
             // If 'stats' contains: { user: { score: 10 } }
-            await puter.kv.set('stats', {user: {score: 10}})
+            await mixt.kv.set('stats', {user: {score: 10}})
 
             // This decrements user.score by 2
-            const newValue = await puter.kv.decr('stats', {"user.score": 2});
+            const newValue = await mixt.kv.decr('stats', {"user.score": 2});
 
             // newValue will be: { user: { score: 8 } }
-            puter.print(`New value: ${JSON.stringify(newValue)}`);
+            mixt.print(`New value: ${JSON.stringify(newValue)}`);
         })();
     </script>
 </body>

@@ -2,7 +2,7 @@
  * ContextMenuModal
  *
  * A mobile-friendly context menu modal that appears positioned over a target element.
- * Adapted from voice-recorder project for Puter dashboard use.
+ * Adapted from voice-recorder project for Mixt dashboard use.
  */
 
 /**
@@ -157,7 +157,7 @@ export default class ContextMenuModal {
 
     /**
      * Render menu items as HTML
-     * Supports both Puter format (html/onClick) and voice-recorder format (label/action)
+     * Supports both Mixt format (html/onClick) and voice-recorder format (label/action)
      * @param {Array} menuItems - Array of menu items
      * @returns {string} HTML string
      */

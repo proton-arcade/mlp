@@ -1,6 +1,6 @@
 ---
 title: Handle Errors in a Worker
-description: "Learn how to handle errors in a Puter.js serverless worker, so your app can show users what went wrong."
+description: "Learn how to handle errors in a Mixt.js serverless worker, so your app can show users what went wrong."
 tags: [workers]
 order: 41
 ---
@@ -73,7 +73,7 @@ router.post('/notes', async ({ request, user }) => {
     }
 
     const note = { id: crypto.randomUUID(), text, at: Date.now() };
-    await user.puter.kv.set(`notes:${note.id}`, note);
+    await user.mixt.kv.set(`notes:${note.id}`, note);
     return note;
 });
 ```
@@ -83,8 +83,8 @@ Check the type as well as the value. A body like `{ "text": 42 }` or
 
 ## Check the User's Session
 
-When your app calls the worker with [`puter.workers.exec()`](/Workers/exec/),
-the request carries the user's Puter session, and the route gets a `user`. The
+When your app calls the worker with [`mixt.workers.exec()`](/Workers/exec/),
+the request carries the user's Mixt OS session, and the route gets a `user`. The
 route gets a `user` even when the session is wrong or expired, because the
 session is not checked until you use it. The first call made with it rejects.
 
@@ -94,7 +94,7 @@ To answer `401` in that case too, look up the user in a `try` block:
 async function getCaller(user) {
     if (!user) return null;
     try {
-        return await user.puter.getUser();
+        return await user.mixt.getUser();
     } catch {
         return null;
     }
@@ -134,7 +134,7 @@ router.post('/summary', async ({ request, user }) => {
     }
 
     try {
-        const reply = await user.puter.fs.write(`notes/${body.id}.txt`, body.text);
+        const reply = await user.mixt.fs.write(`notes/${body.id}.txt`, body.text);
         return { saved: true, path: reply.path };
     } catch {
         return error(502, 'could not save right now, try again');
@@ -162,12 +162,12 @@ would answer every request.
 
 ## Read the Error in Your App
 
-The [`puter.workers.exec()`](/Workers/exec/) method works like `fetch()`. It
+The [`mixt.workers.exec()`](/Workers/exec/) method works like `fetch()`. It
 resolves for every status code, so a `400` is not thrown. Check `res.ok` and
 read the message:
 
 ```js
-const res = await puter.workers.exec('https://notes-api.puter.work/notes', {
+const res = await mixt.workers.exec('https://notes-api.mixt.work/notes', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ text: '' }),

@@ -17,8 +17,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { PuterController } from '../types.js';
-import type { PuterRouter } from '../../core/http/PuterRouter';
+import { MixtController } from '../types.js';
+import type { MixtRouter } from '../../core/http/MixtRouter';
 import { promoteToVerifiedGroup } from '../../util/userProvisioning.js';
 
 /**
@@ -43,8 +43,8 @@ const TOKEN_LINK_LIMIT = {
     key: 'ip' as const,
 };
 
-export class StaticPagesController extends PuterController {
-    registerRoutes(router: PuterRouter) {
+export class StaticPagesController extends MixtController {
+    registerRoutes(router: MixtRouter) {
         const origin = this.config.origin ?? '';
         const docsOrigin = (() => {
             const d = this.config.domain;
@@ -62,7 +62,7 @@ export class StaticPagesController extends PuterController {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>${title} — Puter</title>
+<title>${title} — Mixt</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -141,7 +141,7 @@ export class StaticPagesController extends PuterController {
     ${docsOrigin ? `<a href="${docsOrigin}">Docs</a>` : ''}
     <a href="${origin}/terms">Terms</a>
     <a href="${origin}/privacy">Privacy</a>
-    <a href="https://github.com/HeyPuter/puter">GitHub</a>
+    <a href="https://github.com/proton-arcade/mlp">GitHub</a>
   </div>
 </body>
 </html>`;

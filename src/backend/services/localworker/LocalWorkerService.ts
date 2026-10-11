@@ -1,5 +1,5 @@
 import { Miniflare, RequestInit as MiniflareRequestInit } from 'miniflare';
-import { puterServices } from '..';
+import { mixtServices } from '..';
 import { makeActor } from '../../core';
 import { loadFileInput } from '../../drivers/util/fileInput';
 import {
@@ -7,10 +7,10 @@ import {
     WORKER_COMPATIBILITY_DATE,
     WORKER_COMPATIBILITY_FLAGS,
 } from '../../drivers/workers/WorkerDriver';
-import { puterStores } from '../../stores';
+import { mixtStores } from '../../stores';
 import type { SubdomainRow } from '../../stores/subdomain/SubdomainStore';
 import { LayerInstances } from '../../types';
-import { PuterService } from '../types';
+import { MixtService } from '../types';
 
 const MAX_SOURCE_SIZE = 10 * 1024 * 1024; // 10 MB
 
@@ -37,15 +37,15 @@ const eventsKey = (workerName: string): string =>
 
 /**
  * Miniflare ignores the strict-public flag, so local workers fetch through this
- * network instead: public addresses and this machine (where Puter's own hosts
+ * network instead: public addresses and this machine (where Mixt's own hosts
  * live), but not link-local, where cloud metadata endpoints answer. The LAN is
  * opt-in via `workers.allowLanAccess`.
  */
 const LINK_LOCAL_RANGE = '169.254.0.0/16';
 
-export class LocalWorkerService extends PuterService {
-    declare protected stores: LayerInstances<typeof puterStores>;
-    declare protected services: LayerInstances<typeof puterServices>;
+export class LocalWorkerService extends MixtService {
+    declare protected stores: LayerInstances<typeof mixtStores>;
+    declare protected services: LayerInstances<typeof mixtServices>;
     async cfDeployLocal(
         workerName: string,
         authorization: string | undefined,
@@ -101,14 +101,14 @@ export class LocalWorkerService extends PuterService {
                     },
                 },
                 // Binds variables/secrets to the environment. A worker
-                // deployed without a token gets no `puter_auth` at all, the
+                // deployed without a token gets no `mixt_auth` at all, the
                 // same as upstream.
                 bindings: {
                     ...(authorization === undefined
                         ? {}
-                        : { puter_auth: authorization }),
+                        : { mixt_auth: authorization }),
                     ...extraBindings,
-                    puter_endpoint: this.config.api_base_url,
+                    mixt_endpoint: this.config.api_base_url,
                 },
                 script: code,
             } as WorkerOptions);
@@ -139,7 +139,7 @@ export class LocalWorkerService extends PuterService {
             // cfDeployLocal here
             const existingSub: SubdomainRow | null =
                 await this.stores.subdomain.getBySubdomain(
-                    'workers.puter.' + workerName,
+                    'workers.mixt.' + workerName,
                 );
 
             if (!existingSub) {
@@ -190,7 +190,7 @@ export class LocalWorkerService extends PuterService {
 
     async cfDeleteLocal(workerName: string) {
         await this.#disposeWorker(workerName);
-        // Mirror the Cloudflare delete response shape — puter.js checks
+        // Mirror the Cloudflare delete response shape — mixt.js checks
         // `result` to decide whether the delete succeeded.
         return {
             success: true,

@@ -63,11 +63,11 @@ import type {
     ServerUploadInput,
     SignedUploadResult,
 } from '../../stores/fs/s3Types.js';
-import type { puterStores } from '../../stores/index.js';
+import type { mixtStores } from '../../stores/index.js';
 import type { LayerInstances } from '../../types.js';
 import { runWithConcurrencyLimitSettled } from '../../util/concurrency.js';
 import { AclMode } from '../acl/ACLService.js';
-import type { puterServices } from '../index.js';
+import type { mixtServices } from '../index.js';
 import {
     APP_DATA_FS_MODE_CLASSES,
     appDataPermission,
@@ -75,7 +75,7 @@ import {
 } from '../permission/appDataScopes.js';
 import { MANAGE_PERM_PREFIX } from '../permission/consts.js';
 import { PermissionUtil } from '../permission/permissionUtil.js';
-import { PuterService } from '../types.js';
+import { MixtService } from '../types.js';
 import { FSEntryCacheInvalidationEventHandler } from './cacheInvalidation.js';
 import {
     isOwnersTrash,
@@ -265,12 +265,12 @@ interface BatchStartSignedWriteResult {
     createdDirectoryEntries: FSEntry[];
 }
 
-export class FSService extends PuterService {
+export class FSService extends MixtService {
     /** Overridable so tests can reach the cap without filling it. */
     static MAX_PENDING_UPLOADS_PER_OWNER = MAX_PENDING_UPLOADS_PER_OWNER;
 
-    declare protected stores: LayerInstances<typeof puterStores>;
-    declare protected services: LayerInstances<typeof puterServices>;
+    declare protected stores: LayerInstances<typeof mixtStores>;
+    declare protected services: LayerInstances<typeof mixtServices>;
 
     override onServerStart(): void {
         // Wire cache invalidation: listens to events emitted by FS
@@ -298,7 +298,7 @@ export class FSService extends PuterService {
         const fsEntryStore = this.stores.fsEntry;
 
         // -- fs:/path:mode → fs:<uuid>:mode -----------------------------
-        // Clients (puter.perms, requestPermission) emit path-based strings;
+        // Clients (mixt.perms, requestPermission) emit path-based strings;
         // stored as-is they'd never match anything, so resolve to uuid up
         // front.
         permissions.registerRewriter({
@@ -558,7 +558,7 @@ export class FSService extends PuterService {
     }
 
     #resolveBucket(): string {
-        const bucket = this.config.s3_bucket ?? 'puter-local';
+        const bucket = this.config.s3_bucket ?? 'mixt-local';
         if (typeof bucket !== 'string' || bucket.length === 0) {
             throw new HttpError(500, 'Missing S3 bucket configuration', {
                 legacyCode: 'internal_error',

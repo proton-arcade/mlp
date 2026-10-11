@@ -40,8 +40,8 @@ import { runWithContext } from '../../core/context.js';
 import { KV_GLOBAL_APP_KEY } from '../../stores/systemKv/SystemKVStore.js';
 import {
     createTestUser,
-    setupPuterTestEnv,
-    type PuterTestEnv,
+    setupMixtTestEnv,
+    type MixtTestEnv,
 } from '../../testUtil.js';
 import type { IConfig } from '../../types.js';
 import { DEFAULT_FREE_SUBSCRIPTION } from '../metering/consts.js';
@@ -61,7 +61,7 @@ interface TestUser {
     uuid: string;
 }
 
-let env: PuterTestEnv;
+let env: MixtTestEnv;
 let owner: TestUser;
 let guest: TestUser;
 let stranger: TestUser;
@@ -118,7 +118,7 @@ const clearRows = async () => {
 };
 
 beforeAll(async () => {
-    env = await setupPuterTestEnv({
+    env = await setupMixtTestEnv({
         events: { enabled: true, kvHandles: true },
         // Seeded accounts carry no email, which the plan machinery reads as a
         // temporary account — and a temporary account holds no durable rows.
@@ -658,7 +658,7 @@ describe('a write in the shared region', () => {
  * email when it wants to be a registered one.
  */
 describe('what a plan lets an account hold', () => {
-    let tiered: PuterTestEnv;
+    let tiered: MixtTestEnv;
     let tieredUserId: number;
     let tieredUuid: string;
 
@@ -700,7 +700,7 @@ describe('what a plan lets an account hold', () => {
     };
 
     beforeAll(async () => {
-        tiered = await setupPuterTestEnv({
+        tiered = await setupMixtTestEnv({
             events: { enabled: true, kvHandles: true },
         } as IConfig);
         const user = await tiered.server.stores.user.getByUsername(

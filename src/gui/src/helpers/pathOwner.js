@@ -18,7 +18,7 @@
  */
 
 /**
- * Owner of an item, read off its path — Puter paths are `/{username}/…`.
+ * Owner of an item, read off its path — Mixt paths are `/{username}/…`.
  *
  * @param {string} path
  * @returns {string|null} null when the path names no owner (relative, or `/`).

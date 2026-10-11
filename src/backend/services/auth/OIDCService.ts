@@ -19,10 +19,10 @@
 
 import type { LayerInstances } from '../../types';
 import type { EventMetadata } from '../../clients/event/types.js';
-import type { puterServices } from '../index';
+import type { mixtServices } from '../index';
 import type { UserRow } from '../../stores/user/UserStore';
 import { isOwnedEmailConflict } from '../../stores/user/UserStore.js';
-import { PuterService } from '../types';
+import { MixtService } from '../types';
 import {
     cleanEmail,
     isBlockedEmail,
@@ -93,8 +93,8 @@ interface OIDCUserInfo {
  * Config shape: `config.oidc.providers.<providerId>.{ client_id, client_secret,
  * ... }`
  */
-export class OIDCService extends PuterService {
-    declare protected services: LayerInstances<typeof puterServices>;
+export class OIDCService extends MixtService {
+    declare protected services: LayerInstances<typeof mixtServices>;
 
     #discoveryCache: Map<string, Record<string, string>> = new Map();
     #jwksCache: Map<string, JwksCacheEntry> = new Map();
@@ -415,7 +415,7 @@ export class OIDCService extends PuterService {
     }
 
     /**
-     * Find an existing Puter user by the email claimed by the OIDC provider.
+     * Find an existing Mixt user by the email claimed by the OIDC provider.
      *
      * Matches on both the raw `email` column and the canonical `clean_email`
      * column so that `Foo.Bar+tag@gmail.com` (OIDC) resolves to an account that
@@ -472,7 +472,7 @@ export class OIDCService extends PuterService {
     }
 
     /**
-     * Create a new Puter user from OIDC claims and link the provider. Returns
+     * Create a new Mixt user from OIDC claims and link the provider. Returns
      * `{ success, user, error? }`.
      *
      * `raced` means a concurrent callback got there first and the caller should
@@ -594,7 +594,7 @@ export class OIDCService extends PuterService {
         // address verdict is an input to the reputation decision. The abuse
         // extension's `email.validate` handler caches its Kickbox verdict and
         // its `emailQuality` check reads that cache under
-        // `puter.signup.validate`, so emitting these two in the other order
+        // `mixt.signup.validate`, so emitting these two in the other order
         // silently drops the email signal from every OIDC signup.
         if (isBlockedEmail(email, this.config.blockedEmailDomains)) {
             return {
@@ -648,7 +648,7 @@ export class OIDCService extends PuterService {
         const validateMeta: EventMetadata = {};
         try {
             await this.clients.event?.emitAndWait(
-                'puter.signup.validate',
+                'mixt.signup.validate',
                 validateEvent,
                 validateMeta,
             );
@@ -842,7 +842,7 @@ export class OIDCService extends PuterService {
         }
         try {
             this.clients.event?.emit(
-                'puter.signup.success',
+                'mixt.signup.success',
                 {
                     user_id: resolved.id,
                     user_uuid: resolved.uuid,

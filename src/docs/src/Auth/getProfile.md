@@ -1,5 +1,5 @@
 ---
-title: puter.auth.getProfile()
+title: mixt.auth.getProfile()
 description: Read a user's profile, returning null when it is not available.
 platforms: [websites, apps, nodejs, workers]
 ---
@@ -9,8 +9,8 @@ Returns a user's profile: their picture, display name, and bio. A user can alway
 ## Syntax
 
 ```js
-puter.auth.getProfile();
-puter.auth.getProfile(username);
+mixt.auth.getProfile();
+mixt.auth.getProfile(username);
 ```
 
 ## Parameters
@@ -30,13 +30,13 @@ When signed out with no `username`, it resolves to `null` without opening a sign
 ```html;auth-get-profile
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <button id="show-profile">Show my profile</button>
     <pre id="profile"></pre>
     <script>
         document.getElementById('show-profile').addEventListener('click', async () => {
-            if (!puter.auth.isSignedIn()) await puter.auth.signIn();
-            const profile = await puter.auth.getProfile();
+            if (!mixt.auth.isSignedIn()) await mixt.auth.signIn();
+            const profile = await mixt.auth.getProfile();
             document.getElementById('profile').textContent = profile
                 ? JSON.stringify({ ...profile, picture: profile.picture ? '(picture set)' : null }, null, 2)
                 : 'No profile available.';

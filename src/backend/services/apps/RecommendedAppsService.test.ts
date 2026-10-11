@@ -1,12 +1,12 @@
 import { randomUUID } from 'node:crypto';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { extension, extensionStore } from '../../extensions.js';
-import type { PuterServer } from '../../server.js';
+import type { MixtServer } from '../../server.js';
 import { setupTestServer } from '../../testUtil.js';
 import { RECOMMENDED_APP_NAMES } from './RecommendedAppsService.js';
 
 describe('RecommendedAppsService', () => {
-    let server: PuterServer;
+    let server: MixtServer;
     let customApp: Record<string, unknown>;
     let defaults: Array<Record<string, unknown>>;
     const previousListeners = extensionStore.events['app.recommended'];

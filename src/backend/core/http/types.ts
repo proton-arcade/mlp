@@ -75,7 +75,7 @@ export type AccountGateUser = Partial<
 
 /**
  * Renders an error into a vendor-compatible wire envelope instead of the
- * default Puter JSON shape. Set per-route via `RouteOptions.errorRenderer`; the
+ * default Mixt JSON shape. Set per-route via `RouteOptions.errorRenderer`; the
  * terminal `errorHandler` middleware uses it when present, for every error that
  * reaches that route — including gate failures (auth, plan, rate limit) — not
  * only ones the handler itself throws.
@@ -283,14 +283,14 @@ export interface RouteOptions {
 
     /**
      * Render every error this route produces — including gate failures — in a
-     * vendor-compatible wire envelope instead of the default Puter JSON shape.
+     * vendor-compatible wire envelope instead of the default Mixt JSON shape.
      * See [[ErrorRenderer]].
      */
     errorRenderer?: ErrorRenderer;
 }
 
 /**
- * Normalized route record produced by PuterRouter (and the class/method
+ * Normalized route record produced by MixtRouter (and the class/method
  * decorators). `path` is omitted only for `router.use(handler)` / `use(options,
  * handler)`.
  */
@@ -314,9 +314,9 @@ export interface CollectedRoute {
 }
 
 /** Internal: the property name used to stash decorator metadata on prototypes. */
-export const ROUTES_METADATA_KEY = '__puterRoutes' as const;
+export const ROUTES_METADATA_KEY = '__mixtRoutes' as const;
 /** Internal: the property name used to stash a controller's path prefix. */
-export const PREFIX_METADATA_KEY = '__puterControllerPrefix' as const;
+export const PREFIX_METADATA_KEY = '__mixtControllerPrefix' as const;
 
 // -- Type narrowing helpers ------------------------------------------
 //
@@ -325,7 +325,7 @@ export const PREFIX_METADATA_KEY = '__puterControllerPrefix' as const;
 // gate runs before the handler. These types encode that guarantee at the
 // type level, so handlers can use `req.actor` without a non-null assertion.
 //
-// Activated by the `const` generic on PuterRouter's per-method overloads:
+// Activated by the `const` generic on MixtRouter's per-method overloads:
 // the literal options object is captured precisely (e.g. `{requireAuth: true}`
 // rather than `{requireAuth: boolean}`), letting the conditional branches
 // match by value.

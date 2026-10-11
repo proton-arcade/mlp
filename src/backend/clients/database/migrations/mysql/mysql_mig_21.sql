@@ -56,9 +56,9 @@
 -- duplicate owners. Collapse them first (admin → One-off Jobs → Collapse
 -- Duplicate Emails) — there is no safe automatic merge of two accounts.
 
-DROP PROCEDURE IF EXISTS _puter_add_owned_email;
+DROP PROCEDURE IF EXISTS _mixt_add_owned_email;
 DELIMITER //
-CREATE PROCEDURE _puter_add_owned_email()
+CREATE PROCEDURE _mixt_add_owned_email()
 BEGIN
   IF NOT EXISTS (
     SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS
@@ -93,11 +93,11 @@ BEGIN
 END//
 DELIMITER ;
 
-CALL _puter_add_owned_email();
+CALL _mixt_add_owned_email();
 
-DROP PROCEDURE IF EXISTS _puter_add_owned_email;
+DROP PROCEDURE IF EXISTS _mixt_add_owned_email;
 
--- One Puter account per external identity. OIDCStore.link already assumes this
+-- One Mixt account per external identity. OIDCStore.link already assumes this
 -- constraint exists — it catches the unique violation to tell "re-linking the
 -- same account" apart from "this sub belongs to someone else" — but the table
 -- never actually had it, so two concurrent first-time logins could each create
@@ -107,9 +107,9 @@ DROP PROCEDURE IF EXISTS _puter_add_owned_email;
 -- Dedupe `user_oidc_providers` before applying this: keep the lowest `id` per
 -- (provider, provider_sub) and point it at the account the collapse job kept.
 
-DROP PROCEDURE IF EXISTS _puter_add_oidc_sub_unique;
+DROP PROCEDURE IF EXISTS _mixt_add_oidc_sub_unique;
 DELIMITER //
-CREATE PROCEDURE _puter_add_oidc_sub_unique()
+CREATE PROCEDURE _mixt_add_oidc_sub_unique()
 BEGIN
   IF NOT EXISTS (
     SELECT 1 FROM INFORMATION_SCHEMA.STATISTICS
@@ -123,6 +123,6 @@ BEGIN
 END//
 DELIMITER ;
 
-CALL _puter_add_oidc_sub_unique();
+CALL _mixt_add_oidc_sub_unique();
 
-DROP PROCEDURE IF EXISTS _puter_add_oidc_sub_unique;
+DROP PROCEDURE IF EXISTS _mixt_add_oidc_sub_unique;

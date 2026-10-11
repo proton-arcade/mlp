@@ -25,8 +25,8 @@ import { makeActor, type Actor } from '../../core/actor.js';
 import { runWithContext } from '../../core/context.js';
 import type { HttpError } from '../../core/http/HttpError.js';
 import { consumeRouteRateLimit } from '../../core/http/middleware/rateLimit.js';
-import { PuterRouter } from '../../core/http/PuterRouter.js';
-import { PuterServer } from '../../server.js';
+import { MixtRouter } from '../../core/http/MixtRouter.js';
+import { MixtServer } from '../../server.js';
 import { DEFAULT_FREE_SUBSCRIPTION } from '../../services/metering/consts.js';
 import { FULL_API_ACCESS } from '../../services/permission/consts.js';
 import { setupTestServer } from '../../testUtil.js';
@@ -38,11 +38,11 @@ import { FS_MUTATE_LIMIT, FS_SIGN_MAX_ITEMS } from './limits.js';
 
 // ── Test harness ────────────────────────────────────────────────────
 //
-// Boots one real PuterServer per test file (in-memory sqlite + dynamo +
+// Boots one real MixtServer per test file (in-memory sqlite + dynamo +
 // s3 + mock redis). Each test gets its own fresh user via `makeUser` so
 // state doesn't leak between cases.
 
-let server: PuterServer;
+let server: MixtServer;
 let controller: LegacyFSController;
 
 beforeAll(async () => {
@@ -176,7 +176,7 @@ const multipartWriteBatchReq = (
 
 // Multipart /batch body built from explicitly ordered parts — for payloads
 // that interleave `operation`/`fileinfo` fields with a `file` blob the way
-// puter-js's legacy folder-upload fallback does.
+// mixt-js's legacy folder-upload fallback does.
 type BatchMultipartPart =
     | { field: 'operation' | 'fileinfo'; value: unknown }
     | {
@@ -2538,10 +2538,10 @@ describe('LegacyFSController.openItem (grant scope)', () => {
     };
 
     it('is registered behind the user-session gate', () => {
-        const router = new PuterRouter();
+        const router = new MixtRouter();
         (
             controller as unknown as {
-                registerRoutes: (r: PuterRouter) => void;
+                registerRoutes: (r: MixtRouter) => void;
             }
         ).registerRoutes(router);
         const route = router.routes.find(
@@ -3489,7 +3489,7 @@ describe('LegacyFSController.read file streaming', () => {
         return { res, captured };
     };
 
-    it('streams a file with octet-stream by default for wire-compat with v1 puter-js', async () => {
+    it('streams a file with octet-stream by default for wire-compat with v1 mixt-js', async () => {
         const { actor, userId } = await makeUser();
         const username = actor.user!.username!;
         const body = Buffer.from('legacy file body');
@@ -4799,7 +4799,7 @@ describe('LegacyFSController.updateFsentryThumbnail', () => {
     it.each([
         [
             'an s3:// pointer',
-            's3://puter-local/00000000-0000-4000-8000-000000000000',
+            's3://mixt-local/00000000-0000-4000-8000-000000000000',
         ],
         ['an https URL', 'https://cdn.example.com/x.png'],
         ['a bare object key', 'thumbnails/whatever'],
@@ -4854,10 +4854,10 @@ describe('LegacyFSController GET /get-launch-apps', () => {
     // The route is an inline lambda in `registerRoutes`, so pull it off a
     // freshly-registered router rather than calling a named method.
     const getLaunchAppsHandler = () => {
-        const router = new PuterRouter();
+        const router = new MixtRouter();
         (
             controller as unknown as {
-                registerRoutes: (r: PuterRouter) => void;
+                registerRoutes: (r: MixtRouter) => void;
             }
         ).registerRoutes(router);
         const route = router.routes.find(

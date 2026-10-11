@@ -30,18 +30,18 @@ import {
 import jwt from 'jsonwebtoken';
 import { v4 as uuidv4 } from 'uuid';
 import { runWithContext } from '../../core/context.js';
-import { PuterRouter } from '../../core/http/PuterRouter.js';
+import { MixtRouter } from '../../core/http/MixtRouter.js';
 import type { OIDCService } from '../../services/auth/OIDCService.js';
-import { PuterServer } from '../../server.js';
+import { MixtServer } from '../../server.js';
 import { setupTestServer } from '../../testUtil.js';
 
 const TEST_ORIGIN = 'http://test.local';
 
 // ── Test harness ────────────────────────────────────────────────────
 //
-// Boots one real PuterServer with a custom OIDC provider configured,
+// Boots one real MixtServer with a custom OIDC provider configured,
 // then re-registers OIDCController's inline lambda routes onto a
-// fresh PuterRouter so each handler is reachable. Tests run against
+// fresh MixtRouter so each handler is reachable. Tests run against
 // the live wired OIDCService (real signState / verifyState, real
 // findUserByProviderSub / linkProviderToUser, real createUserFromOIDC)
 // and AuthService (real session token).
@@ -50,8 +50,8 @@ const TEST_ORIGIN = 'http://test.local';
 // and `getUserInfo` — are stubbed per-test with `vi.spyOn` so the
 // callback flow can be exercised without standing up a fake IdP.
 
-let server: PuterServer;
-let router: PuterRouter;
+let server: MixtServer;
+let router: MixtRouter;
 
 // Stand-in for the abuse extension's signup veto. EventClient has no off(),
 // so one shared listener is installed in beforeAll and tests swap the
@@ -84,10 +84,10 @@ beforeAll(async () => {
             },
         },
     } as never);
-    router = new PuterRouter();
+    router = new MixtRouter();
     server.controllers.oidc.registerRoutes(router);
     server.clients.event.on(
-        'puter.signup.validate',
+        'mixt.signup.validate',
         (_k: unknown, data: unknown) => {
             if (signupValidateOverride) {
                 signupValidateOverride(data as Record<string, unknown>);
@@ -95,19 +95,19 @@ beforeAll(async () => {
         },
     );
     server.clients.event.on(
-        'puter.signup-bonus.check',
+        'mixt.signup-bonus.check',
         (_k: unknown, data: unknown) => {
             bonusCheckOverride?.(data as Record<string, unknown>);
         },
     );
     server.clients.event.on(
-        'puter.signup-bonus.validate',
+        'mixt.signup-bonus.validate',
         (_k: unknown, data: unknown) => {
             bonusValidateOverride?.(data as Record<string, unknown>);
         },
     );
     server.clients.event.on(
-        'puter.signup.success',
+        'mixt.signup.success',
         (_k: unknown, data: unknown) => {
             heardSignupSuccess.push(data as Record<string, unknown>);
         },
@@ -1031,7 +1031,7 @@ describe('OIDCController login callback', () => {
         // Session cookie plus the proof's binding companion.
         expect(captured.cookies).toHaveLength(2);
         const binding = captured.cookies.find(
-            (c) => c.name === 'puter_oidc_popup_return',
+            (c) => c.name === 'mixt_oidc_popup_return',
         );
         expect(binding?.value).toBeTruthy();
         expect(proof?.nonce).toBe(binding!.value);
@@ -1423,7 +1423,7 @@ describe('OIDCController signup veto (abuse harness)', () => {
 });
 
 describe('OIDCController browser binding', () => {
-    const NONCE_COOKIE = 'puter_oidc_nonce';
+    const NONCE_COOKIE = 'mixt_oidc_nonce';
 
     const stubIdP = (sub: string, email: string) => {
         vi.spyOn(oidc(), 'exchangeCodeForTokens').mockResolvedValue({
@@ -1941,9 +1941,9 @@ describe('OIDCController revalidate callback', () => {
         expect(captured.redirectUrl).toBe(
             `${TEST_ORIGIN}/auth/revalidate-done`,
         );
-        // puter_revalidation cookie is set with httpOnly + 5 min max age.
+        // mixt_revalidation cookie is set with httpOnly + 5 min max age.
         expect(captured.cookies).toHaveLength(1);
-        expect(captured.cookies[0]?.name).toBe('puter_revalidation');
+        expect(captured.cookies[0]?.name).toBe('mixt_revalidation');
         expect(captured.cookies[0]?.value).toBeTruthy();
         const opts = captured.cookies[0]?.opts as {
             httpOnly: boolean;
@@ -2012,7 +2012,7 @@ describe('OIDCController GET /auth/revalidate-done', () => {
         );
         expect(captured.contentType).toContain('text/html');
         const body = String(captured.body);
-        expect(body).toContain('puter-revalidate-done');
+        expect(body).toContain('mixt-revalidate-done');
         // The configured origin is JSON-stringified into the inline script.
         expect(body).toContain(JSON.stringify(TEST_ORIGIN));
     });
@@ -2040,7 +2040,7 @@ describe('OIDCController POST /auth/oidc/verify-popup-return', () => {
     const redeemWith = (openerState: unknown, nonce: string | null = NONCE) =>
         makeReq({
             body: { opener_state: openerState },
-            cookies: nonce === null ? {} : { puter_oidc_popup_return: nonce },
+            cookies: nonce === null ? {} : { mixt_oidc_popup_return: nonce },
         });
 
     const redeem = async (openerState: unknown) => {
@@ -2086,7 +2086,7 @@ describe('OIDCController POST /auth/oidc/verify-popup-return', () => {
     it('rejects a proof signed with someone else’s key', async () => {
         const forged = jwt.sign(
             {
-                opener_origin: 'https://console.puter.com',
+                opener_origin: 'https://console.mixt.mpl',
                 oidc_login: true,
                 purpose: 'popup-return',
                 nonce: NONCE,
@@ -2154,7 +2154,7 @@ describe('OIDCController POST /auth/oidc/verify-popup-return', () => {
     it('rejects an authorization state presented as a proof', async () => {
         const state = server.services.oidc.signState({
             provider: 'google',
-            redirect_uri: 'https://puter.test/action/sign-in',
+            redirect_uri: 'https://mixt.test/action/sign-in',
             embedded_in_popup: true,
             msg_id: '77',
             opener_origin: 'https://opener.test',
@@ -2202,7 +2202,7 @@ describe('OIDCController POST /auth/oidc/verify-popup-return', () => {
             res,
         );
         expect(captured.clearedCookies).toContainEqual(
-            expect.objectContaining({ name: 'puter_oidc_popup_return' }),
+            expect.objectContaining({ name: 'mixt_oidc_popup_return' }),
         );
     });
 

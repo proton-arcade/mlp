@@ -49,9 +49,9 @@ CREATE TABLE IF NOT EXISTS `kv_share_handles` (
 -- user uuid, an app uid and a key prefix. Guarded on the current length, as
 -- mig_24: replaying a column change on a growing table rebuilds it every boot.
 
-DROP PROCEDURE IF EXISTS _puter_widen_subscription_permission;
+DROP PROCEDURE IF EXISTS _mixt_widen_subscription_permission;
 DELIMITER //
-CREATE PROCEDURE _puter_widen_subscription_permission()
+CREATE PROCEDURE _mixt_widen_subscription_permission()
 BEGIN
   IF EXISTS (
     SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS
@@ -64,5 +64,5 @@ BEGIN
   END IF;
 END //
 DELIMITER ;
-CALL _puter_widen_subscription_permission();
-DROP PROCEDURE IF EXISTS _puter_widen_subscription_permission;
+CALL _mixt_widen_subscription_permission();
+DROP PROCEDURE IF EXISTS _mixt_widen_subscription_permission;

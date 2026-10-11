@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { PuterStore } from '../types';
+import { MixtStore } from '../types';
 import { HttpError } from '../../core/http/HttpError.js';
 
 const isUniqueConstraintError = (e) => {
@@ -35,7 +35,7 @@ const isUniqueConstraintError = (e) => {
  * Columns: id, user_id, provider, provider_sub, refresh_token, created_at.
  * UNIQUE(provider, provider_sub).
  */
-export class OIDCStore extends PuterStore {
+export class OIDCStore extends MixtStore {
     // -- Reads --------------------------------------------------------
 
     async getByProviderSub(provider, providerSub) {

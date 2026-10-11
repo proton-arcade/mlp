@@ -34,7 +34,7 @@ const resolve_app = async (name) => {
 
 export class ExecService extends Service {
     static description = `
-        Manages instances of apps on the Puter desktop.
+        Manages instances of apps on the Mixt desktop.
     `;
 
     _construct () {
@@ -54,7 +54,7 @@ export class ExecService extends Service {
             handler: this.connectToInstance.bind(this),
         });
 
-        this.log = puter.logger.fields({
+        this.log = mixt.logger.fields({
             category: 'ipc',
         });
     }
@@ -149,7 +149,7 @@ export class ExecService extends Service {
                 // accept both (same guard as launchApp.js).
                 if ( caller_app_info && (caller_app_info.godmode === true || caller_app_info.godmode === 1) ) {
                     // Get target app info to create file signatures
-                    const target_app_info = await puter.apps.get(app_name);
+                    const target_app_info = await mixt.apps.get(app_name);
 
                     // For the first file, create a file signature and set it up like opening a file
                     if ( file_paths.length > 0 ) {
@@ -158,12 +158,12 @@ export class ExecService extends Service {
 
                         try {
                             // Get file stats to verify it exists
-                            const file_stat = await puter.fs.stat({ path: first_file_path, consistency: 'eventual' });
+                            const file_stat = await mixt.fs.stat({ path: first_file_path, consistency: 'eventual' });
 
                             // Create file signature for the target app.
-                            // puter.apps.get returns `uid`; `uuid` is kept as
+                            // mixt.apps.get returns `uid`; `uuid` is kept as
                             // a fallback for any older cached shape.
-                            const file_signature_result = await puter.fs.sign(target_app_info.uid ?? target_app_info.uuid, {
+                            const file_signature_result = await mixt.fs.sign(target_app_info.uid ?? target_app_info.uuid, {
                                 path: first_file_path,
                                 action: 'write',
                             });
@@ -275,7 +275,7 @@ export class ExecService extends Service {
         if ( caller_process.name !== 'phoenix' ) {
             throw new Error('Connection not allowed.');
         }
-        if ( app_name !== 'puter-linux' ) {
+        if ( app_name !== 'mixt-linux' ) {
             throw new Error('Connection not allowed.');
         }
 

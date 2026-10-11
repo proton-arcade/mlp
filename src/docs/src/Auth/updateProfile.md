@@ -1,5 +1,5 @@
 ---
-title: puter.auth.updateProfile()
+title: mixt.auth.updateProfile()
 description: Update the signed-in user's profile picture, display name, or bio.
 platforms: [websites, apps, nodejs, workers]
 draft: true
@@ -10,7 +10,7 @@ Changes fields on the signed-in user's profile and returns the updated profile. 
 ## Syntax
 
 ```js
-puter.auth.updateProfile(patch);
+mixt.auth.updateProfile(patch);
 ```
 
 ## Parameters
@@ -44,16 +44,16 @@ The profile belongs to the account, so the call must be made with a user session
 ```html;auth-update-profile
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <input id="display-name" placeholder="Display name">
     <button id="save">Save</button>
     <p id="status"></p>
     <script>
         document.getElementById('save').addEventListener('click', async () => {
-            if (!puter.auth.isSignedIn()) await puter.auth.signIn();
+            if (!mixt.auth.isSignedIn()) await mixt.auth.signIn();
             const displayName = document.getElementById('display-name').value;
             try {
-                const profile = await puter.auth.updateProfile({ displayName });
+                const profile = await mixt.auth.updateProfile({ displayName });
                 document.getElementById('status').textContent = `Saved as ${profile.displayName ?? '(no name)'}`;
             } catch (error) {
                 document.getElementById('status').textContent = `${error.code}: ${error.message}`;

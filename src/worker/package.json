@@ -1,8 +1,8 @@
 {
-  "name": "@heyputer/worker",
+  "name": "@mixt/worker",
   "type": "module",
   "version": "1.0.0",
-  "description": "Worker preamble builder for Puter",
+  "description": "Worker preamble builder for Mixt",
   "main": "src/index.js",
   "scripts": {
     "build": "webpack --config webpack.config.cjs --mode production && node ./scripts/buildPreamble.mjs"

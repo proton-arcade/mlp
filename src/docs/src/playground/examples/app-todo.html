@@ -49,7 +49,7 @@
             color: #888;
         }
     </style>
-    <script src="/puter.js/v2"></script>
+    <script src="/mixt.js/v2"></script>
 </head>
 
 <body>
@@ -68,7 +68,7 @@
             let user;
 
             // When user logs in, print their username
-            puter.onAuth = async (user) => {
+            mixt.onAuth = async (user) => {
                 // print the user's username
                 const username = document.getElementById('username');
                 username.textContent = `Welcome, ${user.username}`;
@@ -76,7 +76,7 @@
 
             // Try to get the user from the session
             try {
-                user = await puter.getUser();
+                user = await mixt.getUser();
                 // print the user's username
                 const username = document.getElementById('username');
                 username.textContent = `Welcome, ${user.username}`;
@@ -87,8 +87,8 @@
             const inputField = document.getElementById('todo-input');
             const todoList = document.getElementById('todo-list');
 
-            // Load todos from the Puter Key-Value Store
-            const todos = JSON.parse(await puter.kv.get('todos') ?? null) || [];
+            // Load todos from the Mixt OS Key-Value Store
+            const todos = JSON.parse(await mixt.kv.get('todos') ?? null) || [];
             todos.forEach(todo => addTodoElement(todo));
 
             addButton.addEventListener('click', () => {
@@ -105,7 +105,7 @@
 
             clearAllButton.addEventListener('click', async () => {
                 todoList.innerHTML = ''; // Clear the list on the page
-                await puter.kv.del('todos'); // Clear the todos
+                await mixt.kv.del('todos'); // Clear the todos
             });
 
             todoList.addEventListener('click', (event) => {
@@ -133,7 +133,7 @@
                 const updatedTodos = [...todoList.children].map(li => {
                     return { text: li.textContent, completed: li.classList.contains('completed') };
                 });
-                await puter.kv.set('todos', JSON.stringify(updatedTodos));
+                await mixt.kv.set('todos', JSON.stringify(updatedTodos));
             }
         });
     </script>

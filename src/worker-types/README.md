@@ -1,13 +1,13 @@
-# @heyputer/worker-types
+# @mixt/worker-types
 
-TypeScript type definitions for the [Puter Workers](https://docs.puter.com/Workers/router) runtime.
+TypeScript type definitions for the [Mixt OS Workers](https://docs.mixt.mpl/Workers/router) runtime.
 
-Adds type-checking and autocomplete for the globals the runtime injects into every worker — `router`, `me`, `my`, `myself`, `puter_auth`, `puter_endpoint` — plus typed route handlers with **automatic `params` inference** from path literals.
+Adds type-checking and autocomplete for the globals the runtime injects into every worker — `router`, `me`, `my`, `myself`, `mixt_auth`, `mixt_endpoint` — plus typed route handlers with **automatic `params` inference** from path literals.
 
 ## Install
 
 ```sh
-npm install --save-dev @heyputer/worker-types
+npm install --save-dev @mixt/worker-types
 ```
 
 ## Setup
@@ -19,14 +19,14 @@ The recommended convention is to name worker files `*.worker.js` or `*.worker.ts
 Add a triple-slash reference at the top of each `*.worker.js` / `*.worker.ts` file:
 
 ```js
-/// <reference types="@heyputer/worker-types" />
+/// <reference types="@mixt/worker-types" />
 
 router.get('/api/hello', ({ request }) => {
     return { msg: 'hello' };
 });
 ```
 
-This is the line that the **New > Worker** action in the Puter GUI now adds automatically (the file is created as `New Worker.worker.js`).
+This is the line that the **New > Worker** action in the Mixt OS GUI now adds automatically (the file is created as `New Worker.worker.js`).
 
 ### Project-wide for worker files only
 
@@ -36,7 +36,7 @@ If you have many workers and don't want to repeat the directive, add a worker-on
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "types": ["@heyputer/worker-types"]
+    "types": ["@mixt/worker-types"]
   },
   "include": ["**/*.worker.ts"]
 }
@@ -57,7 +57,7 @@ Run both with `tsc -p tsconfig.json && tsc -p tsconfig.workers.json`, or use Typ
 For users who prefer being explicit, the same types are exported by name. Importing anything pulls the globals into that file, so you don't also need the triple-slash reference:
 
 ```ts
-import type { Handler, Router, WorkerEvent } from '@heyputer/worker-types';
+import type { Handler, Router, WorkerEvent } from '@mixt/worker-types';
 
 const getPost: Handler<{ id: string }> = ({ params }) => ({ id: params.id });
 router.get('/posts/:id', getPost);
@@ -68,16 +68,16 @@ router.get('/posts/:id', getPost);
 | Global | Type | Description |
 |---|---|---|
 | `router` | `Router` | Register handlers via `get`/`post`/`put`/`delete`/`options`/`custom`. |
-| `me` | `{ puter: Puter }` | Deployer's Puter context (FS, KV, auth, etc). |
-| `my`, `myself` | `{ puter: Puter }` | Aliases for `me`. |
-| `puter_auth` | `string` | Deployer's auth token (Cloudflare secret binding). |
-| `puter_endpoint` | `string` | Puter API endpoint. |
+| `me` | `{ mixt: Mixt OS }` | Deployer's Mixt OS context (FS, KV, auth, etc). |
+| `my`, `myself` | `{ mixt: Mixt OS }` | Aliases for `me`. |
+| `mixt_auth` | `string` | Deployer's auth token (Cloudflare secret binding). |
+| `mixt_endpoint` | `string` | Mixt OS API endpoint. |
 
 The `event` object passed to a handler exposes:
 
 - `request` — standard `Request`
 - `params` — route params, **inferred from the path literal** (`'/posts/:id'` -> `{ id: string }`)
-- `user` / `requestor` — caller's Puter context, present only when the worker is invoked with a `puter-auth` header (e.g. via `puter.workers.exec()`)
+- `user` / `requestor` — caller's Mixt OS context, present only when the worker is invoked with a `mixt-auth` header (e.g. via `mixt.workers.exec()`)
 
 Handlers can return a `Response`, a string, a `Blob`/`ArrayBuffer`/`Uint8Array`/`ReadableStream`, or any JSON-serialisable value — the router wraps it for you.
 

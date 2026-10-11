@@ -1,25 +1,25 @@
 ---
-title: puter.email.get()
+title: mixt.email.get()
 description: Fetch and parse one message from the user's mailbox by its id.
 platforms: [websites, apps, nodejs, workers]
 ---
 
 Reads one message by the `id` a listing returned. The whole raw message is downloaded and parsed, so the result carries the full subject, sender and recipients, the text and HTML bodies, every header, and each attachment with its bytes. Pass `raw: true` to get the unparsed `message/rfc822` bytes as a `Blob` instead.
 
-Reading the mailbox requires the `fs:/{username}/.mail:read` permission, the same grant [`puter.email.list()`](/Email/list/) needs.
+Reading the mailbox requires the `fs:/{username}/.mail:read` permission, the same grant [`mixt.email.list()`](/Email/list/) needs.
 
 ## Syntax
 
 ```js
-puter.email.get(id)
-puter.email.get(options)
+mixt.email.get(id)
+mixt.email.get(options)
 ```
 
 ## Parameters
 
 #### `id` (String) (required)
 
-The message id from `puter.email.list()`. Looks up the inbox.
+The message id from `mixt.email.list()`. Looks up the inbox.
 
 #### `options` (Object)
 
@@ -33,7 +33,7 @@ A `Promise` that resolves to an [`EmailMessage`](/Objects/emailmessage/) object:
 
 With `raw: true`, the `Promise` resolves to a `Blob` of the `message/rfc822` bytes exactly as they were received.
 
-Messages can be up to 25 MiB, and `get()` holds the whole message in memory while parsing. For a message list, use `puter.email.list()` and read messages one at a time as the user opens them.
+Messages can be up to 25 MiB, and `get()` holds the whole message in memory while parsing. For a message list, use `mixt.email.list()` and read messages one at a time as the user opens them.
 
 ## Errors
 
@@ -50,16 +50,16 @@ Rejects with an object carrying a `code`:
 ```html
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
-            const { items } = await puter.email.list({ limit: 1 });
-            if (items.length === 0) return puter.print('Inbox is empty');
+            const { items } = await mixt.email.list({ limit: 1 });
+            if (items.length === 0) return mixt.print('Inbox is empty');
 
-            const message = await puter.email.get(items[0].id);
-            puter.print(`From: ${message.from?.name} &lt;${message.from?.address}&gt;<br>`);
-            puter.print(`Subject: ${message.subject}<br>`);
-            puter.print(`<pre>${message.text}</pre>`);
+            const message = await mixt.email.get(items[0].id);
+            mixt.print(`From: ${message.from?.name} &lt;${message.from?.address}&gt;<br>`);
+            mixt.print(`Subject: ${message.subject}<br>`);
+            mixt.print(`<pre>${message.text}</pre>`);
         })();
     </script>
 </body>
@@ -71,17 +71,17 @@ Rejects with an object carrying a `code`:
 ```html
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
-            const { items } = await puter.email.list({ limit: 1 });
-            if (items.length === 0) return puter.print('Inbox is empty');
+            const { items } = await mixt.email.list({ limit: 1 });
+            if (items.length === 0) return mixt.print('Inbox is empty');
 
-            const message = await puter.email.get(items[0].id);
+            const message = await mixt.email.get(items[0].id);
             for (const attachment of message.attachments) {
                 const name = attachment.filename ?? 'attachment';
-                await puter.fs.write(`~/Documents/${name}`, new Blob([attachment.content], { type: attachment.mimeType }));
-                puter.print(`Saved ${name} (${attachment.size} bytes)<br>`);
+                await mixt.fs.write(`~/Documents/${name}`, new Blob([attachment.content], { type: attachment.mimeType }));
+                mixt.print(`Saved ${name} (${attachment.size} bytes)<br>`);
             }
         })();
     </script>
@@ -94,15 +94,15 @@ Rejects with an object carrying a `code`:
 ```html
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
-            const { items } = await puter.email.list({ folder: 'sent', limit: 1 });
-            if (items.length === 0) return puter.print('Nothing sent yet');
+            const { items } = await mixt.email.list({ folder: 'sent', limit: 1 });
+            if (items.length === 0) return mixt.print('Nothing sent yet');
 
-            const blob = await puter.email.get({ id: items[0].id, folder: 'sent', raw: true });
+            const blob = await mixt.email.get({ id: items[0].id, folder: 'sent', raw: true });
             const text = await blob.text();
-            puter.print(`<pre>${text.slice(0, 2000)}</pre>`);
+            mixt.print(`<pre>${text.slice(0, 2000)}</pre>`);
         })();
     </script>
 </body>

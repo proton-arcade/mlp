@@ -13,7 +13,7 @@ function bail(value) {
   return value;
 }
 
-// Workers are served at <name>.puter.work (the SDK lowercases the name).
+// Workers are served at <name>.mixt.work (the SDK lowercases the name).
 function workerUrl(name) {
   return `https://${String(name).toLowerCase()}.${WORKER_DOMAIN}`;
 }
@@ -34,7 +34,7 @@ export async function workerDeploy(fileArg, nameArg, opts) {
   if (!interactive && (!fileArg || !nameArg)) {
     throw new CLIError(
       'Both a file and name are required in non-interactive mode.',
-      { hint: 'Usage: puter worker deploy <file> <name>' },
+      { hint: 'Usage: mixt worker deploy <file> <name>' },
     );
   }
 
@@ -53,12 +53,12 @@ export async function workerDeploy(fileArg, nameArg, opts) {
     throw new CLIError(`No such file '${fileInput}'.`);
   }
 
-  const puter = await ensureClient();
+  const mixt = await ensureClient();
 
   // Resolve name.
   let name = nameArg;
   if (!name && interactive) {
-    const suggested = await randName(puter);
+    const suggested = await randName(mixt);
     name = bail(
       await clack.text({
         message: 'Worker name',
@@ -75,7 +75,7 @@ export async function workerDeploy(fileArg, nameArg, opts) {
   // 1. Does it already exist?
   let existing = null;
   try {
-    existing = await puter.workers.get(name);
+    existing = await mixt.workers.get(name);
   } catch {
     existing = null;
   }
@@ -86,12 +86,12 @@ export async function workerDeploy(fileArg, nameArg, opts) {
   const sp = ui.spinner('Uploading worker...');
   let created = null;
   try {
-    await puter.fs.write(remotePath, code, {
+    await mixt.fs.write(remotePath, code, {
       overwrite: true,
       createMissingParents: true,
     });
     if (!existing) {
-      created = await puter.workers.create(name, remotePath);
+      created = await mixt.workers.create(name, remotePath);
       sp.stop('Worker created.');
     } else {
       sp.stop('Worker file updated.');
@@ -112,11 +112,11 @@ export async function workerDeploy(fileArg, nameArg, opts) {
 // --- list / get / delete --------------------------------------------------
 
 export async function workerList() {
-  const puter = await ensureClient();
-  const workers = (await puter.workers.list()) ?? [];
+  const mixt = await ensureClient();
+  const workers = (await mixt.workers.list()) ?? [];
 
   if (workers.length === 0) {
-    ui.info('No workers yet. Deploy one with: puter worker deploy');
+    ui.info('No workers yet. Deploy one with: mixt worker deploy');
     return;
   }
   for (const w of workers) {
@@ -126,10 +126,10 @@ export async function workerList() {
 }
 
 export async function workerGet(nameArg) {
-  const puter = await ensureClient();
+  const mixt = await ensureClient();
   let worker;
   try {
-    worker = await puter.workers.get(nameArg);
+    worker = await mixt.workers.get(nameArg);
   } catch (err) {
     throw new CLIError(`Could not fetch '${nameArg}': ${err.message}`);
   }
@@ -143,7 +143,7 @@ export async function workerGet(nameArg) {
 }
 
 export async function workerDelete(nameArg, opts) {
-  const puter = await ensureClient();
+  const mixt = await ensureClient();
 
   if (isInteractive() && !opts.yes) {
     const go = bail(
@@ -158,14 +158,14 @@ export async function workerDelete(nameArg, opts) {
   // Delete the worker first, then its backing file (the order the platform
   // wants: unregister before removing the file it points at).
   try {
-    await puter.workers.delete(nameArg);
+    await mixt.workers.delete(nameArg);
   } catch (err) {
     throw new CLIError(`Could not delete '${nameArg}': ${err.message}`);
   }
 
   const remotePath = `~/Workers/${nameArg}.js`;
   try {
-    await puter.fs.delete(remotePath);
+    await mixt.fs.delete(remotePath);
   } catch (err) {
     // Worker is already gone; the file may not exist or have a different name.
     ui.warn(`Worker deleted, but could not remove ${remotePath}: ${err?.message ?? err}`);

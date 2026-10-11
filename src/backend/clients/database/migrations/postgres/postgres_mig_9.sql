@@ -17,7 +17,7 @@
 
 -- User-to-developer feedback for apps that opt in. Mirrors SQLite migration
 -- 0065 / MySQL mysql_mig_20. Opt-in is the new `apps.feedback_enabled` column
--- (developer-writable through the regular `puter.apps.update` path). Each row
+-- (developer-writable through the regular `mixt.apps.update` path). Each row
 -- of `app_feedback` is one message a signed-in user submitted through the GUI
 -- feedback dialog; a copy is emailed to the app owner unless the per-app
 -- daily email cap suppressed it (`email_sent` records which). `app_uid` is

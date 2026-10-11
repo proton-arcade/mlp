@@ -18,8 +18,8 @@ import {
     PathPrefixIds,
     type SystemKVStore,
 } from './SystemKVStore.ts';
-import { PUTER_KV_STORE_TABLE_NAME } from './tableDefinition.ts';
-import { PuterServer } from '../../server.ts';
+import { MIXT_KV_STORE_TABLE_NAME } from './tableDefinition.ts';
+import { MixtServer } from '../../server.ts';
 import type { Actor } from '../../core/actor.ts';
 
 describe('incr expression sizing', () => {
@@ -113,7 +113,7 @@ describe('PathPrefixIds', () => {
 });
 
 describe('SystemKVStore', () => {
-    let server: PuterServer;
+    let server: MixtServer;
     let target: SystemKVStore;
 
     beforeAll(async () => {
@@ -1302,11 +1302,11 @@ describe('SystemKVStore', () => {
             const result = await target.update(
                 {
                     key: 'doc',
-                    pathAndValueMap: { name: 'puter' },
+                    pathAndValueMap: { name: 'mixt' },
                 },
                 opts,
             );
-            expect(result.res).toMatchObject({ name: 'puter' });
+            expect(result.res).toMatchObject({ name: 'mixt' });
         });
 
         it('writes nested paths and creates intermediate maps', async () => {
@@ -1847,7 +1847,7 @@ describe('SystemKVStore', () => {
                 );
                 expect(result.res).toBeNull();
                 const raw = await server.clients.dynamo.get(
-                    PUTER_KV_STORE_TABLE_NAME,
+                    MIXT_KV_STORE_TABLE_NAME,
                     {
                         namespace: kvNamespace(
                             actor.user.uuid!,
@@ -2738,7 +2738,7 @@ describe('SystemKVStore', () => {
                 });
                 expect((await target.get({ key }, opts)).res).toBeNull();
                 const raw = await server.clients.dynamo.get(
-                    PUTER_KV_STORE_TABLE_NAME,
+                    MIXT_KV_STORE_TABLE_NAME,
                     {
                         namespace: kvNamespace(
                             actor.user.uuid!,
@@ -3358,7 +3358,7 @@ describe('SystemKVStore', () => {
                 .spyOn(server.clients.dynamo, 'batchGet')
                 .mockImplementation(async (_params, consistentRead) => ({
                     Responses: {
-                        [PUTER_KV_STORE_TABLE_NAME]: [
+                        [MIXT_KV_STORE_TABLE_NAME]: [
                             {
                                 namespace,
                                 key: 'racy-secret-batch',
@@ -3429,7 +3429,7 @@ describe('SystemKVStore', () => {
                 value: 1,
             });
             const raw = await server.clients.dynamo.get(
-                PUTER_KV_STORE_TABLE_NAME,
+                MIXT_KV_STORE_TABLE_NAME,
                 { namespace: namespaceOf(actor), key: 'expiredCounter' },
             );
             expect(raw.Item?.ttl).toBeUndefined();
@@ -3557,7 +3557,7 @@ describe('SystemKVStore', () => {
                 opts,
             );
             const raw = await server.clients.dynamo.get(
-                PUTER_KV_STORE_TABLE_NAME,
+                MIXT_KV_STORE_TABLE_NAME,
                 { namespace: namespaceOf(actor), key: 'expiredWithTtl' },
             );
             expect(raw.Item?.ttl).toBe(future);
@@ -3722,7 +3722,7 @@ describe('SystemKVStore', () => {
                 opts,
             );
             const raw = await server.clients.dynamo.get(
-                PUTER_KV_STORE_TABLE_NAME,
+                MIXT_KV_STORE_TABLE_NAME,
                 { namespace: namespaceOf(actor), key: 'nullTtl' },
             );
             expect(raw.Item?.ttl).toBeUndefined();
@@ -3736,7 +3736,7 @@ describe('SystemKVStore', () => {
                 opts,
             );
             const raw = await server.clients.dynamo.get(
-                PUTER_KV_STORE_TABLE_NAME,
+                MIXT_KV_STORE_TABLE_NAME,
                 { namespace: namespaceOf(actor), key: 'zeroTtl' },
             );
             expect(raw.Item?.ttl).toBeUndefined();
@@ -3753,7 +3753,7 @@ describe('SystemKVStore', () => {
             const listed = await target.list({ as: 'keys' }, opts);
             expect(listed.res).not.toContain('pastTtl');
             const raw = await server.clients.dynamo.get(
-                PUTER_KV_STORE_TABLE_NAME,
+                MIXT_KV_STORE_TABLE_NAME,
                 { namespace: namespaceOf(actor), key: 'pastTtl' },
             );
             expect(raw.Item?.ttl as number).toBeGreaterThan(0);
@@ -3769,7 +3769,7 @@ describe('SystemKVStore', () => {
                 opts,
             );
             const raw = await server.clients.dynamo.get(
-                PUTER_KV_STORE_TABLE_NAME,
+                MIXT_KV_STORE_TABLE_NAME,
                 { namespace: namespaceOf(actor), key: 'bpNullTtl' },
             );
             expect(raw.Item?.ttl).toBeUndefined();
@@ -3777,13 +3777,13 @@ describe('SystemKVStore', () => {
 
         it('get and list agree on legacy rows whose ttl is null or 0', async () => {
             const namespace = namespaceOf(actor);
-            await server.clients.dynamo.put(PUTER_KV_STORE_TABLE_NAME, {
+            await server.clients.dynamo.put(MIXT_KV_STORE_TABLE_NAME, {
                 namespace,
                 key: 'legacyNull',
                 value: 'a',
                 ttl: null,
             });
-            await server.clients.dynamo.put(PUTER_KV_STORE_TABLE_NAME, {
+            await server.clients.dynamo.put(MIXT_KV_STORE_TABLE_NAME, {
                 namespace,
                 key: 'legacyZero',
                 value: 'b',
@@ -3827,7 +3827,7 @@ describe('SystemKVStore', () => {
                 opts,
             );
             const raw = await server.clients.dynamo.get(
-                PUTER_KV_STORE_TABLE_NAME,
+                MIXT_KV_STORE_TABLE_NAME,
                 { namespace: namespaceOf(actor), key: 'updateRemoveTtl' },
             );
             expect(raw.Item?.ttl).toBeUndefined();
@@ -3846,7 +3846,7 @@ describe('SystemKVStore', () => {
             const listed = await target.list({ as: 'keys' }, opts);
             expect(listed.res).not.toContain('expireAtZero');
             const raw = await server.clients.dynamo.get(
-                PUTER_KV_STORE_TABLE_NAME,
+                MIXT_KV_STORE_TABLE_NAME,
                 { namespace: namespaceOf(actor), key: 'expireAtZero' },
             );
             expect(raw.Item?.ttl as number).toBeGreaterThan(0);
@@ -3855,7 +3855,7 @@ describe('SystemKVStore', () => {
         it('a legacy row with a future string ttl is readable by get and list', async () => {
             const namespace = namespaceOf(actor);
             const future = String(Math.floor(Date.now() / 1000) + 3600);
-            await server.clients.dynamo.put(PUTER_KV_STORE_TABLE_NAME, {
+            await server.clients.dynamo.put(MIXT_KV_STORE_TABLE_NAME, {
                 namespace,
                 key: 'legacyStringFuture',
                 value: 'a',
@@ -3870,7 +3870,7 @@ describe('SystemKVStore', () => {
         it('a legacy row with a past numeric-string ttl reads null in get and list', async () => {
             const namespace = namespaceOf(actor);
             const past = String(Math.floor(Date.now() / 1000) - 3600);
-            await server.clients.dynamo.put(PUTER_KV_STORE_TABLE_NAME, {
+            await server.clients.dynamo.put(MIXT_KV_STORE_TABLE_NAME, {
                 namespace,
                 key: 'legacyStringPast',
                 value: 'b',
@@ -3884,7 +3884,7 @@ describe('SystemKVStore', () => {
 
         it('a legacy row with a non-numeric string ttl is readable by get and list', async () => {
             const namespace = namespaceOf(actor);
-            await server.clients.dynamo.put(PUTER_KV_STORE_TABLE_NAME, {
+            await server.clients.dynamo.put(MIXT_KV_STORE_TABLE_NAME, {
                 namespace,
                 key: 'legacyStringGarbage',
                 value: 'c',
@@ -3899,7 +3899,7 @@ describe('SystemKVStore', () => {
         it('incr on a legacy expired string-ttl row starts from zero, and get agrees', async () => {
             const namespace = namespaceOf(actor);
             const past = String(Math.floor(Date.now() / 1000) - 3600);
-            await server.clients.dynamo.put(PUTER_KV_STORE_TABLE_NAME, {
+            await server.clients.dynamo.put(MIXT_KV_STORE_TABLE_NAME, {
                 namespace,
                 key: 'legacyStringIncr',
                 value: 5,
@@ -3913,7 +3913,7 @@ describe('SystemKVStore', () => {
             const got = await target.get({ key: 'legacyStringIncr' }, opts);
             expect(got.res).toBe(1);
             const raw = await server.clients.dynamo.get(
-                PUTER_KV_STORE_TABLE_NAME,
+                MIXT_KV_STORE_TABLE_NAME,
                 { namespace, key: 'legacyStringIncr' },
             );
             expect(raw.Item?.ttl).toBeUndefined();
@@ -3922,7 +3922,7 @@ describe('SystemKVStore', () => {
         it('incr on a legacy future string-ttl row keeps its value and stores the expiry as a number', async () => {
             const namespace = namespaceOf(actor);
             const future = String(Math.floor(Date.now() / 1000) + 3600);
-            await server.clients.dynamo.put(PUTER_KV_STORE_TABLE_NAME, {
+            await server.clients.dynamo.put(MIXT_KV_STORE_TABLE_NAME, {
                 namespace,
                 key: 'legacyStringIncrFuture',
                 value: 5,
@@ -3942,7 +3942,7 @@ describe('SystemKVStore', () => {
             );
             expect(got.res).toBe(6);
             const raw = await server.clients.dynamo.get(
-                PUTER_KV_STORE_TABLE_NAME,
+                MIXT_KV_STORE_TABLE_NAME,
                 { namespace, key: 'legacyStringIncrFuture' },
             );
             expect(raw.Item?.ttl).toBe(Number(future));
@@ -3951,7 +3951,7 @@ describe('SystemKVStore', () => {
 
         it('incr on a legacy row whose ttl is true starts from zero', async () => {
             const namespace = namespaceOf(actor);
-            await server.clients.dynamo.put(PUTER_KV_STORE_TABLE_NAME, {
+            await server.clients.dynamo.put(MIXT_KV_STORE_TABLE_NAME, {
                 namespace,
                 key: 'legacyBooleanIncr',
                 value: 5,
@@ -3969,7 +3969,7 @@ describe('SystemKVStore', () => {
         it('update on a legacy expired string-ttl row doesn’t bring back its old fields', async () => {
             const namespace = namespaceOf(actor);
             const past = String(Math.floor(Date.now() / 1000) - 3600);
-            await server.clients.dynamo.put(PUTER_KV_STORE_TABLE_NAME, {
+            await server.clients.dynamo.put(MIXT_KV_STORE_TABLE_NAME, {
                 namespace,
                 key: 'legacyStringUpdate',
                 value: { a: 1, b: 2 },
@@ -3991,7 +3991,7 @@ describe('SystemKVStore', () => {
         it('expire on a legacy expired string-ttl row makes an empty marker', async () => {
             const namespace = namespaceOf(actor);
             const past = String(Math.floor(Date.now() / 1000) - 3600);
-            await server.clients.dynamo.put(PUTER_KV_STORE_TABLE_NAME, {
+            await server.clients.dynamo.put(MIXT_KV_STORE_TABLE_NAME, {
                 namespace,
                 key: 'legacyStringExpire',
                 value: 'old',
@@ -4008,7 +4008,7 @@ describe('SystemKVStore', () => {
         it('remove on a legacy expired string-ttl row resolves null', async () => {
             const namespace = namespaceOf(actor);
             const past = String(Math.floor(Date.now() / 1000) - 3600);
-            await server.clients.dynamo.put(PUTER_KV_STORE_TABLE_NAME, {
+            await server.clients.dynamo.put(MIXT_KV_STORE_TABLE_NAME, {
                 namespace,
                 key: 'legacyStringRemove',
                 value: { a: 1 },
@@ -4023,7 +4023,7 @@ describe('SystemKVStore', () => {
 
         it('a write to a legacy row with a non-numeric ttl keeps it readable and drops the ttl', async () => {
             const namespace = namespaceOf(actor);
-            await server.clients.dynamo.put(PUTER_KV_STORE_TABLE_NAME, {
+            await server.clients.dynamo.put(MIXT_KV_STORE_TABLE_NAME, {
                 namespace,
                 key: 'legacyGarbageWrite',
                 value: { a: 1 },
@@ -4035,7 +4035,7 @@ describe('SystemKVStore', () => {
             );
             expect(result.res).toEqual({ a: 1, b: 2 });
             const raw = await server.clients.dynamo.get(
-                PUTER_KV_STORE_TABLE_NAME,
+                MIXT_KV_STORE_TABLE_NAME,
                 { namespace, key: 'legacyGarbageWrite' },
             );
             expect(raw.Item?.ttl).toBeUndefined();
@@ -4045,7 +4045,7 @@ describe('SystemKVStore', () => {
             const key = 'legacyTtlRace';
             const namespace = namespaceOf(actor);
             const past = String(Math.floor(Date.now() / 1000) - 3600);
-            await server.clients.dynamo.put(PUTER_KV_STORE_TABLE_NAME, {
+            await server.clients.dynamo.put(MIXT_KV_STORE_TABLE_NAME, {
                 namespace,
                 key,
                 value: 5,
@@ -4083,7 +4083,7 @@ describe('SystemKVStore', () => {
             const pattern = 'legacyTotalAgree';
             const key = `${pattern}Key`;
             const past = String(Math.floor(Date.now() / 1000) - 3600);
-            await server.clients.dynamo.put(PUTER_KV_STORE_TABLE_NAME, {
+            await server.clients.dynamo.put(MIXT_KV_STORE_TABLE_NAME, {
                 namespace,
                 key,
                 value: 5,
@@ -4118,7 +4118,7 @@ describe('SystemKVStore', () => {
                 const got = await target.get({ key }, opts);
                 expect(got.res).toBe(1);
                 const raw = await server.clients.dynamo.get(
-                    PUTER_KV_STORE_TABLE_NAME,
+                    MIXT_KV_STORE_TABLE_NAME,
                     { namespace: namespaceOf(actor), key },
                 );
                 expect(raw.Item?.ttl).toBeUndefined();
@@ -4179,7 +4179,7 @@ describe('SystemKVStore', () => {
                     legacyCode: 'bad_request',
                 });
                 const raw = await server.clients.dynamo.get(
-                    PUTER_KV_STORE_TABLE_NAME,
+                    MIXT_KV_STORE_TABLE_NAME,
                     { namespace: namespaceOf(actor), key },
                 );
                 expect(raw.Item?.ttl).toBe(future);
@@ -4201,7 +4201,7 @@ describe('SystemKVStore', () => {
                 opts,
             );
             const raw = await server.clients.dynamo.get(
-                PUTER_KV_STORE_TABLE_NAME,
+                MIXT_KV_STORE_TABLE_NAME,
                 { namespace: namespaceOf(actor), key },
             );
             expect(raw.Item?.ttl).toBe(future);
@@ -4239,7 +4239,7 @@ describe('SystemKVStore', () => {
                 opts,
             );
             const raw = await server.clients.dynamo.get(
-                PUTER_KV_STORE_TABLE_NAME,
+                MIXT_KV_STORE_TABLE_NAME,
                 { namespace: namespaceOf(actor), key },
             );
             expect(typeof raw.Item?.ttl).toBe('number');
@@ -4260,7 +4260,7 @@ describe('SystemKVStore', () => {
                 opts,
             );
             const raw = await server.clients.dynamo.get(
-                PUTER_KV_STORE_TABLE_NAME,
+                MIXT_KV_STORE_TABLE_NAME,
                 { namespace: namespaceOf(actor), key: 'numericStringTtl' },
             );
             expect(raw.Item?.ttl).toBe(future);
@@ -4286,7 +4286,7 @@ describe('SystemKVStore', () => {
                 opts,
             );
             const raw = await server.clients.dynamo.get(
-                PUTER_KV_STORE_TABLE_NAME,
+                MIXT_KV_STORE_TABLE_NAME,
                 { namespace: namespaceOf(actor), key: 'emptyStringTtl' },
             );
             expect(raw.Item?.ttl).toBeUndefined();

@@ -1,5 +1,5 @@
 ---
-title: puter.fs.revokeReadURL()
+title: mixt.fs.revokeReadURL()
 description: Revoke a URL created by getReadURL(), so it stops serving the file.
 platforms: [websites, apps, nodejs, workers]
 ---
@@ -9,7 +9,7 @@ Revokes a URL created by [`getReadURL()`](/FS/getReadURL/), so it immediately st
 ## Syntax
 
 ```js
-puter.fs.revokeReadURL(url)
+mixt.fs.revokeReadURL(url)
 ```
 
 ## Parameters
@@ -33,7 +33,7 @@ A rejection carries an `Error` with a stable `code`:
 | `token_missing` | No authentication token was presented. |
 | `token_auth_failed` | The token presented did not authenticate. |
 | `forbidden` | Called with a scoped access token, or `url` carries a personal API token (revoke those from account settings). |
-| `token_invalid` | `url` doesn't carry a Puter access token: it is forged, malformed, or another kind of token. |
+| `token_invalid` | `url` doesn't carry a Mixt OS access token: it is forged, malformed, or another kind of token. |
 | `not_found` | The URL was created by a different app, or belongs to another account. |
 | `too_many_requests` | The rate limit was exceeded. See [Rate Limits & Quotas](/rate-limits-and-quotas/). |
 
@@ -44,15 +44,15 @@ A rejection carries an `Error` with a stable `code`:
 ```html
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
-            await puter.fs.write('~/shared.txt', 'temporary contents');
-            const url = await puter.fs.getReadURL('~/shared.txt');
-            puter.print(`Readable at: ${url}<br>`);
+            await mixt.fs.write('~/shared.txt', 'temporary contents');
+            const url = await mixt.fs.getReadURL('~/shared.txt');
+            mixt.print(`Readable at: ${url}<br>`);
 
-            await puter.fs.revokeReadURL(url);
-            puter.print('Revoked — the URL no longer serves the file.');
+            await mixt.fs.revokeReadURL(url);
+            mixt.print('Revoked — the URL no longer serves the file.');
         })();
     </script>
 </body>

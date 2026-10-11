@@ -18,9 +18,9 @@
  */
 
 import { v4 as uuidv4 } from 'uuid';
-import { PuterStore } from '../types';
+import { MixtStore } from '../types';
 
-export class NotificationStore extends PuterStore {
+export class NotificationStore extends MixtStore {
     // -- Reads --------------------------------------------------------
 
     async getByUid(uid, { userId } = {}) {

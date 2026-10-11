@@ -54,7 +54,7 @@ const RESERVED_SUBDOMAINS = new Set<string>([
     // currently installed — the redirect should still skip them).
     ...NATIVE_APP_SUBDOMAINS,
     // App-icon serving subdomain.
-    'puter-app-icons',
+    'mixt-app-icons',
     // Extension-owned subdomains.
     'onlyoffice',
 ]);
@@ -184,7 +184,7 @@ export const createWwwRedirect = (config: IConfig): RequestHandler => {
 
 /**
  * Rejects user-defined subdomains on the main domain with a 404
- * (`foo.puter.com/...`). User sites are served only from the static hosting
+ * (`foo.mixt.mpl/...`). User sites are served only from the static hosting
  * domain; the main domain must not act as an alias for them.
  *
  * Passes through when:

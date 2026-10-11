@@ -18,7 +18,7 @@
  * [https://www.gnu.org/licenses/](https://www.gnu.org/licenses/).
  */
 
-import type { AbstractDatabaseClient } from '@heyputer/backend/src/clients/database/DatabaseClient';
+import type { AbstractDatabaseClient } from '@mixt/backend/src/clients/database/DatabaseClient';
 import type { Request } from 'express';
 import type { AuthService } from '../../../services/auth/AuthService';
 import type { IConfig } from '../../../types';
@@ -26,8 +26,8 @@ import type { Actor } from '../../actor';
 
 /**
  * Support helpers for the private-app access gate — ported from v1's
- * `puterSiteMiddleware.js` (see `origin/main:src/backend/src/routers/
- * hosting/puterSiteMiddleware.js`). Split out because the middleware file was
+ * `mixtSiteMiddleware.js` (see `origin/main:src/backend/src/routers/
+ * hosting/mixtSiteMiddleware.js`). Split out because the middleware file was
  * getting long.
  *
  * Covers:
@@ -38,15 +38,15 @@ import type { Actor } from '../../actor';
  *   `associated_app_id`-trusting path, which was user-writable without an
  *   ownership check.
  * - Bootstrap-token identity resolution (`Authorization: Bearer`,
- *   `?puter.auth.token=`, `X-Puter-Auth-Token`, referrer query) so private-app
+ *   `?mixt.auth.token=`, `X-Mixt-Auth-Token`, referrer query) so private-app
  *   visitors with a valid session token (but no cookie on the private host) can
  *   still be identified.
- * - Building the redirect URL from a public hosting host (`puter.site`) to the
- *   private host (`puter.app`) when a private app is being served off the wrong
+ * - Building the redirect URL from a public hosting host (`mixt.site`) to the
+ *   private host (`mixt.app`) when a private app is being served off the wrong
  *   domain.
  *
- * Sticky cookies (`puter.private.asset.token` for private apps,
- * `puter.public.hosted.actor.token` for public-hosted actors) are set after a
+ * Sticky cookies (`mixt.private.asset.token` for private apps,
+ * `mixt.public.hosted.actor.token` for public-hosted actors) are set after a
  * visitor passes the gate, and honored on subsequent requests to skip the full
  * entitlement lookup. See AuthService `createPrivateAssetToken` /
  * `createPublicHostedActorToken`.
@@ -158,8 +158,8 @@ export function subdomainFromHost(
     host: string,
     hostingDomains: string[],
 ): string {
-    // Longest-first so `foo.bar.puter.app` matches `bar.puter.app` before
-    // falling back to `puter.app`.
+    // Longest-first so `foo.bar.mixt.app` matches `bar.mixt.app` before
+    // falling back to `mixt.app`.
     const sorted = [...hostingDomains].sort((a, b) => b.length - a.length);
     for (const d of sorted) {
         const suffix = `.${d}`;
@@ -177,7 +177,7 @@ export function subdomainFromHost(
 /**
  * Resolve "what app does the subdomain owner run on this host?" by matching
  * apps owned by `site.user_id` against the request's host variants. Used by the
- * puter-site middleware to decide whether the request hits a private app (gate)
+ * mixt-site middleware to decide whether the request hits a private app (gate)
  * or a public app (sticky cookie), and by the subdomain driver to populate the
  * `associated_app` field in API responses.
  *
@@ -257,7 +257,7 @@ export async function resolveOwnedAppForHostedSite(opts: {
     );
     if (rows.length === 0) return null;
     if (rows.length > 1) {
-        console.warn('[puter-site] hosted_site_app_match_ambiguous', {
+        console.warn('[mixt-site] hosted_site_app_match_ambiguous', {
             requestHost: host,
             matchCount: rows.length,
         });
@@ -276,7 +276,7 @@ function getAuthorizationToken(req: Request): string | null {
 
 function getQueryToken(req: Request): string | null {
     const q = req.query as Record<string, unknown> | undefined;
-    const candidates = [q?.['puter.auth.token'], q?.auth_token];
+    const candidates = [q?.['mixt.auth.token'], q?.auth_token];
     for (const v of candidates) {
         if (typeof v === 'string' && v.trim()) return v.trim();
     }
@@ -284,7 +284,7 @@ function getQueryToken(req: Request): string | null {
 }
 
 function getHeaderToken(req: Request): string | null {
-    const raw = req.headers?.['x-puter-auth-token'];
+    const raw = req.headers?.['x-mixt-auth-token'];
     if (typeof raw === 'string' && raw.trim()) return raw.trim();
     return null;
 }
@@ -295,7 +295,7 @@ function getReferrerToken(req: Request): string | null {
     try {
         const url = new URL(ref);
         return (
-            url.searchParams.get('puter.auth.token') ||
+            url.searchParams.get('mixt.auth.token') ||
             url.searchParams.get('auth_token')
         );
     } catch {
@@ -321,7 +321,7 @@ export function getBootstrapToken(
  * Resolve the acting user for a private-app hosted request. Lookup order (first
  * hit wins):
  *
- * 1. `puter.private.asset.token` cookie — the sticky cookie set after a previous
+ * 1. `mixt.private.asset.token` cookie — the sticky cookie set after a previous
  *    successful entitlement check. Must match the expected app + subdomain +
  *    private host.
  * 2. `req.actor` from the auth probe (e.g. main session cookie on same-site
@@ -472,7 +472,7 @@ function actorMatchesExpectedApp(
 
 /**
  * Mirror of `resolvePrivateIdentity` for public hosted apps. Reads the sticky
- * `puter.public.hosted.actor.token` cookie first, then the same
+ * `mixt.public.hosted.actor.token` cookie first, then the same
  * session/bootstrap fallbacks.
  */
 export async function resolvePublicHostedIdentity(opts: {
@@ -667,7 +667,7 @@ export function buildPrivateHostRedirect(
  * equivalent URL for a request that landed on the private hosting domain but
  * doesn't belong there (non-private app, or no app at all). Used so a
  * formerly-paid app that's now free (or a plain hosted site) resolves on
- * `puter.site` instead of 404ing on `puter.app`.
+ * `mixt.site` instead of 404ing on `mixt.app`.
  */
 export function buildPublicHostRedirect(
     req: Request,
@@ -711,9 +711,9 @@ export function buildAppCenterFallback(
 // -- Login bootstrap HTML --------------------------------------------
 
 /**
- * Minimal HTML page that prompts the visitor to sign in with Puter. Uses
- * puter.js's `auth.signIn` to get a token, then redirects back to the same URL
- * with `?puter.auth.token=…` so the middleware can resolve identity on the next
+ * Minimal HTML page that prompts the visitor to sign in with Mixt. Uses
+ * mixt.js's `auth.signIn` to get a token, then redirects back to the same URL
+ * with `?mixt.auth.token=…` so the middleware can resolve identity on the next
  * request.
  *
  * Kept inline (no template engine dependency). Ported from v1's
@@ -753,46 +753,46 @@ button{border:0;border-radius:10px;font-size:15px;font-weight:600;padding:10px 1
 <body>
 <main class="card">
 <h1>Sign in required</h1>
-<p>${name} requires Puter authentication before private files can load.</p>
-<p id="status">Click "Sign In with Puter" to continue.</p>
+<p>${name} requires Mixt authentication before private files can load.</p>
+<p id="status">Click "Sign In with Mixt" to continue.</p>
 <div class="actions">
-<button id="loginButton" type="button">Sign In with Puter</button>
+<button id="loginButton" type="button">Sign In with Mixt</button>
 <button id="retryButton" type="button">Retry</button>
 </div>
 </main>
-<script src="/puter.js/v2"></script>
+<script src="/mixt.js/v2"></script>
 <script>
 (() => {
 const status = document.getElementById('status');
 const loginBtn = document.getElementById('loginButton');
 const retryBtn = document.getElementById('retryButton');
-const storageKey = 'puter.privateAppBootstrap.lastAttemptedToken';
+const storageKey = 'mixt.privateAppBootstrap.lastAttemptedToken';
 const setStatus = m => { status.textContent = m; };
-const getStored = () => globalThis.puter?.authToken || localStorage.getItem('auth_token') || localStorage.getItem('puter.auth.token');
+const getStored = () => globalThis.mixt?.authToken || localStorage.getItem('auth_token') || localStorage.getItem('mixt.auth.token');
 const redirectWithToken = t => {
 if (typeof t !== 'string' || !t) throw new Error('missing_auth_token');
 sessionStorage.setItem(storageKey, t);
 const u = new URL(location.href);
-u.searchParams.set('puter.auth.token', t);
+u.searchParams.set('mixt.auth.token', t);
 location.replace(u.toString());
 };
 const tryStored = () => {
 const u = new URL(location.href);
-if (u.searchParams.get('puter.auth.token')) return false;
+if (u.searchParams.get('mixt.auth.token')) return false;
 const t = getStored();
 if (!t) return false;
 const last = sessionStorage.getItem(storageKey);
 if (last === t) return false;
-setStatus('Using saved Puter session...');
+setStatus('Using saved Mixt session...');
 redirectWithToken(t);
 return true;
 };
 loginBtn.addEventListener('click', async () => {
 loginBtn.disabled = true;
-setStatus('Authenticating with Puter...');
+setStatus('Authenticating with Mixt...');
 try {
 if (tryStored()) return;
-const r = await globalThis.puter.auth.signIn();
+const r = await globalThis.mixt.auth.signIn();
 redirectWithToken(r?.token || getStored());
 } catch (e) {
 console.error(e);

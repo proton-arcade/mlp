@@ -20,7 +20,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { SYSTEM_ACTOR_UUID } from '../../core/actor.js';
-import type { PuterServer } from '../../server.js';
+import type { MixtServer } from '../../server.js';
 import type { IConfig } from '../../types.js';
 import { setupTestServer } from '../../testUtil.js';
 import type { AppIconService } from './AppIconService.js';
@@ -28,7 +28,7 @@ import type { AppIconService } from './AppIconService.js';
 // Own file (own in-process caches) so the admin lookup genuinely misses —
 // a server booted alongside one that provisioned an admin would read it
 // back out of the shared user cache.
-let server: PuterServer;
+let server: MixtServer;
 
 beforeAll(async () => {
     server = await setupTestServer();
@@ -45,7 +45,7 @@ describe('AppIconService — without an admin user', () => {
         const systemUser =
             await server.stores.user.getByUuid(SYSTEM_ACTOR_UUID);
         expect(
-            (await server.stores.subdomain.getBySubdomain('puter-app-icons'))
+            (await server.stores.subdomain.getBySubdomain('mixt-app-icons'))
                 ?.user_id,
         ).toBe(systemUser!.id);
 
@@ -77,7 +77,7 @@ const PNG_DATA_URL = `data:image/png;base64,${PNG_2X2_BASE64}`;
 const ICONS_PATH = '/system/app_icons';
 
 describe('AppIconService', () => {
-    let server: PuterServer;
+    let server: MixtServer;
     let appIcon: AppIconService;
 
     beforeAll(async () => {
@@ -113,19 +113,19 @@ describe('AppIconService', () => {
     describe('canonical URLs', () => {
         it('serves sized and original icons off the app-icons subdomain', () => {
             expect(appIcon.getIconUrl('app-abc', 64)).toBe(
-                'http://puter-app-icons.site.localhost/app-abc-64.png',
+                'http://mixt-app-icons.site.localhost/app-abc-64.png',
             );
             expect(appIcon.getOriginalIconUrl('app-abc')).toBe(
-                'http://puter-app-icons.site.localhost/app-abc.png',
+                'http://mixt-app-icons.site.localhost/app-abc.png',
             );
         });
 
         it('normalizes a uid that is missing the app- prefix', () => {
             expect(appIcon.getIconUrl('abc', 16)).toBe(
-                'http://puter-app-icons.site.localhost/app-abc-16.png',
+                'http://mixt-app-icons.site.localhost/app-abc-16.png',
             );
             expect(appIcon.getOriginalIconUrl('abc')).toBe(
-                'http://puter-app-icons.site.localhost/app-abc.png',
+                'http://mixt-app-icons.site.localhost/app-abc.png',
             );
         });
 
@@ -151,7 +151,7 @@ describe('AppIconService', () => {
             const primary = cfg.static_hosting_domain;
             cfg.static_hosting_domain = undefined;
             expect(appIcon.getIconUrl('app-abc', 32)).toBe(
-                'http://puter-app-icons.host.localhost/app-abc-32.png',
+                'http://mixt-app-icons.host.localhost/app-abc-32.png',
             );
 
             const alt = cfg.static_hosting_domain_alt;
@@ -183,12 +183,12 @@ describe('AppIconService', () => {
             );
 
             expect(await appIcon.resolveIconRedirectUrl(app.uid, 64)).toBe(
-                `http://puter-app-icons.site.localhost/${app.uid}-64.png`,
+                `http://mixt-app-icons.site.localhost/${app.uid}-64.png`,
             );
 
             // No 999px variant is generated — fall back to the original.
             expect(await appIcon.resolveIconRedirectUrl(app.uid, 999)).toBe(
-                `http://puter-app-icons.site.localhost/${app.uid}.png`,
+                `http://mixt-app-icons.site.localhost/${app.uid}.png`,
             );
         });
     });

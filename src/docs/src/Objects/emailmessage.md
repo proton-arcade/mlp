@@ -1,9 +1,9 @@
 ---
 title: EmailMessage
-description: A fully parsed message from the user's mailbox, returned by puter.email.get().
+description: A fully parsed message from the user's mailbox, returned by mixt.email.get().
 ---
 
-An `EmailMessage` object is a message from the user's mailbox, downloaded and parsed by [`puter.email.get()`](/Email/get/). It has every attribute of an [`EmailSummary`](/Objects/emailsummary/) plus the parsed contents below.
+An `EmailMessage` object is a message from the user's mailbox, downloaded and parsed by [`mixt.email.get()`](/Email/get/). It has every attribute of an [`EmailSummary`](/Objects/emailsummary/) plus the parsed contents below.
 
 ## Attributes
 

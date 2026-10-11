@@ -27,7 +27,7 @@ import {
     vi,
 } from 'vitest';
 import { v4 as uuidv4 } from 'uuid';
-import { PuterServer } from '../../server.js';
+import { MixtServer } from '../../server.js';
 import { setupTestServer } from '../../testUtil.js';
 import { AppFeedbackService } from './AppFeedbackService.js';
 
@@ -38,9 +38,9 @@ import { AppFeedbackService } from './AppFeedbackService.js';
 
 // The email links the service builds are rooted at `config.origin`, which the
 // default test config leaves unset.
-const TEST_ORIGIN = 'https://puter.test';
+const TEST_ORIGIN = 'https://mixt.test';
 
-let server: PuterServer;
+let server: MixtServer;
 let service: AppFeedbackService;
 
 beforeAll(async () => {
@@ -551,7 +551,7 @@ describe('AppFeedbackService owner email', () => {
 
     it('builds app and Dev Center links from the deployment origin', async () => {
         // Both links must follow config.origin so they resolve on
-        // self-hosted deployments, not just puter.com.
+        // self-hosted deployments, not just mixt.mpl.
         const send = mockEmailReady();
         const ownerId = await makeDeliverableOwner();
         const app = await makeApp(ownerId, { feedbackEnabled: true });

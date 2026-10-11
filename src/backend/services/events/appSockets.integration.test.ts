@@ -29,7 +29,7 @@
 import { io as ioClient, type Socket as ClientSocket } from 'socket.io-client';
 import { v4 as uuidv4 } from 'uuid';
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
-import { setupPuterTestEnv, type PuterTestEnv } from '../../testUtil.js';
+import { setupMixtTestEnv, type MixtTestEnv } from '../../testUtil.js';
 import type { IConfig } from '../../types.js';
 import {
     appSocketRoom,
@@ -43,7 +43,7 @@ import {
 
 const BOOT_TIMEOUT_MS = 120_000;
 
-let env: PuterTestEnv;
+let env: MixtTestEnv;
 let userId: number;
 let username: string;
 let sessionToken: string;
@@ -134,7 +134,7 @@ const settle = (seen: unknown[], count = 1) =>
     });
 
 beforeAll(async () => {
-    env = await setupPuterTestEnv({ events: { enabled: true } } as IConfig);
+    env = await setupMixtTestEnv({ events: { enabled: true } } as IConfig);
     username = env.users.user.username;
     sessionToken = env.users.user.token;
     const user = await env.server.stores.user.getByUsername(username);

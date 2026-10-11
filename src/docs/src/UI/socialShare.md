@@ -1,5 +1,5 @@
 ---
-title: puter.ui.socialShare()
+title: mixt.ui.socialShare()
 description: Presents a dialog for sharing a link on various social media platforms.
 platforms: [apps]
 ---
@@ -9,9 +9,9 @@ Presents a dialog to the user allowing them to share a link on various social me
 ## Syntax
 
 ```js
-puter.ui.socialShare(url)
-puter.ui.socialShare(url, message)
-puter.ui.socialShare(url, message, options)
+mixt.ui.socialShare(url)
+mixt.ui.socialShare(url, message)
+mixt.ui.socialShare(url, message, options)
 ```
 
 ## Parameters

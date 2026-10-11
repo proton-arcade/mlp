@@ -18,7 +18,7 @@
 -- Admin-managed blocklist of app origins. Mirrors SQLite migration 0062 /
 -- MySQL mysql_mig_17 (which Postgres was originally missed for). An app whose
 -- `index_url` host (or a request origin) matches an entry is denied access to
--- Puter resources. `include_subdomains = 1` also blocks every subdomain of
+-- Mixt resources. `include_subdomains = 1` also blocks every subdomain of
 -- `domain`. Enforced in AuthService via AppOriginBlocklistService.
 --
 -- Idempotent via IF NOT EXISTS.

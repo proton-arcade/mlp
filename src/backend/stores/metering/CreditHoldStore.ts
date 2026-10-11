@@ -19,11 +19,11 @@
 
 import { randomUUID } from 'node:crypto';
 import { metrics } from '@opentelemetry/api';
-import { PuterStore } from '../types';
+import { MixtStore } from '../types';
 
 // -- Metrics ----------------------------------------------------------
 
-const meter = metrics.getMeter('puter-backend');
+const meter = metrics.getMeter('mixt-backend');
 
 const expiredHoldsCounter = meter.createCounter('metering.holds.expired', {
     description:
@@ -115,7 +115,7 @@ type ScriptRunner = {
  * nothing has been spent yet, they expire on their own, and every deployment
  * has to see them at once for them to mean anything.
  */
-export class CreditHoldStore extends PuterStore {
+export class CreditHoldStore extends MixtStore {
     #definedScripts = false;
 
     get #redis(): ScriptRunner {

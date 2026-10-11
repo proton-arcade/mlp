@@ -18,7 +18,7 @@
  */
 
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { setupPuterTestEnv, type PuterTestEnv } from '../../testUtil.js';
+import { setupMixtTestEnv, type MixtTestEnv } from '../../testUtil.js';
 
 /**
  * Route-level coverage for `GET /fs/readdir`. The unit tests call the handler
@@ -28,10 +28,10 @@ import { setupPuterTestEnv, type PuterTestEnv } from '../../testUtil.js';
  * the whole point of offering the read as a GET.
  */
 describe('GET /fs/readdir over HTTP', () => {
-    let env: PuterTestEnv;
+    let env: MixtTestEnv;
 
     beforeAll(async () => {
-        env = await setupPuterTestEnv();
+        env = await setupMixtTestEnv();
     }, 120_000);
 
     afterAll(async () => {
@@ -420,10 +420,10 @@ describe('GET /fs/readdir over HTTP', () => {
 });
 
 describe('POST /fs/completeWrite over HTTP', () => {
-    let env: PuterTestEnv;
+    let env: MixtTestEnv;
 
     beforeAll(async () => {
-        env = await setupPuterTestEnv();
+        env = await setupMixtTestEnv();
     }, 120_000);
 
     afterAll(async () => {
@@ -472,10 +472,10 @@ describe('POST /fs/completeWrite over HTTP', () => {
 });
 
 describe('POST /fs/startWrite storage quota over HTTP', () => {
-    let env: PuterTestEnv;
+    let env: MixtTestEnv;
 
     beforeAll(async () => {
-        env = await setupPuterTestEnv({
+        env = await setupMixtTestEnv({
             is_storage_limited: true,
             storage_capacity: 10 * 1024,
         } as never);

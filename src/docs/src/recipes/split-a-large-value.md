@@ -1,12 +1,12 @@
 ---
 title: Split a Large Value Across Keys
-description: "Learn how to split a growing value, like a chat history, across several Puter.js key-value entries, and why large entries cost more."
+description: "Learn how to split a growing value, like a chat history, across several Mixt.js key-value entries, and why large entries cost more."
 tags: [kv, data-modeling, performance]
 order: 32
 ---
 
 A chat history or activity log can start out in a single key, with new messages
-added using [`puter.kv.add()`](/KV/add/). But it keeps growing, and one entry
+added using [`mixt.kv.add()`](/KV/add/). But it keeps growing, and one entry
 can only hold [400 KB](/KV/MAX_VALUE_SIZE/). Well before it gets there, it also
 gets expensive, because reads and writes are billed by the size of the whole
 entry.
@@ -22,11 +22,11 @@ times as much to write.
 
 What matters is the size of the whole entry, not how much you change:
 
-- [`puter.kv.add()`](/KV/add/), [`puter.kv.update()`](/KV/update/),
-  [`puter.kv.incr()`](/KV/incr/) and [`puter.kv.remove()`](/KV/remove/) are
+- [`mixt.kv.add()`](/KV/add/), [`mixt.kv.update()`](/KV/update/),
+  [`mixt.kv.incr()`](/KV/incr/) and [`mixt.kv.remove()`](/KV/remove/) are
   billed as writing the whole entry, even if they only change one field. Adding
   a 200-byte message to a 300 KB history costs the same as writing 300 KB.
-- [`puter.kv.list()`](/KV/list/) reads the entries behind the keys it returns,
+- [`mixt.kv.list()`](/KV/list/) reads the entries behind the keys it returns,
   even if you only ask for keys. Listing large entries costs about as much as
   reading them.
 
@@ -44,7 +44,7 @@ everything costs about the same either way, since it's the same amount of data.
 
 ## Split a History into Shards
 
-Give each message a number with [`puter.kv.incr()`](/KV/incr/), and use the
+Give each message a number with [`mixt.kv.incr()`](/KV/incr/), and use the
 number to pick its shard. With 50 messages per shard, messages 1 to 50 go in
 shard 0, 51 to 100 in shard 1, and so on:
 
@@ -55,10 +55,10 @@ const shardKey = (chatId, shard) =>
     `chat:${ chatId }:shard:${ String(shard).padStart(6, '0') }`;
 
 async function addMessage (chatId, text) {
-    const number = await puter.kv.incr(`chat:${ chatId }:count`);
+    const number = await mixt.kv.incr(`chat:${ chatId }:count`);
     const shard = Math.floor((number - 1) / PER_SHARD);
 
-    await puter.kv.add(shardKey(chatId, shard), [{ number, text, at: Date.now() }]);
+    await mixt.kv.add(shardKey(chatId, shard), [{ number, text, at: Date.now() }]);
 }
 ```
 
@@ -76,12 +76,12 @@ takes two small reads:
 
 ```js
 async function latestShard (chatId) {
-    const count = await puter.kv.get(`chat:${ chatId }:count`) ?? 0;
+    const count = await mixt.kv.get(`chat:${ chatId }:count`) ?? 0;
     return Math.floor((count - 1) / PER_SHARD);   // -1 when there are no messages
 }
 
 async function readShard (chatId, shard) {
-    const messages = await puter.kv.get(shardKey(chatId, shard)) ?? [];
+    const messages = await mixt.kv.get(shardKey(chatId, shard)) ?? [];
     return messages.sort((a, b) => a.number - b.number);
 }
 
@@ -93,7 +93,7 @@ For a "Load older messages" button, read the shard before the one you're
 showing: `readShard(chatId, shard - 1)`. If the newest shard only has a few
 messages, load the one before it too so the screen isn't mostly empty.
 
-Use the counter to find the newest shard, not [`puter.kv.list()`](/KV/list/).
+Use the counter to find the newest shard, not [`mixt.kv.list()`](/KV/list/).
 Listing the shards reads all of them, which costs as much as loading the whole
 chat.
 
@@ -105,7 +105,7 @@ a page at a time:
 ```js
 const all = [];
 
-for await ( const page of puter.kv.list({ pattern: `chat:${ chatId }:shard:`, returnValues: true, stream: true }) ) {
+for await ( const page of mixt.kv.list({ pattern: `chat:${ chatId }:shard:`, returnValues: true, stream: true }) ) {
     for ( const { value } of page.items ) {
         all.push(...value);
     }
@@ -121,10 +121,10 @@ expires daily counts:
 
 ```js
 const key = shardKey(chatId, shard);
-await puter.kv.add(key, [{ number, text, at: Date.now() }]);
+await mixt.kv.add(key, [{ number, text, at: Date.now() }]);
 
 if ( number % PER_SHARD === 1 ) {
-    await puter.kv.expire(key, 60 * 60 * 24 * 90);   // 90 days after the shard started
+    await mixt.kv.expire(key, 60 * 60 * 24 * 90);   // 90 days after the shard started
 }
 ```
 
@@ -141,5 +141,5 @@ Data](/recipes/export-or-delete-data/#delete-everything-of-one-kind).
   message goes in, so changing it would make older messages look in the wrong
   place.
 - For one large document that's always read and saved as a whole, like a long
-  text, use a file with [`puter.fs`](/recipes/store-files/) instead. Files don't
+  text, use a file with [`mixt.fs`](/recipes/store-files/) instead. Files don't
   have the 400 KB limit.

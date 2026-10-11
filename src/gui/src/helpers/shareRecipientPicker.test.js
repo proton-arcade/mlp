@@ -73,7 +73,7 @@ beforeEach(() => {
     window.user = { username: 'me' };
     forget_colleagues();
     forget_recent_recipients();
-    globalThis.puter = {
+    globalThis.mixt = {
         teams: {
             listMembers: vi.fn(async () => [
                 { username: 'me' },
@@ -209,7 +209,7 @@ describe('opening the list', () => {
     });
 
     it('says it is loading once the wait is worth mentioning', async () => {
-        puter.kv.get = vi.fn(() => new Promise((resolve) => setTimeout(() => resolve([]), 600)));
+        mixt.kv.get = vi.fn(() => new Promise((resolve) => setTimeout(() => resolve([]), 600)));
         const { picker, $input } = mount();
         picker.setTeams([ACME]);
         $input.trigger('click');
@@ -220,7 +220,7 @@ describe('opening the list', () => {
     });
 
     it('leaves Escape to the dialog while the list is still on its way', async () => {
-        puter.kv.get = vi.fn(() => new Promise((resolve) => setTimeout(() => resolve([]), 600)));
+        mixt.kv.get = vi.fn(() => new Promise((resolve) => setTimeout(() => resolve([]), 600)));
         const { $input } = mount();
         $input.trigger('click');
 
@@ -397,7 +397,7 @@ describe('recording who was shared with', () => {
 
         picker.remember(picker.recipient(), [{ entryUid: 'e-1' }]);
         await settle();
-        expect(puter.kv.set).toHaveBeenCalledWith('recent_share_recipients', [
+        expect(mixt.kv.set).toHaveBeenCalledWith('recent_share_recipients', [
             { kind: 'team', id: 't-1', name: 'Acme' },
             { kind: 'invite', id: 'ann@example.com', name: 'ann@example.com' },
         ]);
@@ -409,7 +409,7 @@ describe('recording who was shared with', () => {
 
         picker.remember(picker.recipient(), [{ holder: 'bob', isNew: true }]);
         await settle();
-        expect(puter.kv.set.mock.calls[0][1][0])
+        expect(mixt.kv.set.mock.calls[0][1][0])
             .toEqual({ kind: 'user', id: 'bob', name: 'bob' });
     });
 
@@ -421,7 +421,7 @@ describe('recording who was shared with', () => {
             { pending: true, recipientEmail: 'new@example.com' },
         ]);
         await settle();
-        expect(puter.kv.set.mock.calls[0][1][0])
+        expect(mixt.kv.set.mock.calls[0][1][0])
             .toEqual({ kind: 'invite', id: 'new@example.com', name: 'new@example.com' });
     });
 
@@ -429,7 +429,7 @@ describe('recording who was shared with', () => {
         const { picker } = mount();
         picker.remember(null);
         await settle();
-        expect(puter.kv.set).not.toHaveBeenCalled();
+        expect(mixt.kv.set).not.toHaveBeenCalled();
     });
 });
 

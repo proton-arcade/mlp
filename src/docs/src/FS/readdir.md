@@ -1,17 +1,17 @@
 ---
-title: puter.fs.readdir()
-description: List files and directories in the user's own Puter file system.
+title: mixt.fs.readdir()
+description: List files and directories in the user's own Mixt OS file system.
 platforms: [websites, apps, nodejs, workers]
 ---
 
-Reads the contents of a directory, returning an array of items (files and directories) within it. This method is useful for listing all items in a specified directory in the Puter cloud storage.
+Reads the contents of a directory, returning an array of items (files and directories) within it. This method is useful for listing all items in a specified directory in the Mixt OS cloud storage.
 
 ## Syntax
 
 ```js
-puter.fs.readdir(path)
-puter.fs.readdir(path, options)
-puter.fs.readdir(options)
+mixt.fs.readdir(path)
+mixt.fs.readdir(path, options)
+mixt.fs.readdir(options)
 ```
 
 ## Parameters
@@ -54,7 +54,7 @@ Requests without pagination params keep returning the full listing as a plain ar
 With `stream: true`, the method returns an async iterator of page objects instead:
 
 ```js
-for await (const page of puter.fs.readdir({ path: './large-dir', stream: true })) {
+for await (const page of mixt.fs.readdir({ path: './large-dir', stream: true })) {
     for (const item of page.items) {
         console.log(item.name);
     }
@@ -68,13 +68,13 @@ for await (const page of puter.fs.readdir({ path: './large-dir', stream: true })
 ```html;fs-readdir
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
-        puter.fs.readdir('./').then((items) => {
+        mixt.fs.readdir('./').then((items) => {
             // print the path of each item in the directory
-            puter.print(`Items in the directory:<br>${items.map((item) => item.path)}<br>`);
+            mixt.print(`Items in the directory:<br>${items.map((item) => item.path)}<br>`);
         }).catch((error) => {
-            puter.print(`Error reading directory: ${error}`);
+            mixt.print(`Error reading directory: ${error}`);
         });
     </script>
 </body>

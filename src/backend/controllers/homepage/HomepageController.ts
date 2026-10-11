@@ -19,14 +19,14 @@
 
 import express from 'express';
 import path from 'node:path';
-import { PuterController } from '../types.js';
+import { MixtController } from '../types.js';
 import { toAppShellView } from '../../util/appShellView.js';
-import type { PuterRouter } from '../../core/http/PuterRouter';
+import type { MixtRouter } from '../../core/http/MixtRouter';
 import type {
-    PuterHomepageService,
+    MixtHomepageService,
     PageMeta,
     LaunchOptions,
-} from '../../services/homepage/PuterHomepageService';
+} from '../../services/homepage/MixtHomepageService';
 
 /** Longest description/og:description/twitter:description on `/app/<name>`. */
 export const APP_META_DESCRIPTION_MAX = 150;
@@ -57,21 +57,21 @@ export function appMetaDescription(text: string): string {
 }
 
 /**
- * Routes that render the Puter GUI shell, plus a catch-all static fallback
+ * Routes that render the Mixt GUI shell, plus a catch-all static fallback
  * under `<gui_assets_root>/src` for non-dist/src paths (images, fonts, lib
  * files referenced from the shell).
  *
  * All root-subdomain-only. Registered last in the controller list so the static
  * catch-all doesn't shadow specific API routes.
  */
-export class HomepageController extends PuterController {
-    registerRoutes(router: PuterRouter) {
+export class HomepageController extends MixtController {
+    registerRoutes(router: MixtRouter) {
         const homepage = this.services
-            .homepage as unknown as PuterHomepageService;
+            .homepage as unknown as MixtHomepageService;
         if (!homepage) return;
 
         const defaultMeta = (req: express.Request): PageMeta => ({
-            title: String(this.config.gui_params?.title ?? 'Puter'),
+            title: String(this.config.gui_params?.title ?? 'Mixt'),
             description: String(
                 this.config.gui_params?.short_description ?? '',
             ),
@@ -167,7 +167,7 @@ export class HomepageController extends PuterController {
             await sendShell(req, res, {
                 title: name
                     ? name.charAt(0).toUpperCase() + name.slice(1)
-                    : 'Puter',
+                    : 'Mixt',
             });
         };
 

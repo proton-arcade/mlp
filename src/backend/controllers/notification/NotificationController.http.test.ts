@@ -18,7 +18,7 @@
  */
 
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { setupPuterTestEnv, type PuterTestEnv } from '../../testUtil.js';
+import { setupMixtTestEnv, type MixtTestEnv } from '../../testUtil.js';
 
 /**
  * Route-level coverage for the notification endpoint. Dismissing is the only
@@ -26,10 +26,10 @@ import { setupPuterTestEnv, type PuterTestEnv } from '../../testUtil.js';
  * going missing or a gate turning a legitimate dismiss away.
  */
 describe('notification endpoints over HTTP', () => {
-    let env: PuterTestEnv;
+    let env: MixtTestEnv;
 
     beforeAll(async () => {
-        env = await setupPuterTestEnv();
+        env = await setupMixtTestEnv();
     }, 120_000);
 
     afterAll(async () => {

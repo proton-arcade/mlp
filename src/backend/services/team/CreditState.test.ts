@@ -20,12 +20,12 @@
 import { v4 as uuidv4 } from 'uuid';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import type { Actor } from '../../core/actor';
-import { PuterServer } from '../../server.ts';
+import { MixtServer } from '../../server.ts';
 import { setupTestServer } from '../../testUtil.ts';
 
 describe('credit-state transitions', () => {
-    let server: PuterServer;
-    let service: PuterServer['services']['team'];
+    let server: MixtServer;
+    let service: MixtServer['services']['team'];
     let owner: { id: number };
 
     /** Resolved per seat: a seat is on the common tier like any account. */

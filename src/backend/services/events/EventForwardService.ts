@@ -27,7 +27,7 @@ import {
     appSocketRoom,
     type SocketSpecifier,
 } from '../socket/SocketService.js';
-import { PuterService } from '../types.js';
+import { MixtService } from '../types.js';
 import {
     FORWARD_MAX_QUEUED,
     FORWARD_MAX_QUEUED_BYTES,
@@ -113,7 +113,7 @@ const overflowGap = (event: DeliverableEvent): GapMarker => ({
     ts: event.ts,
 });
 
-export class EventForwardService extends PuterService {
+export class EventForwardService extends MixtService {
     readonly #cache = new PresenceCache();
     /** UserId → uuid, which is what the presence row is keyed by. */
     readonly #uuids = new Map<number, string>();

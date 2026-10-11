@@ -20,16 +20,16 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { makeActor } from '../../core/actor.js';
 import type { IConfig } from '../../types';
-import { setupPuterTestEnv, type PuterTestEnv, whitelistTestUser } from '../../testUtil.js';
+import { setupMixtTestEnv, type MixtTestEnv, whitelistTestUser } from '../../testUtil.js';
 
 const randomHandle = () => `ws-${Math.random().toString(36).slice(2, 10)}`;
 
 describe('team endpoints over HTTP', () => {
-    let env: PuterTestEnv;
+    let env: MixtTestEnv;
 
     beforeAll(async () => {
         // The cap has its own suite; these tests need many teams.
-        env = await setupPuterTestEnv({
+        env = await setupMixtTestEnv({
             teams_enabled: true,
             max_teams_per_user: 100,
         } as IConfig);
@@ -749,7 +749,7 @@ describe('team endpoints over HTTP', () => {
         const fresh = (await env.server.stores.user.getById(row.id))!;
         const { token } = await env.server.services.auth.createSessionToken(
             fresh,
-            { user_agent: 'puter-test-seat' },
+            { user_agent: 'mixt-test-seat' },
         );
         return { username, password, userId: row.id, token };
     };
@@ -764,9 +764,9 @@ describe('team endpoints over HTTP', () => {
             method: 'POST',
             headers: {
                 'content-type': 'application/json',
-                'user-agent': 'puter-test-seat',
+                'user-agent': 'mixt-test-seat',
                 authorization: `Bearer ${token}`,
-                cookie: `puter_auth_token=${token}`,
+                cookie: `mixt_auth_token=${token}`,
             },
             body: JSON.stringify({ password, new_pass: next }),
         });
@@ -843,7 +843,7 @@ describe('team endpoints over HTTP', () => {
 
         const { token } = await env.server.services.auth.createSessionToken(
             (await env.server.stores.user.getById(seat.userId))!,
-            { user_agent: 'puter-test-seat' },
+            { user_agent: 'mixt-test-seat' },
         );
         const mine = await call('GET', `/teams/${team.uid}/audit/me`, token);
         // The seat owes a password change again, so its own view is all it reaches.
@@ -880,7 +880,7 @@ describe('team endpoints over HTTP', () => {
 
         const tell = body.items.find((e) => e.action === 'sign_in');
         expect(tell?.username).toBe(seat.username);
-        expect(tell?.user_agent).toBe('puter-test-seat');
+        expect(tell?.user_agent).toBe('mixt-test-seat');
         // Only their own; the team owner's entries are not theirs to read.
         expect(
             body.items.every((e) => e.username === seat.username),
@@ -909,10 +909,10 @@ describe('team endpoints over HTTP', () => {
 });
 
 describe('team endpoints with teams_enabled off', () => {
-    let env: PuterTestEnv;
+    let env: MixtTestEnv;
 
     beforeAll(async () => {
-        env = await setupPuterTestEnv({ teams_enabled: false } as IConfig);
+        env = await setupMixtTestEnv({ teams_enabled: false } as IConfig);
     }, 120_000);
 
     afterAll(async () => {

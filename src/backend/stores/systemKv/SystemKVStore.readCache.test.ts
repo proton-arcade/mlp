@@ -9,16 +9,16 @@ import {
     vi,
 } from 'vitest';
 import type { Actor } from '../../core/actor.ts';
-import { PuterServer } from '../../server.ts';
+import { MixtServer } from '../../server.ts';
 import { setupTestServer } from '../../testUtil.ts';
 import type { SystemKVStore } from './SystemKVStore.ts';
 import { kvCacheKey } from './readCache.ts';
-import { PUTER_KV_STORE_TABLE_NAME } from './tableDefinition.ts';
+import { MIXT_KV_STORE_TABLE_NAME } from './tableDefinition.ts';
 
 const BLOCK_SECONDS = 1;
 
 describe('SystemKVStore read cache', () => {
-    let server: PuterServer;
+    let server: MixtServer;
     let target: SystemKVStore;
 
     beforeAll(async () => {
@@ -61,7 +61,7 @@ describe('SystemKVStore read cache', () => {
         value: unknown,
         extra: Record<string, unknown> = {},
     ) =>
-        server.clients.dynamo.put(PUTER_KV_STORE_TABLE_NAME, {
+        server.clients.dynamo.put(MIXT_KV_STORE_TABLE_NAME, {
             namespace,
             key,
             value,
@@ -395,7 +395,7 @@ describe('SystemKVStore read cache', () => {
             vi.restoreAllMocks();
 
             const raw = await server.clients.dynamo.get(
-                PUTER_KV_STORE_TABLE_NAME,
+                MIXT_KV_STORE_TABLE_NAME,
                 { namespace, key },
             );
             expect(raw.Item?.value).toEqual({ a: {} });

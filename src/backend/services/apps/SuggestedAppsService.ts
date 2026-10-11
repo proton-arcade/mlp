@@ -21,7 +21,7 @@ import { posix as pathPosix } from 'node:path';
 import type { AppIconHostConfig } from '../../util/appIcon.js';
 import { getAppIconCdnUrl, getAppIconUrl } from '../../util/appIcon.js';
 import { hostedIndexUrlBackingIsUnavailable } from '../../util/hostedAppBacking.js';
-import { PuterService } from '../types.js';
+import { MixtService } from '../types.js';
 
 // -- Extension → suggested app names mapping -------------------------
 //
@@ -195,7 +195,7 @@ function extractExtension(entry: { name?: string; path?: string }): string {
  * set of built-in opener apps), so a `readdir` with N children of the same type
  * pays the DB cost once.
  */
-export class SuggestedAppsService extends PuterService {
+export class SuggestedAppsService extends MixtService {
     // Keyed by the normalized extension (lowercase, no leading dot). The
     // cached value is the promise — in-flight lookups coalesce, and the
     // same promise is reused for every entry that shares an extension.
@@ -291,11 +291,11 @@ export class SuggestedAppsService extends PuterService {
             candidates.push(app);
         }
 
-        // Drop apps whose puter-hosted backing is gone or has been reclaimed
+        // Drop apps whose mixt-hosted backing is gone or has been reclaimed
         // by another user. These summaries feed the GUI's default-open path,
         // which launches straight from `app_obj` without re-reading the app
         // through AppDriver — so its hosted-backing guard never runs and the
-        // launcher would append `puter.auth.token` to a subdomain the app
+        // launcher would append `mixt.auth.token` to a subdomain the app
         // owner no longer controls. `/open_item` also mints a user-app token
         // (and grants `fs:<uuid>:write`) for `suggested[0]`, so an
         // unlaunchable app must not reach the head of this list either.

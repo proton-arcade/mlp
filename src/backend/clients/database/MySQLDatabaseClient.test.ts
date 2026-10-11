@@ -299,9 +299,9 @@ describe('MySQLDatabaseClient — pool construction', () => {
         await startClient({
             host: 'db.internal',
             port: 3307,
-            user: 'puter',
+            user: 'mixt',
             password: 'hunter2',
-            database: 'puterdb',
+            database: 'mixtdb',
         });
 
         expect(createPoolMock).toHaveBeenCalledTimes(1);
@@ -314,9 +314,9 @@ describe('MySQLDatabaseClient — pool construction', () => {
             enableKeepAlive: true,
             host: 'db.internal',
             port: 3307,
-            user: 'puter',
+            user: 'mixt',
             password: 'hunter2',
-            database: 'puterdb',
+            database: 'mixtdb',
             multipleStatements: true,
         });
     });
@@ -355,7 +355,7 @@ describe('MySQLDatabaseClient — pool construction', () => {
             port: 3306,
             user: 'root',
             password: '',
-            database: 'puter',
+            database: 'mixt',
         });
     });
 
@@ -625,7 +625,7 @@ describe('MySQLDatabaseClient — migrations', () => {
     let dir: string;
 
     beforeEach(() => {
-        dir = mkdtempSync(join(tmpdir(), 'puter-mysql-mig-'));
+        dir = mkdtempSync(join(tmpdir(), 'mixt-mysql-mig-'));
     });
 
     afterEach(() => {

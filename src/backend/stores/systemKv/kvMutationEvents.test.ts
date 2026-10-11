@@ -26,12 +26,12 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Actor } from '../../core/actor.ts';
 import { SYSTEM_ACTOR } from '../../core/actor.ts';
-import { PuterServer } from '../../server.ts';
+import { MixtServer } from '../../server.ts';
 import { setupTestServer } from '../../testUtil.ts';
 import type { IConfig } from '../../types.ts';
 import { KV_GLOBAL_APP_KEY, type SystemKVStore } from './SystemKVStore.ts';
 
-let server: PuterServer;
+let server: MixtServer;
 let store: SystemKVStore;
 let actor: Actor;
 let opts: { actor: Actor };
@@ -40,7 +40,7 @@ let emitted: Array<{ key: string; data: Record<string, unknown> }>;
 const KEY = 'cart:items';
 
 /** Record what the store says on the bus, without silencing anything. */
-const recordEmits = (target: PuterServer): void => {
+const recordEmits = (target: MixtServer): void => {
     const bus = target.clients.event;
     const passThrough = bus.emit.bind(bus);
     vi.spyOn(bus, 'emit').mockImplementation(((
@@ -301,7 +301,7 @@ describe('who is left out', () => {
 });
 
 describe('the read cache does not decide this', () => {
-    let cached: PuterServer;
+    let cached: MixtServer;
 
     beforeAll(async () => {
         cached = await setupTestServer({

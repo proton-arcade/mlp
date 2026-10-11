@@ -25,7 +25,7 @@ import {
     openCursor,
     sealCursor,
 } from '../../util/pagination';
-import { PuterStore } from '../types';
+import { MixtStore } from '../types';
 
 /** Default page size for the keyset listings. */
 const DEFAULT_PAGE_SIZE = 50;
@@ -50,7 +50,7 @@ const SHARED_IDS_CHUNK_SIZE = 1000;
  * one exception: a row with `anyone` = 1 ("anyone with the link") has no holder
  * and no permission behind it, and is itself what the ACL reads.
  */
-export class ShareStore extends PuterStore {
+export class ShareStore extends MixtStore {
     // -- Reads --------------------------------------------------------
 
     async getByUid(uid) {

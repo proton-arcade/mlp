@@ -1,10 +1,10 @@
 {
-  "name": "@heyputer/gui",
+  "name": "@mixt/gui",
   "version": "2.4.0",
   "author": "Puter Technologies Inc.",
   "license": "AGPL-3.0-only",
   "description": "Desktop environment in the browser!",
-  "homepage": "https://puter.com",
+  "homepage": "https://mixt.mpl",
   "type": "module",
   "main": "exports.js",
   "directories": {

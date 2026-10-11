@@ -7,7 +7,7 @@
  *
  * Defaults:
  *   --input  /volatile/config/config.json
- *   --output <repo>/packages/puter/config.json
+ *   --output <repo>/packages/mixt/config.json
  *
  * The input may be either a single JSON document or several docs
  * concatenated (the old prod layout: base + servers + oss-default).

@@ -21,7 +21,7 @@ import { event as pdEvent } from '@pagerduty/pdjs';
 import { inspect } from 'node:util';
 import { createHash } from 'node:crypto';
 import type { IConfig, PagerSeverity, SeverityRule } from '../../types';
-import { PuterClient } from '../types';
+import { MixtClient } from '../types';
 import {
     meetsMinSeverity,
     resolveSeverityOverride,
@@ -186,7 +186,7 @@ function cleanFields(fields: AlarmFields): Record<string, string> {
  * channel. Config can retier or mute any alarm id after the fact — see
  * `pager.severityOverrides` in {@link IConfig}.
  */
-export class AlarmClient extends PuterClient {
+export class AlarmClient extends MixtClient {
     private alarms = new Map<string, Alarm>();
     private aliases = new Map<string, Alarm>();
     private alertHandlers: RegisteredHandler[] = [];

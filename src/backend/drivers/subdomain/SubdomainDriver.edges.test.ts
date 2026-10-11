@@ -18,7 +18,7 @@
  */
 
 /**
- * Guard rails and wire shape for the `puter-subdomains` driver.
+ * Guard rails and wire shape for the `mixt-subdomains` driver.
  *
  * The sibling SubdomainDriver.test.ts covers the CRUD happy paths. This suite
  * pins the refusals a hosting API has to get right — quota, reserved and
@@ -31,18 +31,18 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { makeActor } from '../../core/actor.js';
 import type { Actor } from '../../core/actor.js';
 import { runWithContext } from '../../core/context.js';
-import { PuterServer } from '../../server.js';
+import { MixtServer } from '../../server.js';
 import { setupTestServer } from '../../testUtil.js';
 import { generateDefaultFsentries } from '../../util/userProvisioning.js';
 import type { SubdomainDriver } from './SubdomainDriver.js';
 
-let server: PuterServer;
+let server: MixtServer;
 let driver: SubdomainDriver;
 
 beforeAll(async () => {
     server = await setupTestServer({
         max_subdomains_per_user: 2,
-        static_hosting_domain: 'puter.site',
+        static_hosting_domain: 'mixt.site',
         protocol: 'https:',
     } as never);
     driver = server.drivers.subdomains as unknown as SubdomainDriver;
@@ -392,13 +392,13 @@ describe('SubdomainDriver app-actor scoping', () => {
     it('does not answer for worker rows, which belong to the workers driver', async () => {
         const { actor, userId } = await makeUser();
         const name = uniqueName('wk');
-        const row = await seedRow(userId, `workers.puter.${name}`, null);
+        const row = await seedRow(userId, `workers.mixt.${name}`, null);
 
         // Same 404 as a miss: the name resolves globally, so a distinct
         // refusal would confirm the row exists.
         for (const args of [
             { uid: row.uuid },
-            { id: { subdomain: `workers.puter.${name}` } },
+            { id: { subdomain: `workers.mixt.${name}` } },
         ]) {
             await expect(
                 withActor(actor, () => driver.read(args)),
@@ -619,7 +619,7 @@ describe('SubdomainDriver hydrated wire shape', () => {
             {
                 name: `assoc-${name}`,
                 title: 'Associated',
-                index_url: `https://${name}.puter.site/`,
+                index_url: `https://${name}.mixt.site/`,
             },
             { ownerUserId: userId },
         );

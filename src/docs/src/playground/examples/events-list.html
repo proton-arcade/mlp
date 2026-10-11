@@ -1,21 +1,21 @@
 <html>
 <body>
-    <script src="/puter.js/v2"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
-            const dir = puter.randName();
-            await puter.fs.mkdir(dir);
-            const sub = await puter.events.onPersistent({
+            const dir = mixt.randName();
+            await mixt.fs.mkdir(dir);
+            const sub = await mixt.events.onPersistent({
                 subject: `fs:${dir}`,
                 context: { label: 'inbox' },
             });
 
-            for (const row of await puter.events.list()) {
-                puter.print(`${row.subject} — ${row.delivery}`);
-                puter.print(` (context: ${row.contextKeys?.join(', ') ?? 'none'})<br>`);
+            for (const row of await mixt.events.list()) {
+                mixt.print(`${row.subject} — ${row.delivery}`);
+                mixt.print(` (context: ${row.contextKeys?.join(', ') ?? 'none'})<br>`);
             }
 
-            await puter.events.unsubscribe(sub.subId);
+            await mixt.events.unsubscribe(sub.subId);
         })();
     </script>
 </body>

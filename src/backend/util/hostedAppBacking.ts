@@ -21,13 +21,13 @@ import type { SubdomainStore } from '../stores/subdomain/SubdomainStore';
 import type { PrivateLaunchDecision } from './privateLaunchAccess';
 
 /**
- * Launch-safety checks for puter-hosted `index_url`s.
+ * Launch-safety checks for mixt-hosted `index_url`s.
  *
  * A hosted subdomain (`*.<hosting-domain>`) can be deleted by its owner, but
  * the app row keeps the stale URL — nothing rewrites it on subdomain deletion.
  * Any producer of launchable app metadata must therefore re-check the backing
  * before handing an `index_url` to the GUI launcher, which appends
- * `puter.auth.token` to it.
+ * `mixt.auth.token` to it.
  *
  * The other half of the rule lives on the write side: `SubdomainDriver.create`
  * refuses a name that an app still points at
@@ -85,7 +85,7 @@ function configuredHostedDomainValues(
     ];
 }
 
-export function getPuterHostedDomains(
+export function getMixtHostedDomains(
     config: HostedDomainConfig | undefined | null,
 ): string[] {
     const domains = new Set<string>();
@@ -148,7 +148,7 @@ export function buildHostedSubdomainIndexUrlCandidates(
  * configured hosting domains, else null (a developer's own external domain, or
  * a builtin — we don't manage their DNS and can't reason about ownership).
  */
-export function extractPuterHostedSubdomain(
+export function extractMixtHostedSubdomain(
     indexUrl: unknown,
     config: HostedDomainConfig | undefined | null,
 ): string | null {
@@ -161,9 +161,9 @@ export function extractPuterHostedSubdomain(
         return null;
     }
 
-    // Sort longest-first so `foo.puter.app` matches `puter.app` (not a
+    // Sort longest-first so `foo.mixt.app` matches `mixt.app` (not a
     // shorter `app` if it ever appeared in the configured list).
-    const hostedDomains = getPuterHostedDomains(config).sort(
+    const hostedDomains = getMixtHostedDomains(config).sort(
         (a, b) => b.length - a.length,
     );
 
@@ -200,7 +200,7 @@ function backingRowIsUnavailable(
 }
 
 /**
- * True when the app's puter-hosted subdomain is missing, or is currently owned
+ * True when the app's mixt-hosted subdomain is missing, or is currently owned
  * by a different user than the app's owner (it was reclaimed — launching would
  * leak the token to the new owner). Non-hosted index_urls return false.
  */
@@ -213,7 +213,7 @@ export async function hostedIndexUrlBackingIsUnavailable({
     subdomainStore: Pick<SubdomainStore, 'getBySubdomain'>;
     config: HostedDomainConfig | undefined | null;
 }): Promise<boolean> {
-    const subdomain = extractPuterHostedSubdomain(app.index_url, config);
+    const subdomain = extractMixtHostedSubdomain(app.index_url, config);
     if (!subdomain) return false;
 
     let row = await subdomainStore.getBySubdomain(subdomain);
@@ -221,7 +221,7 @@ export async function hostedIndexUrlBackingIsUnavailable({
         // A freshly-created subdomain may not have reached a replica or the
         // local cache yet; confirm against the primary before treating the
         // backing as gone (mirrors the create/update ownership check in
-        // `AppDriver#ensurePuterSiteSubdomainIsOwned`).
+        // `AppDriver#ensureMixtSiteSubdomainIsOwned`).
         row = await subdomainStore.getBySubdomain(subdomain, {
             primary: true,
         });
@@ -245,7 +245,7 @@ export async function hostedIndexUrlBackingsAreUnavailable({
     config: HostedDomainConfig | undefined | null;
 }): Promise<boolean[]> {
     const subdomains = apps.map((app) =>
-        extractPuterHostedSubdomain(app.index_url, config),
+        extractMixtHostedSubdomain(app.index_url, config),
     );
     const names = [
         ...new Set(subdomains.filter((s): s is string => s !== null)),

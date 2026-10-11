@@ -57,7 +57,7 @@ interface ProjectedEventBase extends DeliveryFields {
     ts: number;
 }
 
-/** What an FS subscriber receives. Additive only — puter.js ships unversioned. */
+/** What an FS subscriber receives. Additive only — mixt.js ships unversioned. */
 export interface ProjectedFsEvent extends ProjectedEventBase {
     op: FsOp;
     uid: string;

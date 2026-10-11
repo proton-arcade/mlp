@@ -19,13 +19,13 @@
 
 import { v4 as uuidv4 } from 'uuid';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { PuterServer } from '../../server.ts';
+import { MixtServer } from '../../server.ts';
 import { setupTestServer } from '../../testUtil.ts';
 import { generateDefaultFsentries } from '../../util/userProvisioning.ts';
 
 describe('team account provisioning: home path conflicts', () => {
-    let server: PuterServer;
-    let service: PuterServer['services']['team'];
+    let server: MixtServer;
+    let service: MixtServer['services']['team'];
 
     const makeUser = async () => {
         const username = `tp_${Math.random().toString(36).slice(2, 10)}`;

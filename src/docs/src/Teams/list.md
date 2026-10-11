@@ -1,5 +1,5 @@
 ---
-title: puter.teams.list()
+title: mixt.teams.list()
 description: Get the current user's team information.
 platforms: [websites, apps, nodejs, workers]
 ---
@@ -8,13 +8,13 @@ platforms: [websites, apps, nodejs, workers]
 
 Get the current user's team information. If the user is not on a team, it resolves to an empty array.
 
-The team owner must enable the directory setting in the [Teams dashboard](https://puter.com/#teams) for the team to be returned to your app.
+The team owner must enable the directory setting in the [Teams dashboard](https://mixt.mpl/#teams) for the team to be returned to your app.
 
 ## Syntax
 
 ```js
-puter.teams.list()
-puter.teams.list(options)
+mixt.teams.list()
+mixt.teams.list(options)
 ```
 
 ## Parameters
@@ -55,21 +55,21 @@ A rejection carries an `Error` with a `code`:
 ```html;teams-list
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
-            const teams = await puter.teams.list();
+            const teams = await mixt.teams.list();
 
             if (teams.length === 0) {
-                puter.print('You are not on a team.');
+                mixt.print('You are not on a team.');
                 return;
             }
 
             for (const team of teams) {
-                puter.print(`${team.name ?? team.handle ?? 'Unnamed team'}<br>`);
-                puter.print(`uid: ${team.uid}<br>`);
-                puter.print(`owner: ${team.isOwner}<br>`);
-                puter.print(`directory open to apps: ${team.directoryEnabled}<br><br>`);
+                mixt.print(`${team.name ?? team.handle ?? 'Unnamed team'}<br>`);
+                mixt.print(`uid: ${team.uid}<br>`);
+                mixt.print(`owner: ${team.isOwner}<br>`);
+                mixt.print(`directory open to apps: ${team.directoryEnabled}<br><br>`);
             }
         })();
     </script>

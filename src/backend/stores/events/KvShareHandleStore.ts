@@ -23,7 +23,7 @@ import {
     sealCursor,
     type PageResult,
 } from '../../util/pagination.js';
-import { PuterStore } from '../types.js';
+import { MixtStore } from '../types.js';
 import { assertColumnWidths, KV_SHARE_HANDLE_WIDTHS } from './columnWidths.js';
 
 /**
@@ -98,7 +98,7 @@ const SELECT_COLUMNS =
     '`handle`, `owner_user_id`, `grantee_user_id`, `app_uid`, ' +
     '`key_prefix`, `permission`, `created_at`, `revoked_at`';
 
-export class KvShareHandleStore extends PuterStore {
+export class KvShareHandleStore extends MixtStore {
     async mint(input: MintKvShareHandleInput): Promise<KvShareHandle> {
         const row: KvShareHandle = {
             handle: mintKvHandleId(),

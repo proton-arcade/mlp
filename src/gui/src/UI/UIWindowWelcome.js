@@ -37,8 +37,8 @@ async function UIWindowWelcome (options) {
     h += '<div class="welcome-window-footer">';
     h += `<a href="/terms" target="_blank">${i18n('welcome_terms')}</a>`;
     h += `<a href="/privacy" style="margin-left: 20px;" target="_blank">${i18n('welcome_privacy')}</a>`;
-    h += `<a href="https://developer.puter.com" style="margin-left: 20px;" target="_blank">${i18n('welcome_developers')}</a>`;
-    h += `<a href="https://github.com/heyputer/puter" style="margin-left: 20px;" target="_blank">${i18n('welcome_open_source')}</a>`;
+    h += `<a href="https://developer.mixt.mpl" style="margin-left: 20px;" target="_blank">${i18n('welcome_developers')}</a>`;
+    h += `<a href="https://github.com/mixt/mixt" style="margin-left: 20px;" target="_blank">${i18n('welcome_open_source')}</a>`;
     h += '</div>';
     h += '</div>';
     h += '</div>';
@@ -71,7 +71,7 @@ async function UIWindowWelcome (options) {
         window_class: 'window-welcome',
         on_close: function () {
             // save the fact that the user has seen the welcome window
-            puter.kv.set('has_seen_welcome_window', true).catch(err => console.warn('Could not save has_seen_welcome_window:', err));
+            mixt.kv.set('has_seen_welcome_window', true).catch(err => console.warn('Could not save has_seen_welcome_window:', err));
         },
         body_css: {
             width: 'initial',

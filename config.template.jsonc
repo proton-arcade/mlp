@@ -28,7 +28,7 @@
     "serverId": "node-1",
 
     // ── Networking / URLs ───────────────────────────────────────────────
-    // Port Puter listens on internally.
+    // Port Mixt listens on internally.
     "port": 4100,
     // Externally-visible port (set this when behind a reverse proxy on 80/443).
     "pub_port": 4100,
@@ -44,7 +44,7 @@
     // Public base URL for the API subdomain (used to build signed URLs and
     // surfaced to the client by the `installedApps` and `whoami` extensions).
     "api_base_url": "http://api.localhost:4100",
-    // Subdomains Puter routes on. Wildcard DNS (`*.<domain>`) must point at
+    // Subdomains Mixt routes on. Wildcard DNS (`*.<domain>`) must point at
     // this server for site/app hosting to work.
     "static_hosting_domain": "site.localhost",
     "static_hosting_domain_alt": "host.localhost",
@@ -66,7 +66,7 @@
     "no_browser_launch": false,
 
     // ── Dev watcher (devWatcher extension) ──────────────────────────────
-    // Rebuilds GUI + puter.js on file changes when running from source.
+    // Rebuilds GUI + mixt.js on file changes when running from source.
     // Ignored when `env: "prod"` unless `devwatch.enabled: true`.
     "no_devwatch": false,
     "devwatch": {
@@ -79,7 +79,7 @@
     // ALWAYS replace these for any public install — `openssl rand -hex 64`.
     "jwt_secret_v2": "change-me",
     "url_signature_secret": "change-me",
-    "cookie_name": "puter_auth_token",
+    "cookie_name": "mixt_auth_token",
     "min_pass_length": 6,
     // When true, anonymous users must log in instead of creating temp or
     // permanent accounts.
@@ -146,7 +146,7 @@
             }
         }
     },
-    "s3_bucket": "puter-local",
+    "s3_bucket": "mixt-local",
     "s3_region": "us-west-2",
     "region": "us-west-2",
     // Default per-user storage cap (bytes). 100 MB.
@@ -158,7 +158,7 @@
     // When unset (or `endpoint` empty), the extension falls back to the
     // main S3 client / bucket above.
     "thumbnailStore": {
-        "name": "puter-local",
+        "name": "mixt-local",
         "endpoint": "",
         "credentials": {
             "accessKeyId": "",
@@ -172,7 +172,7 @@
         // or `postgres` for PostgreSQL.
         //
         // NOTE: `postgres` support is a community contribution and is not
-        // exercised by Puter.com production. It boots, passes its own
+        // exercised by Mixt.mpl production. It boots, passes its own
         // integration tests against pgmock, and runs the common user/app/
         // fsentry/session/permission/OIDC flows — but less-traveled code
         // paths may surface MySQL/SQLite-isms that haven't been ported yet.
@@ -181,7 +181,7 @@
         // the supported defaults.
         "engine": "sqlite",
         // sqlite — file path on disk
-        "path": "volatile/runtime/puter-database.sqlite",
+        "path": "volatile/runtime/mixt-database.sqlite",
         "targetVersion": 0,
         // mysql/postgres — connection details. PostgreSQL defaults to port
         // 5432 when `engine` is `postgres`; MySQL/MariaDB normally use 3306.
@@ -191,7 +191,7 @@
         "password": "",
         "database": "",
         // postgres may also use a URL instead of host/user/password fields:
-        // "connectionString": "postgres://puter:secret@localhost:5432/puter",
+        // "connectionString": "postgres://mixt:secret@localhost:5432/mixt",
         // Optional read-replica pool. Reads route here when populated.
         "replica": {
             "host": "",
@@ -211,7 +211,7 @@
         // Local emulator (dynamodb-local) endpoint. Drop this field for real
         // AWS DynamoDB.
         "endpoint": "http://localhost:8000",
-        // Set true when pointing at a local emulator so Puter creates the KV
+        // Set true when pointing at a local emulator so Mixt creates the KV
         // table on boot. NEVER set against real AWS — provision via IaC.
         // "bootstrapTables": true,
         "path": "",
@@ -244,7 +244,7 @@
     // ── Email (transactional) ───────────────────────────────────────────
     // Nodemailer transport — used for password resets, email confirmation, etc.
     "email": {
-        "from": "\"Puter\" <no-reply@puter.com>",
+        "from": "\"Mixt\" <no-reply@mixt.mpl>",
         "host": "smtp.example.com",
         "port": 587,
         "secure": false,
@@ -278,7 +278,7 @@
     //     // Defaults to <api_base_url>/email/ingress. The endpoint is served
     //     // on the `api` subdomain, so when this points somewhere internal,
     //     // `localIngressHost` has to name that virtual host.
-    //     "localIngressUrl": "http://puter:4100/email/ingress",
+    //     "localIngressUrl": "http://mixt:4100/email/ingress",
     //     "localIngressHost": "api.example.com",
     //     "localHostname": "mx.example.com",
     //     "localMaxRecipients": 50,
@@ -321,7 +321,7 @@
     // deleting yours frees the slot. Default 1.
     "max_teams_per_user": 1,
     //
-    // Seats one team may provision. Each seat is a real Puter account taking a
+    // Seats one team may provision. Each seat is a real Mixt account taking a
     // name from the global username pool, so this is what bounds a team's blast
     // radius. The owner's plan decides which of the two applies; defaults are 3
     // and 40. A plan registered with `teamSeatCap` uses that instead. Lowering
@@ -341,7 +341,7 @@
     // Staged rollout: only these email domains may create a team, and the tab
     // renders for them even with `gui_params.teams_ui` off. Members of an
     // existing team always pass. Unset means everyone, gated by `teams_ui`.
-    // "teams_allowed_email_domains": ["puter.com"],
+    // "teams_allowed_email_domains": ["mixt.mpl"],
 
     // ── Notifications ───────────────────────────────────────────────────
     // How long a notification is kept, in days from creation. Acknowledged or
@@ -389,7 +389,7 @@
             "webhookUrl": "",
             // Optional; defaults to the channel the webhook was created for.
             "channel": "#alerts",
-            "username": "puter-alarms",
+            "username": "mixt-alarms",
             // Severity window posted to Slack. The ceiling defaults to
             // "info" when PagerDuty is configured — what pages belongs in
             // the pager, not in chat — and to "critical" when Slack is the
@@ -421,16 +421,16 @@
     "use_bundled_gui": false,
     "gui_bundle": "/dist/bundle.min.js",
     "gui_css": "/dist/bundle.min.css",
-    "gui_puterjs_bundle": "https://js.puter.com/v2/",
+    "gui_mixtjs_bundle": "https://js.mixt.mpl/v2/",
     "gui_params": {
         "title": "Mixt",
         "short_description": "A complete desktop computer in your browser",
         "social_media_image": ""
     },
-    // Optional roots for native app bundles and custom puter.js builds.
+    // Optional roots for native app bundles and custom mixt.js builds.
     "native_apps_root": "",
     "client_libs_root": "",
-    "puterjs_root": "./src/puter-js/dist",
+    "mixtjs_root": "./src/mixt-js/dist",
 
     // ── Feature flags (whoami extension) ────────────────────────────────
     // Flat `{ flag_name: boolean }` bag. Server-only by default — flags are
@@ -443,7 +443,7 @@
     // ── Misc / safety ───────────────────────────────────────────────────
     // TLDs / domains rejected at signup (prod only).
     "blockedEmailDomains": [],
-    "support_email": "support@puter.com",
+    "support_email": "support@mixt.mpl",
     // Worker / subdomain names users can't claim.
     "reserved_words": [],
     "max_subdomains_per_user": 10,

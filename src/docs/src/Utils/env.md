@@ -1,45 +1,45 @@
 ---
-title: puter.env
-description: Returns the environment in which Puter.js is being used.
+title: mixt.env
+description: Returns the environment in which Mixt.js is being used.
 platforms: [websites, apps, nodejs, workers]
 ---
 
-A property of the `puter` object that returns the environment in which Puter.js is being used.
+A property of the `mixt` object that returns the environment in which Mixt.js is being used.
 
 ## Syntax
 
 ```js
-puter.env
+mixt.env
 ```
 
 ## Return value
 
-A string containing the environment in which Puter.js is being used:
+A string containing the environment in which Mixt.js is being used:
 
-- `app` - Puter.js is running inside a Puter application. e.g. `https://puter.com/app/editor`
+- `app` - Mixt.js is running inside a Mixt OS application. e.g. `https://mixt.mpl/app/editor`
 
-- `web` - Puter.js is running inside a web page outside of the Puter environment. e.g. `https://example.com/index.html`
+- `web` - Mixt.js is running inside a web page outside of the Mixt OS environment. e.g. `https://example.com/index.html`
 
-- `gui` - Puter.js is running inside the Puter GUI. e.g. `https://puter.com/`
+- `gui` - Mixt.js is running inside the Mixt OS GUI. e.g. `https://mixt.mpl/`
 
-- `nodejs` - Puter.js is running in Node.js.
+- `nodejs` - Mixt.js is running in Node.js.
 
-- `web-worker` - Puter.js is running inside a [Web Worker](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API).
+- `web-worker` - Mixt.js is running inside a [Web Worker](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API).
 
-- `service-worker` - Puter.js is running inside a [Puter Worker](/Workers/). Serverless workers execute in a service worker global scope, which is what this value reports.
+- `service-worker` - Mixt.js is running inside a [Mixt OS Worker](/Workers/). Serverless workers execute in a service worker global scope, which is what this value reports.
 
 ## Examples
 
-<strong class="example-title">Get the environment in which Puter.js is running</strong>
+<strong class="example-title">Get the environment in which Mixt.js is running</strong>
 
 <div style="position: relative;">
 
 ```html
 <html>
   <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
-      puter.print("Environment: " + puter.env);
+      mixt.print("Environment: " + mixt.env);
     </script>
   </body>
 </html>

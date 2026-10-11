@@ -1,16 +1,16 @@
 ---
-title: puter.ui.onWindowClose()
+title: mixt.ui.onWindowClose()
 description: Executes a function when the window is about to close.
 platforms: [apps]
 ---
 
 Specify a function to execute when the window is about to close. For example the provided function will run right after  the 'X' button of the window has been pressed.
 
-**Note** `onWindowClose` is not called when app is closed using `puter.exit()`.
+**Note** `onWindowClose` is not called when app is closed using `mixt.exit()`.
 
 ## Syntax
 ```js
-puter.ui.onWindowClose(handler)
+mixt.ui.onWindowClose(handler)
 ```
 
 ## Parameters
@@ -22,11 +22,11 @@ A function to execute when the window is going to close.
 ```html
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
-        puter.ui.onWindowClose(function(){
+        mixt.ui.onWindowClose(function(){
             alert('Window is about to close!')
-            puter.exit();
+            mixt.exit();
         })
     </script>
 </body>

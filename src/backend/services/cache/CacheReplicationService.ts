@@ -21,12 +21,12 @@ import {
     CACHE_TOMBSTONE_TTL_SECONDS,
     isCacheTombstoneKey,
 } from '../../stores/types';
-import { PuterService } from '../types';
+import { MixtService } from '../types';
 
 /**
  * Applies `outer.cacheUpdate` from peer regions.
  *
- * `PuterStore.publishCacheKeys({ broadcast: true })` writes its own cluster's
+ * `MixtStore.publishCacheKeys({ broadcast: true })` writes its own cluster's
  * Redis and emits the same mutation for peers; `BroadcastService` ships it over
  * a webhook. Nothing consumed it on the far side, so cross-region cache
  * replication silently no-oped.
@@ -35,7 +35,7 @@ import { PuterService } from '../types';
  * from their own replica, so forcing a re-read here is the conservative move.
  * Tombstones are the exception — they carry no row, only the fact of a delete.
  */
-export class CacheReplicationService extends PuterService {
+export class CacheReplicationService extends MixtService {
     override onServerStart(): void {
         this.clients.event.on('outer.cacheUpdate', (_key, data, meta) => {
             if (!(meta as { from_outside?: boolean })?.from_outside) return;

@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { extension } from '@heyputer/backend/src/extensions';
+import { extension } from '@mixt/backend/src/extensions';
 
 const page = `
 <!doctype html>
@@ -7,7 +7,7 @@ const page = `
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Puter Worker Sandbox Playground</title>
+    <title>Mixt Worker Sandbox Playground</title>
     <style>
         :root {
             color-scheme: light;
@@ -52,8 +52,8 @@ const page = `
 </head>
 <body>
     <main class="wrap">
-        <h1>Puter Worker Sandbox Playground</h1>
-        <p>Use this page to interact with the puter APIs in the same sandbox as your worker.</p>
+        <h1>Mixt Worker Sandbox Playground</h1>
+        <p>Use this page to interact with the mixt APIs in the same sandbox as your worker.</p>
         <div class="toolbar">
             <button id="run">Run</button>
             <button id="clear">Clear Logs</button>
@@ -61,7 +61,7 @@ const page = `
         <section class="layout">
             <article class="card">
                 <h2>Code</h2>
-                <textarea id="code" spellcheck="false">console.log(JSON.stringify(await puter.kv.list({limit: 100})))</textarea>
+                <textarea id="code" spellcheck="false">console.log(JSON.stringify(await mixt.kv.list({limit: 100})))</textarea>
             </article>
             <article class="card">
                 <h2>Logs</h2>
@@ -69,7 +69,7 @@ const page = `
             </article>
         </section>
     </main>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (() => {
             const codeEl = document.getElementById('code');

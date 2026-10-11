@@ -662,7 +662,7 @@ function driverCaller(req) {
  * imperative `rateLimit` field) — see `resolveDriverRateLimit` in
  * `drivers/meta.ts`. When `opts` is omitted (driver declares nothing) we apply
  * a loose 600/min default that's chatty enough for UI patterns (app listings,
- * repeated `puter-apps:es:app:read` during desktop boot, kv polling) while
+ * repeated `mixt-apps:es:app:read` during desktop boot, kv polling) while
  * still catching runaway loops.
  *
  * Returns true if allowed, false if rate-limited.

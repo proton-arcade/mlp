@@ -17,6 +17,6 @@
 
 -- See sqlite/0085_event-subscriptions-include-value.sql for the column
 -- rationale. No per-file applied-state tracking, so it goes through
--- _puter_add_col as mysql_mig_39 does.
+-- _mixt_add_col as mysql_mig_39 does.
 
-CALL _puter_add_col('event_subscriptions', 'include_value', '`include_value` tinyint(1) NOT NULL DEFAULT 0');
+CALL _mixt_add_col('event_subscriptions', 'include_value', '`include_value` tinyint(1) NOT NULL DEFAULT 0');

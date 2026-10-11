@@ -1,15 +1,15 @@
 ---
-title: puter.ui.on()
-description: Listens to broadcast events from Puter.
+title: mixt.ui.on()
+description: Listens to broadcast events from Mixt OS.
 platforms: [apps]
 ---
 
-Listen to broadcast events from Puter. If the broadcast was received before attaching the handler, then the handler is called immediately with the most recent value.
+Listen to broadcast events from Mixt OS. If the broadcast was received before attaching the handler, then the handler is called immediately with the most recent value.
 
 
 ## Syntax
 ```js
-puter.ui.on(eventName, handler)
+mixt.ui.on(eventName, handler)
 ```
 
 ## Parameters
@@ -24,7 +24,7 @@ Callback function run when the broadcast event is received.
 Possible broadcasts are:
 
 #### `localeChanged`
-Sent on app startup, and whenever the user's locale on Puter is changed. The value passed to `handler` is:
+Sent on app startup, and whenever the user's locale on Mixt OS is changed. The value passed to `handler` is:
 ```js
 {
     language, // (String) Language identifier, such as 'en' or 'pt-BR'
@@ -32,7 +32,7 @@ Sent on app startup, and whenever the user's locale on Puter is changed. The val
 ```
 
 #### `themeChanged`
-Sent on app startup, and whenever the user's desktop theme on Puter is changed. The value passed to `handler` is:
+Sent on app startup, and whenever the user's desktop theme on Mixt OS is changed. The value passed to `handler` is:
 ```js
 {
     palette: {
@@ -60,9 +60,9 @@ Sent when another app requests a connection to your app. The value passed to `ha
 ```html
 <html>
 <body>
-<script src="https://js.puter.com/v2/"></script>
+<script src="https://js.mixt.mpl/v2/"></script>
 <script>
-    puter.ui.on('localeChanged', function(locale) {
+    mixt.ui.on('localeChanged', function(locale) {
         alert(`User's preferred language code is: ${locale.language}!`);
     })
 </script>

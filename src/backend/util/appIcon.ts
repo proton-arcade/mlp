@@ -31,7 +31,7 @@ export { SVG_SNIFF_WINDOW, sniffImageMime };
 // `/app-icon/<uid>/<size>` endpoint URL, which self-heals — it falls back to
 // the un-resized original, decodes data URLs inline, or serves the default
 // placeholder (mirroring v1's `getAppIconPath`). `getAppIconCdnUrl` builds the
-// direct `puter-app-icons` subdomain URL the endpoint would redirect to.
+// direct `mixt-app-icons` subdomain URL the endpoint would redirect to.
 // Clients load the direct one first and keep the endpoint as a fallback: the
 // direct URL saves a redirect and survives networks that break on one, while
 // the endpoint covers apps that only have the original PNG on the subdomain
@@ -106,7 +106,7 @@ export interface IconDataUrlVerdict {
  * Requirements, in order:
  *
  * - Well-formed `data:` URL with an allow-listed image MIME type
- * - `;base64` and nothing else for the parameter list. Every Puter client
+ * - `;base64` and nothing else for the parameter list. Every Mixt client
  *   produces base64 (`FileReader.readAsDataURL` always does); requiring it is
  *   what makes the payload checkable at all. Percent-encoded payloads — the
  *   only shape that can carry raw `<`/`"` — are rejected; callers with literal
@@ -194,7 +194,7 @@ function sniffRawBase64Image(
 }
 
 /**
- * V1-compatible raw-base64 detector. Legacy puter-js callers pass the base64
+ * V1-compatible raw-base64 detector. Legacy mixt-js callers pass the base64
  * payload without a `data:` prefix; v1 accepted it and normalized to
  * `data:image/png;base64,<raw>` before storage. We mirror that here so clients
  * that worked on v1 keep working.
@@ -225,13 +225,13 @@ export function normalizeRawBase64ImageString(value: string): string {
  *
  * - `/app-icon/<uid>(/<size>)?` : the AppController endpoint
  * - `/app-<uid>(-<size>)?.png` : the file written by AppIconService onto the
- *   `puter-app-icons` subdomain
+ *   `mixt-app-icons` subdomain
  *
  * Relative paths must use the endpoint shape (the subdomain-file shape is only
  * meaningful when paired with a trusted host). Absolute URLs accept either
  * shape but only on a trusted host — without the host check an authenticated
  * user could set `icon` to an attacker URL and turn `/app-icon/:uid` into a
- * Puter-branded open redirector.
+ * Mixt-branded open redirector.
  */
 export function isAppIconEndpointUrl(
     value: string,
@@ -263,12 +263,12 @@ export function isAppIconEndpointUrl(
  * Used to gate both the legacy redirect fallback in `/app-icon/:uid` and the
  * write-path validator in AppDriver — without this check an authenticated user
  * can set `icon` to an arbitrary attacker URL and turn the unauthenticated
- * `/app-icon/:uid` route into a Puter-branded open redirector (cached publicly
+ * `/app-icon/:uid` route into a Mixt-branded open redirector (cached publicly
  * for 15 minutes).
  *
  * Accepts:
  *
- * - `puter-app-icons.<static_hosting_domain>` (and …_alt)
+ * - `mixt-app-icons.<static_hosting_domain>` (and …_alt)
  * - The configured `api_base_url` host (AppIconService rewrites icon columns to
  *   `${api_base_url}/app-icon/<uid>`, so it must be trusted or round-tripped
  *   writes would fail validation).

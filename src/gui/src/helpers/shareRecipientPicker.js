@@ -38,7 +38,7 @@ let picker_seq = 0;
  * What the field currently resolves to.
  *
  * @typedef {Object} ChosenRecipient
- * @property {string|{ team: string }} value - What to hand `puter.fs.share`
+ * @property {string|{ team: string }} value - What to hand `mixt.fs.share`
  * @property {string} label - What to call them on screen
  * @property {import('./shareSuggest.js').Suggestion|null} picked - The offer
  *   that was chosen, or null when the address was typed

@@ -20,12 +20,12 @@
 import { v4 as uuidv4 } from 'uuid';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { SYSTEM_ACTOR_UUID } from '../core/actor.js';
-import type { PuterServer } from '../server.js';
+import type { MixtServer } from '../server.js';
 import { setupTestServer } from '../testUtil.js';
 import { ensureSystemSite } from './systemSite.js';
 
 describe('ensureSystemSite', () => {
-    let server: PuterServer;
+    let server: MixtServer;
     let systemUserId: number;
     let otherUserId: number;
 

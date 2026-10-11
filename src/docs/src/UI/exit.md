@@ -1,5 +1,5 @@
 ---
-title: puter.exit()
+title: mixt.exit()
 description: Terminates the running application and closes its window.
 platforms: [apps]
 ---
@@ -8,8 +8,8 @@ Will terminate the running application and close its window.
 
 ## Syntax
 ```js
-puter.exit()
-puter.exit(statusCode)
+mixt.exit()
+mixt.exit(statusCode)
 ```
 
 ## Parameters
@@ -23,12 +23,12 @@ This value is reported to other apps as the reason that your app exited.
 ```html
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <button id="exit-button">Exit App</button>
     <script>
         const exit_button = document.getElementById('exit-button');
         exit_button.addEventListener('click', () => {
-            puter.exit();
+            mixt.exit();
         });
     </script>
 </body>

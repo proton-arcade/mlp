@@ -1,9 +1,9 @@
 ---
 title: Rate Limits and Quotas
-description: The rate limits, usage credits, and storage quotas that apply to Puter.js apps, and how to handle hitting them.
+description: The rate limits, usage credits, and storage quotas that apply to Mixt.js apps, and how to handle hitting them.
 ---
 
-<div class="info">This is an advanced reference. Puter.js already handles the common cases: a call that runs out of credit or storage shows the user an upgrade prompt automatically. Read on if you expect high request volumes or want to handle limit errors yourself.</div>
+<div class="info">This is an advanced reference. Mixt.js already handles the common cases: a call that runs out of credit or storage shows the user an upgrade prompt automatically. Read on if you expect high request volumes or want to handle limit errors yourself.</div>
 
 Three independent checks can stop a request:
 
@@ -21,7 +21,7 @@ Under the [User-Pays Model](/user-pays-model), limits are counted against each u
 
 | Scope                  | What shares one budget |
 | ---------------------- | ---------------------- |
-| **Per user, per app**  | One user in one app. **This is the default**: a limit that names no scope uses it. The same user in another app has a separate budget. The Puter desktop and API tokens count as one more app, and each [worker](/Workers/) gets its own budget too. |
+| **Per user, per app**  | One user in one app. **This is the default**: a limit that names no scope uses it. The same user in another app has a separate budget. The Mixt OS desktop and API tokens count as one more app, and each [worker](/Workers/) gets its own budget too. |
 | **Per user, all apps** | One user, summed across every app they use. Used for quotas on things an account keeps (subscriptions, share handles, shares per day, uploads in progress) and a few call budgets. |
 | **Per app, all users** | One app, summed across all of its users. Used for things a developer publishes, such as event handlers. |
 | **Per network**        | One IP address or device. Used by routes with no signed-in user, such as signed URLs and WebDAV. |
@@ -34,7 +34,7 @@ Where a table shows three numbers, they are **paid / free / anonymous**. Paid is
 
 Usage is charged against the account's monthly allowance at real cost.
 
-- Every account gets a free monthly allowance ([shown in the dashboard](https://puter.com/dashboard#usage)). Paid plans get more; see the [plans page](https://puter.com/dashboard#billing).
+- Every account gets a free monthly allowance ([shown in the dashboard](https://mixt.mpl/dashboard#usage)). Paid plans get more; see the [plans page](https://mixt.mpl/dashboard#billing).
 - The allowance resets monthly and doesn't roll over. Purchased credits never expire and are spent after the allowance runs out.
 
 The main costs:
@@ -122,11 +122,11 @@ Per minute unless stated:
 
 Non-write operations (mkdir/shortcut/move/delete) inside a legacy `/batch` request also count against the Mutations limits above.
 
-A request over one of the per-request caps fails as a whole before any item is processed, with `400 bad_request` (`413` for legacy `/batch`). `puter.fs.upload()` already splits larger uploads into requests of 500.
+A request over one of the per-request caps fails as a whole before any item is processed, with `400 bad_request` (`413` for legacy `/batch`). `mixt.fs.upload()` already splits larger uploads into requests of 500.
 
-An upload is in progress from `startWrite`/`startBatchWrite` (which `puter.fs.upload()` and `puter.fs.write()` use) until it completes, is cancelled, or expires. The count includes uploads by collaborators into the account's folders. Over the limit, new uploads fail with `429 too_many_requests` until some finish.
+An upload is in progress from `startWrite`/`startBatchWrite` (which `mixt.fs.upload()` and `mixt.fs.write()` use) until it completes, is cancelled, or expires. The count includes uploads by collaborators into the account's folders. Over the limit, new uploads fail with `429 too_many_requests` until some finish.
 
-The Puter desktop makes PDF upload thumbnails locally within these budgets. Going over one skips the preview; the upload itself is unaffected.
+The Mixt OS desktop makes PDF upload thumbnails locally within these budgets. Going over one skips the preview; the upload itself is unaffected.
 
 | PDF thumbnail | Limit |
 | --- | --- |
@@ -161,7 +161,7 @@ The last two apply to an `fs:` permission request for a path that doesn't exist 
 | Failed sign-ins | 10 per 15 min | Per account being signed into |
 | Failed sign-ins | 50 per 15 min | Per network |
 
-Successful sign-ins don't count. Over either sign-in limit, `dav` answers `429` until the window passes, even for the right password, so a client retrying a stale password keeps itself locked out: fix the password, then wait. This only affects `dav`; the desktop, the API and `puter.auth` keep working.
+Successful sign-ins don't count. Over either sign-in limit, `dav` answers `429` until the window passes, even for the right password, so a client retrying a stale password keeps itself locked out: fix the password, then wait. This only affects `dav`; the desktop, the API and `mixt.auth` keep working.
 
 For long-lived mounts, sign in with a `-token` username and an API token as the password. That skips the per-account sign-in limit, and the token can be revoked from the dashboard without changing the account password.
 
@@ -182,7 +182,7 @@ For long-lived mounts, sign in with a `-token` username and an API token as the 
 
 | Operation                                                                    | Paid      | Free      | Anonymous |
 | ---------------------------------------------------------------------------- | --------- | --------- | --------- |
-| `puter.apps.get()` / `puter.apps.list()`                                     | 100/10 s  | 100/10 s  | 50/10 s   |
+| `mixt.apps.get()` / `mixt.apps.list()`                                     | 100/10 s  | 100/10 s  | 50/10 s   |
 | REST reads (`GET /apps`, `GET /apps/:names`, `POST /query/app`, record open) | 1,800/min | 1,800/min | 1,800/min |
 | Writes (create, update, delete)                                              | 240/min   | 120/min   | 60/min    |
 
@@ -211,7 +211,7 @@ Another user's profile is readable only while that user is on a paid plan. Owner
 
 ### Email
 
-[`puter.email.sendTransactional()`](/Email/sendTransactional/) requires a paid plan.
+[`mixt.email.sendTransactional()`](/Email/sendTransactional/) requires a paid plan.
 
 | Limit                                | Value |
 | ------------------------------------ | ----- |
@@ -232,7 +232,7 @@ Another user's profile is readable only while that user is on a paid plan. Owner
 
 - All share-listing reads spend one budget, including `stat()` with `returnShares` (on top of its own `stat` budget).
 - A new share gives someone access they didn't have. Changing the mode of an existing share, or re-sharing something the recipient already has, is free. Over the daily limit, `share` fails with `share_daily_limit_reached`.
-- Sharing with **anyone with the link** ([`puter.fs.share()`](/FS/share/) with `{ anyone: true }`) requires a paid plan. A free account gets `subscription_required`, and the link stops working while the owner's plan has lapsed. Sharing with named people and teams is open to every account.
+- Sharing with **anyone with the link** ([`mixt.fs.share()`](/FS/share/) with `{ anyone: true }`) requires a paid plan. A free account gets `subscription_required`, and the link stops working while the owner's plan has lapsed. Sharing with named people and teams is open to every account.
 
 The notification and email that tell a recipient about a share have their own limits:
 
@@ -247,7 +247,7 @@ Recipients can opt out of share email with the link in the email, and a deployme
 
 ### Teams
 
-Available only where the deployment has teams turned on; elsewhere `puter.teams` rejects with `not_found`.
+Available only where the deployment has teams turned on; elsewhere `mixt.teams` rejects with `not_found`.
 
 | Limit                                      | Value |
 | ------------------------------------------ | ----- |
@@ -260,7 +260,7 @@ Available only where the deployment has teams turned on; elsewhere `puter.teams`
 
 The mutation and read budgets are per user, per app, not per team: administering several teams spends one budget.
 
-- **Seats.** A seat is a Puter account the team creates and its owner pays for. Over the seat limit, provisioning fails with `seat_limit_reached`; over the team limit, creation fails with `team_limit_reached`. Both errors include the limit in `fields.limit`.
+- **Seats.** A seat is a Mixt OS account the team creates and its owner pays for. Over the seat limit, provisioning fails with `seat_limit_reached`; over the team limit, creation fails with `team_limit_reached`. Both errors include the limit in `fields.limit`.
 - **Seat plan.** A seat on a team with no paid tier is on the `org_seat_free` plan, which gets **half** the free allowance and the free rate limits. A seat on a paid team tier gets that tier.
 - **Changing the seat limit.** The limit follows the owner's plan, so upgrading raises it immediately. Lowering it never disables anyone; a team over the new limit just can't add seats until it's back under.
 - **Deployment config.** `max_seats_per_team_free` and `max_seats_per_team_paid` set the two seat limits; a plan registered with `teamSeatCap` uses its own instead. `max_seats_per_team` sets one flat limit that overrides all of them. `max_teams_per_user` sets the team limit. These apply to every team on the deployment.
@@ -405,13 +405,13 @@ When the holder's balance runs out, deliveries stop and persistent subscriptions
 
 ### Networking
 
-[`puter.net`](/Networking/) sockets connect through a relay that takes a single-use token. A page fetches one token when it opens its first socket and reuses the connection for later sockets; `puter.net.generateWispV1URL()` fetches a new one on every call.
+[`mixt.net`](/Networking/) sockets connect through a relay that takes a single-use token. A page fetches one token when it opens its first socket and reuses the connection for later sockets; `mixt.net.generateWispV1URL()` fetches a new one on every call.
 
 | Limit                     | Paid | Free | Anonymous |
 | ------------------------- | ---- | ---- | --------- |
 | Relay tokens per minute   | 60   | 30   | 10        |
 
-The relay checks each token against Puter, at most **300 checks/min** per relay IP.
+The relay checks each token against Mixt OS, at most **300 checks/min** per relay IP.
 
 ### Peer connections
 
@@ -441,20 +441,20 @@ Every driver call also counts toward **8,000 calls/min**, before the per-API lim
 
 ## Storage quota
 
-Every account has a filesystem quota (100 MiB free; paid plans add more). It counts bytes stored, not bytes transferred, and deleting files frees space immediately. At the limit, writes fail with `413 storage_limit_reached`; reads keep working. `puter.fs.space()` returns `{ capacity, used }`.
+Every account has a filesystem quota (100 MiB free; paid plans add more). It counts bytes stored, not bytes transferred, and deleting files frees space immediately. At the limit, writes fail with `413 storage_limit_reached`; reads keep working. `mixt.fs.space()` returns `{ capacity, used }`.
 
 An upload reserves its declared size, minus the size of any file it replaces, from the moment it starts. The reservation is released when the upload completes (the real size counts instead), is cancelled, or expires (15 minutes after starting by default, at most 1 hour, plus 5 minutes' grace). An abandoned upload holds its space until it expires. A `startBatchWrite` that doesn't fit fails as a whole, up front. `space()` counts stored bytes only, not reservations.
 
 ## Request timeouts
 
-Puter.js stops a request that makes no progress for too long and rejects it with `code: "request_timeout"`. The clock restarts whenever the request moves: a state change, response bytes arriving, or upload progress where the runtime reports it. A download or stream that keeps moving is never cut off, however long it takes. The file contents `puter.fs.upload()` and `puter.fs.write()` send are not subject to this limit.
+Mixt.js stops a request that makes no progress for too long and rejects it with `code: "request_timeout"`. The clock restarts whenever the request moves: a state change, response bytes arriving, or upload progress where the runtime reports it. A download or stream that keeps moving is never cut off, however long it takes. The file contents `mixt.fs.upload()` and `mixt.fs.write()` send are not subject to this limit.
 
 | Request                                                                                                           | Stopped after this long without progress |
 | ----------------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
-| Reads: read-only calls such as `puter.kv.get()`, `puter.kv.list()`, `puter.apps.get()` and `puter.hosting.list()` | 60 s                                     |
-| Everything else, including writes, streamed responses and every `puter.fs` call                         | 15 min                                   |
+| Reads: read-only calls such as `mixt.kv.get()`, `mixt.kv.list()`, `mixt.apps.get()` and `mixt.hosting.list()` | 60 s                                     |
+| Everything else, including writes, streamed responses and every `mixt.fs` call                         | 15 min                                   |
 
-A read is held to 60 s only while progress can be seen: before the response headers arrive, and after them once the body has started arriving. Node.js, service workers and Puter Workers report no progress for a non-streamed body, so there a read moves to the 15 min limit once its headers are in.
+A read is held to 60 s only while progress can be seen: before the response headers arrive, and after them once the body has started arriving. Node.js, service workers and Mixt OS Workers report no progress for a non-streamed body, so there a read moves to the 15 min limit once its headers are in.
 
 A read that times out is retried once. A write that times out is never retried, because the server may already have done the work: check before repeating it. A stream that stalls throws `{ message, code: "request_timeout" }` from its loop.
 
@@ -470,15 +470,15 @@ A read that times out is retried once. A write that times out is never retried, 
 
 Errors are JSON: `{ "error": …, "message": …, "code": … }`.
 
-### What Puter.js already does for you
+### What Mixt.js already does for you
 
-For `insufficient_funds`, `subscription_required` and `storage_limit_reached`, the SDK shows the user an upgrade dialog automatically: through `puter.ui.requestUpgrade()` in an app, or a dialog the SDK renders on the web. The dialog names the refused call and, for a plan gate, what needs the plan (the SDK's own wording where it has one, otherwise the server's `message`).
+For `insufficient_funds`, `subscription_required` and `storage_limit_reached`, the SDK shows the user an upgrade dialog automatically: through `mixt.ui.requestUpgrade()` in an app, or a dialog the SDK renders on the web. The dialog names the refused call and, for a plan gate, what needs the plan (the SDK's own wording where it has one, otherwise the server's `message`).
 
 The promise still rejects with the error above. An app that writes files should handle `storage_limit_reached` so a save doesn't fail silently, and anything running in a loop should back off on `429`.
 
 ## Checking usage from your app
 
-- `puter.fs.space()` → `{ capacity, used }` in bytes, live.
-- `puter.auth.getMonthlyUsage()` → month-to-date spend and remaining allowance, per API.
+- `mixt.fs.space()` → `{ capacity, used }` in bytes, live.
+- `mixt.auth.getMonthlyUsage()` → month-to-date spend and remaining allowance, per API.
 
 Total spend and remaining allowance are always current. The per-API and per-app breakdowns can lag by up to about a minute. Past 5,000 distinct APIs in a month, the rest are grouped under `other`.

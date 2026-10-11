@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Workers Management - Puter.js Playground</title>
+    <title>Workers Management - Mixt.js Playground</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -130,7 +130,7 @@
 <body>
     <div class="container">
         <h1>Workers Management</h1>
-        <p>Manage your serverless workers with the Puter.js Workers API.</p>
+        <p>Manage your serverless workers with the Mixt.js Workers API.</p>
 
         <!-- Create Worker Section -->
         <div class="section">
@@ -186,7 +186,7 @@ router.get('/api/random', async (event) => {
             <h3>Delete Worker</h3>
             <div>
                 <label>Worker Name:</label>
-                <input type="text" id="deleteWorkerName" placeholder="worker-name.puter.work">
+                <input type="text" id="deleteWorkerName" placeholder="worker-name.mixt.work">
             </div>
             <button onclick="deleteWorker()" class="danger">Delete Worker</button>
             <div id="deleteOutput" class="output" style="display: none;"></div>
@@ -197,14 +197,14 @@ router.get('/api/random', async (event) => {
             <h3>Test Worker</h3>
             <div>
                 <label>Worker URL:</label>
-                <input type="text" id="testWorkerUrl" placeholder="https://worker-name.puter.site">
+                <input type="text" id="testWorkerUrl" placeholder="https://worker-name.mixt.site">
             </div>
             <button onclick="testWorker()">Test Worker</button>
             <div id="testOutput" class="output" style="display: none;"></div>
         </div>
     </div>
 
-    <script src="/puter.js/v2"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         let currentWorkers = {};
 
@@ -220,12 +220,12 @@ router.get('/api/random', async (event) => {
             }
 
             try {
-                // Save the worker code to a file in your Puter account
+                // Save the worker code to a file in your Mixt OS account
                 const fileName = `${name}.js`;
-                await puter.fs.write(fileName, code);
+                await mixt.fs.write(fileName, code);
 
                 // Create the worker using the file path
-                const result = await puter.workers.create(name, fileName);
+                const result = await mixt.workers.create(name, fileName);
                 
                 showOutput(output, `Worker created successfully!\n\nURL: ${result.url}\n\nYou can now test your worker at the URL above.`, 'success');
                 
@@ -242,7 +242,7 @@ router.get('/api/random', async (event) => {
             const container = document.getElementById('workersList');
             
             try {
-                currentWorkers = await puter.workers.list();
+                currentWorkers = await mixt.workers.list();
                 
                 if (Object.keys(currentWorkers).length === 0) {
                     container.innerHTML = '<p>No workers found. Create your first worker above!</p>';
@@ -286,7 +286,7 @@ router.get('/api/random', async (event) => {
             }
 
             try {
-                const worker = await puter.workers.get(name);
+                const worker = await mixt.workers.get(name);
                 showOutput(output, `Worker URL: ${worker.url}`, 'success');
             } catch (error) {
                 showOutput(output, `Error: ${error.message}`, 'error');
@@ -308,7 +308,7 @@ router.get('/api/random', async (event) => {
             }
 
             try {
-                await puter.workers.delete(name);
+                await mixt.workers.delete(name);
                 showOutput(output, `Worker "${name}" deleted successfully.`, 'success');
                 
                 // Refresh the workers list

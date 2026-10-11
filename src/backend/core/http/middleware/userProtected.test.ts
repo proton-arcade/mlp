@@ -24,7 +24,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { HttpError, isHttpError } from '../HttpError';
 import type { OIDCService } from '../../../services/auth/OIDCService';
 import type { TokenService } from '../../../services/auth/TokenService';
-import { PuterServer } from '../../../server';
+import { MixtServer } from '../../../server';
 import type { UserStore } from '../../../stores/user/UserStore';
 import { setupTestServer } from '../../../testUtil';
 import type { IConfig } from '../../../types';
@@ -38,7 +38,7 @@ import { createUserProtectedGate } from './userProtected';
 // three returned middlewares directly so we can assert their contracts
 // without standing up routes.
 
-let server: PuterServer;
+let server: MixtServer;
 let userStore: UserStore;
 let oidcService: OIDCService;
 let tokenService: TokenService;
@@ -55,7 +55,7 @@ afterAll(async () => {
 });
 
 const baseConfig: IConfig = {
-    cookie_name: 'puter_token',
+    cookie_name: 'mixt_token',
     origin: 'https://test.local',
 } as unknown as IConfig;
 
@@ -138,7 +138,7 @@ describe('userProtected — requireSessionCookie (step 1)', () => {
     it('passes through when the session cookie is present and matches req.token', async () => {
         const [requireSessionCookie] = buildGate();
         const arg = await run(requireSessionCookie, {
-            cookies: { puter_token: 'session-tok' },
+            cookies: { mixt_token: 'session-tok' },
             token: 'session-tok',
         });
         expect(arg).toBeUndefined();
@@ -150,7 +150,7 @@ describe('userProtected — requireSessionCookie (step 1)', () => {
         // AND differs from the cookie.
         const [requireSessionCookie] = buildGate();
         const arg = await run(requireSessionCookie, {
-            cookies: { puter_token: 'session-tok' },
+            cookies: { mixt_token: 'session-tok' },
             // no req.token
         });
         expect(arg).toBeUndefined();
@@ -170,7 +170,7 @@ describe('userProtected — requireSessionCookie (step 1)', () => {
         // token which an attacker could plant on a victim's browser.
         const [requireSessionCookie] = buildGate();
         const arg = await run(requireSessionCookie, {
-            cookies: { puter_token: 'real-session' },
+            cookies: { mixt_token: 'real-session' },
             token: 'some-other-token-from-header',
         });
         expect(isHttpError(arg)).toBe(true);
@@ -288,7 +288,7 @@ describe('userProtected — verifyIdentity (step 3)', () => {
         expect((arg as HttpError).legacyCode).toBe('password_required');
     });
 
-    it("accepts a valid puter_revalidation cookie in lieu of a password", async () => {
+    it("accepts a valid mixt_revalidation cookie in lieu of a password", async () => {
         const user = await makeUserWithPassword('hunter2');
         // Sign a real revalidation token via the real TokenService.
         const cookieValue = tokenService.sign('oidc-state', {
@@ -299,7 +299,7 @@ describe('userProtected — verifyIdentity (step 3)', () => {
         const arg = await run(
             verifyIdentity,
             withUser(user, {
-                cookies: { puter_revalidation: cookieValue },
+                cookies: { mixt_revalidation: cookieValue },
             }),
         );
         expect(arg).toBeUndefined();
@@ -319,7 +319,7 @@ describe('userProtected — verifyIdentity (step 3)', () => {
         const arg = await run(
             verifyIdentity,
             withUser(userB, {
-                cookies: { puter_revalidation: cookieForA },
+                cookies: { mixt_revalidation: cookieForA },
             }),
         );
         expect(isHttpError(arg)).toBe(true);
@@ -340,7 +340,7 @@ describe('userProtected — verifyIdentity (step 3)', () => {
         const arg = await run(
             verifyIdentity,
             withUser(user, {
-                cookies: { puter_revalidation: wrongPurpose },
+                cookies: { mixt_revalidation: wrongPurpose },
             }),
         );
         expect(isHttpError(arg)).toBe(true);
@@ -353,7 +353,7 @@ describe('userProtected — verifyIdentity (step 3)', () => {
         const arg = await run(
             verifyIdentity,
             withUser(user, {
-                cookies: { puter_revalidation: 'not.a.valid.jwt' },
+                cookies: { mixt_revalidation: 'not.a.valid.jwt' },
             }),
         );
         expect(isHttpError(arg)).toBe(true);

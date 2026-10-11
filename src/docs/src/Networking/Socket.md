@@ -9,7 +9,7 @@ The Socket API lets you create a raw TCP socket which can be used directly in th
 ## Syntax
 
 ```js
-const socket = new puter.net.Socket(hostname, port);
+const socket = new mixt.net.Socket(hostname, port);
 ```
 
 ## Parameters
@@ -93,21 +93,21 @@ Fired when the socket encounters an error. The close event is fired shortly afte
 ```html;net-basic
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
-    const socket = new puter.net.Socket("example.com", 80);
+    const socket = new mixt.net.Socket("example.com", 80);
     socket.on("open", () => {
         socket.write("GET / HTTP/1.1\r\nHost: example.com\r\n\r\n");
     })
     const decoder = new TextDecoder();
     socket.on("data", (data) => {
-        puter.print(decoder.decode(data), { code: true });
+        mixt.print(decoder.decode(data), { code: true });
     })
     socket.on("error", (error) => {
-        puter.print("Socket errored with the following reason: ", error.message);
+        mixt.print("Socket errored with the following reason: ", error.message);
     })
     socket.on("close", (hadError)=> {
-        puter.print("Socket closed. Was there an error? ", hadError);
+        mixt.print("Socket closed. Was there an error? ", hadError);
     })
     </script>
 </body>

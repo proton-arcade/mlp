@@ -1,5 +1,5 @@
 ---
-title: puter.ui.setWindowY()
+title: mixt.ui.setWindowY()
 description: Sets the y position of the window.
 platforms: [apps]
 ---
@@ -8,8 +8,8 @@ Sets the y position of the window.
 
 ## Syntax
 ```js
-puter.ui.setWindowY(y)
-puter.ui.setWindowY(y, window_id)
+mixt.ui.setWindowY(y)
+mixt.ui.setWindowY(y, window_id)
 ```
 
 ## Parameters
@@ -18,17 +18,17 @@ puter.ui.setWindowY(y, window_id)
 The new y position for this window.
 
 #### `window_id` (optional)
-Targets a specific window other than the app's main window. Accepts either a window id string or a window handle returned by [`puter.ui.createWindow()`](/UI/createWindow/) (an object with an `id` property). When omitted, the app's main window is used.
+Targets a specific window other than the app's main window. Accepts either a window id string or a window handle returned by [`mixt.ui.createWindow()`](/UI/createWindow/) (an object with an `id` property). When omitted, the app's main window is used.
 
 ## Examples
 
 ```html
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         // sets the position of the window to 200px from the top
-        puter.ui.setWindowY(200);
+        mixt.ui.setWindowY(200);
     </script>
 </body>
 ```

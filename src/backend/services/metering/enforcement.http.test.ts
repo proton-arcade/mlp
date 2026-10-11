@@ -19,7 +19,7 @@
 
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import type { Actor } from '../../core/actor';
-import { setupPuterTestEnv, type PuterTestEnv } from '../../testUtil.js';
+import { setupMixtTestEnv, type MixtTestEnv } from '../../testUtil.js';
 
 /**
  * What an account that has spent its whole allowance can and cannot still do,
@@ -31,10 +31,10 @@ import { setupPuterTestEnv, type PuterTestEnv } from '../../testUtil.js';
  * of budget.
  */
 describe('metering enforcement over HTTP', () => {
-    let env: PuterTestEnv;
+    let env: MixtTestEnv;
 
     beforeAll(async () => {
-        env = await setupPuterTestEnv();
+        env = await setupMixtTestEnv();
     }, 120_000);
 
     afterAll(async () => {
@@ -82,7 +82,7 @@ describe('metering enforcement over HTTP', () => {
                 Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify({
-                interface: 'puter-kvstore',
+                interface: 'mixt-kvstore',
                 method,
                 args,
             }),

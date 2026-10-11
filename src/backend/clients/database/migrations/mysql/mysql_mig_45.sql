@@ -18,9 +18,9 @@
 -- Mirrors SQLite migration 0090. Guarded like mysql_mig_22, because there is
 -- no per-file applied-state tracking and a replay must do nothing.
 
-DROP PROCEDURE IF EXISTS _puter_add_user_app_permission_index;
+DROP PROCEDURE IF EXISTS _mixt_add_user_app_permission_index;
 DELIMITER //
-CREATE PROCEDURE _puter_add_user_app_permission_index()
+CREATE PROCEDURE _mixt_add_user_app_permission_index()
 BEGIN
   IF NOT EXISTS (
     SELECT 1 FROM INFORMATION_SCHEMA.STATISTICS
@@ -34,6 +34,6 @@ BEGIN
 END//
 DELIMITER ;
 
-CALL _puter_add_user_app_permission_index();
+CALL _mixt_add_user_app_permission_index();
 
-DROP PROCEDURE IF EXISTS _puter_add_user_app_permission_index;
+DROP PROCEDURE IF EXISTS _mixt_add_user_app_permission_index;

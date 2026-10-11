@@ -34,7 +34,7 @@ const DEFAULT_CONNECTION_LIMIT = 30;
 const IDLE_TIMEOUT_MS = 60_000;
 
 const replicaFailoverCounter = metrics
-    .getMeter('puter-backend')
+    .getMeter('mixt-backend')
     .createCounter('db.read.replica_failover', {
         description:
             'Reads that failed on the replica batcher and were retried on the primary',
@@ -77,7 +77,7 @@ export class MySQLDatabaseClient extends AbstractDatabaseClient {
             port: dbConf.port ?? 3306,
             user: dbConf.user ?? 'root',
             password: dbConf.password ?? '',
-            database: dbConf.database ?? 'puter',
+            database: dbConf.database ?? 'mixt',
         });
         console.log('[mysql] connected to primary');
 
@@ -387,7 +387,7 @@ export class MySQLDatabaseClient extends AbstractDatabaseClient {
             port: dbConf.port ?? 3306,
             user: dbConf.user ?? 'root',
             password: dbConf.password ?? '',
-            database: dbConf.database ?? 'puter',
+            database: dbConf.database ?? 'mixt',
         });
         this.db = this.createPrimaryBatcher(this.primaryPool);
         this.dbPrimaryRead = this.createPrimaryReadBatcher(this.primaryPool);

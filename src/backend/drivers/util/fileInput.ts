@@ -33,7 +33,7 @@ import { secureFetch } from '../../util/secureHttp.js';
 /**
  * Resolve a file-like input sent through the drivers API into a Buffer.
  *
- * Puter-js sends driver args as plain JSON (no multipart). `audio`, `source`,
+ * Mixt-js sends driver args as plain JSON (no multipart). `audio`, `source`,
  * and similar file fields arrive as one of: • a data URL string
  * (`data:image/png;base64,...`) • a web URL string
  * (`https://example.com/image.png`) • a plain path string
@@ -62,7 +62,7 @@ export interface LoadedFile {
 }
 
 /**
- * A Puter FS reference as drivers receive it: a path string or `{ path?, uid?,
+ * A Mixt FS reference as drivers receive it: a path string or `{ path?, uid?,
  * uuid? }`.
  */
 export type FileInputRef =
@@ -175,7 +175,7 @@ export async function loadFileInput(
 }
 
 /**
- * Resolve a Puter FS reference to its entry, with the checks every driver read
+ * Resolve a Mixt FS reference to its entry, with the checks every driver read
  * needs: it must be a file (not a directory, symlink or shortcut) and `actor`
  * must be allowed to read it.
  */
@@ -216,14 +216,14 @@ export async function resolveFileInputEntry(
     }
     // ACL gate: resolveNode does global UID/UUID/ID/path lookups, no
     // namespace check. Without this check, an attacker controlling
-    // `path`/`uid`/`uuid` (e.g. AI chat `puter_path` content parts) could
+    // `path`/`uid`/`uuid` (e.g. AI chat `mixt_path` content parts) could
     // exfiltrate any user's file. Must run before any read of the object.
     await fsService.checkFSAccess(entry, actor, 'read');
     return entry;
 }
 
 /**
- * Open a Puter FS reference as a stream of its bytes. Nothing is buffered: the
+ * Open a Mixt FS reference as a stream of its bytes. Nothing is buffered: the
  * caller pipes `body` wherever it goes and owns its lifetime. A known size over
  * `maxBytes` is refused (413) before a byte is read; a size that is only
  * discovered while reading is the caller's to enforce.

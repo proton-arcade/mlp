@@ -22,7 +22,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { v4 as uuidv4 } from 'uuid';
 import { makeActor } from '../../actor';
 import type { AuthService } from '../../../services/auth/AuthService';
-import { PuterServer } from '../../../server';
+import { MixtServer } from '../../../server';
 import { setupTestServer } from '../../../testUtil';
 import type { IConfig } from '../../../types';
 import {
@@ -49,7 +49,7 @@ import {
 
 describe('normalizeHost', () => {
     it('lowercases and strips port + leading dot', () => {
-        expect(normalizeHost('Foo.Puter.Site:1234')).toBe('foo.puter.site');
+        expect(normalizeHost('Foo.Mixt.Site:1234')).toBe('foo.mixt.site');
         expect(normalizeHost('.foo.bar')).toBe('foo.bar');
         expect(normalizeHost('  foo.bar  ')).toBe('foo.bar');
     });
@@ -67,8 +67,8 @@ describe('normalizeHost', () => {
 
 describe('normalizeHostRaw', () => {
     it('keeps the port (used for index_url candidate matching)', () => {
-        expect(normalizeHostRaw('Foo.Puter.Site:1234')).toBe(
-            'foo.puter.site:1234',
+        expect(normalizeHostRaw('Foo.Mixt.Site:1234')).toBe(
+            'foo.mixt.site:1234',
         );
     });
 
@@ -87,53 +87,53 @@ describe('normalizeHostRaw', () => {
 
 describe('hostMatchesPrivateDomain', () => {
     it('matches exact host AND any subdomain of a private domain', () => {
-        expect(hostMatchesPrivateDomain('app.puter.app', ['puter.app'])).toBe(
+        expect(hostMatchesPrivateDomain('app.mixt.app', ['mixt.app'])).toBe(
             true,
         );
         expect(
-            hostMatchesPrivateDomain('foo.bar.puter.app', ['puter.app']),
+            hostMatchesPrivateDomain('foo.bar.mixt.app', ['mixt.app']),
         ).toBe(true);
-        expect(hostMatchesPrivateDomain('puter.app', ['puter.app'])).toBe(true);
+        expect(hostMatchesPrivateDomain('mixt.app', ['mixt.app'])).toBe(true);
     });
 
     it('does not match unrelated or partial hosts', () => {
-        expect(hostMatchesPrivateDomain('puter.site', ['puter.app'])).toBe(
+        expect(hostMatchesPrivateDomain('mixt.site', ['mixt.app'])).toBe(
             false,
         );
-        // `notputer.app` must not pass — `.endsWith('puter.app')` is true
+        // `notputer.app` must not pass — `.endsWith('mixt.app')` is true
         // but the implementation requires a leading dot or exact match.
-        expect(hostMatchesPrivateDomain('notputer.app', ['puter.app'])).toBe(
+        expect(hostMatchesPrivateDomain('notputer.app', ['mixt.app'])).toBe(
             false,
         );
-        expect(hostMatchesPrivateDomain('a.puter.app', [])).toBe(false);
+        expect(hostMatchesPrivateDomain('a.mixt.app', [])).toBe(false);
     });
 });
 
 describe('subdomainFromHost', () => {
     it('returns the left-most label for a multi-label subdomain', () => {
-        expect(subdomainFromHost('app.puter.site', ['puter.site'])).toBe('app');
+        expect(subdomainFromHost('app.mixt.site', ['mixt.site'])).toBe('app');
         expect(
-            subdomainFromHost('one.two.three.puter.site', ['puter.site']),
+            subdomainFromHost('one.two.three.mixt.site', ['mixt.site']),
         ).toBe('one');
     });
 
     it('prefers longest-matching hosting domain (avoids over-stripping)', () => {
-        // `bar.puter.app` is configured as a hosting domain itself, so a
-        // visit to `foo.bar.puter.app` should pull `foo`, not `foo.bar`.
+        // `bar.mixt.app` is configured as a hosting domain itself, so a
+        // visit to `foo.bar.mixt.app` should pull `foo`, not `foo.bar`.
         expect(
-            subdomainFromHost('foo.bar.puter.app', [
-                'puter.app',
-                'bar.puter.app',
+            subdomainFromHost('foo.bar.mixt.app', [
+                'mixt.app',
+                'bar.mixt.app',
             ]),
         ).toBe('foo');
     });
 
     it('returns empty for the bare hosting domain', () => {
-        expect(subdomainFromHost('puter.site', ['puter.site'])).toBe('');
+        expect(subdomainFromHost('mixt.site', ['mixt.site'])).toBe('');
     });
 
     it('falls back to first label when host matches no configured domain', () => {
-        expect(subdomainFromHost('foo.example.com', ['puter.site'])).toBe(
+        expect(subdomainFromHost('foo.example.com', ['mixt.site'])).toBe(
             'foo',
         );
     });
@@ -188,10 +188,10 @@ describe('getBootstrapToken', () => {
             reqOf({
                 headers: {
                     authorization: 'Bearer header-token',
-                    'x-puter-auth-token': 'x-token',
-                    referer: 'https://x.test/?puter.auth.token=ref-token',
+                    'x-mixt-auth-token': 'x-token',
+                    referer: 'https://x.test/?mixt.auth.token=ref-token',
                 },
-                query: { 'puter.auth.token': 'query-token' },
+                query: { 'mixt.auth.token': 'query-token' },
             }),
         );
         expect(got).toEqual({ token: 'header-token', source: 'authorization' });
@@ -200,19 +200,19 @@ describe('getBootstrapToken', () => {
     it('falls back through query → x-header → referer', () => {
         expect(
             getBootstrapToken(
-                reqOf({ query: { 'puter.auth.token': 'q' } }),
+                reqOf({ query: { 'mixt.auth.token': 'q' } }),
             ),
         ).toEqual({ token: 'q', source: 'query' });
         expect(
             getBootstrapToken(
-                reqOf({ headers: { 'x-puter-auth-token': 'x' } }),
+                reqOf({ headers: { 'x-mixt-auth-token': 'x' } }),
             ),
         ).toEqual({ token: 'x', source: 'authorization' });
         expect(
             getBootstrapToken(
                 reqOf({
                     headers: {
-                        referer: 'https://x.test/?puter.auth.token=ref',
+                        referer: 'https://x.test/?mixt.auth.token=ref',
                     },
                 }),
             ),
@@ -242,8 +242,8 @@ describe('getBootstrapToken', () => {
         expect(
             getBootstrapToken(
                 reqOf({
-                    headers: { authorization: 'Bearer   ', 'x-puter-auth-token': '   ' },
-                    query: { 'puter.auth.token': '   ' },
+                    headers: { authorization: 'Bearer   ', 'x-mixt-auth-token': '   ' },
+                    query: { 'mixt.auth.token': '   ' },
                 }),
             ),
         ).toBeNull();
@@ -398,21 +398,21 @@ describe('isTopLevelNavigation', () => {
 });
 
 describe('pathWithoutQueryParam', () => {
-    const T = 'puter.auth.token';
+    const T = 'mixt.auth.token';
 
     it('removes the parameter and keeps the rest exactly as sent', () => {
         expect(
-            pathWithoutQueryParam('/p/a.html?x=1&puter.auth.token=abc&y=a%20b+c', T),
+            pathWithoutQueryParam('/p/a.html?x=1&mixt.auth.token=abc&y=a%20b+c', T),
         ).toBe('/p/a.html?x=1&y=a%20b+c');
     });
 
     it('drops the query when nothing else is left', () => {
-        expect(pathWithoutQueryParam('/?puter.auth.token=abc', T)).toBe('/');
+        expect(pathWithoutQueryParam('/?mixt.auth.token=abc', T)).toBe('/');
     });
 
     it('removes every occurrence, including a percent-encoded key', () => {
         expect(
-            pathWithoutQueryParam('/?puter.auth.token=a&k=v&puter%2Eauth%2Etoken=b', T),
+            pathWithoutQueryParam('/?mixt.auth.token=a&k=v&mixt%2Eauth%2Etoken=b', T),
         ).toBe('/?k=v');
     });
 
@@ -423,15 +423,15 @@ describe('pathWithoutQueryParam', () => {
     });
 
     it('never produces a redirect off the current host', () => {
-        expect(pathWithoutQueryParam('//evil.example/?puter.auth.token=a', T)).toBe(
+        expect(pathWithoutQueryParam('//evil.example/?mixt.auth.token=a', T)).toBe(
             '/evil.example/',
         );
-        expect(pathWithoutQueryParam('/\\evil.example/?puter.auth.token=a', T)).toBe(
+        expect(pathWithoutQueryParam('/\\evil.example/?mixt.auth.token=a', T)).toBe(
             '/evil.example/',
         );
         // URL parsing drops tabs, which would turn this into `//evil.example`.
         expect(
-            pathWithoutQueryParam('/\t/evil.example/?puter.auth.token=a', T),
+            pathWithoutQueryParam('/\t/evil.example/?mixt.auth.token=a', T),
         ).toBeNull();
     });
 });
@@ -440,7 +440,7 @@ describe('buildPublicHostRedirect', () => {
     // Mirror of buildPrivateHostRedirect — swaps the private hosting
     // domain for the public one. Used when a non-private app (or no app
     // at all) hits the private host, so a paid-→-free app's old
-    // `puter.app` URL still resolves on `puter.site`.
+    // `mixt.app` URL still resolves on `mixt.site`.
     const cfg = buildHostingConfig({
         domain: 'localhost',
         static_hosting_domain: 'site.localhost:4100',
@@ -537,7 +537,7 @@ describe('renderLoginBootstrapHtml', () => {
         // The <script> in the name must be encoded, not rendered.
         expect(html).toContain('&lt;script&gt;alert(1)&lt;/script&gt;');
         expect(html).not.toContain('<script>alert(1)</script>');
-        // The page itself still has script tags (puter.js + bootstrap glue),
+        // The page itself still has script tags (mixt.js + bootstrap glue),
         // so just confirm the escaped content isn't accidentally unescaped.
         expect(html).toMatch(/<!doctype html>/i);
     });
@@ -554,7 +554,7 @@ describe('renderLoginBootstrapHtml', () => {
 // `resolvePrivateIdentity` / `resolvePublicHostedIdentity` rely on the
 // real AuthService for token verification + cookie naming.
 
-let server: PuterServer;
+let server: MixtServer;
 let authService: AuthService;
 
 beforeAll(async () => {
@@ -808,7 +808,7 @@ describe('resolvePrivateIdentity', () => {
                 },
             }),
             authService,
-            sessionCookieName: 'puter_auth_token',
+            sessionCookieName: 'mixt_auth_token',
             expectedAppUid: appUid,
             expectedSubdomain: 'beans',
             expectedPrivateHost: 'beans.app.localhost',
@@ -837,7 +837,7 @@ describe('resolvePrivateIdentity', () => {
                 },
             }),
             authService,
-            sessionCookieName: 'puter_auth_token',
+            sessionCookieName: 'mixt_auth_token',
             expectedAppUid: `app-${uuidv4()}`,
         });
         expect(out.source).toBe('session-cookie');
@@ -853,7 +853,7 @@ describe('resolvePrivateIdentity', () => {
                 headers: { authorization: 'Bearer not-a-real-token' },
             }),
             authService,
-            sessionCookieName: 'puter_auth_token',
+            sessionCookieName: 'mixt_auth_token',
         });
         expect(out.source).toBe('none');
         expect(out.userUid).toBeUndefined();
@@ -877,7 +877,7 @@ describe('resolvePrivateIdentity', () => {
                 }),
             }),
             authService,
-            sessionCookieName: 'puter_auth_token',
+            sessionCookieName: 'mixt_auth_token',
             expectedAppUid: `app-target-${uuidv4()}`,
         });
         expect(out.source).toBe('none');
@@ -904,7 +904,7 @@ describe('resolvePrivateIdentity', () => {
                 }),
             }),
             authService,
-            sessionCookieName: 'puter_auth_token',
+            sessionCookieName: 'mixt_auth_token',
             expectedAppUid: `app-target-${uuidv4()}`,
         });
         expect(out.source).toBe('none');
@@ -928,7 +928,7 @@ describe('resolvePrivateIdentity', () => {
                 }),
             }),
             authService,
-            sessionCookieName: 'puter_auth_token',
+            sessionCookieName: 'mixt_auth_token',
             expectedAppUid: targetUid,
         });
         expect(out.source).toBe('session-cookie');
@@ -948,7 +948,7 @@ describe('resolvePrivateIdentity', () => {
                 }),
             }),
             authService,
-            sessionCookieName: 'puter_auth_token',
+            sessionCookieName: 'mixt_auth_token',
             expectedAppUid: `app-target-${uuidv4()}`,
         });
         expect(out.source).toBe('session-cookie');
@@ -956,7 +956,7 @@ describe('resolvePrivateIdentity', () => {
     });
 
     it("ignores a bootstrap query-token whose actor.app.uid doesn't match the target app", async () => {
-        // Same guard for the `?puter.auth.token=` bootstrap path. A token
+        // Same guard for the `?mixt.auth.token=` bootstrap path. A token
         // minted via getUserAppToken for the attacker's app carries
         // app_uid=attacker; using it as a bootstrap on the target host
         // must fall through to source='none' (login bootstrap), not
@@ -999,10 +999,10 @@ describe('resolvePrivateIdentity', () => {
         const out = await resolvePrivateIdentity({
             req: reqOf({
                 cookies: {},
-                query: { 'puter.auth.token': wrongAppToken },
+                query: { 'mixt.auth.token': wrongAppToken },
             }),
             authService,
-            sessionCookieName: 'puter_auth_token',
+            sessionCookieName: 'mixt_auth_token',
             expectedAppUid: targetUid,
         });
         expect(out.source).toBe('none');
@@ -1038,10 +1038,10 @@ describe('resolvePrivateIdentity', () => {
         const out = await resolvePrivateIdentity({
             req: reqOf({
                 cookies: {},
-                query: { 'puter.auth.token': matchedToken },
+                query: { 'mixt.auth.token': matchedToken },
             }),
             authService,
-            sessionCookieName: 'puter_auth_token',
+            sessionCookieName: 'mixt_auth_token',
             expectedAppUid: targetUid,
         });
         expect(out.source).toBe('query');
@@ -1077,7 +1077,7 @@ describe('resolvePublicHostedIdentity', () => {
                 },
             }),
             authService,
-            sessionCookieName: 'puter_auth_token',
+            sessionCookieName: 'mixt_auth_token',
             expectedAppUid: appUid,
             expectedSubdomain: 'beans',
             expectedHost: 'beans.site.localhost',
@@ -1099,7 +1099,7 @@ describe('resolvePublicHostedIdentity', () => {
                 },
             }),
             authService,
-            sessionCookieName: 'puter_auth_token',
+            sessionCookieName: 'mixt_auth_token',
         });
         expect(out.source).toBe('session-cookie');
         expect(out.userUid).toBe(user.uuid);
@@ -1110,7 +1110,7 @@ describe('resolvePublicHostedIdentity', () => {
         const out = await resolvePublicHostedIdentity({
             req: reqOf({}),
             authService,
-            sessionCookieName: 'puter_auth_token',
+            sessionCookieName: 'mixt_auth_token',
         });
         expect(out.source).toBe('none');
     });

@@ -33,7 +33,7 @@ import type { EventHandler } from '../../stores/events/EventHandlerStore.js';
  */
 
 /** First line of every generated worker, followed by the set hash. */
-export const EVENTS_WORKER_MARKER = '// puter events worker';
+export const EVENTS_WORKER_MARKER = '// mixt events worker';
 
 /**
  * Ceiling on the assembled file. A publish caps the handlers' own bytes at
@@ -75,7 +75,7 @@ export const handlerSetHash = (
  * comment would otherwise swallow the closing parenthesis.
  */
 const registerEntry = (name: string, source: string): string =>
-    `__puterEvents.register(${JSON.stringify(name)}, (\n${source}\n));`;
+    `__mixtEvents.register(${JSON.stringify(name)}, (\n${source}\n));`;
 
 /**
  * Whether a stored handler source parses as the exact text the worker will
@@ -104,7 +104,7 @@ export const generateEventsWorkerSource = (
         const key = JSON.stringify(handler.name);
         if (!parsesAsHandlerEntry(handler.name, handler.source)) {
             broken.push(handler.name);
-            entries.push(`__puterEvents.markBroken(${key});`);
+            entries.push(`__mixtEvents.markBroken(${key});`);
             continue;
         }
         entries.push(registerEntry(handler.name, handler.source));
@@ -134,7 +134,7 @@ ${entries.join('\n')}
         const fallbackSource = `${EVENTS_WORKER_MARKER} ${setHash}
 // Generated from this app's published handlers; republishing regenerates it.
 // The assembled script would not parse, so every handler was marked broken.
-${allBroken.map((name) => `__puterEvents.markBroken(${JSON.stringify(name)});`).join('\n')}
+${allBroken.map((name) => `__mixtEvents.markBroken(${JSON.stringify(name)});`).join('\n')}
 `;
         return {
             source: fallbackSource,

@@ -20,9 +20,9 @@
 import { isPlainUserActor } from '../../core/actor.js';
 import { Context } from '../../core/context.js';
 import { HttpError } from '../../core/http/HttpError.js';
-import type { puterStores } from '../../stores/index.js';
+import type { mixtStores } from '../../stores/index.js';
 import type { LayerInstances } from '../../types.js';
-import type { puterServices } from '../index.js';
+import type { mixtServices } from '../index.js';
 import {
     APP_DATA_KV_OP_CLASSES,
     APP_DATA_PERMISSION_PREFIX,
@@ -36,7 +36,7 @@ import {
     PERMISSION_FOR_NOTHING_IN_PARTICULAR,
 } from '../permission/consts.js';
 import { PermissionUtil } from '../permission/permissionUtil.js';
-import { PuterService } from '../types.js';
+import { MixtService } from '../types.js';
 
 /**
  * Permission rewriters / implicators for the `app:*`, `apps-of-user:*`,
@@ -46,9 +46,9 @@ import { PuterService } from '../types.js';
  * app-root-dir arm of AppService) into one domain-scoped service. Nothing here
  * needs to live beyond init — the registrations are stateless.
  */
-export class AppPermissionService extends PuterService {
-    declare protected stores: LayerInstances<typeof puterStores>;
-    declare protected services: LayerInstances<typeof puterServices>;
+export class AppPermissionService extends MixtService {
+    declare protected stores: LayerInstances<typeof mixtStores>;
+    declare protected services: LayerInstances<typeof mixtServices>;
 
     override onServerStart(): void {
         const permissions = this.services.permission;
@@ -108,7 +108,7 @@ export class AppPermissionService extends PuterService {
 
         // -- apps-of-user:<own_uuid>:* / subdomains-of-user:… ----------
         // A user implicitly holds read/write over *their own* apps and
-        // subdomains. `puter.perms` expresses these as
+        // subdomains. `mixt.perms` expresses these as
         // `apps-of-user:<own_uuid>:<mode>` etc.
         permissions.registerImplicator({
             id: 'user-can-grant-read-own-apps',
@@ -131,7 +131,7 @@ export class AppPermissionService extends PuterService {
         // `write` covers managing them, which includes reading them. Prefix
         // implication only widens the other way — an `apps-of-user:<uuid>`
         // grant covers both modes — so without this a scan for `read` misses
-        // a `write` grant, and `puter.perms.check('apps')` would report an
+        // a `write` grant, and `mixt.perms.check('apps')` would report an
         // app that holds write as holding nothing. Mirrors `fs-access-levels`.
         permissions.registerExploder({
             id: 'apps-of-user-access-levels',

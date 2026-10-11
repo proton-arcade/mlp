@@ -17,7 +17,7 @@
 
 # Backend AI
 
-/src/backend/controllers/puterai/ @404oops @ProgrammerIn-wonderland @Salazareo
+/src/backend/controllers/mixtai/ @404oops @ProgrammerIn-wonderland @Salazareo
 /src/backend/drivers/ai-\*/ @404oops @ProgrammerIn-wonderland @Salazareo
 
 # Backend: AI, hosting, workers, networking, and WebDAV
@@ -50,23 +50,23 @@
 
 # SDK: AI, hosting, workers, and networking
 
-/src/puter-js/src/modules/ai/ @ProgrammerIn-wonderland @Salazareo
-/src/puter-js/src/modules/hosting/ @ProgrammerIn-wonderland @Salazareo
-/src/puter-js/src/modules/Workers* @ProgrammerIn-wonderland @Salazareo
-/src/puter-js/src/modules/networking/ @ProgrammerIn-wonderland @Salazareo
-/src/puter-js/src/lib/networkUtils* @ProgrammerIn-wonderland @Salazareo
-/src/puter-js/tests/api/suites/ai.suite.ts @ProgrammerIn-wonderland @Salazareo
-/src/puter-js/tests/api/suites/hosting.suite.ts @ProgrammerIn-wonderland @Salazareo
-/src/puter-js/tests/api/suites/workers.suite.ts @ProgrammerIn-wonderland @Salazareo
-/src/puter-js/tests/api/suites/net.suite.ts @ProgrammerIn-wonderland @Salazareo
-/src/puter-js/src/modules/Peer\* @ProgrammerIn-wonderland @Salazareo
+/src/mixt-js/src/modules/ai/ @ProgrammerIn-wonderland @Salazareo
+/src/mixt-js/src/modules/hosting/ @ProgrammerIn-wonderland @Salazareo
+/src/mixt-js/src/modules/Workers* @ProgrammerIn-wonderland @Salazareo
+/src/mixt-js/src/modules/networking/ @ProgrammerIn-wonderland @Salazareo
+/src/mixt-js/src/lib/networkUtils* @ProgrammerIn-wonderland @Salazareo
+/src/mixt-js/tests/api/suites/ai.suite.ts @ProgrammerIn-wonderland @Salazareo
+/src/mixt-js/tests/api/suites/hosting.suite.ts @ProgrammerIn-wonderland @Salazareo
+/src/mixt-js/tests/api/suites/workers.suite.ts @ProgrammerIn-wonderland @Salazareo
+/src/mixt-js/tests/api/suites/net.suite.ts @ProgrammerIn-wonderland @Salazareo
+/src/mixt-js/src/modules/Peer\* @ProgrammerIn-wonderland @Salazareo
 
 # SDK: sharing and permissions
 
-/src/puter-js/src/modules/perms/ @jfcastro92
-/src/puter-js/src/modules/FileSystem/operations/share* @jfcastro92 @Salazareo
-/src/puter-js/src/modules/FileSystem/operations/unshare* @jfcastro92 @Salazareo
-/src/puter-js/src/modules/FileSystem/operations/getShares* @jfcastro92 @Salazareo
-/src/puter-js/src/modules/FileSystem/operations/listShared* @jfcastro92 @Salazareo
-/src/puter-js/tests/api/suites/perms.suite.ts @jfcastro92 @Salazareo
-/src/puter-js/tests/api/suites/sharing.suite.ts @jfcastro92 @Salazareo
+/src/mixt-js/src/modules/perms/ @jfcastro92
+/src/mixt-js/src/modules/FileSystem/operations/share* @jfcastro92 @Salazareo
+/src/mixt-js/src/modules/FileSystem/operations/unshare* @jfcastro92 @Salazareo
+/src/mixt-js/src/modules/FileSystem/operations/getShares* @jfcastro92 @Salazareo
+/src/mixt-js/src/modules/FileSystem/operations/listShared* @jfcastro92 @Salazareo
+/src/mixt-js/tests/api/suites/perms.suite.ts @jfcastro92 @Salazareo
+/src/mixt-js/tests/api/suites/sharing.suite.ts @jfcastro92 @Salazareo

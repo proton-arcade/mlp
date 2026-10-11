@@ -21,7 +21,7 @@ import dedent from 'dedent';
 import handlebars, { template } from 'handlebars';
 import nodemailer from 'nodemailer';
 import type { IConfig } from '../../types';
-import { PuterClient } from '../types';
+import { MixtClient } from '../types';
 import {
     EMAIL_TEMPLATES,
     type EmailTemplate,
@@ -129,7 +129,7 @@ const DOMAIN_ALIASES: Record<string, string> = {
  * - Canonical-form normalization for dedup (via `clean`)
  * - Policy + extensible validation (via `validate`)
  */
-export class EmailClient extends PuterClient {
+export class EmailClient extends MixtClient {
     private transport: ReturnType<typeof nodemailer.createTransport> | null =
         null;
     private compiledTemplates: Partial<
@@ -290,7 +290,7 @@ export class EmailClient extends PuterClient {
     // -- Internals ----------------------------------------------------
 
     private defaultFrom(): string {
-        return this.config.email?.from ?? '"Puter" no-reply@puter.com';
+        return this.config.email?.from ?? '"Mixt" no-reply@mixt.mpl';
     }
 
     private registerHandlebarsHelpers(): void {

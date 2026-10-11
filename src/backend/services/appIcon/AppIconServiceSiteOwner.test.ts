@@ -23,20 +23,20 @@ import type { Request, Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { SYSTEM_ACTOR_UUID } from '../../core/actor.js';
-import { createPuterSiteMiddleware } from '../../core/http/middleware/puterSite.js';
-import type { PuterServer } from '../../server.js';
+import { createMixtSiteMiddleware } from '../../core/http/middleware/mixtSite.js';
+import type { MixtServer } from '../../server.js';
 import type { IConfig } from '../../types.js';
 import { setupTestServer } from '../../testUtil.js';
 
 // Own file: the subdomain cache is shared in-process, so a server booted
-// alongside another would read that server's `puter-app-icons` row.
+// alongside another would read that server's `mixt-app-icons` row.
 
 const PNG_DATA_URL =
     'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAACXBIWXMAAAPoAAAD6AG1e1JrAAAAEUlEQVR4nGP4z8DwH4QZYAwAR8oH+WdZbrcAAAAASUVORK5CYII=';
 const ICONS_PATH = '/system/app_icons';
 
 describe('AppIconService — system-owned icons site', () => {
-    let server: PuterServer;
+    let server: MixtServer;
 
     beforeAll(async () => {
         server = await setupTestServer({
@@ -50,7 +50,7 @@ describe('AppIconService — system-owned icons site', () => {
     }, 60_000);
 
     const fetchIconStatus = async (path: string) => {
-        const middleware = createPuterSiteMiddleware(
+        const middleware = createMixtSiteMiddleware(
             {
                 domain: 'localhost',
                 static_hosting_domain: 'site.localhost',
@@ -82,7 +82,7 @@ describe('AppIconService — system-owned icons site', () => {
             redirect: chain,
         });
         const req = {
-            hostname: 'puter-app-icons.site.localhost',
+            hostname: 'mixt-app-icons.site.localhost',
             path,
             originalUrl: path,
             protocol: 'http',
@@ -106,11 +106,11 @@ describe('AppIconService — system-owned icons site', () => {
     };
     const registerSiteTo = async (userId: number) => {
         const site =
-            await server.stores.subdomain.getBySubdomain('puter-app-icons');
+            await server.stores.subdomain.getBySubdomain('mixt-app-icons');
         await server.stores.subdomain.deleteByUuid(site!.uuid);
         await server.stores.subdomain.create({
             userId,
-            subdomain: 'puter-app-icons',
+            subdomain: 'mixt-app-icons',
             rootDirId: site!.root_dir_id,
         });
     };
@@ -136,7 +136,7 @@ describe('AppIconService — system-owned icons site', () => {
             ).toBe(systemUser!.id);
         }
         expect(
-            (await server.stores.subdomain.getBySubdomain('puter-app-icons'))
+            (await server.stores.subdomain.getBySubdomain('mixt-app-icons'))
                 ?.user_id,
         ).toBe(systemUser!.id);
         expect(await fetchIconStatus(`/${uid}-64.png`)).toBe(200);
@@ -161,7 +161,7 @@ describe('AppIconService — system-owned icons site', () => {
 
         await server.services.appIcon.ensureIconsDirectory();
         expect(
-            (await server.stores.subdomain.getBySubdomain('puter-app-icons'))
+            (await server.stores.subdomain.getBySubdomain('mixt-app-icons'))
                 ?.user_id,
         ).toBe(systemUser!.id);
         expect(await fetchIconStatus(iconPath)).toBe(200);
@@ -186,7 +186,7 @@ describe('AppIconService — system-owned icons site', () => {
             ).toBe(systemUser!.id);
         }
         expect(
-            (await server.stores.subdomain.getBySubdomain('puter-app-icons'))
+            (await server.stores.subdomain.getBySubdomain('mixt-app-icons'))
                 ?.user_id,
         ).toBe(systemUser!.id);
     });

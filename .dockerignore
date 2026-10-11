@@ -6,14 +6,14 @@ docker-compose.yml
 node_modules
 dist
 src/gui/dist
-src/puter-js/dist
+src/mixt-js/dist
 *.tsbuildinfo
 
 # Local runtime data
 volatile
 config.json
 config.dev.json
-/puter
+/mixt
 
 # OS / editor
 .DS_Store

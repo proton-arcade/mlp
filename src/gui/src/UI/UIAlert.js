@@ -81,7 +81,7 @@ function UIAlert (options) {
                 if ( options.callback ) {
                     options.callback(button.value);
                 }
-                puter.ui.closeDialog();
+                mixt.ui.closeDialog();
             };
         });
         if ( options.type === 'success' )

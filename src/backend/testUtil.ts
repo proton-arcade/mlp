@@ -8,9 +8,9 @@ import { deepMerge } from '../../tools/lib/configMigration.mjs';
 import { makeActor } from './core/actor';
 import type { Actor } from './core/actor';
 import { runWithContext } from './core/context';
-import { PuterServer } from './server';
+import { MixtServer } from './server';
 import { IConfig } from './types';
-import { puterClients } from './clients';
+import { mixtClients } from './clients';
 import {
     PostgresDatabaseClient,
     type PostgresPool,
@@ -82,7 +82,7 @@ export const createPgMockPostgresDatabaseClient = async (
 };
 
 /**
- * When `PUTER_TEST_DB_ENGINE=postgres` is set, `setupTestServer` swaps its
+ * When `MIXT_TEST_DB_ENGINE=postgres` is set, `setupTestServer` swaps its
  * default sqlite test database for an in-memory Postgres backed by pgmock (with
  * the bundled Postgres migrations applied on boot). Tests that explicitly
  * override `database` still win — the env var only affects the implicit default
@@ -92,7 +92,7 @@ export const createPgMockPostgresDatabaseClient = async (
  * original sqlite-in-memory default.
  */
 const testDatabaseDefault = (): IConfig['database'] => {
-    const engine = (process.env.PUTER_TEST_DB_ENGINE ?? '').toLowerCase();
+    const engine = (process.env.MIXT_TEST_DB_ENGINE ?? '').toLowerCase();
     if (engine === 'postgres') {
         return {
             engine: 'postgres',
@@ -105,7 +105,7 @@ const testDatabaseDefault = (): IConfig['database'] => {
 
 export type SetupTestServerOptions = {
     /**
-     * Listen on a real HTTP port so external clients (puter.js runners,
+     * Listen on a real HTTP port so external clients (mixt.js runners,
      * workerd, browsers) can connect. Default: in-process only, no listener.
      */
     listen?: boolean;
@@ -165,7 +165,7 @@ const TEST_HARNESS_CONFIG = {
 export const setupTestServer = async (
     configOverrides?: IConfig,
     options?: SetupTestServerOptions,
-): Promise<PuterServer> => {
+): Promise<MixtServer> => {
     const defaultConfig = await loadDefaultConfig();
     // merge default config with overrides and test defaults
     const config = deepMerge(
@@ -205,9 +205,9 @@ export const setupTestServer = async (
         pgMockClient = await createPgMockPostgresDatabaseClient(config);
     }
 
-    const server = new PuterServer(
+    const server = new MixtServer(
         config,
-        pgMockClient ? { ...puterClients, db: pgMockClient.client } : undefined,
+        pgMockClient ? { ...mixtClients, db: pgMockClient.client } : undefined,
     );
 
     if (pgMockClient) {
@@ -259,7 +259,7 @@ export type TestUserCredentials = {
  */
 /** Add a test account to the server whitelist, keeping existing entries. */
 export const whitelistTestUser = async (
-    server: PuterServer,
+    server: MixtServer,
     username: string,
 ): Promise<void> => {
     // The whitelist lives on the administrator row. Bare test servers have
@@ -286,7 +286,7 @@ export const whitelistTestUser = async (
 };
 
 export const createTestUser = async (
-    server: PuterServer,
+    server: MixtServer,
     opts: { username: string; password: string; admin?: boolean },
 ): Promise<TestUserCredentials> => {
     const passwordHash = await bcrypt.hash(opts.password, 8);
@@ -321,7 +321,7 @@ export const createTestUser = async (
     const user = (await server.stores.user.getById(created.id)) ?? created;
 
     const { token } = await server.services.auth.createSessionToken(user, {
-        user_agent: 'puter-test-env',
+        user_agent: 'mixt-test-env',
     });
 
     // Mint the delegated credential the same way the dashboard's
@@ -330,7 +330,7 @@ export const createTestUser = async (
     const apiToken = await server.services.auth.createAccessToken(
         makeActor({ user }),
         [[FULL_API_ACCESS]],
-        { label: 'puter-test-env' },
+        { label: 'mixt-test-env' },
     );
 
     // Mint a user-scoped worker token the same way deploying an app-less
@@ -339,7 +339,7 @@ export const createTestUser = async (
         await server.services.auth.createWorkerSessionToken(
             makeActor({ user }),
             user,
-            'puter-test-env-worker',
+            'mixt-test-env-worker',
         );
 
     return {
@@ -351,14 +351,14 @@ export const createTestUser = async (
     };
 };
 
-export type PuterTestEnv = {
+export type MixtTestEnv = {
     /**
      * Root origin (`http://localhost:<port>`) — GUI and root-only routes like
      * `POST /login` live here.
      */
     origin: string;
     /**
-     * API origin (`http://api.localhost:<port>`) — what puter.js clients use as
+     * API origin (`http://api.localhost:<port>`) — what mixt.js clients use as
      * their APIOrigin. Routes gated on the `api` subdomain (e.g. `/whoami`)
      * only match this host.
      */
@@ -373,32 +373,32 @@ export type PuterTestEnv = {
         user: TestUserCredentials;
         other: TestUserCredentials;
     };
-    server: PuterServer;
+    server: MixtServer;
     shutdown: () => Promise<void>;
 };
 
 export const TEST_ADMIN_CREDENTIALS = {
     username: 'admin',
-    password: 'puter-test-admin-password',
+    password: 'mixt-test-admin-password',
 };
 export const TEST_USER_CREDENTIALS = {
     username: 'testuser',
-    password: 'puter-test-user-password',
+    password: 'mixt-test-user-password',
 };
 export const TEST_OTHER_USER_CREDENTIALS = {
     username: 'otheruser',
-    password: 'puter-test-other-password',
+    password: 'mixt-test-other-password',
 };
 
 /**
- * Boot an in-memory Puter server on a real ephemeral port with deterministic
- * credentials, for client test runners (puter.js on node, browsers, workerd).
+ * Boot an in-memory Mixt server on a real ephemeral port with deterministic
+ * credentials, for client test runners (mixt.js on node, browsers, workerd).
  * Clients can authenticate with the pre-minted tokens or via a real `POST
  * /login` using the fixed passwords — no stdout scraping.
  */
-export const setupPuterTestEnv = async (
+export const setupMixtTestEnv = async (
     configOverrides?: IConfig,
-): Promise<PuterTestEnv> => {
+): Promise<MixtTestEnv> => {
     const port = await allocateEphemeralPort();
     // Real hostnames rather than 127.0.0.1: API routes are gated on the
     // `api` subdomain, and `*.localhost` resolves to loopback on modern

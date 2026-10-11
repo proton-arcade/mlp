@@ -19,7 +19,7 @@
 
 import { shutdownTelemetry } from './telemetryShutdown.js';
 
-/** What a graceful shutdown drives; `PuterServer` satisfies it. */
+/** What a graceful shutdown drives; `MixtServer` satisfies it. */
 export interface ShutdownTarget {
     prepareShutdown(): Promise<void>;
     shutdown(): Promise<void>;

@@ -7,13 +7,13 @@
     "outDir": "./dist",
     "baseUrl": ".",
     "paths": {
-      "@heyputer/backend": [
+      "@mixt/backend": [
         "src/backend/exports.ts"
       ],
-      "@heyputer/backend/src/*": [
+      "@mixt/backend/src/*": [
         "src/backend/*"
       ],
-      "@heyputer/backend/*": [
+      "@mixt/backend/*": [
         "src/backend/*"
       ]
     },

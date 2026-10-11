@@ -49,7 +49,7 @@ import {
 } from '../../controllers/events/limits.js';
 import type { Actor } from '../../core/actor.js';
 import { runWithContext } from '../../core/context.js';
-import { setupPuterTestEnv, type PuterTestEnv } from '../../testUtil.js';
+import { setupMixtTestEnv, type MixtTestEnv } from '../../testUtil.js';
 import type { IConfig } from '../../types.js';
 import { EVENTS_BACKGROUND_PERMISSION } from './authorization.js';
 import {
@@ -80,7 +80,7 @@ interface StubCall {
     };
 }
 
-let env: PuterTestEnv;
+let env: MixtTestEnv;
 let userId: number;
 let anchor: string;
 let anchorUid: string;
@@ -111,16 +111,16 @@ const readBody = async (req: http.IncomingMessage): Promise<string> => {
 const startStub = async (): Promise<string> => {
     stub = http.createServer((req, res) => {
         void readBody(req).then((raw) => {
-            const deployed = req.headers['x-puter-events-deployed'] as
+            const deployed = req.headers['x-mixt-events-deployed'] as
                 string | undefined;
             calls.push({
                 method: req.method ?? '',
                 path: req.url ?? '',
                 headers: {
-                    auth: req.headers['x-puter-internal-auth'] as string,
-                    script: req.headers['x-puter-events-script'] as string,
-                    app: req.headers['x-puter-events-app'] as string,
-                    key: req.headers['x-puter-events-key'] as string,
+                    auth: req.headers['x-mixt-internal-auth'] as string,
+                    script: req.headers['x-mixt-events-script'] as string,
+                    app: req.headers['x-mixt-events-app'] as string,
+                    key: req.headers['x-mixt-events-key'] as string,
                     deployed,
                 },
                 body: JSON.parse(raw || '{}') as StubCall['body'],
@@ -130,7 +130,7 @@ const startStub = async (): Promise<string> => {
             // until the deploy-on-miss retry carries the deployed header.
             if (dispatchMissing && deployed !== '1') {
                 res.writeHead(404, {
-                    'x-puter-events-dispatch': 'missing',
+                    'x-mixt-events-dispatch': 'missing',
                 }).end();
                 return;
             }
@@ -139,7 +139,7 @@ const startStub = async (): Promise<string> => {
             // a test is specifically simulating something that never reached one.
             res.writeHead(
                 answer,
-                answerHandled ? { 'x-puter-events-handled': '1' } : {},
+                answerHandled ? { 'x-mixt-events-handled': '1' } : {},
             ).end();
         });
     });
@@ -333,7 +333,7 @@ beforeAll(async () => {
     calls = [];
     const dispatcherUrl = await startStub();
 
-    env = await setupPuterTestEnv({
+    env = await setupMixtTestEnv({
         events: {
             enabled: true,
             workerRuntime: true,
@@ -470,7 +470,7 @@ describe('the call an owed delivery makes', () => {
         const { actor } = await env.server.services.auth.authenticate(token!);
         expect(actor!.user?.id).toBe(userId);
         expect(actor!.effectiveApp?.uid).toBe(appUid);
-        // A worker session, the same shape `puter.workers.*` gets — not an
+        // A worker session, the same shape `mixt.workers.*` gets — not an
         // access token minted with a one-off set of permissions.
         expect(actor!.session?.kind).toBe('worker');
 

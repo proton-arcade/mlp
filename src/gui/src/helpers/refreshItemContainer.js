@@ -88,7 +88,7 @@ const refresh_item_container = function (el_item_container, options) {
         }
     }
 
-    if ( !is_shared_view ) puter.fs.stat({ path: container_path, consistency: options.consistency ?? 'eventual' }).then(fsentry => {
+    if ( !is_shared_view ) mixt.fs.stat({ path: container_path, consistency: options.consistency ?? 'eventual' }).then(fsentry => {
         if ( el_window ) {
             $(el_window).attr('data-uid', fsentry.id);
             $(el_window).attr('data-sort_by', fsentry.sort_by ?? 'name');
@@ -152,7 +152,7 @@ const refresh_item_container = function (el_item_container, options) {
             owner: share.owner,
             metadata: '',
         })))
-        : puter.fs.readdir({ path: container_path, consistency: options.consistency ?? 'eventual' });
+        : mixt.fs.readdir({ path: container_path, consistency: options.consistency ?? 'eventual' });
 
     entries_promise.then(async (fsentries) => {
         // Check if the same folder is still loading since el_item_container's
@@ -255,7 +255,7 @@ const refresh_item_container = function (el_item_container, options) {
                 // if this is desktop, add Trash
                 if ( $(el_item_container).hasClass('desktop') ) {
                     try {
-                        const trash = await puter.fs.stat({ path: window.trash_path, consistency: options.consistency ?? 'eventual' });
+                        const trash = await mixt.fs.stat({ path: window.trash_path, consistency: options.consistency ?? 'eventual' });
                         UIItem({
                             appendTo: el_item_container,
                             uid: trash.id,

@@ -1,12 +1,12 @@
 ---
 title: Keep a Version History
-description: "Learn how to save every version of a document with Puter.js so users can look back and restore an older one."
+description: "Learn how to save every version of a document with Mixt.js so users can look back and restore an older one."
 tags: [kv, data-modeling]
 order: 36
 ---
 
 Lots of editors let you go back to an earlier version, like the version history
-in Google Docs. With [`puter.kv`](/KV/), you can do this by saving a copy of the
+in Google Docs. With [`mixt.kv`](/KV/), you can do this by saving a copy of the
 document under a numbered key every time it's saved. Old copies can delete
 themselves after a while.
 
@@ -28,10 +28,10 @@ const versionKey = (noteId, number) =>
     `note-history:${ noteId }:${ String(number).padStart(8, '0') }`;
 
 async function saveNote (noteId, text) {
-    const number = await puter.kv.incr(`note-revision:${ noteId }`);
+    const number = await mixt.kv.incr(`note-revision:${ noteId }`);
     const in30Days = Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30;
 
-    await puter.kv.set([
+    await mixt.kv.set([
         { key: `note:${ noteId }`, value: { text, version: number } },
         {
             key: versionKey(noteId, number),
@@ -43,11 +43,11 @@ async function saveNote (noteId, text) {
 }
 ```
 
-[`puter.kv.incr()`](/KV/incr/) gives every save its own number, even when two
+[`mixt.kv.incr()`](/KV/incr/) gives every save its own number, even when two
 tabs save at once. The number is padded with zeros so the keys sort in order
 (otherwise `10` would come before `9`).
 
-Passing an array to [`puter.kv.set()`](/KV/set/) writes both keys in one
+Passing an array to [`mixt.kv.set()`](/KV/set/) writes both keys in one
 request. The copy gets an `expireAt`, a Unix time in seconds, so it's deleted
 after 30 days. The current version has no expiry, so the note itself never goes
 away.
@@ -57,12 +57,12 @@ whichever save arrived last becomes the current version.
 
 ## Show the History
 
-To list a note's versions, call [`puter.kv.list()`](/KV/list/) with the note's
+To list a note's versions, call [`mixt.kv.list()`](/KV/list/) with the note's
 prefix. `reverse: true` puts the newest first, and `limit` loads one page at a
 time:
 
 ```js
-const page = await puter.kv.list({
+const page = await mixt.kv.list({
     pattern: `note-history:${ noteId }:`,
     returnValues: true,
     reverse: true,
@@ -78,7 +78,7 @@ If there are more versions, the page includes a `cursor`. Pass it back to load
 the next page of older versions, for example from a "Show older" button:
 
 ```js
-const older = await puter.kv.list({
+const older = await mixt.kv.list({
     pattern: `note-history:${ noteId }:`,
     returnValues: true,
     limit: 20,
@@ -99,7 +99,7 @@ To restore a version, read its copy and save it again:
 
 ```js
 async function restoreVersion (noteId, number) {
-    const version = await puter.kv.get(versionKey(noteId, number));
+    const version = await mixt.kv.get(versionKey(noteId, number));
 
     if ( version !== null ) {   // null once the copy has expired
         await saveNote(noteId, version.text);
@@ -113,7 +113,7 @@ like `git revert`. If the user changes their mind, nothing is lost.
 To undo the last save, restore the version before it:
 
 ```js
-const { items } = await puter.kv.list({
+const { items } = await mixt.kv.list({
     pattern: `note-history:${ noteId }:`,
     returnValues: true,
     reverse: true,
@@ -136,7 +136,7 @@ const KEEP = 50;
 const number = await saveNote(noteId, text);
 
 if ( number > KEEP ) {
-    await puter.kv.del(versionKey(noteId, number - KEEP));
+    await mixt.kv.del(versionKey(noteId, number - KEEP));
 }
 ```
 
@@ -149,14 +149,14 @@ There's no call to delete every key with a prefix, so list them and delete them
 one at a time. `stream: true` reads the list a page at a time:
 
 ```js
-for await ( const page of puter.kv.list({ pattern: `note-history:${ noteId }:`, stream: true }) ) {
+for await ( const page of mixt.kv.list({ pattern: `note-history:${ noteId }:`, stream: true }) ) {
     for ( const key of page.items ) {
-        await puter.kv.del(key);
+        await mixt.kv.del(key);
     }
 }
 
-await puter.kv.del(`note:${ noteId }`);
-await puter.kv.del(`note-revision:${ noteId }`);
+await mixt.kv.del(`note:${ noteId }`);
+await mixt.kv.del(`note-revision:${ noteId }`);
 ```
 
 It's safe to delete keys while you're still listing them.

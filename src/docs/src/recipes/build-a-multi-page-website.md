@@ -1,6 +1,6 @@
 ---
 title: Build a Multi-Page Website
-description: "Learn how to publish a website with several pages, a shared assets folder and a custom 404 page with Puter.js, with links that work on every page."
+description: "Learn how to publish a website with several pages, a shared assets folder and a custom 404 page with Mixt.js, with links that work on every page."
 tags: [hosting, fs]
 order: 58
 ---
@@ -10,7 +10,7 @@ order: 58
 and a blog, plus some images. Then you need to decide where each file goes and how the pages
 link to each other and to the shared files.
 
-A site on Puter serves its folder as it is, like any static host, so the folder
+A site on Mixt OS serves its folder as it is, like any static host, so the folder
 layout decides the URLs.
 
 ## Lay Out the Folder
@@ -49,7 +49,7 @@ it.
 
 ## Write the Files
 
-Write each page with [`puter.fs.write()`](/FS/write/). The
+Write each page with [`mixt.fs.write()`](/FS/write/). The
 `createMissingParents` option creates any folder that does not exist yet:
 
 ```js
@@ -83,15 +83,15 @@ const files = {
 };
 
 for (const [path, content] of Object.entries(files)) {
-    await puter.fs.write(`${dir}/${path}`, content, { createMissingParents: true });
+    await mixt.fs.write(`${dir}/${path}`, content, { createMissingParents: true });
 }
-await puter.fs.write(`${dir}/assets/logo.png`, logoBlob);
+await mixt.fs.write(`${dir}/assets/logo.png`, logoBlob);
 
-const site = await puter.hosting.create(puter.randName(), dir);
+const site = await mixt.hosting.create(mixt.randName(), dir);
 ```
 
 To publish many files in one call, such as a folder the user dropped onto the
-page, use [`puter.fs.upload()`](/FS/upload/) instead.
+page, use [`mixt.fs.upload()`](/FS/upload/) instead.
 
 ## Link From the Site Root
 
@@ -116,10 +116,10 @@ start with `/` do not have this problem.
 ## Add a 404 Page
 
 A request for a path with no file gets a default 404 page. To show your own,
-add a `.puter_site_config` file at the top of the folder that points to it:
+add a `.mixt_site_config` file at the top of the folder that points to it:
 
 ```js
-await puter.fs.write(`${dir}/.puter_site_config`, JSON.stringify({
+await mixt.fs.write(`${dir}/.mixt_site_config`, JSON.stringify({
     errors: {
         404: { file: '/404.html' },
     },
@@ -127,7 +127,7 @@ await puter.fs.write(`${dir}/.puter_site_config`, JSON.stringify({
 ```
 
 The page is sent with a `404` status, so search engines know it is not a real
-page. The `.puter_site_config` file itself is never served to visitors.
+page. The `.mixt_site_config` file itself is never served to visitors.
 
 The site reads this file again at most once a minute, so give a change a minute
 before you test it. If the file has a mistake, such as broken JSON, the site

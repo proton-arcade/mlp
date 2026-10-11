@@ -1,20 +1,20 @@
 <html>
 <body>
-    <script src="/puter.js/v2"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // (1) Create a random directory
-            let dirName = puter.randName();
-            await puter.fs.mkdir(dirName)
+            let dirName = mixt.randName();
+            await mixt.fs.mkdir(dirName)
 
             // (2) Create 'index.html' in the directory with the contents "Hello, world!"
-            await puter.fs.write(`${dirName}/index.html`, '<h1>Hello, world!</h1>');
+            await mixt.fs.write(`${dirName}/index.html`, '<h1>Hello, world!</h1>');
 
             // (3) Host the directory under a random subdomain
-            let subdomain = puter.randName();
-            const site = await puter.hosting.create(subdomain, dirName)
+            let subdomain = mixt.randName();
+            const site = await mixt.hosting.create(subdomain, dirName)
 
-            puter.print(`Website hosted at: <a href="https://${site.subdomain}.puter.site" target="_blank">https://${site.subdomain}.puter.site</a>`);
+            mixt.print(`Website hosted at: <a href="https://${site.subdomain}.mixt.site" target="_blank">https://${site.subdomain}.mixt.site</a>`);
         })();
     </script>
 </body>

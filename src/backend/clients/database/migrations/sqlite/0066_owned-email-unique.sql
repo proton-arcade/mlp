@@ -43,7 +43,7 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_user_owned_email
     WHERE email IS NOT NULL
       AND (email_confirmed = 1 OR password IS NOT NULL);
 
--- One Puter account per external identity. OIDCStore.link already assumes this
+-- One Mixt account per external identity. OIDCStore.link already assumes this
 -- constraint exists — it catches the unique violation to tell "re-linking the
 -- same account" apart from "this sub belongs to someone else" — but the table
 -- never actually had it, so two concurrent first-time logins could each create

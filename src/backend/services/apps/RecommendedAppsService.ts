@@ -20,7 +20,7 @@
 
 import type { AppIconHostConfig } from '../../util/appIcon.js';
 import { getAppIconCdnUrl, getAppIconUrl } from '../../util/appIcon.js';
-import { PuterService } from '../types.js';
+import { MixtService } from '../types.js';
 
 /**
  * Hardcoded list of recommended apps shown on the desktop launch grid. Resolved
@@ -57,7 +57,7 @@ export const RECOMMENDED_APP_NAMES = [
     'klondike',
 ];
 
-export class RecommendedAppsService extends PuterService {
+export class RecommendedAppsService extends MixtService {
     async getRecommendedApps(): Promise<Array<Record<string, unknown>>> {
         const event = { appNames: [...RECOMMENDED_APP_NAMES] };
         await this.clients.event.emitAndWait('app.recommended', event, {});
@@ -91,7 +91,7 @@ function toAppSummary(
         // SuggestedAppsService.toAppSummary; the drawer's feedback control
         // renders off this flag.
         feedback_enabled: Boolean(app.feedback_enabled),
-        // An app with no owner isn't owned by a Puter user — it's an
+        // An app with no owner isn't owned by a Mixt user — it's an
         // "external" (origin-bootstrapped) app.
         external: app.owner_user_id == null || app.owner_user_id === '',
     };

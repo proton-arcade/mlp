@@ -21,7 +21,7 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { v4 as uuidv4 } from 'uuid';
 import type { Actor } from '../../core/actor.js';
 import { runWithContext } from '../../core/context.js';
-import { PuterServer } from '../../server.js';
+import { MixtServer } from '../../server.js';
 import { setupTestServer } from '../../testUtil.js';
 import { generateDefaultFsentries } from '../../util/userProvisioning.js';
 import { inferFilenameFromUrlOrPath, loadFileInput } from './fileInput.js';
@@ -36,14 +36,14 @@ vi.mock('../../util/secureHttp.js', async (importOriginal) => ({
 
 // ── Test harness ────────────────────────────────────────────────────
 //
-// Boots one real PuterServer (in-memory sqlite + dynamo + s3 + mock
+// Boots one real MixtServer (in-memory sqlite + dynamo + s3 + mock
 // redis) and exercises `loadFileInput` against the live wired stores
 // and FSService. Each test makes its own user via `makeUser` and,
 // where the FS-resolution path is being exercised, writes a real
 // file through FSService.write so there's an actual fsentry +
 // in-memory S3 object behind the path / uuid we hand to loadFileInput.
 
-let server: PuterServer;
+let server: MixtServer;
 
 beforeAll(async () => {
     server = await setupTestServer();

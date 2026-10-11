@@ -51,7 +51,7 @@ import {
 import { EVENTS_INVOKE_PATH } from '../../clients/events/EventsWorkerInvokerClient.js';
 import { runWithContext } from '../../core/context.js';
 import { appSocketRoom, SocketService } from '../socket/SocketService.js';
-import { setupPuterTestEnv, type PuterTestEnv } from '../../testUtil.js';
+import { setupMixtTestEnv, type MixtTestEnv } from '../../testUtil.js';
 import type { IConfig } from '../../types.js';
 import { EVENTS_BACKGROUND_PERMISSION } from './authorization.js';
 import {
@@ -136,7 +136,7 @@ const INGEST_SOURCE = `async ({ event, ctx, user, fetch, ack }) => {
             ambient: {
                 me: typeof me,
                 router: typeof router,
-                puterAuth: typeof puter_auth,
+                mixtAuth: typeof mixt_auth,
                 invokeKey: typeof events_invoke_key,
             },
         }),
@@ -148,7 +148,7 @@ const EXPLODE_SOURCE = "async () => { throw new Error('boom'); }";
 // so the invoker's timeout is the only thing that can end the attempt.
 const SLEEPY_SOURCE = 'async ({ ctx, fetch }) => { await fetch(ctx.hang); }';
 
-let env: PuterTestEnv;
+let env: MixtTestEnv;
 let userId: number;
 let anchor: string;
 let anchorUid: string;
@@ -267,7 +267,7 @@ const rehydrate = async (
             method: 'POST',
             headers: {
                 'content-type': 'application/json',
-                ...(secret === null ? {} : { 'x-puter-internal-auth': secret }),
+                ...(secret === null ? {} : { 'x-mixt-internal-auth': secret }),
             },
             body: JSON.stringify(body),
         },
@@ -347,7 +347,7 @@ const failuresOf = async (subId: string): Promise<number> =>
     Number((await env.server.clients.redis.get(`ev:qf:{${subId}}`)) ?? 0);
 
 beforeAll(async () => {
-    env = await setupPuterTestEnv({
+    env = await setupMixtTestEnv({
         events: {
             enabled: true,
             workerRuntime: true,
@@ -448,7 +448,7 @@ describe('publishing handlers', () => {
             // listable, and not deletable as though it were the owner's.
             expect(
                 await env.server.stores.subdomain.getBySubdomain(
-                    `workers.puter.${script}`,
+                    `workers.mixt.${script}`,
                 ),
             ).toBeFalsy();
             const { actor } = await env.server.services.auth.authenticate(
@@ -601,7 +601,7 @@ describe('single delivery through the real worker', () => {
             expect(sinkPosts[0].ambient).toEqual({
                 me: 'undefined',
                 router: 'undefined',
-                puterAuth: 'undefined',
+                mixtAuth: 'undefined',
                 // Read once by the runtime and dropped before handler code ran.
                 invokeKey: 'undefined',
             });
@@ -736,7 +736,7 @@ describe('what can reach a deployed events worker', () => {
                                 method: 'POST',
                                 headers: {
                                     'content-type': 'application/json',
-                                    'x-puter-events-key': key,
+                                    'x-mixt-events-key': key,
                                 },
                                 body: JSON.stringify({
                                     handler: 'ingest',

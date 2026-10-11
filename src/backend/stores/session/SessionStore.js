@@ -24,7 +24,7 @@ import {
     isMissingParentViolation,
     isUniqueViolation,
 } from '../../util/dbError.js';
-import { PuterStore } from '../types';
+import { MixtStore } from '../types';
 
 // `updateActivity` / `updateUserActivity` intentionally skip cache
 // invalidation — they're throttled UPDATEs, stale `last_activity` in
@@ -80,7 +80,7 @@ const predates = (row, notBefore) =>
     Number(row?.created_at) > 0 &&
     Number(row.created_at) < notBefore;
 
-export class SessionStore extends PuterStore {
+export class SessionStore extends MixtStore {
     #lastSessionTouchMs = new Map();
     #lastUserTouchMs = new Map();
 

@@ -19,7 +19,7 @@
 
 import type { FlatPermRef } from '../../stores/permission/PermissionStore.js';
 import type { UserRow } from '../../stores/user/UserStore.js';
-import { PuterService } from '../types.js';
+import { MixtService } from '../types.js';
 
 /**
  * Home directory plus the seven folders `generateDefaultFsentries` creates. An
@@ -36,7 +36,7 @@ const PROVISIONED_FSENTRY_COUNT = 8;
  * so "delete the row" is never the whole job — anything reaching for that
  * shortcut leaves orphans behind. Go through `cascadeDelete`.
  */
-export class UserAccountService extends PuterService {
+export class UserAccountService extends MixtService {
     /**
      * Delete a user and the state that belongs to them: their files (S3 objects
      * included), their sites, their sessions, and the row itself.

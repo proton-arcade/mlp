@@ -34,8 +34,8 @@ import { makeActor, type Actor } from '../../core/actor.js';
 import { runWithContext } from '../../core/context.js';
 import {
     createTestUser,
-    setupPuterTestEnv,
-    type PuterTestEnv,
+    setupMixtTestEnv,
+    type MixtTestEnv,
 } from '../../testUtil.js';
 import type { IConfig } from '../../types.js';
 import type { DeliveryEnvelope } from './EventsService.js';
@@ -53,7 +53,7 @@ interface TestUser {
     uuid: string;
 }
 
-let env: PuterTestEnv;
+let env: MixtTestEnv;
 let owner: TestUser;
 let guest: TestUser;
 let stranger: TestUser;
@@ -141,7 +141,7 @@ const clearRows = async () => {
 };
 
 beforeAll(async () => {
-    env = await setupPuterTestEnv({
+    env = await setupMixtTestEnv({
         events: { enabled: true, kvHandles: true },
         // Seeded accounts carry no email, which the plan machinery reads as a
         // temporary account — and a temporary account holds no durable rows.

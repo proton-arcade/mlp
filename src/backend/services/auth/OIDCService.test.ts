@@ -21,7 +21,7 @@ import crypto from 'node:crypto';
 import jwt from 'jsonwebtoken';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { runWithContext } from '../../core/context.js';
-import { PuterServer } from '../../server.js';
+import { MixtServer } from '../../server.js';
 import { setupTestServer } from '../../testUtil.js';
 import { cleanEmail } from '../../util/email.js';
 import { generate_identifier } from '../../util/identifier.js';
@@ -52,7 +52,7 @@ const APPLE_DISCOVERY_URL =
 const CUSTOM_USERINFO = 'https://idp.example/userinfo';
 const CUSTOM_TOKEN = 'https://idp.example/token';
 
-let server: PuterServer;
+let server: MixtServer;
 let privateKey: crypto.KeyObject;
 let jwk: Record<string, unknown>;
 const fetchedUrls: string[] = [];
@@ -932,7 +932,7 @@ describe('OIDCService.createUserFromOIDC', () => {
         const email = `new-${crypto.randomBytes(4).toString('hex')}@example.com`;
         const signups: unknown[] = [];
         const onSignup = (_k: string, data: unknown) => signups.push(data);
-        server.clients.event.on('puter.signup.success', onSignup);
+        server.clients.event.on('mixt.signup.success', onSignup);
 
         const result = await runWithContext({ req }, () =>
             oidc().createUserFromOIDC(
@@ -961,7 +961,7 @@ describe('OIDCService.createUserFromOIDC', () => {
         ).toBeTruthy();
         expect(signups).toHaveLength(1);
 
-        server.clients.event.off('puter.signup.success', onSignup);
+        server.clients.event.off('mixt.signup.success', onSignup);
     });
 
     it('retries the generated username when its home path is already occupied', async () => {
@@ -1031,8 +1031,8 @@ describe('OIDCService.createUserFromOIDC', () => {
         const seen: Array<Record<string, unknown>> = [];
         const record = (_k: string, data: unknown) =>
             seen.push(data as Record<string, unknown>);
-        server.clients.event.on('puter.signup.validate', record);
-        server.clients.event.on('puter.signup.success', record);
+        server.clients.event.on('mixt.signup.validate', record);
+        server.clients.event.on('mixt.signup.success', record);
         try {
             const email = `xff-${crypto.randomBytes(4).toString('hex')}@example.com`;
             const result = await runWithContext({ req: forgedReq }, () =>
@@ -1056,8 +1056,8 @@ describe('OIDCService.createUserFromOIDC', () => {
             expect(persisted!.signup_ip).toBe('203.0.113.9');
             expect(persisted!.signup_ip_forwarded).toBe('203.0.113.9');
         } finally {
-            server.clients.event.off('puter.signup.validate', record);
-            server.clients.event.off('puter.signup.success', record);
+            server.clients.event.off('mixt.signup.validate', record);
+            server.clients.event.off('mixt.signup.success', record);
         }
     });
 
@@ -1069,7 +1069,7 @@ describe('OIDCService.createUserFromOIDC', () => {
             e.code = 'blocked_by_policy';
             e.trail_id = 'trail-42';
         };
-        server.clients.event.on('puter.signup.validate', veto);
+        server.clients.event.on('mixt.signup.validate', veto);
         try {
             const result = await runWithContext({ req }, () =>
                 oidc().createUserFromOIDC('google', {
@@ -1085,7 +1085,7 @@ describe('OIDCService.createUserFromOIDC', () => {
                 requestCode: 'trail-42',
             });
         } finally {
-            server.clients.event.off('puter.signup.validate', veto);
+            server.clients.event.off('mixt.signup.validate', veto);
         }
     });
 
@@ -1096,7 +1096,7 @@ describe('OIDCService.createUserFromOIDC', () => {
             e.requires_card_verification = true;
             e.reputation = 42;
         };
-        server.clients.event.on('puter.signup.validate', flag);
+        server.clients.event.on('mixt.signup.validate', flag);
         try {
             const email = `flagged-${crypto.randomBytes(4).toString('hex')}@example.com`;
             const result = await runWithContext({ req }, () =>
@@ -1110,7 +1110,7 @@ describe('OIDCService.createUserFromOIDC', () => {
             expect(result.user?.requires_phone_verification).toBeTruthy();
             expect(result.user?.requires_card_verification).toBeTruthy();
         } finally {
-            server.clients.event.off('puter.signup.validate', flag);
+            server.clients.event.off('mixt.signup.validate', flag);
         }
     });
 

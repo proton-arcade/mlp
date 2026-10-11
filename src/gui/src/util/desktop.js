@@ -18,7 +18,7 @@
  */
 
 /**
- * This file contains functions that are used by Puter's desktop GUI.
+ * This file contains functions that are used by Mixt's desktop GUI.
  * Functions moved here are not bound to the `window` object, making it
  * easier to write unit tests for them.
  *

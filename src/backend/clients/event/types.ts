@@ -115,8 +115,8 @@ export type EventMap = {
     // Emitted after an app token is granted (get-user-app-token). The app-side
     // analogue of `site.htmlServed` — the external-app abuse scanner
     // (extensions/subdomainAbuse/appScan.ts) listens to screenshot + classify
-    // external `index_url`s that Puter never serves itself.
-    'puter.app.authenticated': {
+    // external `index_url`s that Mixt never serves itself.
+    'mixt.app.authenticated': {
         app_uid?: string;
         user_id?: number | null;
         app?: {
@@ -130,7 +130,7 @@ export type EventMap = {
     };
 
     // ---- Auth / signup ----
-    'puter.signup.validate': {
+    'mixt.signup.validate': {
         allow: boolean;
         email?: string;
         /**
@@ -169,7 +169,7 @@ export type EventMap = {
         requires_card_verification?: boolean;
         [key: string]: unknown;
     };
-    'puter.signup.success': {
+    'mixt.signup.success': {
         user_id: number;
         user_uuid: string;
         email: string;
@@ -178,13 +178,13 @@ export type EventMap = {
         fingerprint?: string | null;
         /** True when the created account is a temp user (no email/password). */
         is_temp?: boolean;
-        /** The bonus code `puter.signup-bonus.validate` accepted, if any. */
+        /** The bonus code `mixt.signup-bonus.validate` accepted, if any. */
         bonus_code?: string;
         [key: string]: unknown;
     };
     // Signup bonus codes are pure mechanism here: an extension decides what a
     // code is worth and fills these in (both emitted via `emitAndWait`).
-    'puter.signup-bonus.check': {
+    'mixt.signup-bonus.check': {
         code: string;
         ip: string | null;
         fingerprint: string | null;
@@ -196,11 +196,11 @@ export type EventMap = {
         requirements: { phone: boolean; card: boolean } | null;
     };
     /**
-     * Emitted once a signup has passed `puter.signup.validate`, so listeners
+     * Emitted once a signup has passed `mixt.signup.validate`, so listeners
      * see the harness's verdict. A listener sets `accepted` to honor the code,
      * and may raise (never lower) the verification requirements.
      */
-    'puter.signup-bonus.validate': {
+    'mixt.signup-bonus.validate': {
         code: string;
         email?: string;
         clean_email?: string;
@@ -245,7 +245,7 @@ export type EventMap = {
     // already verified this number and flipping `allowed` to false when the
     // cross-account limit is hit. No extension listening → `allowed` stays
     // true and the send proceeds.
-    'puter.phone-verification.check': {
+    'mixt.phone-verification.check': {
         user_id: number;
         user_uid: string;
         phone: string;
@@ -263,7 +263,7 @@ export type EventMap = {
     // Fire-and-forget signal that a code was actually sent — the abuse
     // extension bumps its per-number / per-account / per-device send-velocity
     // counters off this. No-op with no extension listening.
-    'puter.phone-verification.sent': {
+    'mixt.phone-verification.sent': {
         user_id: number;
         user_uid: string;
         phone: string;
@@ -281,7 +281,7 @@ export type EventMap = {
     // these in (emitted via `emitAndWait`). `enabled` stays null when no
     // extension is installed; the extension always sets it (true/false) so
     // the endpoints can distinguish "disabled" from "not installed".
-    'puter.card-verification.setup': {
+    'mixt.card-verification.setup': {
         user_id: number;
         user_uid: string;
         email?: string;
@@ -308,10 +308,10 @@ export type EventMap = {
     // no user state, nothing billed. It exists so the SMS-to-card fallback can
     // default on only where a card gate actually works, which means it gets
     // asked often and must stay cheap.
-    'puter.card-verification.status': {
+    'mixt.card-verification.status': {
         enabled: boolean | null;
     };
-    'puter.card-verification.confirm': {
+    'mixt.card-verification.confirm': {
         user_id: number;
         user_uid: string;
         email?: string;
@@ -688,7 +688,7 @@ export type EventMap = {
     };
 
     // ---- Extension hooks / misc ----
-    'puter.gui.addons': {
+    'mixt.gui.addons': {
         prependHeadContent?: string[];
         prependBodyContent?: string[];
     };
@@ -759,7 +759,7 @@ export type EventMap = {
 /** Payload for `subscription.gate.<surface>` events. */
 export type SubscriptionGateEvent = {
     actor: Actor;
-    /** The key after `subscription.gate.`, e.g. `driver.puter-kvstore.get`. */
+    /** The key after `subscription.gate.`, e.g. `driver.mixt-kvstore.get`. */
     surface: string;
     /** What the gate asked for: any paid plan (`true`) or these policy ids. */
     requirement: boolean | readonly string[];

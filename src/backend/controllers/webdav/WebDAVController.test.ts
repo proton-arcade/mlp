@@ -1,14 +1,14 @@
-// This suite tests basic features of puter webdav. it is not a comprehensive webdav test suite unlike litmus
-// but rather it performs some common sense checks to ensure that WebDAV support isn't irrevocably broken in puter
+// This suite tests basic features of mixt webdav. it is not a comprehensive webdav test suite unlike litmus
+// but rather it performs some common sense checks to ensure that WebDAV support isn't irrevocably broken in mixt
 import type { Request, RequestHandler, Response } from 'express';
 import { Readable, Writable } from 'node:stream';
 import { GetObjectCommand } from '@aws-sdk/client-s3';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { v4 as uuidv4 } from 'uuid';
 import { hash as bcryptHash } from 'bcrypt';
-import { PuterRouter } from '../../core/http/PuterRouter.js';
+import { MixtRouter } from '../../core/http/MixtRouter.js';
 import type { RouteDescriptor } from '../../core/http/types.js';
-import { PuterServer } from '../../server.js';
+import { MixtServer } from '../../server.js';
 import { setupTestServer } from '../../testUtil.js';
 import { makeActor } from '../../core/actor.js';
 import { runWithContext } from '../../core/context.js';
@@ -16,7 +16,7 @@ import { FULL_API_ACCESS } from '../../services/permission/consts.js';
 import { generateDefaultFsentries } from '../../util/userProvisioning.js';
 import type { WebDAVController } from './WebDAVController.js';
 
-let server: PuterServer;
+let server: MixtServer;
 let controller: WebDAVController;
 let routes: RouteDescriptor[];
 
@@ -24,7 +24,7 @@ beforeAll(async () => {
     server = await setupTestServer();
     controller = server.controllers.webdav as unknown as WebDAVController;
 
-    const router = new PuterRouter();
+    const router = new MixtRouter();
     controller.registerRoutes(router);
     routes = router.routes;
 });
@@ -207,7 +207,7 @@ const makeUser = async () => {
 describe('WebDAVController', () => {
     describe('route registration', () => {
         it('registers one catch-all per DAV verb, all on the dav subdomain', () => {
-            const router = new PuterRouter();
+            const router = new MixtRouter();
             controller.registerRoutes(router);
 
             for (const verb of [
@@ -240,7 +240,7 @@ describe('WebDAVController', () => {
         });
 
         it('registers HEAD ahead of GET so express does not fold the two', () => {
-            const router = new PuterRouter();
+            const router = new MixtRouter();
             controller.registerRoutes(router);
             const head = router.routes.findIndex((r) => r.method === 'head');
             const get = router.routes.findIndex((r) => r.method === 'get');
@@ -473,7 +473,7 @@ describe('WebDAVController', () => {
                     method: 'OPTIONS',
                     path: '/someone/.vscode/settings.json',
                     headers: {
-                        origin: 'https://code.puter.com',
+                        origin: 'https://code.mixt.mpl',
                         'access-control-request-method': 'PROPFIND',
                     },
                 }),
@@ -496,7 +496,7 @@ describe('WebDAVController', () => {
                     method: 'OPTIONS',
                     // An Origin alone isn't a preflight — only the
                     // `Access-Control-Request-Method` probe is.
-                    headers: { origin: 'https://code.puter.com' },
+                    headers: { origin: 'https://code.mixt.mpl' },
                 }),
                 res,
                 noop,

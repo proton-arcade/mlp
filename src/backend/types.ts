@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import type { PuterRouter } from './core/http/PuterRouter';
+import type { MixtRouter } from './core/http/MixtRouter';
 
 export interface IAWSCredentials {
     access_key?: string;
@@ -29,7 +29,7 @@ export interface IDynamoConfig {
     aws?: IAWSCredentials;
     endpoint?: string;
     /**
-     * Local dynalite store path. Default `./volatile/runtime/puter-ddb`;
+     * Local dynalite store path. Default `./volatile/runtime/mixt-ddb`;
      * `':memory:'` for tests.
      */
     path?: string;
@@ -182,7 +182,7 @@ export interface IEmailConfig {
 }
 
 /**
- * Puter-addressed user mailboxes: the shared secret the ingress endpoint
+ * Mixt-addressed user mailboxes: the shared secret the ingress endpoint
  * checks, and the optional local SMTP receiver that feeds it.
  *
  * The receiver is the self-hosted stand-in for an externally-hosted inbound
@@ -236,13 +236,13 @@ export interface IPreludeConfig {
     maxSmsCostEur?: number;
     /**
      * Verification template id (from the Prelude dashboard) that controls the
-     * SMS wording — e.g. a "Your Puter verification code is {{code}}" template.
+     * SMS wording — e.g. a "Your Mixt verification code is {{code}}" template.
      * The message text itself is authored in Prelude, not here; this just
      * selects it. Omit to use the dashboard default.
      */
     templateId?: string;
     /**
-     * Alphanumeric Sender ID to brand who the SMS is "from" (e.g. "Puter").
+     * Alphanumeric Sender ID to brand who the SMS is "from" (e.g. "Mixt").
      * Must be pre-enabled by Prelude and isn't supported by all
      * carriers/regions (notably US long/short codes). Omit to use Prelude's
      * default sender.
@@ -263,7 +263,7 @@ export interface IPreludeConfig {
  * (fauxqs locally, real S3 in prod) and writes into the default bucket.
  */
 export interface IThumbnailStoreConfig {
-    /** Bucket name. Default: `puter-local`. */
+    /** Bucket name. Default: `mixt-local`. */
     name?: string;
     /** Endpoint URL — unset forces the fallback. */
     endpoint?: string;
@@ -377,8 +377,8 @@ export interface IWorkersConfig {
      */
     namespace?: string;
     /**
-     * Base URL included as the `puter_endpoint` binding. Default
-     * `https://api.puter.com`.
+     * Base URL included as the `mixt_endpoint` binding. Default
+     * `https://api.mixt.mpl`.
      */
     internetExposedUrl?: string;
     /**
@@ -584,7 +584,7 @@ export interface IDevWatcherConfig {
         env?: Record<string, string>;
     }>;
     /**
-     * Optional webpack watcher entries. Omit to use the built-in GUI/puter.js
+     * Optional webpack watcher entries. Omit to use the built-in GUI/mixt.js
      * watchers.
      */
     webpack?: Array<{
@@ -625,7 +625,7 @@ interface IConfigOptional {
 
     /** Externally-visible protocol. Default 'http'. */
     protocol: string;
-    /** Primary domain for Puter (e.g., `localhost`, `puter.com`). */
+    /** Primary domain for Mixt (e.g., `localhost`, `mixt.mpl`). */
     domain: string;
     /**
      * Externally-visible port. Defaults to `port`. Behind a reverse proxy, set
@@ -667,11 +667,11 @@ interface IConfigOptional {
      */
     origin: string;
     /**
-     * Public base URL for the API subdomain, e.g. `https://api.puter.com`. Used
+     * Public base URL for the API subdomain, e.g. `https://api.mixt.mpl`. Used
      * to build signed URLs.
      */
     api_base_url: string;
-    /** Static hosting domain for user sites (e.g., `puter.site`). */
+    /** Static hosting domain for user sites (e.g., `mixt.site`). */
     static_hosting_domain: string;
     /** Alt static hosting domain. */
     static_hosting_domain_alt: string;
@@ -684,7 +684,7 @@ interface IConfigOptional {
      * sites. Unset means no header at all, which is the default: hosted sites
      * are arbitrary third-party apps, so an enforcing policy has to be rolled
      * out with evidence rather than switched on blind.
-     * `RECOMMENDED_HOSTING_CSP` in `middleware/puterSite.ts` is the suggested
+     * `RECOMMENDED_HOSTING_CSP` in `middleware/mixtSite.ts` is the suggested
      * value.
      */
     hosting_csp?: string;
@@ -705,8 +705,8 @@ interface IConfigOptional {
      * so the group is owned by exactly one app row.
      *
      * Entries are bare hosts (no scheme), lowercased. Example: [
-     * ["camera.puter.com", "camera.puter.site", "camera.ca"],
-     * ["player.puter.com", "player.puter.site"], ]
+     * ["camera.mixt.mpl", "camera.mixt.site", "camera.ca"],
+     * ["player.mixt.mpl", "player.mixt.site"], ]
      */
     app_origin_aliases?: string[][];
     /** When true, accept any Host header value. Dev/testing only. */
@@ -959,7 +959,7 @@ interface IConfigOptional {
     kvCache: IKvCacheConfig;
     pager: IPagerConfig;
     email: IEmailConfig;
-    /** Puter-addressed user mailboxes and the optional local SMTP receiver. */
+    /** Mixt-addressed user mailboxes and the optional local SMTP receiver. */
     userEmail: IUserEmailConfig;
     /** Optional — only set when SMS phone verification (Prelude) is wired in. */
     prelude: IPreludeConfig;
@@ -998,7 +998,7 @@ interface IConfigOptional {
 
     /** Absolute path to the GUI assets root. */
     gui_assets_root: string;
-    /** Which profile in `puter-gui.json` to load. Default: `development`. */
+    /** Which profile in `mixt-gui.json` to load. Default: `development`. */
     gui_profile: string;
     /** Map of built-in app name → local directory served at `/builtin/<name>`. */
     builtin_apps: Record<string, string>;
@@ -1009,10 +1009,10 @@ interface IConfigOptional {
     /** Override the GUI CSS path when bundled. Default: `/dist/bundle.min.css`. */
     gui_css: string;
     /**
-     * Override the puter.js preload URL when bundled. Default:
-     * `/puter.js/v2`.
+     * Override the mixt.js preload URL when bundled. Default:
+     * `/mixt.js/v2`.
      */
-    gui_puterjs_bundle: string;
+    gui_mixtjs_bundle: string;
     /**
      * Free-form bag of values passed through to the client-side `gui()`
      * function.
@@ -1024,12 +1024,12 @@ interface IConfigOptional {
      */
     native_apps_root: string;
     /**
-     * Absolute path to a directory holding `puter.js`/`putility.js` version
+     * Absolute path to a directory holding `mixt.js`/`putility.js` version
      * bundles.
      */
     client_libs_root: string;
-    /** Path to the puter-js SDK root (serves `/sdk/*` and `/puter.js/v{1,2}`). */
-    puterjs_root: string;
+    /** Path to the mixt-js SDK root (serves `/sdk/*` and `/mixt.js/v{1,2}`). */
+    mixtjs_root: string;
 
     // -- Extension-specific ------------------------------------------
 
@@ -1046,7 +1046,7 @@ interface IConfigOptional {
     feature_flags: Record<string, boolean | string | number>;
     /** Blocked email TLDs / domains — checked in `prod` only. */
     blockedEmailDomains: string[];
-    /** Contact-form recipient. Default `support@puter.com`. */
+    /** Contact-form recipient. Default `support@mixt.mpl`. */
     support_email: string;
     /** Worker / subdomain names that cannot be allocated by users. */
     reserved_words: string[];
@@ -1191,7 +1191,7 @@ interface IConfigOptional {
         /**
          * Dispatch namespace events workers are deployed into. Must not be the
          * one the public worker dispatcher serves — that namespace is reachable
-         * at `<script>.puter.work`, and an events worker must not be. No
+         * at `<script>.mixt.work`, and an events worker must not be. No
          * default: deploys refuse rather than land somewhere public.
          */
         workerNamespace?: string;
@@ -1221,7 +1221,7 @@ interface IConfigOptional {
 
 /**
  * Extension-augmentable config keys, declaration-merged from
- * `@heyputer/backend/types`; see `IExtensionClientInstances` for the pattern.
+ * `@mixt/backend/types`; see `IExtensionClientInstances` for the pattern.
  */
 export interface IExtensionConfig {
     [key: string]: unknown;
@@ -1248,7 +1248,7 @@ export interface WithCostsReporting extends WithLifecycle {
 }
 
 export interface WithControllerRegistration extends WithCostsReporting {
-    registerRoutes: (router: PuterRouter) => void;
+    registerRoutes: (router: MixtRouter) => void;
 }
 
 export type LayerInstances<

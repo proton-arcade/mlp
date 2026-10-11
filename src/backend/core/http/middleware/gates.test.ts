@@ -123,14 +123,14 @@ describe('subdomainGate', () => {
     it('passes through (next()) when the active subdomain matches', () => {
         const got = runGate(subdomainGate('api'), {
             // express stores subdomains right-to-left → active is the last entry
-            subdomains: ['com', 'puter', 'api'] as unknown as string[],
+            subdomains: ['com', 'mixt', 'api'] as unknown as string[],
         });
         expect(got).toBeUndefined();
     });
 
     it("calls next('route') when subdomain doesn't match — does NOT throw", () => {
         const got = runGate(subdomainGate('api'), {
-            subdomains: ['com', 'puter', 'admin'] as unknown as string[],
+            subdomains: ['com', 'mixt', 'admin'] as unknown as string[],
         });
         // Critical: subdomainGate skips, it does not reject. This is how
         // multiple route trees coexist on the same host.

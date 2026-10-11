@@ -145,7 +145,7 @@ const he = {
         forgot_pass_c2a: 'שכחת את הסיסמא?',
         from: 'טופס',
         general: 'כללי',
-        get_a_copy_of_on_puter: 'קבל עותק של \'%%\' ב Mixt.com!',
+        get_a_copy_of_on_mixt: 'קבל עותק של \'%%\' ב Mixt.com!',
         get_copy_link: 'קבל העתק קישור',
         hide_all_windows: 'הסתר את כל החלונות',
         home: 'בית',
@@ -215,7 +215,7 @@ const he = {
         picture: 'תמונה',
         pictures: 'תמונות',
         plural_suffix: 's',
-        powered_by_puter_js: 'מונע ע"י {{link=docs}}Puter.js{{/link}}',
+        powered_by_mixt_js: 'מונע ע"י {{link=docs}}Mixt.js{{/link}}',
         preparing: 'מכין...',
         preparing_for_upload: 'מתכוננים להעלאה...',
         print: 'הדפס',
@@ -231,7 +231,7 @@ const he = {
         public: 'ציבורי',
         publish: 'פרסם',
         publish_as_website: 'פרסום כאתר אינטרנט',
-        puter_description: 'הוא ענן אישי ששם את הפרטיות בראש סדר העדיפויות כדי לשמור על כל הקבצים, המשחקים, והיישומים שלך במקום מאובטח אחד, נגיש מכל מקום ובכל זמן Mixt',
+        mixt_description: 'הוא ענן אישי ששם את הפרטיות בראש סדר העדיפויות כדי לשמור על כל הקבצים, המשחקים, והיישומים שלך במקום מאובטח אחד, נגיש מכל מקום ובכל זמן Mixt',
         reading_file: 'קורא %strong%',
         recent: 'לאחרונה',
         recommended: 'מומלץ',
@@ -248,7 +248,7 @@ const he = {
         replace_all: 'החלף הכל',
         resend_confirmation_code: 'שליחה מחדש של קוד אישור',
         reset_colors: 'איפוס צבעים',
-        restart_puter_confirm: 'האם אתה בטוח שברצונך להפעיל Mixt מחדש ?',
+        restart_mixt_confirm: 'האם אתה בטוח שברצונך להפעיל Mixt מחדש ?',
         restore: 'שחזור',
         save: 'שמירה',
         saturation: 'סטורציה',
@@ -279,7 +279,7 @@ const he = {
         shortcut_to: 'קיצור דרך אל',
         show_all_windows: 'הצג את כל החלונות',
         show_hidden: 'הצג מוסתר',
-        sign_in_with_puter: 'להתחבר עם Mixt',
+        sign_in_with_mixt: 'להתחבר עם Mixt',
         sign_up: 'הרשמה',
         signing_in: 'התחברות…',
         size: 'גודל',
@@ -289,7 +289,7 @@ const he = {
         start: 'התחלה',
         status: 'סטטוס',
         storage_usage: 'שימוש באחסון',
-        storage_puter_used: 'Mixt בשימוש על ידי',
+        storage_mixt_used: 'Mixt בשימוש על ידי',
         taking_longer_than_usual: 'לוקח קצת יותר זמן מהרגיל. חכה בבקשה...',
         task_manager: 'מנהל משימות',
         taskmgr_header_name: 'שם',
@@ -322,7 +322,7 @@ const he = {
         visibility: 'נראות',
         yes: 'כן',
         yes_release_it: 'כן, שחררו אותו',
-        you_have_been_referred_to_puter_by_a_friend: 'הופנית אל Mixt על ידי חבר!',
+        you_have_been_referred_to_mixt_by_a_friend: 'הופנית אל Mixt על ידי חבר!',
         zip: 'מכווץ',
         zipping_file: 'מכווץ קובץ %strong%',
 
@@ -488,7 +488,7 @@ const he = {
         'window_title_public': 'ציבורי', // In English: "Public"
         'window_title_videos': 'סרטונים', // In English: "Videos"
         'window_title_pictures': 'תמונות', // In English: "Pictures"
-        'window_title_puter': 'Mixt', // In English: "Mixt"
+        'window_title_mixt': 'Mixt', // In English: "Mixt"
         'window_folder_empty': 'תיקייה זו ריקה', // In English: "This folder is empty"
         'manage_your_subdomains': 'ניהול תת-הדומיינים שלך', // In English: "Manage Your Subdomains"
         'open_containing_folder': 'פתח תיקייה מכילה', // In English: "Open Containing Folder"

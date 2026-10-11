@@ -1,41 +1,41 @@
 <html>
 <body>
-    <script src="/puter.js/v2"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // (1) An app of your own — handlers belong to an app you own
-            const name = `ingest-${puter.randName()}`;
-            const app = await puter.apps.create(name, `https://example.com/${name}`);
+            const name = `ingest-${mixt.randName()}`;
+            const app = await mixt.apps.create(name, `https://example.com/${name}`);
             const appUid = app.uid;
 
             // (2) Publish
-            const published = await puter.events.handlers.publish(
+            const published = await mixt.events.handlers.publish(
                 'ingestUpload',
                 async ({ event, ctx }) => {
                     await fetch(ctx.endpoint, { method: 'POST', body: event.path });
                 },
                 { appUid },
             );
-            puter.print(`published ${published.name} (${published.outcome})<br>`);
+            mixt.print(`published ${published.name} (${published.outcome})<br>`);
 
             // (3) Publishing the same source again changes nothing
-            const again = await puter.events.handlers.publish(
+            const again = await mixt.events.handlers.publish(
                 'ingestUpload',
                 async ({ event, ctx }) => {
                     await fetch(ctx.endpoint, { method: 'POST', body: event.path });
                 },
                 { appUid },
             );
-            puter.print(`second publish: ${again.outcome}<br>`);
+            mixt.print(`second publish: ${again.outcome}<br>`);
 
             // (4) What is deployed, and how much depends on it
-            for (const handler of await puter.events.handlers.list({ appUid })) {
-                puter.print(`${handler.name}: ${handler.subscriptions} subscription(s)<br>`);
+            for (const handler of await mixt.events.handlers.list({ appUid })) {
+                mixt.print(`${handler.name}: ${handler.subscriptions} subscription(s)<br>`);
             }
 
             // (5) Nothing bound to it, so it is deleted outright
-            const removed = await puter.events.handlers.remove('ingestUpload', { appUid });
-            puter.print(`removed: ${removed.removed}, suspended: ${removed.suspended}<br>`);
+            const removed = await mixt.events.handlers.remove('ingestUpload', { appUid });
+            mixt.print(`removed: ${removed.removed}, suspended: ${removed.suspended}<br>`);
         })();
     </script>
 </body>

@@ -1,6 +1,6 @@
 ---
-title: puter.fs.stat()
-description: Get file or directory information in the user's own Puter file system.
+title: mixt.fs.stat()
+description: Get file or directory information in the user's own Mixt OS file system.
 platforms: [websites, apps, nodejs, workers]
 ---
 
@@ -9,8 +9,8 @@ This method allows you to get information about a file or directory.
 ## Syntax
 
 ```js
-puter.fs.stat(path, options)
-puter.fs.stat(options)
+mixt.fs.stat(path, options)
+mixt.fs.stat(options)
 ```
 
 ## Parameters
@@ -48,19 +48,19 @@ With `returnShares: true`, the result also carries `shares` — an array of the 
 ```html;fs-stat
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
             // () create a file
-            await puter.fs.write('hello.txt', 'Hello, world!');
-            puter.print('hello.txt created<br>');
+            await mixt.fs.write('hello.txt', 'Hello, world!');
+            mixt.print('hello.txt created<br>');
 
             // (2) get information about hello.txt
-            const file = await puter.fs.stat('hello.txt');
-            puter.print(`hello.txt name: ${file.name}<br>`);
-            puter.print(`hello.txt path: ${file.path}<br>`);
-            puter.print(`hello.txt size: ${file.size}<br>`);
-            puter.print(`hello.txt created: ${file.created}<br>`);
+            const file = await mixt.fs.stat('hello.txt');
+            mixt.print(`hello.txt name: ${file.name}<br>`);
+            mixt.print(`hello.txt path: ${file.path}<br>`);
+            mixt.print(`hello.txt size: ${file.size}<br>`);
+            mixt.print(`hello.txt created: ${file.created}<br>`);
         })()
     </script>
 </body>
@@ -72,16 +72,16 @@ With `returnShares: true`, the result also carries `shares` — an array of the 
 ```html;fs-stat-shares
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
-            await puter.fs.write('report.txt', 'Quarterly numbers');
-            await puter.fs.share('report.txt', 'friend@example.com', 'read');
+            await mixt.fs.write('report.txt', 'Quarterly numbers');
+            await mixt.fs.share('report.txt', 'friend@example.com', 'read');
 
-            const file = await puter.fs.stat('report.txt', { returnShares: true });
-            puter.print(`shared: ${file.is_shared}<br>`);
+            const file = await mixt.fs.stat('report.txt', { returnShares: true });
+            mixt.print(`shared: ${file.is_shared}<br>`);
             for (const share of file.shares) {
-                puter.print(`${share.holder ?? share.recipientEmail}: ${share.mode}<br>`);
+                mixt.print(`${share.holder ?? share.recipientEmail}: ${share.mode}<br>`);
             }
         })()
     </script>
@@ -91,5 +91,5 @@ With `returnShares: true`, the result also carries `shares` — an array of the 
 
 ## Related
 
-- [`puter.fs.getShares()`](/FS/getShares/) - List who can reach an item
-- [`puter.fs.share()`](/FS/share/) - Grant access
+- [`mixt.fs.getShares()`](/FS/getShares/) - List who can reach an item
+- [`mixt.fs.share()`](/FS/share/) - Grant access

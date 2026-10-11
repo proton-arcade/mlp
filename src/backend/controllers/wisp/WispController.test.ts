@@ -1,13 +1,13 @@
 // This tests wisp controller but not wisp itself. That is out of process and out of this repo
-// This simply tests the authentication methods that puter wisp expects and uses.
+// This simply tests the authentication methods that mixt wisp expects and uses.
 import type { Request, Response } from 'express';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
-import { PuterRouter } from '../../core/http/PuterRouter.js';
-import { PuterServer } from '../../server.js';
+import { MixtRouter } from '../../core/http/MixtRouter.js';
+import { MixtServer } from '../../server.js';
 import { setupTestServer } from '../../testUtil.js';
 import type { WispController } from './WispController.js';
 
-let server: PuterServer;
+let server: MixtServer;
 let controller: WispController;
 let createHandler: Function;
 let verifyHandler: Function;
@@ -18,7 +18,7 @@ beforeAll(async () => {
     });
     controller = server.controllers.wisp as unknown as WispController;
 
-    const router = new PuterRouter();
+    const router = new MixtRouter();
     controller.registerRoutes(router);
 
     createHandler = router.routes.find(
@@ -76,7 +76,7 @@ const makeRes = () => {
 describe('WispController', () => {
     describe('route registration', () => {
         it('registers both expected routes', () => {
-            const router = new PuterRouter();
+            const router = new MixtRouter();
             controller.registerRoutes(router);
             const paths = router.routes.map((r) => r.path);
             expect(paths).toContain('/wisp/relay-token/create');
@@ -129,7 +129,7 @@ describe('WispController', () => {
             const minController = minServer.controllers
                 .wisp as unknown as WispController;
             try {
-                const router = new PuterRouter();
+                const router = new MixtRouter();
                 minController.registerRoutes(router);
                 const handler = router.routes.find(
                     (r) => r.path === '/wisp/relay-token/create',

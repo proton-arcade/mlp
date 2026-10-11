@@ -1,17 +1,17 @@
 ---
-title: puter.apps.create()
-description: Create apps in the Puter desktop environment.
+title: mixt.apps.create()
+description: Create apps in the Mixt OS desktop environment.
 platforms: [websites, apps, nodejs, workers]
 ---
 
-Creates a Puter app with the given name. The app will be created in the user's apps, and will be accessible to this app. The app will be created with no permissions, and will not be able to access any data until permissions are granted to it.
+Creates a Mixt OS app with the given name. The app will be created in the user's apps, and will be accessible to this app. The app will be created with no permissions, and will not be able to access any data until permissions are granted to it.
 
 ## Syntax
 
 ```js
-puter.apps.create(name, indexURL)
-puter.apps.create(name, indexURL, title)
-puter.apps.create(options)
+mixt.apps.create(name, indexURL)
+mixt.apps.create(name, indexURL, title)
+mixt.apps.create(options)
 ```
 
 ## Parameters
@@ -48,7 +48,7 @@ An object containing the options for the app to create. The object can contain t
 - `filetypeAssociations` (Array<String>) (optional): An array of strings representing the filetypes that the app can open. Defaults to `[]`. File extentions and MIME types are supported; For example, `[".txt", ".md", "application/pdf"]` would allow the app to open `.txt`, `.md`, and PDF files. At most 200 entries, each at most 60 characters.
 - `dedupeName` (Boolean) (optional) - Whether to deduplicate the app name if it already exists. Defaults to `false`.
 - `background` (Boolean) (optional) - Whether the app should run in the background. Defaults to `false`.
-- `feedbackEnabled` (Boolean) (optional) - Whether users can send feedback to you through [`puter.ui.showFeedbackDialog()`](/UI/showFeedbackDialog/). Defaults to `false`.
+- `feedbackEnabled` (Boolean) (optional) - Whether users can send feedback to you through [`mixt.ui.showFeedbackDialog()`](/UI/showFeedbackDialog/). Defaults to `false`.
 - `metadata` (Object) (optional) - An object containing custom metadata for the app. This can be used to store arbitrary key-value pairs associated with the app. At most 16 KiB when serialized as JSON.
 
 ## Return value
@@ -62,18 +62,18 @@ A `Promise` that will resolve to the [`CreateAppResult`](/Objects/createappresul
 ```html;app-create
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
             // (1) Generate a random app name
-            let appName = puter.randName();
+            let appName = mixt.randName();
 
             // (2) Create the app and prints its UID to the page
-            let app = await puter.apps.create(appName, "https://example.com");
-            puter.print(`Created app "${app.name}". UID: ${app.uid}`);
+            let app = await mixt.apps.create(appName, "https://example.com");
+            mixt.print(`Created app "${app.name}". UID: ${app.uid}`);
 
             // (3) Delete the app (cleanup)
-            await puter.apps.delete(appName);
+            await mixt.apps.delete(appName);
         })();
     </script>
 </body>

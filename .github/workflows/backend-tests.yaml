@@ -4,7 +4,7 @@ name: Backend Tests
 # decides whether backend/extension paths actually changed (test-only changes
 # match the same globs, since tests are co-located with the code), and `test`
 # still reports success when they didn't. Pushes to main produce the coverage
-# PRs compare against. puter.js SDK changes are covered by puterjs-tests.yaml.
+# PRs compare against. mixt.js SDK changes are covered by mixtjs-tests.yaml.
 on:
   pull_request:
     types: [opened, synchronize, reopened]

@@ -33,7 +33,7 @@ const UID = '11111111-2222-3333-4444-555555555555';
 beforeEach(() => {
     globalThis.window = {
         user: { username: 'sharemate' },
-        shared_path: 'puter://shared',
+        shared_path: 'mixt://shared',
     };
 });
 
@@ -85,7 +85,7 @@ describe('is_share_root', () => {
 describe('parent_path_for', () => {
     it('sends the shared item up to Shared, not into the owner’s folder', () => {
         expect(parent_path_for(`/jfcastro/${UID}/Contents`)).toBe(
-            'puter://shared',
+            'mixt://shared',
         );
     });
 
@@ -96,7 +96,7 @@ describe('parent_path_for', () => {
     });
 
     it('stops at Shared', () => {
-        expect(parent_path_for('puter://shared')).toBe('puter://shared');
+        expect(parent_path_for('mixt://shared')).toBe('mixt://shared');
     });
 
     it('leaves ordinary paths to ordinary rules', () => {
@@ -144,10 +144,10 @@ describe('share_link_for', () => {
     it('addresses the item by owner and uid on the shared param', () => {
         const link = share_link_for(
             { owner: 'ann', uid: UID, name: 'Q3 report.txt' },
-            'https://puter.com/',
+            'https://mixt.mpl/',
         );
         expect(link).toBe(
-            `https://puter.com/?shared=${encodeURIComponent(`/ann/${UID}/Q3 report.txt`)}`,
+            `https://mixt.mpl/?shared=${encodeURIComponent(`/ann/${UID}/Q3 report.txt`)}`,
         );
         // What it names is what the GUI reads back.
         expect(parse_shared_path(decodeURIComponent(link.split('?shared=')[1]))).toEqual({

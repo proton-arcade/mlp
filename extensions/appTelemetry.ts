@@ -1,24 +1,24 @@
-import { Context } from '@heyputer/backend/src/core';
-import type { Actor } from '@heyputer/backend/src/core/actor';
-import { HttpError } from '@heyputer/backend/src/core/http';
-import { PuterDriver } from '@heyputer/backend/src/drivers/types';
+import { Context } from '@mixt/backend/src/core';
+import type { Actor } from '@mixt/backend/src/core/actor';
+import { HttpError } from '@mixt/backend/src/core/http';
+import { MixtDriver } from '@mixt/backend/src/drivers/types';
 import type {
     DriverConcurrentConfig,
     DriverRateLimitConfig,
-} from '@heyputer/backend/src/drivers/meta';
+} from '@mixt/backend/src/drivers/meta';
 import {
     DEFAULT_FREE_SUBSCRIPTION,
     DEFAULT_TEMP_SUBSCRIPTION,
-} from '@heyputer/backend/src/services/metering/consts';
-import { extension } from '@heyputer/backend/src/extensions';
+} from '@mixt/backend/src/services/metering/consts';
+import { extension } from '@mixt/backend/src/extensions';
 
 // App-telemetry lets an app owner enumerate the users who have
 // authenticated into their app. v1 shipped this as a driver on the
 // `app-telemetry` interface (methods `get_users` / `user_count`) and
-// puter-js's `puter.apps(...).getUsers()` still calls it that way
-// (`puter.drivers.call('app-telemetry', 'app-telemetry', 'get_users', …)`).
+// mixt-js's `mixt.apps(...).getUsers()` still calls it that way
+// (`mixt.drivers.call('app-telemetry', 'app-telemetry', 'get_users', …)`).
 // This is the v2 port of that driver — same interface/method/return shapes
-// so existing puter-js callers work unchanged.
+// so existing mixt-js callers work unchanged.
 
 const DEFAULT_LIMIT = 100;
 const MAX_LIMIT = 1000;
@@ -64,7 +64,7 @@ const parseIntParam = (
  * caller the app owner?" — is enforced inside `get_users` below, exactly as v1
  * did.
  */
-export class AppTelemetryDriver extends PuterDriver {
+export class AppTelemetryDriver extends MixtDriver {
     readonly driverInterface = 'app-telemetry';
     readonly driverName = 'app-telemetry';
     readonly isDefault = true;
@@ -158,7 +158,7 @@ export class AppTelemetryDriver extends PuterDriver {
 
         // Only surface a user's email if *that user* granted this app the
         // `user:<their-uuid>:email:read` permission — the same grant
-        // `puter.perms.requestEmail()` obtains and `whoami` honours. This is a
+        // `mixt.perms.requestEmail()` obtains and `whoami` honours. This is a
         // per-user check keyed on the app (not the calling owner-actor): a
         // user may have authenticated into the app without sharing their
         // email. Resolve the whole page in one query.

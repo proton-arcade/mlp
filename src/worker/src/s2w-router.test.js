@@ -20,7 +20,7 @@
 /**
  * The router runtime's client bootstrap. A caller's client is built fresh on
  * every authed request and only ever makes API calls on their behalf, so the
- * socket `init_puter_portable` opens by default is one connection per request
+ * socket `init_mixt_portable` opens by default is one connection per request
  * and no use to anyone.
  */
 
@@ -33,23 +33,23 @@ const GLOBALS = [
     'myself',
     'router',
     'self',
-    'init_puter_portable',
-    'puter_auth',
-    'puter_endpoint',
+    'init_mixt_portable',
+    'mixt_auth',
+    'mixt_endpoint',
 ];
 
-/** Every `init_puter_portable` call the runtime made, in order. */
+/** Every `init_mixt_portable` call the runtime made, in order. */
 let builds;
 
 /** Bring the runtime up with the globals the preamble would have defined. */
 const loadRouter = () => {
     builds = [];
-    globalThis.init_puter_portable = (auth, apiOrigin, type, options) => {
+    globalThis.init_mixt_portable = (auth, apiOrigin, type, options) => {
         builds.push({ auth, apiOrigin, type, options });
         return { authToken: auth, build: builds.length };
     };
-    globalThis.puter_auth = 'worker-token';
-    globalThis.puter_endpoint = 'https://api.example';
+    globalThis.mixt_auth = 'worker-token';
+    globalThis.mixt_endpoint = 'https://api.example';
     globalThis.self = { addEventListener: () => {} };
     initS2w();
 
@@ -65,7 +65,7 @@ const loadRouter = () => {
 const request = (token) =>
     globalThis.router.route({
         request: new Request('https://worker.example/ping', {
-            headers: token ? { 'puter-auth': token } : {},
+            headers: token ? { 'mixt-auth': token } : {},
         }),
     });
 
@@ -86,9 +86,9 @@ describe('the router runtime, per authed request', () => {
         expect(builds[1].auth).toBe('caller-a');
         expect(builds[1].options).toEqual({ socket: false });
         expect(builds[1].apiOrigin).toBe('https://api.example');
-        expect(builds[1].type).toBe('userPuter');
+        expect(builds[1].type).toBe('userMixt');
         expect(seen[0].user).toBe(seen[0].requestor);
-        expect(seen[0].requestor.puter.authToken).toBe('caller-a');
+        expect(seen[0].requestor.mixt.authToken).toBe('caller-a');
     });
 
     it('builds the caller a client of their own, separate from me', async () => {

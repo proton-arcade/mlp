@@ -96,7 +96,7 @@ window.root_dirname = 'Mixt';
 // Not a real directory — items shared with this user live under their owners'
 // paths. Deliberately not path-shaped so it can never collide with a folder
 // someone actually creates.
-window.shared_path = 'puter://shared';
+window.shared_path = 'mixt://shared';
 
 // user preferences, persisted across sessions, cached in localStorage
 try {
@@ -157,7 +157,7 @@ window.launch_apps.recommended = [];
 // Map of { child_instance_id -> { parent_instance_id, launch_msg_id } }
 window.child_launch_callbacks = {};
 
-// Is puter being loaded inside an iframe?
+// Is mixt being loaded inside an iframe?
 if ( window.location !== window.parent.location ) {
     window.is_embedded = true;
     // taskbar is not needed in embedded mode
@@ -215,8 +215,8 @@ window.sites = [];
 window.feature_flags = {
     // if true, the user will be able to create shortcuts to files and directories
     create_shortcut: true,
-    // if true, the user will be asked to confirm before navigating away from Puter only if there is at least one window open
-    prompt_user_when_navigation_away_from_puter: false,
+    // if true, the user will be asked to confirm before navigating away from Mixt only if there is at least one window open
+    prompt_user_when_navigation_away_from_mixt: false,
     // if true, the user will be able to zip and download directories
     download_directory: true,
 };

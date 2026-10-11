@@ -19,9 +19,9 @@
 -- migration 0092. Guarded like mysql_mig_45, because there is no per-file
 -- applied-state tracking and a replay must do nothing.
 
-DROP PROCEDURE IF EXISTS _puter_add_share_entry_owner;
+DROP PROCEDURE IF EXISTS _mixt_add_share_entry_owner;
 DELIMITER //
-CREATE PROCEDURE _puter_add_share_entry_owner()
+CREATE PROCEDURE _mixt_add_share_entry_owner()
 BEGIN
   IF NOT EXISTS (
     SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS
@@ -42,9 +42,9 @@ BEGIN
 END//
 DELIMITER ;
 
-CALL _puter_add_share_entry_owner();
+CALL _mixt_add_share_entry_owner();
 
-DROP PROCEDURE IF EXISTS _puter_add_share_entry_owner;
+DROP PROCEDURE IF EXISTS _mixt_add_share_entry_owner;
 
 UPDATE `share` JOIN `fsentries` ON `fsentries`.`id` = `share`.`fsentry_id`
 SET `share`.`entry_owner_user_id` = `fsentries`.`user_id`

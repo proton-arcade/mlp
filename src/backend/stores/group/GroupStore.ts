@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { PuterStore } from '../types';
+import { MixtStore } from '../types';
 
 // -- GroupStore -------------------------------------------------------
 
@@ -32,7 +32,7 @@ import { PuterStore } from '../types';
  * Permissions attached to a group are read through PermissionStore instead,
  * which joins the junction table itself.
  */
-export class GroupStore extends PuterStore {
+export class GroupStore extends MixtStore {
     /** Adds users to a seeded system group. No-op for a team or a member. */
     async addUsers(uid: string, usernames: string[]): Promise<void> {
         if (usernames.length === 0) return;

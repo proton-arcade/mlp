@@ -47,7 +47,7 @@ describe('eventsWorkerLabel', () => {
     });
 });
 
-// Minimal `puter.events.workers` double: paginate a fixed item set by cursor.
+// Minimal `mixt.events.workers` double: paginate a fixed item set by cursor.
 const makeWorkersClient = (pages) => {
     const calls = [];
     return {

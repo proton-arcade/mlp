@@ -1,21 +1,21 @@
 ---
-title: puter.perms.request()
+title: mixt.perms.request()
 description: Request access to a user's data or resources, prompting only when the access isn't already held.
 platforms: [websites, apps]
 ---
 
 Request access to something belonging to the user. The first argument names the resource; the second carries the details that resource takes.
 
-The user is prompted to allow or deny. Anything already granted is skipped, so a call whose access is fully in place doesn't prompt at all. [`puter.perms.check()`](/Perms/check/) reads the same state, so the two always agree.
+The user is prompted to allow or deny. Anything already granted is skipped, so a call whose access is fully in place doesn't prompt at all. [`mixt.perms.check()`](/Perms/check/) reads the same state, so the two always agree.
 
-Inside the Puter desktop the prompt is shown as a dialog. On websites, it opens in a popup window on the Puter origin — call this from a user gesture (e.g. a click handler) so the browser doesn't block the popup; without a gesture, a consent dialog is shown first and the popup opens when the user clicks Continue.
+Inside the Mixt OS desktop the prompt is shown as a dialog. On websites, it opens in a popup window on the Mixt OS origin — call this from a user gesture (e.g. a click handler) so the browser doesn't block the popup; without a gesture, a consent dialog is shown first and the popup opens when the user clicks Continue.
 
 ## Syntax
 
 ```js
-puter.perms.request(resource)
-puter.perms.request(resource, details)
-puter.perms.request(requests)
+mixt.perms.request(resource)
+mixt.perms.request(resource, details)
+mixt.perms.request(requests)
 ```
 
 ## Parameters
@@ -68,14 +68,14 @@ Some permission strings are not supported and are denied silently.
 
 An app's root directory has no raw form: `app-root-dir:` reads as nothing during a permission check, so asking for it this way would prompt on every call and [`check()`](/Perms/check/) would report it as not granted even once it is. Use the `'appRootDir'` resource, which asks the server directly.
 
-A lone string that names no resource is treated as a permission string, so `puter.perms.request('fs:/user/Documents:read')` keeps working.
+A lone string that names no resource is treated as a permission string, so `mixt.perms.request('fs:/user/Documents:read')` keeps working.
 
 ## Creating a path on request
 
 An `fs:{path}:{mode}` permission for a path that doesn't exist yet is created on approval: once the user clicks Allow, the path is created on the server (as the user, inside their own home directory) before the grant is written. Nothing has to be passed for this — it's what `create` does by default.
 
 ```js
-const granted = await puter.perms.request('permission', {
+const granted = await mixt.perms.request('permission', {
     permission: `fs:/${username}/.mail:write`,
 });
 ```
@@ -98,7 +98,7 @@ const granted = await puter.perms.request('permission', {
 ```js
 // The app wants /user/my.folder as a directory, which the heuristic would
 // read as a file.
-await puter.perms.request('permission', {
+await mixt.perms.request('permission', {
     permission: `fs:/${username}/my.folder:write`,
     create: 'dir',
 });
@@ -106,7 +106,7 @@ await puter.perms.request('permission', {
 
 Creation only ever happens after the user clicks Allow, and never on a `check()` or on a denied request — a denied prompt creates nothing. If the path already exists, nothing is created: the grant resolves the existing entry, whatever kind it already is. A missing path must be inside the requesting user's own home directory (not inside `AppData` or `Trash`, and not more than 16 path components below it — see [rate limits and quotas](/rate-limits-and-quotas/#permissions)), or the request is rejected. `create` has no effect on anything but an `fs:` path permission — it's silently ignored on other permission strings, and it does not apply to a `manage:fs:…` delegation (creating a path in order to hand out management of it isn't a bounded request), which is denied for a missing path as if `create` were `false`.
 
-Missing intermediate directories are created along the way. `puter.perms.request('permission', { permission: 'fs:/user/a/b/.mail:write' })` creates `a` and `b` as directories too if they don't exist yet, not just `.mail`.
+Missing intermediate directories are created along the way. `mixt.perms.request('permission', { permission: 'fs:/user/a/b/.mail:write' })` creates `a` and `b` as directories too if they don't exist yet, not just `.mail`.
 
 A batch of raw permissions shares one prompt, so at most one distinct `create` value may apply to it: passing none is fine, passing the same value on every entry that needs it is fine, and passing two different values across entries throws before anything is asked.
 
@@ -128,7 +128,7 @@ Pass an array to ask for several things in one call. Everything already granted 
 A denied prompt denies every entry that needed it. Entries that were already granted keep their value, since nothing was asked about them.
 
 ```js
-const [documents, apps] = await puter.perms.request([
+const [documents, apps] = await mixt.perms.request([
     { resource: 'folder', name: 'Documents', access: 'write' },
     { resource: 'apps' },
 ]);
@@ -141,16 +141,16 @@ const [documents, apps] = await puter.perms.request([
 ```html
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <button id="request">Request Documents Access</button>
     <script>
         document.getElementById('request').addEventListener('click', async () => {
-            const path = await puter.perms.request('folder', { name: 'Documents', access: 'write' });
+            const path = await mixt.perms.request('folder', { name: 'Documents', access: 'write' });
             if (path) {
-                await puter.fs.write(`${path}/hello.txt`, 'Hello from Documents!');
-                puter.print(`Wrote to ${path}`);
+                await mixt.fs.write(`${path}/hello.txt`, 'Hello from Documents!');
+                mixt.print(`Wrote to ${path}`);
             } else {
-                puter.print('Documents write access denied');
+                mixt.print('Documents write access denied');
             }
         });
     </script>
@@ -163,12 +163,12 @@ const [documents, apps] = await puter.perms.request([
 ```html
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <button id="request">Request Email Access</button>
     <script>
         document.getElementById('request').addEventListener('click', async () => {
-            const email = await puter.perms.request('email');
-            puter.print(email ? `Email: ${email}` : 'Email access denied');
+            const email = await mixt.perms.request('email');
+            mixt.print(email ? `Email: ${email}` : 'Email access denied');
         });
     </script>
 </body>
@@ -180,16 +180,16 @@ const [documents, apps] = await puter.perms.request([
 ```html
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <button id="request">Set Up</button>
     <script>
         document.getElementById('request').addEventListener('click', async () => {
-            const [documents, apps] = await puter.perms.request([
+            const [documents, apps] = await mixt.perms.request([
                 { resource: 'folder', name: 'Documents', access: 'write' },
                 { resource: 'apps' },
             ]);
-            puter.print(`Documents: ${documents ?? 'denied'}`);
-            puter.print(`Apps: ${apps ? 'granted' : 'denied'}`);
+            mixt.print(`Documents: ${documents ?? 'denied'}`);
+            mixt.print(`Apps: ${apps ? 'granted' : 'denied'}`);
         });
     </script>
 </body>
@@ -201,15 +201,15 @@ const [documents, apps] = await puter.perms.request([
 ```html
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <button id="request">Request Permission</button>
     <script>
         document.getElementById('request').addEventListener('click', async () => {
-            const user = await puter.auth.getUser();
-            const granted = await puter.perms.request('permission', {
+            const user = await mixt.auth.getUser();
+            const granted = await mixt.perms.request('permission', {
                 permission: `user:${user.uuid}:email:read`,
             });
-            puter.print(granted ? 'Permission granted' : 'Permission denied');
+            mixt.print(granted ? 'Permission granted' : 'Permission denied');
         });
     </script>
 </body>
@@ -221,16 +221,16 @@ const [documents, apps] = await puter.perms.request([
 ```html
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <button id="request">Set Up Mail Folder</button>
     <script>
         document.getElementById('request').addEventListener('click', async () => {
-            const user = await puter.auth.getUser();
+            const user = await mixt.auth.getUser();
             // `.mail` is created as a directory if it doesn't exist yet.
-            const granted = await puter.perms.request('permission', {
+            const granted = await mixt.perms.request('permission', {
                 permission: `fs:/${user.username}/.mail:write`,
             });
-            puter.print(granted ? 'Mail folder ready' : 'Permission denied');
+            mixt.print(granted ? 'Mail folder ready' : 'Permission denied');
         });
     </script>
 </body>

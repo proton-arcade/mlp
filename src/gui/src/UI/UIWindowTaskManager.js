@@ -34,7 +34,7 @@ const end_process = async (uuid, force) => {
         if ( ! force ) {
             confirmation = i18n('close_all_windows_confirm');
         } else {
-            confirmation = i18n('restart_puter_confirm');
+            confirmation = i18n('restart_mixt_confirm');
         }
     } else if ( force ) {
         confirmation = i18n('end_process_force_confirm');

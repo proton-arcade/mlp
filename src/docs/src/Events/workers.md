@@ -1,5 +1,5 @@
 ---
-title: puter.events.workers
+title: mixt.events.workers
 description: List and destroy the events worker a published handler set stands up.
 platforms: [websites, apps, nodejs, workers]
 ---
@@ -8,24 +8,24 @@ platforms: [websites, apps, nodejs, workers]
 
 An **events worker** runs an app's published [handlers](/Events/handlers/): every `broadcast` delivery that targets it, whether or not a client is connected, and a `single` delivery once no connected client takes it. Each app has at most one, created when it publishes its first handler, however many handlers it publishes.
 
-A hosted Puter deployment may bill each app's events worker as a monthly cost, even if nothing ever delivers to it. Use this API to see which apps have one and remove the ones you don't need.
+A hosted Mixt OS deployment may bill each app's events worker as a monthly cost, even if nothing ever delivers to it. Use this API to see which apps have one and remove the ones you don't need.
 
 ```js
-const { items } = await puter.events.workers.list();      // [{ appUid, appName, handlerCount, ... }]
-await puter.events.workers.destroy(items[0].appUid);      // removes every handler that app published
+const { items } = await mixt.events.workers.list();      // [{ appUid, appName, handlerCount, ... }]
+await mixt.events.workers.destroy(items[0].appUid);      // removes every handler that app published
 ```
 
 An account session or API token sees every app you own. An app sees only its own worker (0 or 1 item), and only if the signed-in user owns the app.
 
-On a website with nobody signed in, each method asks the user to sign in first, as other Puter.js calls do. An app running on Puter is always signed in.
+On a website with nobody signed in, each method asks the user to sign in first, as other Mixt.js calls do. An app running on Mixt OS is always signed in.
 
 The worker starts on the first delivery that needs it, and again after it's been idle long enough to be shut down, so the first background delivery after a publish has a short cold start. Only the platform can invoke it.
 
 ## `list()`
 
 ```js
-puter.events.workers.list()
-puter.events.workers.list(options)
+mixt.events.workers.list()
+mixt.events.workers.list(options)
 ```
 
 - `options.limit` (Number): Apps per page.
@@ -40,10 +40,10 @@ Resolves to `{ items, cursor, deployable }`:
 ## `destroy()`
 
 ```js
-puter.events.workers.destroy(appUid)
+mixt.events.workers.destroy(appUid)
 ```
 
-Removes **every** handler the app has published, the same as calling [`puter.events.handlers.remove()`](/Events/handlers/) on each: their subscriptions are *suspended* with `handler_not_found`, not deleted, and publishing the handlers again resumes them.
+Removes **every** handler the app has published, the same as calling [`mixt.events.handlers.remove()`](/Events/handlers/) on each: their subscriptions are *suspended* with `handler_not_found`, not deleted, and publishing the handlers again resumes them.
 
 It also ends the worker session background deliveries ran under, for every user. The next delivery after a republish starts a new one.
 
@@ -70,13 +70,13 @@ Both methods reject with `{ message, code }`:
 ```html;events-workers
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
-            const name = `retired-${puter.randName()}`;
-            const app = await puter.apps.create(name, `https://example.com/${name}`);
+            const name = `retired-${mixt.randName()}`;
+            const app = await mixt.apps.create(name, `https://example.com/${name}`);
 
-            await puter.events.handlers.publish(
+            await mixt.events.handlers.publish(
                 'ingestUpload',
                 async ({ event, ctx }) => {
                     await fetch(ctx.endpoint, { method: 'POST', body: event.path });
@@ -84,14 +84,14 @@ Both methods reject with `{ message, code }`:
                 { appUid: app.uid },
             );
 
-            const { items, deployable } = await puter.events.workers.list();
-            puter.print(`this server deploys events workers: ${deployable}<br>`);
+            const { items, deployable } = await mixt.events.workers.list();
+            mixt.print(`this server deploys events workers: ${deployable}<br>`);
             for (const worker of items) {
-                puter.print(`${worker.appName}: ${worker.handlerCount} handler(s)<br>`);
+                mixt.print(`${worker.appName}: ${worker.handlerCount} handler(s)<br>`);
             }
 
-            const destroyed = await puter.events.workers.destroy(app.uid);
-            puter.print(`removed ${destroyed.removed}, suspended ${destroyed.suspended}<br>`);
+            const destroyed = await mixt.events.workers.destroy(app.uid);
+            mixt.print(`removed ${destroyed.removed}, suspended ${destroyed.suspended}<br>`);
         })();
     </script>
 </body>

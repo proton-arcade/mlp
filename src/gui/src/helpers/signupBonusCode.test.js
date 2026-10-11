@@ -59,11 +59,11 @@ describe('checkSignupBonusCode', () => {
     it('posts the code (and fingerprint) to the check route', async () => {
         const { fetchImpl, calls } = respond(200, { valid: false });
         await checkSignupBonusCode('startup3m-7kq2', {
-            origin: 'https://puter.test',
+            origin: 'https://mixt.test',
             fingerprint: 'fp1',
             fetchImpl,
         });
-        expect(calls[0].url).toBe('https://puter.test/signup/bonus-code/check');
+        expect(calls[0].url).toBe('https://mixt.test/signup/bonus-code/check');
         expect(JSON.parse(calls[0].init.body)).toEqual({
             bonusCode: 'startup3m-7kq2',
             fingerprint: 'fp1',

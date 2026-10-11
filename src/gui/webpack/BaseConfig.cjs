@@ -30,8 +30,8 @@ module.exports = async (options = {}) => {
     // Out-of-tree extension directories (e.g. proprietary extensions kept in
     // a separate repository).
     const externalDirs = [];
-    if ( process.env.PUTER_GUI_EXTENSION_PATHS ) {
-        const paths = process.env.PUTER_GUI_EXTENSION_PATHS.split(';');
+    if ( process.env.MIXT_GUI_EXTENSION_PATHS ) {
+        const paths = process.env.MIXT_GUI_EXTENSION_PATHS.split(';');
         externalDirs.push(...paths.filter(Boolean).map(p => path.resolve(p)));
         extension_directories.push(...externalDirs);
     }

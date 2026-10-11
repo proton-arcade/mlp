@@ -25,13 +25,13 @@ let feedback_modal_seq = 0;
 
 /**
  * "Send feedback to this app's developer" modal, behind
- * `puter.ui.showFeedbackDialog()`. Not to be confused with UIWindowFeedback,
- * which is Puter's own Contact Us form.
+ * `mixt.ui.showFeedbackDialog()`. Not to be confused with UIWindowFeedback,
+ * which is Mixt's own Contact Us form.
  *
  * Deliberately NOT a UIWindow: it's a from-scratch, theme-aware overlay in
  * the same spirit as the dashboard modals (uninstall, add-app), so it renders
  * consistently in every context it's opened from — the desktop (app IPC), the
- * dashboard app-drawer, and the standalone puter.com popup.
+ * dashboard app-drawer, and the standalone mixt.mpl popup.
  *
  * The target is named by exactly one of `options.app` (app uid or name — the
  * desktop/drawer paths know which app asked) or `options.origin` (the popup
@@ -54,7 +54,7 @@ async function UIWindowAppFeedback (options) {
         let sending = false;
         let closed = false;
 
-        const authToken = puter.authToken ?? window.auth_token;
+        const authToken = mixt.authToken ?? window.auth_token;
         const target_params = options.app
             ? { app: options.app }
             : { origin: options.origin };

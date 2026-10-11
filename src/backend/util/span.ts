@@ -19,7 +19,7 @@
 
 import { type Attributes, SpanStatusCode, trace } from '@opentelemetry/api';
 
-const tracer = trace.getTracer('puter-backend');
+const tracer = trace.getTracer('mixt-backend');
 
 type AttrsOrFactory = Attributes | (() => Attributes);
 

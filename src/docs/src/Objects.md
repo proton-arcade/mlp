@@ -1,9 +1,9 @@
 ---
 title: Objects
-description: Various object types and classes for different entities in the Puter ecosystem.
+description: Various object types and classes for different entities in the Mixt OS ecosystem.
 ---
 
-Various object types and classes that represent different entities in the Puter ecosystem. These objects encapsulate data and provide methods for interacting with system resources.
+Various object types and classes that represent different entities in the Mixt OS ecosystem. These objects encapsulate data and provide methods for interacting with system resources.
 
 ## Available Objects
 
@@ -17,11 +17,11 @@ Various object types and classes that represent different entities in the Puter 
 - **[FSItem](/Objects/fsitem/)** - Represents a file or directory
 - **[KVPair](/Objects/kvpair/)** - Represents a key-value pair
 - **[MonthlyUsage](/Objects/monthlyusage/)** - Represents user's monthly resource usage information
-- **[PuterPeerConnection](/Objects/puterpeerconnection/)** - Represents a data-channel connection to a peer
-- **[PuterPeerServer](/Objects/puterpeerserver/)** - Represents a peer server and its connected clients
+- **[MixtPeerConnection](/Objects/mixtpeerconnection/)** - Represents a data-channel connection to a peer
+- **[MixtPeerServer](/Objects/mixtpeerserver/)** - Represents a peer server and its connected clients
 - **[Subdomain](/Objects/subdomain/)** - Represents a subdomain
-- **[Team](/Objects/team/)** - Represents a Puter team
+- **[Team](/Objects/team/)** - Represents a Mixt OS team
 - **[TeamDirectoryEntry](/Objects/teamdirectoryentry/)** - Represents a member of a team
-- **[User](/Objects/user/)** - Represents a Puter user
+- **[User](/Objects/user/)** - Represents a Mixt OS user
 - **[WorkerDeployment](/Objects/workerdeployment/)** - Represents a worker deployment result
 - **[WorkerInfo](/Objects/workerinfo/)** - Represents worker information

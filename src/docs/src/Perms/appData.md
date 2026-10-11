@@ -8,19 +8,19 @@ Request permission for your app to use another app's data belonging to the signe
 
 The user is prompted once and sees exactly which apps and which kinds of access are involved. If the permission has already been granted the user is not prompted and `true` is returned. If the user declines, `false` is returned.
 
-On a website, sign the user in to your site first with [`puter.auth.signIn()`](/Auth/signIn/). This reads the signed-in user's identity before it can prompt, so for a signed-out visitor it rejects with `Unauthorized` and no prompt is shown. Answering a permission prompt does not by itself sign the user in to your site, so guard the call:
+On a website, sign the user in to your site first with [`mixt.auth.signIn()`](/Auth/signIn/). This reads the signed-in user's identity before it can prompt, so for a signed-out visitor it rejects with `Unauthorized` and no prompt is shown. Answering a permission prompt does not by itself sign the user in to your site, so guard the call:
 
 ```js
-if (!puter.authToken) await puter.auth.signIn();
+if (!mixt.authToken) await mixt.auth.signIn();
 ```
 
 ## Syntax
 
 ```js
-puter.perms.request('appData', { app, scopes })
+mixt.perms.request('appData', { app, scopes })
 ```
 
-See [`puter.perms.request()`](/Perms/request/) for the other resources it takes, and [`puter.perms.check()`](/Perms/check/) to ask whether the access is already granted without prompting.
+See [`mixt.perms.request()`](/Perms/request/) for the other resources it takes, and [`mixt.perms.check()`](/Perms/check/) to ask whether the access is already granted without prompting.
 
 ## Details
 
@@ -61,19 +61,19 @@ The promise rejects if the named app does not exist, or if a scope is misspelled
 ```html
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <button id="request">Use Contacts' data</button>
     <script>
         document.getElementById('request').addEventListener('click', async () => {
-            const contacts = await puter.apps.get('contacts');
-            const granted = await puter.perms.request('appData', { app: contacts.uid, scopes: 'read' });
+            const contacts = await mixt.apps.get('contacts');
+            const granted = await mixt.perms.request('appData', { app: contacts.uid, scopes: 'read' });
             if (!granted) {
-                puter.print('Permission denied');
+                mixt.print('Permission denied');
                 return;
             }
             // Read from the other app's key-value namespace.
-            const birthdays = await puter.kv.get('birthdays', { appUuid: contacts.uid });
-            puter.print(`Birthdays: ${JSON.stringify(birthdays)}`);
+            const birthdays = await mixt.kv.get('birthdays', { appUuid: contacts.uid });
+            mixt.print(`Birthdays: ${JSON.stringify(birthdays)}`);
         });
     </script>
 </body>
@@ -85,23 +85,23 @@ The promise rejects if the named app does not exist, or if a scope is misspelled
 ```html
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <button id="book">Book, then cancel</button>
     <script>
         document.getElementById('book').addEventListener('click', async () => {
-            const contacts = await puter.apps.get('contacts');
+            const contacts = await mixt.apps.get('contacts');
             // Writing and deleting are separate scopes, so ask for both.
-            const granted = await puter.perms.request('appData', {
+            const granted = await mixt.perms.request('appData', {
                 app: contacts.uid,
                 scopes: { kv: ['set', 'del'] },
             });
             if (!granted) return;
 
-            await puter.kv.set('invite:42', { when: 'friday' }, { appUuid: contacts.uid });
-            puter.print('Invite added');
+            await mixt.kv.set('invite:42', { when: 'friday' }, { appUuid: contacts.uid });
+            mixt.print('Invite added');
 
-            await puter.kv.del('invite:42', { appUuid: contacts.uid });
-            puter.print('Invite cancelled');
+            await mixt.kv.del('invite:42', { appUuid: contacts.uid });
+            mixt.print('Invite cancelled');
         });
     </script>
 </body>
@@ -113,17 +113,17 @@ The promise rejects if the named app does not exist, or if a scope is misspelled
 ```html
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <button id="files">List Contacts' files</button>
     <script>
         document.getElementById('files').addEventListener('click', async () => {
-            const contacts = await puter.apps.get('contacts');
-            const granted = await puter.perms.request('appData', { app: contacts.uid, scopes: ['fs:read'] });
+            const contacts = await mixt.apps.get('contacts');
+            const granted = await mixt.perms.request('appData', { app: contacts.uid, scopes: ['fs:read'] });
             if (!granted) return;
 
-            const user = await puter.auth.getUser();
-            const items = await puter.fs.readdir(`/${user.username}/AppData/${contacts.uid}`);
-            puter.print(`${items.length} file(s)`);
+            const user = await mixt.auth.getUser();
+            const items = await mixt.fs.readdir(`/${user.username}/AppData/${contacts.uid}`);
+            mixt.print(`${items.length} file(s)`);
         });
     </script>
 </body>
@@ -135,7 +135,7 @@ The promise rejects if the named app does not exist, or if a scope is misspelled
 Another app can only reach your data if the user grants it, but the user cannot see what a key-value namespace holds before answering. If your app stores something no other app should ever read — a cached OAuth token, a licence key — mark it private when you write it:
 
 ```js
-await puter.kv.set('googleRefreshToken', token, { disableSharing: true });
+await mixt.kv.set('googleRefreshToken', token, { disableSharing: true });
 ```
 
 A private entry is invisible to every other app: reads return nothing, listings omit it, writes and deletes are refused, and subscriptions are never told it changed — regardless of what the user has granted. Your own app reads and writes it normally, and writing the key again without the flag makes it shareable once more.

@@ -1,6 +1,6 @@
 <html>
 <body>
-    <script src="/puter.js/v2"></script>
+    <script src="/mixt.js/v2"></script>
     <input type="file" id="file-input" />
     <script>
         // File input
@@ -8,7 +8,7 @@
 
         // Upload the file when the user selects it
         fileInput.onchange = () => {
-            puter.fs.upload(fileInput.files).then((file) => {
+            mixt.fs.upload(fileInput.files).then((file) => {
                 document.write(`File uploaded successfully to: ${file.path}`);                
             })
         };

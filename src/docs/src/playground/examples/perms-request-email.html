@@ -1,18 +1,18 @@
 <html>
 <body>
-    <script src="/puter.js/v2"></script>
+    <script src="/mixt.js/v2"></script>
     <button id="request-email">Request Email Access</button>
     <script>
         document.getElementById('request-email').addEventListener('click', async () => {
-            const email = await puter.perms.request('email');
+            const email = await mixt.perms.request('email');
             if (email !== undefined) {
                 if (email === null) {
-                    puter.print('User does not have an email address');
+                    mixt.print('User does not have an email address');
                 } else {
-                    puter.print(`Email: ${email}`);
+                    mixt.print(`Email: ${email}`);
                 }
             } else {
-                puter.print('Email access denied');
+                mixt.print('Email access denied');
             }
         });
     </script>

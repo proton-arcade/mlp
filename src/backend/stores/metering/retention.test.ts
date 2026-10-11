@@ -90,7 +90,7 @@ describe('meteringRecordExpiresAt', () => {
         expect(
             meteringRecordExpiresAt('metering:actor:u-1:app:app-1:2026-09', 3),
         ).toBe(Date.UTC(2027, 0, 1) / 1000);
-        expect(meteringRecordExpiresAt('metering:puter:412:2026-09', 3)).toBe(
+        expect(meteringRecordExpiresAt('metering:mixt:412:2026-09', 3)).toBe(
             Date.UTC(2027, 0, 1) / 1000,
         );
     });
@@ -106,7 +106,7 @@ describe('meteringRecordExpiresAt', () => {
             ),
         ).toBe(Date.UTC(2027, 0, 1) / 1000);
         expect(
-            meteringRecordExpiresAt('metering:v2:puter:412:2026-09', 3),
+            meteringRecordExpiresAt('metering:v2:mixt:412:2026-09', 3),
         ).toBe(Date.UTC(2027, 0, 1) / 1000);
     });
 

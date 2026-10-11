@@ -36,7 +36,7 @@ const is_minimized = (el_window) => {
 /**
  * Hidden outright rather than minimized: the window was created hidden by a
  * background launch (see starts_hidden) or hidden later by
- * `puter.ui.hideWindow()`. It kept its geometry, so un-hiding is the whole job.
+ * `mixt.ui.hideWindow()`. It kept its geometry, so un-hiding is the whole job.
  *
  * @param {Element} [el_window] a `.window` element
  * @returns {boolean}

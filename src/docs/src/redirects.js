@@ -1,7 +1,7 @@
 const redirects = {
     '/Introduction': '/',
 
-    // `puter.perms` collapsed one-method-per-task into `request(resource,
+    // `mixt.perms` collapsed one-method-per-task into `request(resource,
     // details)`, so these pages went. Every one of them shipped, which is the
     // reason for the redirect: an external link or a bookmark would otherwise
     // land on nothing. Pages that only ever existed on the branch that removed

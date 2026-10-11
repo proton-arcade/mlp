@@ -22,8 +22,8 @@ import type { Request, Response } from 'express';
 import { makeActor, type Actor } from '../../core/actor.js';
 import { HttpError } from '../../core/http/HttpError.js';
 import { computeNetworkFingerprint } from '../../core/http/middleware/rateLimit.js';
-import type { PuterRouter } from '../../core/http/PuterRouter.js';
-import { PuterController } from '../types.js';
+import type { MixtRouter } from '../../core/http/MixtRouter.js';
+import { MixtController } from '../types.js';
 import { PEER_COSTS } from './costs.js';
 import {
     readClaimedGrantIdentifier,
@@ -122,7 +122,7 @@ const actorToTurnIdentifier = (actor: Actor): string => {
  *   guest routes
  * - `guest_turn.grant_ttl`, `guest_turn.credential_ttl`
  */
-export class PeerController extends PuterController {
+export class PeerController extends MixtController {
     override getReportedCosts(): Record<string, unknown>[] {
         return Object.entries(PEER_COSTS).map(([usageType, ucentsPerUnit]) => ({
             usageType,
@@ -132,7 +132,7 @@ export class PeerController extends PuterController {
         }));
     }
 
-    registerRoutes(router: PuterRouter): void {
+    registerRoutes(router: MixtRouter): void {
         router.get(
             '/peer/signaller-info',
             {
@@ -420,7 +420,7 @@ export class PeerController extends PuterController {
             throw new HttpError(403, 'Forbidden', { legacyCode: 'forbidden' });
         }
         const expectedSecret = cfg.internal_auth_secret;
-        const header = req.headers['x-puter-internal-auth'];
+        const header = req.headers['x-mixt-internal-auth'];
         if (
             !expectedSecret ||
             typeof header !== 'string' ||

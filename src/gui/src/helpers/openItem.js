@@ -73,7 +73,7 @@ const open_item = async function (options) {
     //----------------------------------------------------------------
     if ( item_path && item_path.toLowerCase().endsWith('.app') ) {
         try {
-            const content = await puter.fs.read({ path: item_path });
+            const content = await mixt.fs.read({ path: item_path });
             const text = typeof content === 'string' ? content : await content.text();
             const data = JSON.parse(text);
             if ( data.app ) {
@@ -111,7 +111,7 @@ const open_item = async function (options) {
             // Try to read the file content directly using the file's path
             if ( ! url ) {
                 try {
-                    const content = await puter.fs.read({
+                    const content = await mixt.fs.read({
                         path: item_path,
                     });
 
@@ -201,7 +201,7 @@ Please try recreating the link.`);
             let parent_window_app_uid = $filedialog_parent_app_window.attr('data-app_uuid');
             const initiating_app_uuid = $el_parent_window.attr('data-initiating_app_uuid');
 
-            let res = await puter.fs.sign(window.host_app_uid ?? parent_window_app_uid, { uid: uid, action: 'write' });
+            let res = await mixt.fs.sign(window.host_app_uid ?? parent_window_app_uid, { uid: uid, action: 'write' });
             res = res.items;
             // todo split is buggy because there might be a slash in the filename
             res.path = window.privacy_aware_path(item_path);

@@ -25,7 +25,7 @@ import type { ErrorRenderer, TokenSource } from './types';
  * Global Express.Request augmentation for v2.
  *
  * Every field declared here is populated by _global_ middleware installed by
- * `PuterServer` (auth probe, body parser, etc.). Per-route fields stay local to
+ * `MixtServer` (auth probe, body parser, etc.). Per-route fields stay local to
  * their handlers via `TypedRequest<O>` instead.
  *
  * This module is import-only — it has no runtime exports. Files that consume
@@ -78,7 +78,7 @@ declare global {
 
             /**
              * True when the request's Host is a custom domain (not one of the
-             * configured Puter domains).
+             * configured Mixt domains).
              */
             is_custom_domain?: boolean;
 
@@ -91,7 +91,7 @@ declare global {
 
             /**
              * Client-supplied device fingerprint (ThumbmarkJS hash) from the
-             * body or `x-puter-device-fingerprint` header, populated by the
+             * body or `x-mixt-device-fingerprint` header, populated by the
              * global fingerprint middleware. Present only when the client sent
              * a well-shaped value; spoofable but stable per device across IPs.
              */
@@ -125,7 +125,7 @@ declare global {
              * Set by the route materializer when `RouteOptions.errorRenderer`
              * is declared; the terminal `errorHandler` reads it to render
              * errors in a vendor-compatible wire envelope instead of the
-             * default Puter JSON shape.
+             * default Mixt JSON shape.
              */
             errorRenderer?: ErrorRenderer;
         }

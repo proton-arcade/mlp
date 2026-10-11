@@ -23,24 +23,24 @@ import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest
 import { v4 as uuidv4 } from 'uuid';
 import type { Actor } from '../../core/actor.js';
 import { kv } from '../../util/kvSingleton.js';
-import { PuterRouter } from '../../core/http/PuterRouter.js';
-import { PuterServer } from '../../server.js';
+import { MixtRouter } from '../../core/http/MixtRouter.js';
+import { MixtServer } from '../../server.js';
 import { setupTestServer } from '../../testUtil.js';
 
 // ── Test harness ────────────────────────────────────────────────────
 //
-// Boots one real PuterServer (in-memory sqlite + dynamo + s3 + mock
+// Boots one real MixtServer (in-memory sqlite + dynamo + s3 + mock
 // redis) and re-registers SystemController's inline lambda routes
-// onto a fresh PuterRouter so each handler is reachable. Tests then
+// onto a fresh MixtRouter so each handler is reachable. Tests then
 // drive the captured handler with stub req/res — the underlying
 // services (health, db, drivers) are the live wired ones.
 
-let server: PuterServer;
-let router: PuterRouter;
+let server: MixtServer;
+let router: MixtRouter;
 
 beforeAll(async () => {
     server = await setupTestServer();
-    router = new PuterRouter();
+    router = new MixtRouter();
     server.controllers.system.registerRoutes(router);
 });
 
@@ -685,11 +685,11 @@ describe('SystemController POST /contactUs — attachments', () => {
 // ── /whoarewe ───────────────────────────────────────────────────────
 
 describe('SystemController GET /whoarewe', () => {
-    it('returns the configured Puter identity payload', async () => {
+    it('returns the configured Mixt identity payload', async () => {
         const { res, captured } = makeRes();
         await callRoute('get', '/whoarewe', makeReq({}), res);
         expect(captured.body).toMatchObject({
-            name: 'Puter',
+            name: 'Mixt',
             environment: 'dev',
             disable_user_signup: false,
         });
@@ -771,12 +771,12 @@ describe('SystemController.onServerPrepareShutdown', () => {
         // Reset before the call so the assertion is meaningful even
         // when earlier code in the same process already tripped it.
         (
-            globalThis as unknown as { __puter_draining?: boolean }
-        ).__puter_draining = false;
+            globalThis as unknown as { __mixt_draining?: boolean }
+        ).__mixt_draining = false;
         server.controllers.system.onServerPrepareShutdown();
         expect(
-            (globalThis as unknown as { __puter_draining?: boolean })
-                .__puter_draining,
+            (globalThis as unknown as { __mixt_draining?: boolean })
+                .__mixt_draining,
         ).toBe(true);
     });
 });

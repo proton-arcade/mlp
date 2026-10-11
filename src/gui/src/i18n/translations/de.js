@@ -133,7 +133,7 @@ const de = {
         forgot_pass_c2a: 'Passwort vergessen?',
         from: 'Von',
         general: 'Allgemein',
-        get_a_copy_of_on_puter: 'Holen Sie sich eine Kopie von \'%%\' auf Mixt.com!',
+        get_a_copy_of_on_mixt: 'Holen Sie sich eine Kopie von \'%%\' auf Mixt.com!',
         get_copy_link: 'Kopierlink erhalten',
         hide_all_windows: 'Alle Fenster verstecken',
         home: 'Startseite',
@@ -199,7 +199,7 @@ const de = {
         picture: 'Bild',
         pictures: 'Bilder',
         plural_suffix: 's',
-        powered_by_puter_js: 'Betrieben von {{link=docs}}Puter.js{{/link}}',
+        powered_by_mixt_js: 'Betrieben von {{link=docs}}Mixt.js{{/link}}',
         preparing: 'Bereite vor...',
         preparing_for_upload: 'Vorbereiten zum Hochladen...',
         print: 'Drucken',
@@ -215,7 +215,7 @@ const de = {
         public: 'Öffentlich',
         publish: 'Veröffentlichen',
         publish_as_website: 'Als Webseite veröffentlichen',
-        puter_description: 'Mixt ist eine datenschutzorientierte persönliche Cloud, um alle Ihre Dateien, Apps und Spiele an einem sicheren Ort zu speichern, von überall und jederzeit zugänglich.',
+        mixt_description: 'Mixt ist eine datenschutzorientierte persönliche Cloud, um alle Ihre Dateien, Apps und Spiele an einem sicheren Ort zu speichern, von überall und jederzeit zugänglich.',
         reading_file: 'Lesen von %strong%',
         recent: 'Kürzlich',
         recommended: 'Empfohlen',
@@ -231,7 +231,7 @@ const de = {
         replace_all: 'Alles ersetzen',
         resend_confirmation_code: 'Bestätigungscode erneut senden',
         reset_colors: 'Farben zurücksetzen',
-        restart_puter_confirm: 'Möchten Sie Mixt wirklich neu starten?',
+        restart_mixt_confirm: 'Möchten Sie Mixt wirklich neu starten?',
         restore: 'Wiederherstellen',
         save: 'Speichern',
         saturation: 'Sättigung',
@@ -261,7 +261,7 @@ const de = {
         shortcut_to: 'Verknüpfung zu',
         show_all_windows: 'Alle Fenster anzeigen',
         show_hidden: 'Zeige versteckte',
-        sign_in_with_puter: 'Mit Mixt anmelden',
+        sign_in_with_mixt: 'Mit Mixt anmelden',
         sign_up: 'Registrieren',
         signing_in: 'Anmelden…',
         size: 'Größe',
@@ -271,7 +271,7 @@ const de = {
         start: 'Starten',
         status: 'Status',
         storage_usage: 'Speichernutzung',
-        storage_puter_used: 'Verwendet von Mixt',
+        storage_mixt_used: 'Verwendet von Mixt',
         taking_longer_than_usual: 'Es dauert etwas länger als gewöhnlich. Bitte warten...',
         task_manager: 'Task-Manager',
         taskmgr_header_name: 'Name',
@@ -304,7 +304,7 @@ const de = {
         visibility: 'Sichtbarkeit',
         yes: 'Ja',
         yes_release_it: 'Ja, veröffentlichen',
-        you_have_been_referred_to_puter_by_a_friend: 'Sie wurden von einem Freund an Mixt verwiesen!',
+        you_have_been_referred_to_mixt_by_a_friend: 'Sie wurden von einem Freund an Mixt verwiesen!',
         zip: 'Verpacken',
         zipping_file: 'Verpacken von %strong%',
 
@@ -470,7 +470,7 @@ const de = {
         'window_title_public': 'Öffentlich', // In English: "Public"
         'window_title_videos': 'Videos', // In English: "Videos"
         'window_title_pictures': 'Bilder', // In English: "Pictures"
-        'window_title_puter': 'Mixt', // In English: "Mixt"
+        'window_title_mixt': 'Mixt', // In English: "Mixt"
         'window_folder_empty': 'Dieser Ordner ist leer', // In English: "This folder is empty"
         'manage_your_subdomains': 'Verwalten Sie Ihre Subdomains', // In English: "Manage Your Subdomains"
         'open_containing_folder': 'Enthaltenen Ordner öffnen', // In English: "Open Containing Folder"

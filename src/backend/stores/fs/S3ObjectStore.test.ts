@@ -24,7 +24,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { runWithContext } from '../../core/context.js';
 import { configContainer } from '../../exports.js';
-import { PuterServer } from '../../server.js';
+import { MixtServer } from '../../server.js';
 import { setupTestServer } from '../../testUtil.js';
 import type { IConfig } from '../../types.js';
 import {
@@ -45,9 +45,9 @@ import {
 //    external boundary) — the only way to reach upstream-failure, chunking
 //    and multipart-lifecycle branches deterministically.
 
-let server: PuterServer;
+let server: MixtServer;
 const region = 'us-west-2';
-const bucket = 'puter-local';
+const bucket = 'mixt-local';
 
 beforeAll(async () => {
     server = await setupTestServer();
@@ -226,7 +226,7 @@ describe('S3ObjectStore region and bucket fallbacks', () => {
         expect(configured.resolveBucket(null)).toBe('configured');
 
         const { store: bare } = makeFakeStore({});
-        expect(bare.resolveBucket(undefined)).toBe('puter-local');
+        expect(bare.resolveBucket(undefined)).toBe('mixt-local');
     });
 
     it('exposes the client upload thresholds', () => {

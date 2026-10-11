@@ -33,10 +33,10 @@ const PREVIEW_DEVICES = [
 
 async function init_apps () {
     setTimeout(async function () {
-        puter.ui.onLaunchedWithItems(async function (items) {
+        mixt.ui.onLaunchedWithItems(async function (items) {
             source_path = items[0].path;
             // if source_path is provided, this means that the user is creating a new app/updating an existing app
-            // by deploying an existing Puter folder. So we create the app and deploy it.
+            // by deploying an existing Mixt folder. So we create the app and deploy it.
             if ( source_path ) {
                 // todo if there are no apps, go straight to creating a new app
                 $('.insta-deploy-modal').get(0).showModal();
@@ -45,9 +45,9 @@ async function init_apps () {
             }
         });
 
-        // Get dev profile. This is only for puter.com for now as we don't have dev profiles in self-hosted Puter
-        if ( domain === 'puter.com' ) {
-            puter.apps.getDeveloperProfile(async function (dev_profile) {
+        // Get dev profile. This is only for mixt.mpl for now as we don't have dev profiles in self-hosted Mixt
+        if ( domain === 'mixt.mpl' ) {
+            mixt.apps.getDeveloperProfile(async function (dev_profile) {
                 window.developer = dev_profile;
                 if ( dev_profile.approved_for_incentive_program && !dev_profile.joined_incentive_program ) {
                     $('#join-incentive-program').show();
@@ -55,7 +55,7 @@ async function init_apps () {
 
                 // show earn money c2a only if dev is not approved for incentive program or has already joined
                 if ( !dev_profile.approved_for_incentive_program || dev_profile.joined_incentive_program ) {
-                    puter.kv.get('earn-money-c2a-closed').then((value) => {
+                    mixt.kv.get('earn-money-c2a-closed').then((value) => {
                         if ( value?.result || value === true || value === 'true' )
                         {
                             return;
@@ -74,11 +74,11 @@ async function init_apps () {
             });
         }
         // Get apps
-        puter.apps.list({ icon_size: 64 }).then((resp) => {
+        mixt.apps.list({ icon_size: 64 }).then((resp) => {
             apps = resp;
 
             // hide loading
-            puter.ui.hideSpinner();
+            mixt.ui.hideSpinner();
 
             // set apps
             if ( apps.length > 0 ) {
@@ -111,15 +111,15 @@ async function init_apps () {
 window.refresh_app_list = (show_loading = false) => {
     if ( show_loading )
     {
-        puter.ui.showSpinner();
+        mixt.ui.showSpinner();
     }
     // get apps
     setTimeout(function () {
         // uncheck the select all checkbox
         $('.select-all-apps').prop('checked', false);
 
-        puter.apps.list({ icon_size: 64 }).then((apps_res) => {
-            puter.ui.hideSpinner();
+        mixt.apps.list({ icon_size: 64 }).then((apps_res) => {
+            mixt.ui.hideSpinner();
             apps = apps_res;
             if ( apps.length > 0 ) {
                 if ( window.activeTab === 'apps' ) {
@@ -137,16 +137,16 @@ window.refresh_app_list = (show_loading = false) => {
                 $('#app-list').hide();
             }
             activate_tippy();
-            puter.ui.hideSpinner();
+            mixt.ui.hideSpinner();
         });
     }, show_loading ? 1000 : 0);
 };
 
 $(document).on('click', '.create-an-app-btn', async function (e) {
-    let title = await puter.ui.prompt('Please enter a title for your app:', 'My Awesome App');
+    let title = await mixt.ui.prompt('Please enter a title for your app:', 'My Awesome App');
 
     if ( title.length > 60 ) {
-        puter.ui.alert('Title cannot be longer than 60.', [
+        mixt.ui.alert('Title cannot be longer than 60.', [
             {
                 label: 'Ok',
             },
@@ -159,9 +159,9 @@ $(document).on('click', '.create-an-app-btn', async function (e) {
     }
 });
 
-if ( ! (await puter.auth.getUser()).hasDevAccountAccess ) $('.setup-account-btn').hide();
+if ( ! (await mixt.auth.getUser()).hasDevAccountAccess ) $('.setup-account-btn').hide();
 $('.setup-account-btn').on('click', async () => {
-    await puter.ui.openDevPaymentsAccount();
+    await mixt.ui.openDevPaymentsAccount();
 });
 
 async function create_app (title, source_path = null, items = null) {
@@ -177,15 +177,15 @@ async function create_app (title, source_path = null, items = null) {
     // open the 'Creting new app...' modal
     let start_ts = Date.now();
 
-    puter.ui.showSpinner();
+    mixt.ui.showSpinner();
 
     //----------------------------------------------------
     // Create app
     //----------------------------------------------------
-    puter.apps.create({
+    mixt.apps.create({
         title: title,
         name: name,
-        indexURL: 'https://dev-center.puter.com/coming-soon.html',
+        indexURL: 'https://dev-center.mixt.mpl/coming-soon.html',
         icon: icon,
         description: ' ',
         maximizeOnStart: false,
@@ -204,20 +204,20 @@ async function create_app (title, source_path = null, items = null) {
             // ----------------------------------------------------
             // Create app directory in AppData
             // ----------------------------------------------------
-            app_dir = await puter.fs.mkdir(`/${auth_username}/AppData/${dev_center_uid}/${app.uid}`,
+            app_dir = await mixt.fs.mkdir(`/${auth_username}/AppData/${dev_center_uid}/${app.uid}`,
                             { overwrite: true, recursive: true, rename: false });
             // ----------------------------------------------------
             // Create a router for the app with a fresh hostname
             // ----------------------------------------------------
             let subdomain = `${name}-${Math.random().toString(36).substring(2)}`;
-            await puter.hosting.create(subdomain, app_dir.path);
+            await mixt.hosting.create(subdomain, app_dir.path);
 
             // ----------------------------------------------------
             // Update the app with the new hostname
             // ----------------------------------------------------
-            puter.apps.update(app.name, {
+            mixt.apps.update(app.name, {
                 title: title,
-                indexURL: source_path ? `${protocol}://${subdomain}.${static_hosting_domain}` : 'https://dev-center.puter.com/coming-soon.html',
+                indexURL: source_path ? `${protocol}://${subdomain}.${static_hosting_domain}` : 'https://dev-center.mixt.mpl/coming-soon.html',
                 icon: icon,
                 description: ' ',
                 maximizeOnStart: false,
@@ -229,7 +229,7 @@ async function create_app (title, source_path = null, items = null) {
                 },
             }).then(async (app) => {
                 // refresh app list
-                puter.apps.list({ icon_size: 64 }).then(async (resp) => {
+                mixt.apps.list({ icon_size: 64 }).then(async (resp) => {
                     apps = resp;
                     // Close the 'Creating new app...' modal
                     // but make sure it was shown for at least 2 seconds
@@ -242,7 +242,7 @@ async function create_app (title, source_path = null, items = null) {
                             $('.drop-area').removeClass('drop-area-hover');
                             $('.drop-area').addClass('drop-area-ready-to-deploy');
                         }
-                        puter.ui.hideSpinner();
+                        mixt.ui.hideSpinner();
                         // deploy app if source_path was provided
                         if ( source_path ) {
                             deploy(app, source_path);
@@ -258,7 +258,7 @@ async function create_app (title, source_path = null, items = null) {
             // ----------------------------------------------------
             // Create a "shortcut" on the desktop
             // ----------------------------------------------------
-            puter.fs.upload(new File([], app.title),
+            mixt.fs.upload(new File([], app.title),
                             `/${auth_username}/Desktop`,
                             {
                                 name: app.title,
@@ -515,7 +515,7 @@ function generate_edit_app_section (app) {
                 <div style="margin-top:30px;">
                     <input type="checkbox" id="edit-app-user-feedback" name="edit-app-user-feedback" value="true" ${app.feedback_enabled ? 'checked' : ''}>
                     <label for="edit-app-user-feedback" style="display: inline;">User Feedback</label>
-                    <p>When enabled, users can send you feedback about this app from within Puter. Feedback is delivered to your account's email address.</p>
+                    <p>When enabled, users can send you feedback about this app from within Mixt. Feedback is delivered to your account's email address.</p>
                 </div>
 
                 <div style="margin-top:30px;">
@@ -713,13 +713,13 @@ function resetToOriginalValues () {
 }
 
 async function edit_app_section (cur_app_name, tab = 'deploy') {
-    puter.ui.showSpinner();
+    mixt.ui.showSpinner();
 
     $('section:not(.sidebar)').hide();
     $('.tab-btn').removeClass('active');
     $('.tab-btn[data-tab="apps"]').addClass('active');
 
-    let cur_app = await puter.apps.get(cur_app_name, { icon_size: 128, stats_period: 'today' });
+    let cur_app = await mixt.apps.get(cur_app_name, { icon_size: 128, stats_period: 'today' });
 
     currently_editing_app = cur_app;
 
@@ -828,13 +828,13 @@ async function edit_app_section (cur_app_name, tab = 'deploy') {
             $('.drop-area').removeClass('drop-area-hover');
 
             //----------------------------------------------------
-            // Puter items dropped
+            // Mixt items dropped
             //----------------------------------------------------
             if ( e.detail?.items?.length > 0 ) {
                 let items = e.detail.items;
 
                 // ----------------------------------------------------
-                // One Puter file dropped
+                // One Mixt file dropped
                 // ----------------------------------------------------
                 if ( items.length === 1 && !items[0].isDirectory ) {
                     if ( items[0].name.toLowerCase() === 'index.html' ) {
@@ -848,7 +848,7 @@ async function edit_app_section (cur_app_name, tab = 'deploy') {
                         $('.deploy-btn').removeClass('disabled');
 
                     } else {
-                        puter.ui.alert('You need to have an index.html file in your deployment.', [
+                        mixt.ui.alert('You need to have an index.html file in your deployment.', [
                             {
                                 label: 'Ok',
                             },
@@ -860,7 +860,7 @@ async function edit_app_section (cur_app_name, tab = 'deploy') {
                     return;
                 }
                 // ----------------------------------------------------
-                // Multiple Puter files dropped
+                // Multiple Mixt files dropped
                 // ----------------------------------------------------
                 else if ( items.length > 1 ) {
                     let hasIndexHtml = false;
@@ -881,7 +881,7 @@ async function edit_app_section (cur_app_name, tab = 'deploy') {
                         // enable deploy button
                         $('.deploy-btn').removeClass('disabled');
                     } else {
-                        puter.ui.alert('You need to have an index.html file in your deployment.', [
+                        mixt.ui.alert('You need to have an index.html file in your deployment.', [
                             {
                                 label: 'Ok',
                             },
@@ -894,10 +894,10 @@ async function edit_app_section (cur_app_name, tab = 'deploy') {
                     return;
                 }
                 // ----------------------------------------------------
-                // One Puter directory dropped
+                // One Mixt directory dropped
                 // ----------------------------------------------------
                 else if ( items.length === 1 && items[0].isDirectory ) {
-                    let children = await puter.fs.readdir(items[0].path);
+                    let children = await mixt.fs.readdir(items[0].path);
                     // check if index.html exists, if found, deploy entire directory
                     for ( let child of children ) {
                         if ( child.name === 'index.html' ) {
@@ -935,7 +935,7 @@ async function edit_app_section (cur_app_name, tab = 'deploy') {
                     }
 
                     // no index.html in directory
-                    puter.ui.alert(index_missing_error, [
+                    mixt.ui.alert(index_missing_error, [
                         {
                             label: 'Ok',
                         },
@@ -957,7 +957,7 @@ async function edit_app_section (cur_app_name, tab = 'deploy') {
             }
 
             // get dropped items
-            dropped_items = await puter.ui.getEntriesFromDataTransferItems(e.dataTransfer.items);
+            dropped_items = await mixt.ui.getEntriesFromDataTransferItems(e.dataTransfer.items);
 
             // generate a flat array of full paths from the dropped items
             let paths = [];
@@ -972,7 +972,7 @@ async function edit_app_section (cur_app_name, tab = 'deploy') {
 
             // alert if no index.html in root
             if ( ! hasRootIndexHtml(tree) ) {
-                puter.ui.alert(index_missing_error, [
+                mixt.ui.alert(index_missing_error, [
                     {
                         label: 'Ok',
                     },
@@ -1274,7 +1274,7 @@ async function saveEditedApp (mode) {
     }
 
     // show working spinner
-    puter.ui.showSpinner();
+    mixt.ui.showSpinner();
 
     // disable submit button
     $('.edit-app-save-btn').prop('disabled', true);
@@ -1289,7 +1289,7 @@ async function saveEditedApp (mode) {
     const previewImagesState = getPreviewImagesState();
     const previewImages = await handlePreviewImagesUpload(name, previewImagesState);
 
-    puter.apps.update(currently_editing_app.name, {
+    mixt.apps.update(currently_editing_app.name, {
         title: title,
         name: name,
         indexURL: index_url,
@@ -1360,7 +1360,7 @@ async function saveEditedApp (mode) {
         // re-enable submit button
         $('.edit-app-save-btn').prop('disabled', false);
     }).finally(() => {
-        puter.ui.hideSpinner();
+        mixt.ui.hideSpinner();
     });
 };
 
@@ -1376,11 +1376,11 @@ $(document).on('click', '.edit-app-reset-btn', function () {
 });
 
 $(document).on('click', '.open-app-btn', async function (e) {
-    puter.ui.launchApp($(this).attr('data-app-name'));
+    mixt.ui.launchApp($(this).attr('data-app-name'));
 });
 
 $(document).on('click', '.edit-app-open-app-btn', async function (e) {
-    puter.ui.launchApp($(this).attr('data-app-name'));
+    mixt.ui.launchApp($(this).attr('data-app-name'));
 });
 
 $(document).on('click', '.delete-app-settings', async function (e) {
@@ -1389,10 +1389,10 @@ $(document).on('click', '.delete-app-settings', async function (e) {
     let app_title = $(this).attr('data-app-title');
 
     // check if app is locked
-    const app_data = await puter.apps.get(app_name, { icon_size: 16 });
+    const app_data = await mixt.apps.get(app_name, { icon_size: 16 });
 
     if ( app_data.metadata?.locked ) {
-        puter.ui.alert(`<strong>${html_encode(app_data.title)}</strong> is locked and cannot be deleted.`, [
+        mixt.ui.alert(`<strong>${html_encode(app_data.title)}</strong> is locked and cannot be deleted.`, [
             {
                 label: 'Ok',
             },
@@ -1403,7 +1403,7 @@ $(document).on('click', '.delete-app-settings', async function (e) {
     }
 
     // confirm delete
-    const alert_resp = await puter.ui.alert(`Are you sure you want to premanently delete <strong>${html_encode(app_title)}</strong>?`,
+    const alert_resp = await mixt.ui.alert(`Are you sure you want to premanently delete <strong>${html_encode(app_title)}</strong>?`,
                     [
                         {
                             label: 'Yes, delete permanently',
@@ -1417,29 +1417,29 @@ $(document).on('click', '.delete-app-settings', async function (e) {
 
     if ( alert_resp === 'delete' ) {
         let init_ts = Date.now();
-        puter.ui.showSpinner();
-        puter.apps.delete(app_name).then(async (app) => {
+        mixt.ui.showSpinner();
+        mixt.apps.delete(app_name).then(async (app) => {
             setTimeout(() => {
-                puter.ui.hideSpinner();
+                mixt.ui.hideSpinner();
                 $('.back-to-main-btn').trigger('click');
             },
             // make sure the modal was shown for at least 2 seconds
             (Date.now() - init_ts) > 2000 ? 1 : 2000 - (Date.now() - init_ts));
             // get app directory
-            puter.fs.stat({
+            mixt.fs.stat({
                 path: `/${auth_username}/AppData/${dev_center_uid}/${app_uid}`,
                 returnSubdomains: true,
             }).then(async (stat) => {
                 // delete subdomain associated with the app dir
-                puter.hosting.delete(stat.subdomains[0].subdomain);
+                mixt.hosting.delete(stat.subdomains[0].subdomain);
                 // delete app directory
-                puter.fs.delete(`/${auth_username}/AppData/${dev_center_uid}/${app_uid}`,
+                mixt.fs.delete(`/${auth_username}/AppData/${dev_center_uid}/${app_uid}`,
                                 { recursive: true });
             });
         }).catch(async (err) => {
             setTimeout(() => {
-                puter.ui.hideSpinner();
-                puter.ui.alert(err?.message, [
+                mixt.ui.hideSpinner();
+                mixt.ui.alert(err?.message, [
                     {
                         label: 'Ok',
                     },
@@ -1460,13 +1460,13 @@ $(document).on('click', '.back-to-main-btn', function (e) {
     $('.tab-btn[data-tab="apps"]').addClass('active');
 
     // get apps
-    puter.ui.showSpinner();
+    mixt.ui.showSpinner();
     setTimeout(function () {
-        puter.apps.list({ icon_size: 64 }).then((apps_res) => {
+        mixt.apps.list({ icon_size: 64 }).then((apps_res) => {
             // uncheck the select all checkbox
             $('.select-all-apps').prop('checked', false);
 
-            puter.ui.hideSpinner();
+            mixt.ui.hideSpinner();
             apps = apps_res;
             if ( apps.length > 0 ) {
                 if ( window.activeTab === 'apps' ) {
@@ -1508,11 +1508,11 @@ $(document).on('click', '#edit-app-icon-delete', async function (e) {
 });
 
 $(document).on('click', '#edit-app-icon', async function (e) {
-    const res2 = await puter.ui.showOpenFilePicker({
+    const res2 = await mixt.ui.showOpenFilePicker({
         accept: 'image/*',
     });
 
-    const icon = await puter.fs.read(res2.path);
+    const icon = await mixt.fs.read(res2.path);
     // convert blob to base64
     const reader = new FileReader();
     reader.readAsDataURL(icon);
@@ -1757,17 +1757,17 @@ function sort_apps () {
  * @returns {Promise<boolean>} - True if .git directory is found
  */
 async function hasGitDirectory (items) {
-    // Case 1: Single Puter path
+    // Case 1: Single Mixt path
     if ( typeof items === 'string' && (items.startsWith('/') || items.startsWith('~')) ) {
-        const stat = await puter.fs.stat(items);
+        const stat = await mixt.fs.stat(items);
         if ( stat.is_dir ) {
-            const files = await puter.fs.readdir(items);
+            const files = await mixt.fs.readdir(items);
             return files.some(file => file.name === '.git' && file.is_dir);
         }
         return false;
     }
 
-    // Case 2: Array of Puter items
+    // Case 2: Array of Mixt items
     if ( Array.isArray(items) && items[0]?.uid ) {
         return items.some(item => item.name === '.git' && item.is_dir);
     }
@@ -1793,7 +1793,7 @@ async function hasGitDirectory (items) {
 async function showGitWarningDialog () {
     try {
         // Check if the user has chosen to skip the warning
-        const skipWarning = await puter.kv.get('skip-git-warning');
+        const skipWarning = await mixt.kv.get('skip-git-warning');
 
         // Log retrieved value for debugging
         console.log('Retrieved skip-git-warning:', skipWarning);
@@ -1837,7 +1837,7 @@ async function showGitWarningDialog () {
                 const skipChecked = document.getElementById('skip-git-warning')?.checked;
                 if ( skipChecked ) {
                     console.log("Saving 'skip-git-warning' preference as true");
-                    await puter.kv.set('skip-git-warning', true);
+                    await mixt.kv.set('skip-git-warning', true);
                 }
             } catch ( error ) {
                 console.error('Error saving user preference to KV store:', error);
@@ -1886,7 +1886,7 @@ window.deploy = async function (app, items) {
     // later on
     // --------------------------------------------------------------------
     try {
-        current_app_dir = await puter.fs.stat({
+        current_app_dir = await mixt.fs.stat({
             path: `/${auth_username}/AppData/${dev_center_uid}/${app.uid ?? app.uuid}`,
             returnSubdomains: true,
         });
@@ -1898,7 +1898,7 @@ window.deploy = async function (app, items) {
     // deploy that dies midway never leaves the app on an unregistered name.
     const deleteOldHostnames = () => {
         for ( let subdomain of current_app_dir?.subdomains ?? [] ) {
-            puter.hosting.delete(subdomain.subdomain);
+            mixt.hosting.delete(subdomain.subdomain);
         }
     };
 
@@ -1906,7 +1906,7 @@ window.deploy = async function (app, items) {
     // Delete existing app directory
     // --------------------------------------------------------------------
     try {
-        await puter.fs.delete(current_app_dir.path);
+        await mixt.fs.delete(current_app_dir.path);
     } catch ( err ) {
         console.log(err);
     }
@@ -1916,7 +1916,7 @@ window.deploy = async function (app, items) {
     // if the directory already exists, it should be overwritten
     // --------------------------------------------------------------------
     try {
-        appdata_dir = await puter.fs.mkdir(
+        appdata_dir = await mixt.fs.mkdir(
                         // path
                         `/${auth_username}/AppData/${dev_center_uid}/${app.uid ?? app.uuid}`,
                         // options
@@ -1926,25 +1926,25 @@ window.deploy = async function (app, items) {
     }
 
     // --------------------------------------------------------------------
-    // (A) One Puter Item: If 'items' is a string and starts with /, it's a path to a Puter item
+    // (A) One Mixt Item: If 'items' is a string and starts with /, it's a path to a Mixt item
     // --------------------------------------------------------------------
     if ( typeof items === 'string' && (items.startsWith('/') || items.startsWith('~')) ) {
         // perform stat on 'items'
-        const stat = await puter.fs.stat(items);
+        const stat = await mixt.fs.stat(items);
 
         // --------------------------------------------------------------------
-        // Puter Directory
+        // Mixt Directory
         // --------------------------------------------------------------------
         // Perform readdir on 'items'
-        // todo there is apparently a bug in Puter where sometimes path is literally missing from the items
+        // todo there is apparently a bug in Mixt where sometimes path is literally missing from the items
         // returned by readdir. This is the 'path' that readdit didn't return a path for: "~/Desktop/particle-clicker-master"
         if ( stat.is_dir ) {
-            const files = await puter.fs.readdir(items);
+            const files = await mixt.fs.readdir(items);
             // copy the 'files' to the app directory
             if ( files.length > 0 ) {
                 for ( let file of files ) {
                     // perform copy
-                    await puter.fs.copy(file.path,
+                    await mixt.fs.copy(file.path,
                                     appdata_dir.path,
                                     { overwrite: true });
                     // update progress
@@ -1953,11 +1953,11 @@ window.deploy = async function (app, items) {
             }
         }
         // --------------------------------------------------------------------
-        // Puter File
+        // Mixt File
         // --------------------------------------------------------------------
         else {
             // copy the 'files' to the app directory
-            await puter.fs.copy(items,
+            await mixt.fs.copy(items,
                             appdata_dir.path,
                             { overwrite: true });
         }
@@ -1969,9 +1969,9 @@ window.deploy = async function (app, items) {
         // Create a router for the app with the fresh hostname
         // we change hostname every time to prevent caching issues
         // --------------------------------------------------------------------
-        puter.hosting.create(hostname, appdata_dir.path).then(async (res) => {
+        mixt.hosting.create(hostname, appdata_dir.path).then(async (res) => {
             // TODO this endpoint needs to be able to update only the specified fields
-            await puter.apps.update(currently_editing_app.name, {
+            await mixt.apps.update(currently_editing_app.name, {
                 indexURL: `${protocol}://${hostname}.${static_hosting_domain}`,
                 title: currently_editing_app.title,
                 name: currently_editing_app.name,
@@ -1991,8 +1991,8 @@ window.deploy = async function (app, items) {
         });
     }
     // --------------------------------------------------------------------
-    // (B) Multiple Puter Items: If `items` is an Array `items[0]` has `uid`
-    // then it's a Puter Item Array.
+    // (B) Multiple Mixt Items: If `items` is an Array `items[0]` has `uid`
+    // then it's a Mixt Item Array.
     // --------------------------------------------------------------------
     else if ( Array.isArray(items) && items[0].uid ) {
         // If there's no index.html in the root, return
@@ -2004,7 +2004,7 @@ window.deploy = async function (app, items) {
         // copy the 'files' to the app directory
         for ( let item of items ) {
             // perform copy
-            await puter.fs.copy(item.fullPath ? item.fullPath : item.path ? item.path : item.filepath,
+            await mixt.fs.copy(item.fullPath ? item.fullPath : item.path ? item.path : item.filepath,
                             appdata_dir.path,
                             { overwrite: true });
             // update progress
@@ -2018,9 +2018,9 @@ window.deploy = async function (app, items) {
         // Create a router for the app with the fresh hostname
         // we change hostname every time to prevent caching issues
         // --------------------------------------------------------------------
-        puter.hosting.create(hostname, appdata_dir.path).then(async (res) => {
+        mixt.hosting.create(hostname, appdata_dir.path).then(async (res) => {
             // TODO this endpoint needs to be able to update only the specified fields
-            await puter.apps.update(currently_editing_app.name, {
+            await mixt.apps.update(currently_editing_app.name, {
                 indexURL: `${protocol}://${hostname}.${static_hosting_domain}`,
                 title: currently_editing_app.title,
                 name: currently_editing_app.name,
@@ -2044,7 +2044,7 @@ window.deploy = async function (app, items) {
     // (C) Local Items: Upload new deploy
     // --------------------------------------------------------------------
     else {
-        puter.fs.upload(items,
+        mixt.fs.upload(items,
                         `/${auth_username}/AppData/${dev_center_uid}/${currently_editing_app.uid}`,
                         {
                             dedupeName: false,
@@ -2062,9 +2062,9 @@ window.deploy = async function (app, items) {
             // Create a router for the app with a fresh hostname
             // we change hostname every time to prevent caching issues
             // ----------------------------------------
-            puter.hosting.create(hostname, appdata_dir.path).then(async (res) => {
+            mixt.hosting.create(hostname, appdata_dir.path).then(async (res) => {
                 // TODO this endpoint needs to be able to update only the specified fields
-                await puter.apps.update(currently_editing_app.name, {
+                await mixt.apps.update(currently_editing_app.name, {
                     indexURL: `${protocol}://${hostname}.${static_hosting_domain}`,
                     title: currently_editing_app.title,
                     name: currently_editing_app.name,
@@ -2151,15 +2151,15 @@ function hasRootIndexHtml (tree) {
 }
 
 $(document).on('click', '.open-app', function (e) {
-    puter.ui.launchApp($(this).attr('data-app-name'));
+    mixt.ui.launchApp($(this).attr('data-app-name'));
 });
 
 $(document).on('click', '.insta-deploy-to-new-app', async function (e) {
     $('.insta-deploy-modal').get(0).close();
-    let title = await puter.ui.prompt('Please enter a title for your app:', 'My Awesome App');
+    let title = await mixt.ui.prompt('Please enter a title for your app:', 'My Awesome App');
 
     if ( title.length > 60 ) {
-        puter.ui.alert('Title cannot be longer than 60.', [
+        mixt.ui.alert('Title cannot be longer than 60.', [
             {
                 label: 'Ok',
             },
@@ -2188,7 +2188,7 @@ $(document).on('click', '.insta-deploy-to-existing-app', function (e) {
     $('.insta-deploy-modal').get(0).close();
     $('.insta-deploy-existing-app-select').get(0).showModal();
     $('.insta-deploy-existing-app-list').html(`<div style="margin: 100px auto 10px auto; width: 40px; height:40px;">${loading_spinner}</div>`);
-    puter.apps.list({ icon_size: 64 }).then((apps) => {
+    mixt.apps.list({ icon_size: 64 }).then((apps) => {
         setTimeout(() => {
             $('.insta-deploy-existing-app-list').html('');
             if ( apps.length === 0 )
@@ -2264,9 +2264,9 @@ $('.insta-deploy-existing-app-select').on('close', function (e) {
 });
 
 $('.refresh-app-list').on('click', function (e) {
-    puter.ui.showSpinner();
+    mixt.ui.showSpinner();
 
-    puter.apps.list({ icon_size: 64 }).then((resp) => {
+    mixt.apps.list({ icon_size: 64 }).then((resp) => {
         setTimeout(() => {
             apps = resp;
 
@@ -2293,7 +2293,7 @@ $('.refresh-app-list').on('click', function (e) {
             sort_apps();
             activate_tippy();
 
-            puter.ui.hideSpinner();
+            mixt.ui.hideSpinner();
         }, 1000);
     });
 });
@@ -2442,7 +2442,7 @@ function remove_app_card (app_uid, callback = null) {
 
 $(document).on('click', '.delete-apps-btn', async function (e) {
     // show confirmation alert
-    let resp = await puter.ui.alert('Are you sure you want to delete the selected apps?', [
+    let resp = await mixt.ui.alert('Are you sure you want to delete the selected apps?', [
         {
             label: 'Delete',
             type: 'danger',
@@ -2457,7 +2457,7 @@ $(document).on('click', '.delete-apps-btn', async function (e) {
 
     if ( resp === 'delete' ) {
         // show 'deleting' modal
-        puter.ui.showSpinner();
+        mixt.ui.showSpinner();
 
         let start_ts = Date.now();
         const apps = $('.app-checkbox:checked').toArray();
@@ -2469,11 +2469,11 @@ $(document).on('click', '.delete-apps-btn', async function (e) {
             const app_name = $(app).attr('data-app-name');
 
             // get app
-            const app_data = await puter.apps.get(app_name, { icon_size: 64 });
+            const app_data = await mixt.apps.get(app_name, { icon_size: 64 });
 
             if ( app_data.metadata?.locked ) {
                 if ( apps.length === 1 ) {
-                    puter.ui.alert(`<strong>${html_encode(app_data.title)}</strong> is locked and cannot be deleted.`, [
+                    mixt.ui.alert(`<strong>${html_encode(app_data.title)}</strong> is locked and cannot be deleted.`, [
                         {
                             label: 'Ok',
                         },
@@ -2484,7 +2484,7 @@ $(document).on('click', '.delete-apps-btn', async function (e) {
                     break;
                 }
 
-                let resp = await puter.ui.alert(`<strong>${html_encode(app_data.title)}</strong> is locked and cannot be deleted.`, [
+                let resp = await mixt.ui.alert(`<strong>${html_encode(app_data.title)}</strong> is locked and cannot be deleted.`, [
                     {
                         label: 'Skip and Continue',
                         value: 'Continue',
@@ -2512,23 +2512,23 @@ $(document).on('click', '.delete-apps-btn', async function (e) {
             }
 
             // delete app
-            await puter.apps.delete(app_name);
+            await mixt.apps.delete(app_name);
 
             // remove app card
             remove_app_card(app_uid);
 
             try {
                 // get app directory
-                const stat = await puter.fs.stat({
+                const stat = await mixt.fs.stat({
                     path: `/${auth_username}/AppData/${dev_center_uid}/${app_uid}`,
                     returnSubdomains: true,
                 });
                 // delete subdomain associated with the app directory
                 if ( stat?.subdomains[0]?.subdomain ) {
-                    await puter.hosting.delete(stat.subdomains[0].subdomain);
+                    await mixt.hosting.delete(stat.subdomains[0].subdomain);
                 }
                 // delete app directory
-                await puter.fs.delete(`/${auth_username}/AppData/${dev_center_uid}/${app_uid}`,
+                await mixt.fs.delete(`/${auth_username}/AppData/${dev_center_uid}/${app_uid}`,
                                 { recursive: true });
                 count_apps();
             } catch ( err ) {
@@ -2538,7 +2538,7 @@ $(document).on('click', '.delete-apps-btn', async function (e) {
 
         // close 'deleting' modal
         setTimeout(() => {
-            puter.ui.hideSpinner();
+            mixt.ui.hideSpinner();
             if ( $('.app-checkbox:checked').length === 0 ) {
                 // disable delete button
                 $('.delete-apps-btn').addClass('disabled');
@@ -2606,12 +2606,12 @@ $(document).on('click', '.reset-deploy', function (e) {
 window.initializeAssetsDirectory = async () => {
     try {
         // Check if assets_url exists
-        const existingURL = await puter.kv.get('assets_url');
+        const existingURL = await mixt.kv.get('assets_url');
         if ( ! existingURL ) {
             // Create assets directory
             const assetsPath = `/${auth_username}/AppData/${dev_center_uid}/assets`;
             try {
-                await puter.fs.mkdir(assetsPath,
+                await mixt.fs.mkdir(assetsPath,
                                 { overwrite: false, recursive: true, rename: false });
             } catch ( err ) {
                 if ( err.code !== 'item_with_same_name_exists' ) {
@@ -2621,10 +2621,10 @@ window.initializeAssetsDirectory = async () => {
 
             // Publish the directory
             const hostname = `assets-${Math.random().toString(36).substring(2)}`;
-            const route = await puter.hosting.create(hostname, assetsPath);
+            const route = await mixt.hosting.create(hostname, assetsPath);
 
             // Store the URL
-            await puter.kv.set('assets_url', `https://${hostname}.puter.site`);
+            await mixt.kv.set('assets_url', `https://${hostname}.mixt.site`);
         }
     } catch ( err ) {
         console.error('Error initializing assets directory:', err);
@@ -2632,10 +2632,10 @@ window.initializeAssetsDirectory = async () => {
 };
 
 async function ensureAssetsURL () {
-    let assets_url = await puter.kv.get('assets_url');
+    let assets_url = await mixt.kv.get('assets_url');
     if ( ! assets_url ) {
         await initializeAssetsDirectory();
-        assets_url = await puter.kv.get('assets_url');
+        assets_url = await mixt.kv.get('assets_url');
     }
 
     if ( ! assets_url ) throw new Error('Assets URL not found');
@@ -2672,11 +2672,11 @@ window.generatePreviewImagesSection = () => {
 };
 
 $(document).on('click', '#edit-app-social-image', async function (e) {
-    const res = await puter.ui.showOpenFilePicker({
+    const res = await mixt.ui.showOpenFilePicker({
         accept: 'image/*',
     });
 
-    const socialImage = await puter.fs.read(res.path);
+    const socialImage = await mixt.fs.read(res.path);
     // Convert blob to base64 for preview
     const reader = new FileReader();
     reader.readAsDataURL(socialImage);
@@ -2793,7 +2793,7 @@ function serializePreviewState (state) {
 }
 
 async function readImageFileAsDataURL (file) {
-    const blob = await puter.fs.read(file.path);
+    const blob = await mixt.fs.read(file.path);
 
     return await new Promise((resolve) => {
         const reader = new FileReader();
@@ -2816,13 +2816,13 @@ $(document).on('click', '.add-preview-image', async function () {
 
     const currentCount = grid.find('.preview-thumb').length;
     if ( currentCount >= 10 ) {
-        puter.ui.alert('You can add up to 10 images for this device.');
+        mixt.ui.alert('You can add up to 10 images for this device.');
         return;
     }
 
     let selected;
     try {
-        selected = await puter.ui.showOpenFilePicker({
+        selected = await mixt.ui.showOpenFilePicker({
             accept: 'image/*',
             multiple: true,
         });
@@ -2841,7 +2841,7 @@ $(document).on('click', '.add-preview-image', async function () {
     }
 
     if ( selections.length > filesToUse.length ) {
-        puter.ui.alert('You can add up to 10 images for this device.');
+        mixt.ui.alert('You can add up to 10 images for this device.');
     }
 
     updatePreviewCounts();
@@ -2871,7 +2871,7 @@ window.handleSocialImageUpload = async (app_name, socialImageData) => {
         const assetsDir = `/${auth_username}/AppData/${dev_center_uid}/assets`;
 
         // Upload new image
-        await puter.fs.upload(new File([blob], `${app_name}.png`, { type: 'image/png' }),
+        await mixt.fs.upload(new File([blob], `${app_name}.png`, { type: 'image/png' }),
                         assetsDir,
                         { overwrite: true });
 
@@ -2893,7 +2893,7 @@ window.handlePreviewImagesUpload = async (app_name, previewImagesState) => {
     const assets_url = await ensureAssetsURL();
 
     const assetsDir = `/${auth_username}/AppData/${dev_center_uid}/assets/previews/${app_name}`;
-    await puter.fs.mkdir(assetsDir, { overwrite: true, recursive: true, rename: false });
+    await mixt.fs.mkdir(assetsDir, { overwrite: true, recursive: true, rename: false });
 
     const result = getDefaultPreviewImagesState();
 
@@ -2905,7 +2905,7 @@ window.handlePreviewImagesUpload = async (app_name, previewImagesState) => {
                 const base64Response = await fetch(image.base64);
                 const blob = await base64Response.blob();
                 const filename = `${app_name}-${device.id}-${i + 1}.png`;
-                await puter.fs.upload(new File([blob], filename, { type: 'image/png' }),
+                await mixt.fs.upload(new File([blob], filename, { type: 'image/png' }),
                                 assetsDir,
                                 { overwrite: true });
                 result[device.id].push(`${assets_url}/previews/${app_name}/${filename}`);
@@ -2934,7 +2934,7 @@ $(document).on('change', '#analytics-period', async function (e) {
 });
 
 async function render_analytics (period) {
-    puter.ui.showSpinner();
+    mixt.ui.showSpinner();
 
     // set a sensible stats_grouping based on the selected period
     let stats_grouping;
@@ -2949,7 +2949,7 @@ async function render_analytics (period) {
         stats_grouping = 'month';
     }
 
-    const app = await puter.apps.get(currently_editing_app.name,
+    const app = await mixt.apps.get(currently_editing_app.name,
                     {
                         icon_size: 16,
                         stats_period: period,
@@ -3045,7 +3045,7 @@ async function render_analytics (period) {
         },
     });
 
-    puter.ui.hideSpinner();
+    mixt.ui.hideSpinner();
 }
 // ── App Users modal ──────────────────────────────────────────────
 let app_users_state = null; // { app, offset, pageSize, done }
@@ -3077,7 +3077,7 @@ async function load_more_app_users () {
     $('.app-users-load-more-btn').hide();
 
     try {
-        const app = await puter.apps.get(app_users_state.app.name);
+        const app = await mixt.apps.get(app_users_state.app.name);
         const users = await app.getUsers({
             limit: app_users_state.pageSize,
             offset: app_users_state.offset,
@@ -3129,13 +3129,13 @@ $(document).on('click', '.stats-cell', function (e) {
 });
 
 function app_context_menu (app_name, app_title, app_uid) {
-    puter.ui.contextMenu({
+    mixt.ui.contextMenu({
         items: [
             {
                 label: 'Open App',
                 type: 'primary',
                 action: () => {
-                    puter.ui.launchApp(app_name);
+                    mixt.ui.launchApp(app_name);
                 },
             },
             '-',
@@ -3150,7 +3150,7 @@ function app_context_menu (app_name, app_title, app_uid) {
                 label: 'Add Shortcut to Desktop',
                 type: 'primary',
                 action: () => {
-                    puter.fs.upload(new File([], app_title),
+                    mixt.fs.upload(new File([], app_title),
                                     `/${auth_username}/Desktop`,
                                     {
                                         name: app_title,
@@ -3158,7 +3158,7 @@ function app_context_menu (app_name, app_title, app_uid) {
                                         overwrite: false,
                                         appUID: app_uid,
                                     }).then(async (uploaded) => {
-                        puter.ui.alert(`<strong>${html_encode(app_title)}</strong> shortcut has been added to your desktop.`, [
+                        mixt.ui.alert(`<strong>${html_encode(app_title)}</strong> shortcut has been added to your desktop.`, [
                             {
                                 label: 'Ok',
                                 type: 'primary',
@@ -3195,10 +3195,10 @@ $(document).on('click', '.options-icon-app', function (e) {
 
 async function attempt_delete_app (app_name, app_title, app_uid) {
     // get app
-    const app_data = await puter.apps.get(app_name, { icon_size: 16 });
+    const app_data = await mixt.apps.get(app_name, { icon_size: 16 });
 
     if ( app_data.metadata?.locked ) {
-        puter.ui.alert(`<strong>${html_encode(app_data.title)}</strong> is locked and cannot be deleted.`, [
+        mixt.ui.alert(`<strong>${html_encode(app_data.title)}</strong> is locked and cannot be deleted.`, [
             {
                 label: 'Ok',
             },
@@ -3209,7 +3209,7 @@ async function attempt_delete_app (app_name, app_title, app_uid) {
     }
 
     // confirm delete
-    const alert_resp = await puter.ui.alert(`Are you sure you want to premanently delete <strong>${html_encode(app_title)}</strong>?`,
+    const alert_resp = await mixt.ui.alert(`Are you sure you want to premanently delete <strong>${html_encode(app_title)}</strong>?`,
                     [
                         {
                             label: 'Yes, delete permanently',
@@ -3225,21 +3225,21 @@ async function attempt_delete_app (app_name, app_title, app_uid) {
         remove_app_card(app_uid);
 
         // delete app
-        puter.apps.delete(app_name).then(async (app) => {
+        mixt.apps.delete(app_name).then(async (app) => {
             // get app directory
-            puter.fs.stat({
+            mixt.fs.stat({
                 path: `/${auth_username}/AppData/${dev_center_uid}/${app_uid}`,
                 returnSubdomains: true,
             }).then(async (stat) => {
                 // delete subdomain associated with the app dir
-                puter.hosting.delete(stat.subdomains[0].subdomain);
+                mixt.hosting.delete(stat.subdomains[0].subdomain);
                 // delete app directory
-                puter.fs.delete(`/${auth_username}/AppData/${dev_center_uid}/${app_uid}`,
+                mixt.fs.delete(`/${auth_username}/AppData/${dev_center_uid}/${app_uid}`,
                                 { recursive: true });
             });
         }).catch(async (err) => {
-            puter.ui.hideSpinner();
-            puter.ui.alert(err?.message, [
+            mixt.ui.hideSpinner();
+            mixt.ui.alert(err?.message, [
                 {
                     label: 'Ok',
                 },

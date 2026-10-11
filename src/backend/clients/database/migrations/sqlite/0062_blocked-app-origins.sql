@@ -16,7 +16,7 @@
 -- along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 -- Admin-managed blocklist of app origins. An app whose `index_url` host (or
--- a request origin) matches an entry is denied access to Puter resources:
+-- a request origin) matches an entry is denied access to Mixt resources:
 -- it cannot obtain an app token and already-issued app tokens are rejected
 -- on each request. `include_subdomains = 1` also blocks every subdomain of
 -- `domain`. Enforced in AuthService via AppOriginBlocklistService.

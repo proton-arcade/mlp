@@ -18,7 +18,7 @@ let origin;
 let workerMode;
 
 beforeAll(async () => {
-    directory = await mkdtemp(path.join(tmpdir(), 'puter-pdf-thumbnails-'));
+    directory = await mkdtemp(path.join(tmpdir(), 'mixt-pdf-thumbnails-'));
     await copyPdfThumbnailAssets(directory);
     await new Promise((resolve, reject) => {
         const compiler = webpack({
@@ -55,15 +55,15 @@ beforeAll(async () => {
         next();
     });
     app.use('/dist', express.static(directory));
-    // The generator's relative import into the SDK source climbs past /src, which the browser clamps to /puter-js/src.
-    app.use('/puter-js/src', express.static(fileURLToPath(new URL('../../../../puter-js/src/', import.meta.url))));
+    // The generator's relative import into the SDK source climbs past /src, which the browser clamps to /mixt-js/src.
+    app.use('/mixt-js/src', express.static(fileURLToPath(new URL('../../../../mixt-js/src/', import.meta.url))));
     app.use('/src', express.static(fileURLToPath(new URL('../../', import.meta.url))));
     app.get('/bundled', (req, res) => res.send(`<!doctype html><title>Bundled thumbnail test</title>
         <script src="${req.query.cdn ? `${cdnOrigin}/assets` : '/dist'}/bundle.js?v=1"></script>
         <script>window.createUploadThumbnailGenerator = window.pdfThumbnails.createUploadThumbnailGenerator;</script>`));
     app.get('/', (_req, res) => res.send(`<!doctype html><title>Thumbnail test</title><script type="module">
         import { createUploadThumbnailGenerator } from '/src/services/pdfThumbnails/index.js';
-        import { defaultThumbnailGenerator } from '/puter-js/src/modules/FileSystem/operations/upload/thumbnails.js';
+        import { defaultThumbnailGenerator } from '/mixt-js/src/modules/FileSystem/operations/upload/thumbnails.js';
         window.defaultGenerator = defaultThumbnailGenerator;
         window.createUploadThumbnailGenerator = createUploadThumbnailGenerator;
     </script>`));

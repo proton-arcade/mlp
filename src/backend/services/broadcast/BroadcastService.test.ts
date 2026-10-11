@@ -20,7 +20,7 @@
 /**
  * Integration tests for BroadcastService.
  *
- * Boots a real PuterServer (mock redis + in-memory everything) wired with a
+ * Boots a real MixtServer (mock redis + in-memory everything) wired with a
  * single peer and our own webhook identity, then exercises the service
  * directly. Axios is mocked at the module boundary so outbound POSTs never
  * leave the process — that's the only external call this service makes. Per
@@ -40,7 +40,7 @@ import {
     it,
     vi,
 } from 'vitest';
-import { PuterServer } from '../../server.js';
+import { MixtServer } from '../../server.js';
 import { setupTestServer } from '../../testUtil.js';
 import type { BroadcastService } from './BroadcastService.js';
 
@@ -98,7 +98,7 @@ const nextNonce = () => ++nonceCounter;
 // ── verifyAndEmit ───────────────────────────────────────────────────
 
 describe('BroadcastService.verifyAndEmit', () => {
-    let server: PuterServer;
+    let server: MixtServer;
     let broadcast: BroadcastService;
 
     beforeAll(async () => {
@@ -450,7 +450,7 @@ describe('BroadcastService.verifyAndEmit', () => {
 // ── Outbound flush ──────────────────────────────────────────────────
 
 describe('BroadcastService outbound flush', () => {
-    let server: PuterServer;
+    let server: MixtServer;
 
     beforeAll(async () => {
         server = await setupTestServer({
@@ -635,7 +635,7 @@ describe('BroadcastService outbound flush', () => {
 // -- Header validation ------------------------------------------------
 
 describe('BroadcastService.verifyAndEmit — header validation', () => {
-    let server: PuterServer;
+    let server: MixtServer;
     let broadcast: BroadcastService;
 
     beforeAll(async () => {
@@ -771,7 +771,7 @@ describe('BroadcastService.verifyAndEmit — header validation', () => {
 // -- Config handling ---------------------------------------------------
 
 describe('BroadcastService — peer configuration', () => {
-    let server: PuterServer;
+    let server: MixtServer;
     let broadcast: BroadcastService;
     let warn: ReturnType<typeof vi.spyOn>;
 
@@ -850,7 +850,7 @@ describe('BroadcastService — peer configuration', () => {
 // -- Redis pub/sub fan-out ---------------------------------------------
 
 describe('BroadcastService — same-cluster pub/sub fan-out', () => {
-    let server: PuterServer;
+    let server: MixtServer;
 
     beforeAll(async () => {
         server = await setupTestServer({

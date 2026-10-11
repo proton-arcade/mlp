@@ -19,7 +19,7 @@ module.exports = {
         extensions: ['.js'],
     },
     externals: {
-        'https://puter-net.b-cdn.net/rustls.js': 'undefined',
+        'https://mixt-net.b-cdn.net/rustls.js': 'undefined',
     },
     optimization: {
         minimize: true,
@@ -41,7 +41,7 @@ module.exports = {
         rules: [
             {
                 test: /\.js$/,
-                exclude: /puter\.js$/,
+                exclude: /mixt\.js$/,
                 parser: {
                     dynamicImports: false,
                 },

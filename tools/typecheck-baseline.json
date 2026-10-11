@@ -12,7 +12,7 @@
   "src/backend/services/apps/AppPermissionService.ts | TS2345": 2,
   "src/backend/services/broadcast/BroadcastService.ts | TS2345": 2,
   "src/backend/services/fs/cacheInvalidation.ts | TS2345": 1,
-  "src/backend/services/homepage/PuterHomepageService.ts | TS2345": 1,
+  "src/backend/services/homepage/MixtHomepageService.ts | TS2345": 1,
   "src/backend/services/localworker/LocalWorkerService.ts | TS7018": 3,
   "src/backend/stores/fs/S3ObjectStore.ts | TS7011": 1,
   "src/backend/testUtil.ts | TS1470": 1,

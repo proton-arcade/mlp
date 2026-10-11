@@ -255,7 +255,7 @@ const TabAccount = {
             const selectedFile = Array.isArray(e.detail) ? e.detail[0] : e.detail;
             // Let the user frame the photo before it becomes the avatar.
             UIProfilePictureCropModal({
-                picture: puter.fs.read(selectedFile.path),
+                picture: mixt.fs.read(selectedFile.path),
                 $container: $el_window,
                 returnFocusTo: $el_window.find('.dashboard-section-account .change-profile-picture').get(0),
                 onSave: (dataUrl) => {

@@ -1,5 +1,5 @@
 ---
-title: puter.randName()
+title: mixt.randName()
 description: Generate a random domain-safe name.
 platforms: [websites, apps, nodejs, workers]
 ---
@@ -9,8 +9,8 @@ A function that generates a domain-safe name by combining a random adjective, a 
 ## Syntax
 
 ```js
-puter.randName()
-puter.randName(separator)
+mixt.randName()
+mixt.randName(separator)
 ```
 
 ## Parameters
@@ -28,9 +28,9 @@ The separator to use between components. Defaults to `-`.
 ```html
 <html>
   <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
-      puter.print(puter.randName());
+      mixt.print(mixt.randName());
     </script>
   </body>
 </html>

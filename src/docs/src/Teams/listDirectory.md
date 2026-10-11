@@ -1,5 +1,5 @@
 ---
-title: puter.teams.listDirectory()
+title: mixt.teams.listDirectory()
 description: Get the list of members of a team.
 platforms: [websites, apps, nodejs, workers]
 ---
@@ -8,20 +8,20 @@ platforms: [websites, apps, nodejs, workers]
 
 Get the list of members of a team.
 
-The current user must be a member of the team, and the team owner must enable the directory setting in the [Teams dashboard](https://puter.com/#teams).
+The current user must be a member of the team, and the team owner must enable the directory setting in the [Teams dashboard](https://mixt.mpl/#teams).
 
 ## Syntax
 
 ```js
-puter.teams.listDirectory(uid)
-puter.teams.listDirectory(uid, options)
+mixt.teams.listDirectory(uid)
+mixt.teams.listDirectory(uid, options)
 ```
 
 ## Parameters
 
 #### `uid` (String) (required)
 
-The team's `uid`, from [`puter.teams.list()`](/Teams/list/).
+The team's `uid`, from [`mixt.teams.list()`](/Teams/list/).
 
 #### `options` (Object) (optional)
 
@@ -60,14 +60,14 @@ A rejection carries an `Error` with a `code`:
 ```html;teams-directory
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <select id="colleagues"><option>Loading…</option></select>
     <button id="pick">Pick</button>
     <script>
         const select = document.getElementById('colleagues');
 
         (async () => {
-            const [team] = await puter.teams.list();
+            const [team] = await mixt.teams.list();
             if (!team) {
                 select.innerHTML = '<option>You are not on a team</option>';
                 return;
@@ -79,7 +79,7 @@ A rejection carries an `Error` with a `code`:
                 return;
             }
 
-            const entries = await puter.teams.listDirectory(team.uid);
+            const entries = await mixt.teams.listDirectory(team.uid);
             select.innerHTML = '';
             for (const { username, uuid } of entries) {
                 const option = document.createElement('option');
@@ -92,7 +92,7 @@ A rejection carries an `Error` with a `code`:
 
         document.getElementById('pick').addEventListener('click', () => {
             const option = select.selectedOptions[0];
-            if (option) puter.print(`${option.textContent} → ${option.value}<br>`);
+            if (option) mixt.print(`${option.textContent} → ${option.value}<br>`);
         });
     </script>
 </body>

@@ -61,10 +61,10 @@ describe('resolving receiver config', () => {
         const cfg = resolveSmtpConfig(
             config({
                 ...valid,
-                localIngressUrl: 'http://puter:4100/email/ingress',
+                localIngressUrl: 'http://mixt:4100/email/ingress',
             }),
         );
-        expect(cfg.ingressUrl).toBe('http://puter:4100/email/ingress');
+        expect(cfg.ingressUrl).toBe('http://mixt:4100/email/ingress');
         expect(cfg.ingressHost).toBe('api.example.com');
     });
 

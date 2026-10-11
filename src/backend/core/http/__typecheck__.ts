@@ -18,16 +18,16 @@
  */
 
 /**
- * Compile-time narrowing checks for PuterRouter type ergonomics.
+ * Compile-time narrowing checks for MixtRouter type ergonomics.
  *
  * This file is _only_ here to fail the typecheck if the const-generic narrowing
  * on `req.actor` regresses. It produces no runtime artifacts of interest.
  * Delete it whenever a real test suite for the router exists.
  */
 import type { Actor } from '../actor';
-import { PuterRouter } from './PuterRouter';
+import { MixtRouter } from './MixtRouter';
 
-const r = new PuterRouter();
+const r = new MixtRouter();
 
 // No options → req.actor: Actor | undefined
 r.get('/anon', (req, _res) => {

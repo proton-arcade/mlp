@@ -1,12 +1,12 @@
 <html>
 <body>
-    <script src="/puter.js/v2"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
-            const name = `retired-${puter.randName()}`;
-            const app = await puter.apps.create(name, `https://example.com/${name}`);
+            const name = `retired-${mixt.randName()}`;
+            const app = await mixt.apps.create(name, `https://example.com/${name}`);
 
-            await puter.events.handlers.publish(
+            await mixt.events.handlers.publish(
                 'ingestUpload',
                 async ({ event, ctx }) => {
                     await fetch(ctx.endpoint, { method: 'POST', body: event.path });
@@ -14,14 +14,14 @@
                 { appUid: app.uid },
             );
 
-            const { items, deployable } = await puter.events.workers.list();
-            puter.print(`this server deploys events workers: ${deployable}<br>`);
+            const { items, deployable } = await mixt.events.workers.list();
+            mixt.print(`this server deploys events workers: ${deployable}<br>`);
             for (const worker of items) {
-                puter.print(`${worker.appName}: ${worker.handlerCount} handler(s)<br>`);
+                mixt.print(`${worker.appName}: ${worker.handlerCount} handler(s)<br>`);
             }
 
-            const destroyed = await puter.events.workers.destroy(app.uid);
-            puter.print(`removed ${destroyed.removed}, suspended ${destroyed.suspended}<br>`);
+            const destroyed = await mixt.events.workers.destroy(app.uid);
+            mixt.print(`removed ${destroyed.removed}, suspended ${destroyed.suspended}<br>`);
         })();
     </script>
 </body>

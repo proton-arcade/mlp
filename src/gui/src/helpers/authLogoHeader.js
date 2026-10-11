@@ -18,8 +18,8 @@
  */
 
 // Logo strip at the top of the login and signup windows. Inside a sign-in
-// popup it pairs the opener site's favicon with the Puter logo, joined by a
-// dashed line, so the user sees which site they are connecting to Puter.
+// popup it pairs the opener site's favicon with the Mixt logo, joined by a
+// dashed line, so the user sees which site they are connecting to Mixt.
 
 // The tile renders at 40px; asking for more keeps it sharp on high-DPI
 // screens when the site publishes a large (e.g. Apple touch) icon.
@@ -80,17 +80,17 @@ function openerLogoTile(origin, fallbackSrc) {
  * Markup for the logo strip.
  *
  * @param {Object} options
- * @param {string} options.logoSrc - URL of the Puter logo.
+ * @param {string} options.logoSrc - URL of the Mixt logo.
  * @param {boolean} [options.logoClickable] - Adds the pointer cursor; the
  *   caller wires the click.
  * @param {string} [options.openerOrigin] - When set, the opener's favicon is
- *   rendered beside the Puter logo with a dashed connector between them.
+ *   rendered beside the Mixt logo with a dashed connector between them.
  * @param {string} [options.openerFallbackSrc] - Generic website icon shown
  *   when the favicon is missing.
  * @returns {string}
  */
 export function authLogoHeader({ logoSrc, logoClickable = false, openerOrigin = '', openerFallbackSrc = '' }) {
-    const puterLogo = `<img src="${html_encode(logoSrc)}" class="auth-logo"${logoClickable ? ' style="cursor: pointer;"' : ''}>`;
+    const mixtLogo = `<img src="${html_encode(logoSrc)}" class="auth-logo"${logoClickable ? ' style="cursor: pointer;"' : ''}>`;
 
     let h = '';
     h += `<div class="auth-logo-header${openerOrigin ? ' auth-logo-header-connected' : ''}">`;
@@ -98,7 +98,7 @@ export function authLogoHeader({ logoSrc, logoClickable = false, openerOrigin = 
         h += openerLogoTile(openerOrigin, openerFallbackSrc);
         h += '<div class="auth-logo-connector"></div>';
     }
-    h += puterLogo;
+    h += mixtLogo;
     h += '</div>';
     return h;
 }

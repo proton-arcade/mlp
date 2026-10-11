@@ -3,10 +3,10 @@ import { CLIError } from '../lib/errors.js';
 import * as ui from '../lib/ui.js';
 
 export async function whoamiCommand() {
-  const puter = await ensureClient();
+  const mixt = await ensureClient();
   let user;
   try {
-    user = await puter.auth.getUser();
+    user = await mixt.auth.getUser();
   } catch (err) {
     throw new CLIError(`Could not fetch account: ${err.message}`);
   }

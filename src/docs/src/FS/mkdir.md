@@ -1,6 +1,6 @@
 ---
-title: puter.fs.mkdir()
-description: Create directories in the user's own Puter file system.
+title: mixt.fs.mkdir()
+description: Create directories in the user's own Mixt OS file system.
 platforms: [websites, apps, nodejs, workers]
 ---
 
@@ -9,9 +9,9 @@ Allows you to create a directory.
 ## Syntax
 
 ```js
-puter.fs.mkdir(path)
-puter.fs.mkdir(path, options)
-puter.fs.mkdir(options)
+mixt.fs.mkdir(path)
+mixt.fs.mkdir(path, options)
+mixt.fs.mkdir(options)
 ```
 
 ## Parameters
@@ -41,14 +41,14 @@ Returns a `Promise` that resolves to the [`FSItem`](/Objects/fsitem) object of t
 ```html;fs-mkdir
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         // Create a directory with random name
-        let dirName = puter.randName();
-        puter.fs.mkdir(dirName).then((directory) => {
-            puter.print(`"${dirName}" created at ${directory.path}`);
+        let dirName = mixt.randName();
+        mixt.fs.mkdir(dirName).then((directory) => {
+            mixt.print(`"${dirName}" created at ${directory.path}`);
         }).catch((error) => {
-            puter.print('Error creating directory:', error);
+            mixt.print('Error creating directory:', error);
         });
     </script>
 </body>
@@ -60,15 +60,15 @@ Returns a `Promise` that resolves to the [`FSItem`](/Objects/fsitem) object of t
 ```html;fs-mkdir-dedupe
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
             // create a directory named 'hello'
-            let dir_1 = await puter.fs.mkdir('hello');
-            puter.print(`Directory 1: ${dir_1.name}<br>`);
+            let dir_1 = await mixt.fs.mkdir('hello');
+            mixt.print(`Directory 1: ${dir_1.name}<br>`);
             // create a directory named 'hello' again, it should be automatically renamed to 'hello (n)' where n is the next available number
-            let dir_2 = await puter.fs.mkdir('hello', { dedupeName: true });
-            puter.print(`Directory 2: ${dir_2.name}<br>`);
+            let dir_2 = await mixt.fs.mkdir('hello', { dedupeName: true });
+            mixt.print(`Directory 2: ${dir_2.name}<br>`);
         })();
     </script>
 </body>
@@ -80,12 +80,12 @@ Returns a `Promise` that resolves to the [`FSItem`](/Objects/fsitem) object of t
 ```html;fs-mkdir-create-missing-parents
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
             // Create a directory named 'hello' in a directory that does not exist
-            let dir = await puter.fs.mkdir('my-directory/another-directory/hello', { createMissingParents: true });
-            puter.print(`Directory created at: ${dir.path}<br>`);
+            let dir = await mixt.fs.mkdir('my-directory/another-directory/hello', { createMissingParents: true });
+            mixt.print(`Directory created at: ${dir.path}<br>`);
         })();
     </script>
 </body>

@@ -21,9 +21,9 @@ const LOOPBACK_HOSTNAMES = new Set(['localhost', '[::1]', '::1']);
 const LOOPBACK_IPV4 = /^127\.\d{1,3}\.\d{1,3}\.\d{1,3}$/;
 
 /**
- * Is this origin a Puter served off the developer's own machine?
+ * Is this origin a Mixt served off the developer's own machine?
  *
- * @param {string} [origin] - An absolute origin, e.g. `https://puter.com`.
+ * @param {string} [origin] - An absolute origin, e.g. `https://mixt.mpl`.
  * @returns {boolean}
  */
 export const isLoopbackOrigin = (origin) => {
@@ -47,7 +47,7 @@ export const isLoopbackOrigin = (origin) => {
  * `whoami` included -- against a server we don't control. Apps may repoint
  * their own SDK instance; the GUI may not.
  *
- * The one exception is a Puter served from the developer's own machine, where
+ * The one exception is a Mixt served from the developer's own machine, where
  * `npm start -- --server` drives a local GUI against a remote backend. That
  * choice sticks for the rest of the session, so the caller persists whatever
  * comes back when it differs from the configured origin, and passes it here as

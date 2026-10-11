@@ -134,7 +134,7 @@ const br = {
         forgot_pass_c2a: 'Esqueceu a senha?',
         from: 'De',
         general: 'Geral',
-        get_a_copy_of_on_puter: 'Obtenha uma cópia de \'%%\' em Mixt.com!',
+        get_a_copy_of_on_mixt: 'Obtenha uma cópia de \'%%\' em Mixt.com!',
         get_copy_link: 'Obter Link de Cópia',
         hide_all_windows: 'Ocultar Todas as Janelas',
         home: 'Início',
@@ -200,7 +200,7 @@ const br = {
         'picture': 'Imagem',
         'pictures': 'Imagens',
         'plural_suffix': 's',
-        'powered_by_puter_js': 'Desenvolvido por {{link=docs}}Puter.js{{/link}}',
+        'powered_by_mixt_js': 'Desenvolvido por {{link=docs}}Mixt.js{{/link}}',
         'preparing': 'Preparando...',
         'preparing_for_upload': 'Preparando para upload...',
         'print': 'Imprimir',
@@ -216,7 +216,7 @@ const br = {
         'public': 'Público',
         'publish': 'Publicar',
         'publish_as_website': 'Publicar como site',
-        'puter_description': 'Mixt é uma nuvem pessoal que prioriza a privacidade para manter todos os seus arquivos, aplicativos e jogos em um lugar seguro, acessível de qualquer lugar a qualquer momento.',
+        'mixt_description': 'Mixt é uma nuvem pessoal que prioriza a privacidade para manter todos os seus arquivos, aplicativos e jogos em um lugar seguro, acessível de qualquer lugar a qualquer momento.',
         'reading_file': 'Lendo %strong%',
         'recent': 'Recente',
         'recommended': 'Recomendado',
@@ -232,7 +232,7 @@ const br = {
         'replace_all': 'Substituir Todos',
         'resend_confirmation_code': 'Reenviar Código de Confirmação',
         'reset_colors': 'Redefinir Cores',
-        'restart_puter_confirm': 'Tem certeza de que deseja reiniciar o Mixt?',
+        'restart_mixt_confirm': 'Tem certeza de que deseja reiniciar o Mixt?',
         'restore': 'Restaurar',
         'save': 'Salvar',
         'saturation': 'Saturação',
@@ -262,7 +262,7 @@ const br = {
         'shortcut_to': 'Atalho para',
         'show_all_windows': 'Mostrar Todas as Janelas',
         'show_hidden': 'Mostrar ocultos',
-        'sign_in_with_puter': 'Entrar com Mixt',
+        'sign_in_with_mixt': 'Entrar com Mixt',
         'sign_up': 'Cadastrar-se',
         'signing_in': 'Entrando...',
         'size': 'Tamanho',
@@ -272,7 +272,7 @@ const br = {
         'start': 'Iniciar',
         'status': 'Status',
         'storage_usage': 'Uso de Armazenamento',
-        'storage_puter_used': 'usado pelo Mixt',
+        'storage_mixt_used': 'usado pelo Mixt',
         'taking_longer_than_usual': 'Levando um pouco mais de tempo do que o normal. Por favor, aguarde...',
         'task_manager': 'Gerenciador de Tarefas',
         'taskmgr_header_name': 'Nome',
@@ -305,7 +305,7 @@ const br = {
         'visibility': 'Visibilidade',
         'yes': 'Sim',
         'yes_release_it': 'Sim, Liberar',
-        'you_have_been_referred_to_puter_by_a_friend': 'Você foi indicado ao Mixt por um amigo!',
+        'you_have_been_referred_to_mixt_by_a_friend': 'Você foi indicado ao Mixt por um amigo!',
         'zip': 'Compactar',
         'zipping_file': 'Compactando %strong%',
 
@@ -471,7 +471,7 @@ const br = {
         'window_title_public': 'Público', // In English: "Public"
         'window_title_videos': 'Vídeos', // In English: "Videos"
         'window_title_pictures': 'Imagens', // In English: "Pictures"
-        'window_title_puter': 'Mixt', // In English: "Mixt"
+        'window_title_mixt': 'Mixt', // In English: "Mixt"
         'window_folder_empty': 'Esta pasta está vazia', // In English: "This folder is empty"
         'manage_your_subdomains': 'Gerenciar seus subdomínios', // In English: "Manage Your Subdomains"
         'open_containing_folder': 'Abrir local do arquivo', // In English: "Open Containing Folder"

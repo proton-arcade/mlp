@@ -98,7 +98,7 @@ let cached = null;
 export const recent_recipients = () => {
     cached ??= (async () => {
         try {
-            return sanitize_recents(await puter.kv.get(KV_KEY));
+            return sanitize_recents(await mixt.kv.get(KV_KEY));
         } catch {
             return [];
         }
@@ -117,7 +117,7 @@ export const remember_recipient = async (entry) => {
     const next = merge_recent(await recent_recipients(), entry);
     cached = Promise.resolve(next);
     try {
-        await puter.kv.set(KV_KEY, next);
+        await mixt.kv.set(KV_KEY, next);
     } catch { /* the in-memory list still serves this session */ }
     return next;
 };

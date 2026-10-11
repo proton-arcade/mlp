@@ -36,7 +36,7 @@ async function UIWindowPublishWebsite (target_dir_uid, target_dir_name, target_d
     h += '<div class="publish-website-error-msg"></div>';
 
     // Subdomain input
-    h += '<div class="puter-subdomain-section" style="overflow: hidden; margin-bottom: 20px;">';
+    h += '<div class="mixt-subdomain-section" style="overflow: hidden; margin-bottom: 20px;">';
     h += `<label style="margin-bottom: 10px; display: block;">${i18n('pick_name_for_website')}</label>`;
     h += '<div style="font-family: monospace; display: flex; align-items: center; background: #f8f9fa; padding: 8px; border-radius: 6px; border: 1px solid #dee2e6;">';
     h += `<span style="color: #666;">${html_encode(window.extractProtocol(window.url))}://</span>`;
@@ -98,7 +98,7 @@ async function UIWindowPublishWebsite (target_dir_uid, target_dir_name, target_d
                 throw new Error('Please enter a subdomain name');
             }
 
-            const res = await puter.hosting.create(subdomain, target_dir_path);
+            const res = await mixt.hosting.create(subdomain, target_dir_path);
             let url = `https://${ subdomain }.${ window.hosting_domain }/`;
 
             // Show success

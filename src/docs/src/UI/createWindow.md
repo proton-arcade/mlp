@@ -1,5 +1,5 @@
 ---
-title: puter.ui.createWindow()
+title: mixt.ui.createWindow()
 description: Creates and displays a window.
 platforms: [apps]
 ---
@@ -8,8 +8,8 @@ Creates and displays a window.
 
 ## Syntax
 ```js
-puter.ui.createWindow()
-puter.ui.createWindow(options)
+mixt.ui.createWindow()
+mixt.ui.createWindow(options)
 ```
 
 ## Parameters
@@ -34,10 +34,10 @@ A `Promise` that resolves to a window handle object with an `id` (String) proper
 ```html
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         // create the window
-        puter.ui.createWindow({
+        mixt.ui.createWindow({
             title: 'Cool Title',
             content: `<h1 style="text-align:center;">My little test window!</h1>`, 
             disable_parent_window: true,

@@ -134,7 +134,7 @@ const sv = {
         forgot_pass_c2a: 'Glömt lösenord?',
         from: 'Från',
         general: 'Allmänt',
-        get_a_copy_of_on_puter: "Få en kopia av '%%' på Mixt.com!",
+        get_a_copy_of_on_mixt: "Få en kopia av '%%' på Mixt.com!",
         get_copy_link: 'Få kopieringslänk',
         hide_all_windows: 'Dölj alla fönster',
         home: 'Hem',
@@ -200,7 +200,7 @@ const sv = {
         picture: 'Bild',
         pictures: 'Bilder',
         plural_suffix: '', // neutrum has "", utrum has "or", "ar", "er"
-        powered_by_puter_js: 'Drivs av {{link=docs}}Puter.js{{/link}}',
+        powered_by_mixt_js: 'Drivs av {{link=docs}}Mixt.js{{/link}}',
         preparing: 'Förbereder...',
         preparing_for_upload: 'Förbereder för uppladdning...',
         print: 'Skriv ut',
@@ -216,7 +216,7 @@ const sv = {
         public: 'Offentligt',
         publish: 'Publicera',
         publish_as_website: 'Publicera som webbplats',
-        puter_description: 'Mixt är ett integritetsvänligt personligt moln för alla dina filer, appar och spel på ett säkert ställe, tillgängligt varsomhelst och närsomhelst.',
+        mixt_description: 'Mixt är ett integritetsvänligt personligt moln för alla dina filer, appar och spel på ett säkert ställe, tillgängligt varsomhelst och närsomhelst.',
         reading_file: 'Läser in %strong%',
         recent: 'Senaste',
         recommended: 'Rekommenderat',
@@ -232,7 +232,7 @@ const sv = {
         replace_all: 'Ersätt alla',
         resend_confirmation_code: 'Skicka bekräftelsekoden igen',
         reset_colors: 'Nolställ färgerna',
-        restart_puter_confirm: 'Är det säkert att du vill starta om Mixt?',
+        restart_mixt_confirm: 'Är det säkert att du vill starta om Mixt?',
         restore: 'Återställ',
         save: 'Spara',
         saturation: 'Mättnad',
@@ -262,7 +262,7 @@ const sv = {
         shortcut_to: 'Genväg till',
         show_all_windows: 'Visa alla fönster',
         show_hidden: 'Visa dolda',
-        sign_in_with_puter: 'Logga in med Mixt',
+        sign_in_with_mixt: 'Logga in med Mixt',
         sign_up: 'Skapa konto',
         signing_in: 'Loggar in…',
         size: 'Storlek',
@@ -272,7 +272,7 @@ const sv = {
         start: 'Start',
         status: 'Tillstånd',
         storage_usage: 'Användning av lagringsutrymme',
-        storage_puter_used: 'använt av Mixt',
+        storage_mixt_used: 'använt av Mixt',
         taking_longer_than_usual: 'Detta tar längre tid än vanligt. Vänligen vänta...',
         task_manager: 'Aktivitetshanteraren',
         taskmgr_header_name: 'Namn',
@@ -280,7 +280,7 @@ const sv = {
         taskmgr_header_type: 'Typ',
         terms: 'Villkor',
         text_document: 'Textdokument',
-        tos_fineprint: "Genom att klicka på 'Skapa gratis konto' godkänner du Puters {{link=terms}}användarvillkor{{/link}} och {{link=privacy}}integritetspolicy{{/link}}.",
+        tos_fineprint: "Genom att klicka på 'Skapa gratis konto' godkänner du Mixts {{link=terms}}användarvillkor{{/link}} och {{link=privacy}}integritetspolicy{{/link}}.",
         transparency: 'Transparens',
         trash: 'Papperskorg',
         two_factor: 'Tvåfaktors-autentisering',
@@ -305,7 +305,7 @@ const sv = {
         visibility: 'Synlighet',
         yes: 'Ja',
         yes_release_it: 'Ja, frigör den',
-        you_have_been_referred_to_puter_by_a_friend: 'Du har blivit hänvisad till Mixt av en vän!',
+        you_have_been_referred_to_mixt_by_a_friend: 'Du har blivit hänvisad till Mixt av en vän!',
         zip: 'Zippa',
         zipping_file: 'Komprimerar %strong%',
 
@@ -474,7 +474,7 @@ const sv = {
         'window_title_public': 'Offentligt', // In English: "Public"
         'window_title_videos': 'Videor', // In English: "Videos"
         'window_title_pictures': 'Bilder', // In English: "Pictures"
-        'window_title_puter': 'Mixt', // In English: "Mixt"
+        'window_title_mixt': 'Mixt', // In English: "Mixt"
         'window_folder_empty': 'Denna mapp är tom', // In English: "This folder is empty"
         'manage_your_subdomains': 'Hantera dina subdomäner', // In English: "Manage Your Subdomains"
         'open_containing_folder': 'Öppna innehållande mapp', // In English: "Open Containing Folder"

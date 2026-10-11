@@ -1,6 +1,6 @@
 ---
-title: puter.fs.read()
-description: Read data from files in the user's own Puter file system.
+title: mixt.fs.read()
+description: Read data from files in the user's own Mixt OS file system.
 platforms: [websites, apps, nodejs, workers]
 ---
 
@@ -9,9 +9,9 @@ Reads data from a file.
 ## Syntax
 
 ```js
-puter.fs.read(path)
-puter.fs.read(path, options)
-puter.fs.read(options)
+mixt.fs.read(path)
+mixt.fs.read(path, options)
+mixt.fs.read(options)
 ```
 
 ## Parameters
@@ -42,18 +42,18 @@ A `Promise` that will resolve to a `Blob` object containing the contents of the 
 ```html;fs-read
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
             // (1) Create a random text file
-            let filename = puter.randName() + ".txt";
-            await puter.fs.write(filename, "Hello world! I'm a file!");
-            puter.print(`"${filename}" created<br>`);
+            let filename = mixt.randName() + ".txt";
+            await mixt.fs.write(filename, "Hello world! I'm a file!");
+            mixt.print(`"${filename}" created<br>`);
 
             // (2) Read the file and print its contents
-            let blob = await puter.fs.read(filename);
+            let blob = await mixt.fs.read(filename);
             let content = await blob.text();
-            puter.print(`"${filename}" read (content: "${content}")<br>`);
+            mixt.print(`"${filename}" read (content: "${content}")<br>`);
         })();
     </script>
 </body>

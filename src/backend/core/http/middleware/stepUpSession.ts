@@ -44,7 +44,7 @@ import '../expressAugmentation';
  * proof is inert without the session.
  *
  * The proof travels as an httpOnly cookie for browsers, or as the
- * `x-puter-elevation` header for API clients (which have no cookie jar). The
+ * `x-mixt-elevation` header for API clients (which have no cookie jar). The
  * two are equivalent — both are the same signed token, and obtaining either
  * requires the password/TOTP. Nothing is exempt from the requirement: there is
  * deliberately no carve-out for any credential kind, because any credential a
@@ -56,8 +56,8 @@ import '../expressAugmentation';
  * main auth token even though every scope shares `jwt_secret_v2`.
  */
 
-export const STEP_UP_COOKIE_NAME = 'puter_elevated';
-export const STEP_UP_HEADER_NAME = 'x-puter-elevation';
+export const STEP_UP_COOKIE_NAME = 'mixt_elevated';
+export const STEP_UP_HEADER_NAME = 'x-mixt-elevation';
 export const STEP_UP_SCOPE = 'step-up';
 export const STEP_UP_PURPOSE = 'elevation';
 export const STEP_UP_TTL_SECONDS = 7 * 24 * 60 * 60;
@@ -101,7 +101,7 @@ export function stepUpCookieOptions(config: IConfig): {
 }
 
 /**
- * True iff a valid elevation proof (cookie or `x-puter-elevation` header) is
+ * True iff a valid elevation proof (cookie or `x-mixt-elevation` header) is
  * present AND bound to the acting user. Never throws — a missing/expired/
  * mismatched proof returns false so callers can prompt for the second factor
  * instead of erroring.

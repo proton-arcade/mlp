@@ -67,7 +67,7 @@ async function UIWindowMyWebsites (options) {
         color: #596c7c;">${i18n('loading')}...</p>`);
     }, 1000);
 
-    puter.hosting.list().then(function (sites) {
+    mixt.hosting.list().then(function (sites) {
         setTimeout(function () {
             // clear loading
             clearTimeout(loading);
@@ -76,7 +76,7 @@ async function UIWindowMyWebsites (options) {
                 let h = '';
                 for ( let i = 0; i < sites.length; i++ ) {
                     h += `<div class="mywebsites-card" data-uuid="${sites[i].uid}">`;
-                    h += `<a class="mywebsites-address-link" href="https://${sites[i].subdomain}.puter.site" target="_blank">${sites[i].subdomain}.puter.site</a>`;
+                    h += `<a class="mywebsites-address-link" href="https://${sites[i].subdomain}.mixt.site" target="_blank">${sites[i].subdomain}.mixt.site</a>`;
                     h += `<img class="mywebsites-site-setting" data-site-uuid="${sites[i].uid}" src="${html_encode(window.icons['cog.svg'])}">`;
                     // there is a directory associated with this site
                     if ( sites[i].root_dir ) {
@@ -175,7 +175,7 @@ $(document).on('click', '.mywebsites-site-setting', function (e) {
 });
 
 $(document).on('click', '.mywebsites-dis-dir', function (e) {
-    puter.hosting.delete(
+    mixt.hosting.delete(
                     // dir
                     $(e.target).attr('data-dir-uuid'),
                     // hostname

@@ -1,5 +1,5 @@
 ---
-title: puter.workers.get()
+title: mixt.workers.get()
 description: Get information about a specific worker.
 platforms: [websites, apps, nodejs, workers]
 ---
@@ -9,7 +9,7 @@ Gets the information for a specific worker.
 ## Syntax
 
 ```js
-puter.workers.get(workerName)
+mixt.workers.get(workerName)
 ```
 
 ## Parameters
@@ -29,15 +29,15 @@ A `Promise` that resolves to a [`WorkerInfo`](/Objects/workerinfo) object if the
 ```html;workers-get
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
             // Get a worker's information
-            const workerInfo = await puter.workers.get('my-api');
+            const workerInfo = await mixt.workers.get('my-api');
             if (workerInfo) {
-                puter.print(`Worker information: ${JSON.stringify(workerInfo, null, 2)}`);
+                mixt.print(`Worker information: ${JSON.stringify(workerInfo, null, 2)}`);
             } else {
-                puter.print('Worker not found!');
+                mixt.print('Worker not found!');
             }
         })();
     </script>

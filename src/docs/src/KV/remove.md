@@ -1,5 +1,5 @@
 ---
-title: puter.kv.remove()
+title: mixt.kv.remove()
 description: Remove values at one or more paths from a key in the user's own key-value store.
 platforms: [websites, apps, nodejs, workers]
 ---
@@ -9,7 +9,7 @@ Remove values from an existing key by path. Paths can target nested fields and a
 ## Syntax
 
 ```js
-puter.kv.remove(key, ...paths)
+mixt.kv.remove(key, ...paths)
 ```
 
 ## Parameters
@@ -22,7 +22,7 @@ The key to remove values from.
 
 One or more paths to remove (for example, `"profile.bio"`).
 
-Paths support dot notation, array indexes at any level (`[0]`, `items[0]`, or `some.path[1].to.value`), and quoted property names (`["key.with.dots"]`). An empty path (`""`) deletes the whole entry, as [`puter.kv.del()`](/KV/del/) does, and resolves to `null`. Use non-negative integer indexes in brackets to address arrays. Removing an array element shifts later elements down by one index. A path may chain at most 31 levels; a deeper one rejects with `bad_request`. Quoted names can't be empty. All of a call's paths go into one write, so a call fits at most 1,500 path segments, and fewer when it has many paths or long ones; split larger changes across calls. See [Rate Limits and Quotas](/rate-limits-and-quotas/).
+Paths support dot notation, array indexes at any level (`[0]`, `items[0]`, or `some.path[1].to.value`), and quoted property names (`["key.with.dots"]`). An empty path (`""`) deletes the whole entry, as [`mixt.kv.del()`](/KV/del/) does, and resolves to `null`. Use non-negative integer indexes in brackets to address arrays. Removing an array element shifts later elements down by one index. A path may chain at most 31 levels; a deeper one rejects with `bad_request`. Quoted names can't be empty. All of a call's paths go into one write, so a call fits at most 1,500 path segments, and fewer when it has many paths or long ones; split larger changes across calls. See [Rate Limits and Quotas](/rate-limits-and-quotas/).
 
 ## Return value
 
@@ -50,13 +50,13 @@ A rejection carries an `Error` with a stable `code`:
 ```html;kv-remove
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
-            await puter.kv.set('profile', { name: 'Puter', stats: { score: 10, level: 2 } });
+            await mixt.kv.set('profile', { name: 'Mixt OS', stats: { score: 10, level: 2 } });
 
-            const updated = await puter.kv.remove('profile', 'stats.score');
-            puter.print(`Updated profile: ${JSON.stringify(updated)}`);
+            const updated = await mixt.kv.remove('profile', 'stats.score');
+            mixt.print(`Updated profile: ${JSON.stringify(updated)}`);
         })();
     </script>
 </body>

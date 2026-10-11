@@ -1,4 +1,4 @@
-// Binds puter.kv to one app's store.
+// Binds mixt.kv to one app's store.
 //
 // A user token can address another app's key-value store by passing
 // `optConfig: { appUuid }` into the driver call — the backend pins app-scoped
@@ -11,7 +11,7 @@
 // expireAt/ttl for set()/update(), in the amount slot for incr()/decr(), and
 // so on. Rather than encode twelve slot positions, we rely on the fact that
 // every method already accepts optConfig as a *trailing* argument (see
-// src/puter-js/src/modules/kv/lib/args.js), and only special-case the object
+// src/mixt-js/src/modules/kv/lib/args.js), and only special-case the object
 // form, where the config belongs inside the options object instead.
 //
 // These wrappers never print: the REPL echoes results itself, and a log here
@@ -64,7 +64,7 @@ const TRAILING_ONLY = ['remove', 'expire', 'expireAt'];
 function methodOf(kv, name) {
   const fn = kv?.[name];
   if (typeof fn !== 'function') {
-    throw new CLIError(`puter.kv.${name} is not available in this SDK build.`);
+    throw new CLIError(`mixt.kv.${name} is not available in this SDK build.`);
   }
   return fn.bind(kv);
 }
@@ -72,7 +72,7 @@ function methodOf(kv, name) {
 /**
  * Wrap the SDK's kv module so every call is scoped to `appUuid`.
  *
- * @param {object} kv - puter.kv
+ * @param {object} kv - mixt.kv
  * @param {string} appUuid - the connected app's uid
  * @returns {object} the same method names, app-scoped
  */
@@ -84,7 +84,7 @@ export function bindApp(kv, appUuid) {
   for (const name of TRAILING_ONLY) {
     bound[name] = trailingOnly(methodOf(kv, name), appUuid);
   }
-  // Same invariant the SDK keeps: puter.kv.clear === puter.kv.flush.
+  // Same invariant the SDK keeps: mixt.kv.clear === mixt.kv.flush.
   bound.clear = bound.flush;
   return bound;
 }

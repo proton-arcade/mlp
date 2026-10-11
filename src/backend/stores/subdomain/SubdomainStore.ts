@@ -18,7 +18,7 @@
  */
 
 import { v4 as uuidv4 } from 'uuid';
-import { PuterStore } from '../types';
+import { MixtStore } from '../types';
 
 /**
  * A row from the `subdomains` table (the shape `getBySubdomain` / `getByUuid`
@@ -58,7 +58,7 @@ export interface SubdomainRow {
 //     place by `reclaimByUuid`), never via patch.
 //     Flipping either hands the site to another user / app.
 //   - access gate: `protected` — clearing this lets a future caller delete
-//     or rename a protected site (e.g. `puter-app-icons`). The driver itself
+//     or rename a protected site (e.g. `mixt-app-icons`). The driver itself
 //     honours the flag only via a read check in `delete`.
 //   - external resource link: `database_id` — repointing a Cloudflare D1
 //     binding could route another site's traffic / writes to attacker DB.
@@ -69,9 +69,9 @@ export interface SubdomainRow {
 // not accept it: nothing validates a custom domain's ownership yet.
 /**
  * Worker deployments are stored as subdomain rows under this prefix.
- * Site-facing listings (the `puter-subdomains` driver) exclude them.
+ * Site-facing listings (the `mixt-subdomains` driver) exclude them.
  */
-export const WORKER_SUBDOMAIN_PREFIX = 'workers.puter.';
+export const WORKER_SUBDOMAIN_PREFIX = 'workers.mixt.';
 
 const READ_ONLY_COLUMNS = new Set([
     'id',
@@ -116,7 +116,7 @@ const NEGATIVE_CACHE_TTL_SECONDS = 10;
 // Cap on placeholders per `IN (?, ?, …)` chunk — mirrors AppStore/UserStore.
 const BULK_QUERY_CHUNK_SIZE = 200;
 
-export class SubdomainStore extends PuterStore {
+export class SubdomainStore extends MixtStore {
     // -- Reads --------------------------------------------------------
 
     async getByUuid(

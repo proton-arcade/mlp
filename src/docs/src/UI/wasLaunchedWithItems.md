@@ -1,5 +1,5 @@
 ---
-title: puter.ui.wasLaunchedWithItems()
+title: mixt.ui.wasLaunchedWithItems()
 description: Returns whether the app was launched to open one or more items.
 platforms: [apps]
 ---
@@ -8,7 +8,7 @@ Returns whether the app was launched to open one or more items. Use this in conj
 
 ## Syntax
 ```js
-puter.ui.wasLaunchedWithItems()
+mixt.ui.wasLaunchedWithItems()
 ```
 
 ## Return value

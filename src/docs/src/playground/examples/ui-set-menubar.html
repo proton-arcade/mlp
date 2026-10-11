@@ -1,24 +1,24 @@
 <html>
 <body>
-    <script src="/puter.js/v2"></script>
+    <script src="/mixt.js/v2"></script>
     <p style="font-family: sans-serif; margin: 20px;">A menubar has been added to the top of this window. Try clicking the menu items.</p>
     <script>
-        puter.ui.setMenubar({
+        mixt.ui.setMenubar({
             items: [
                 {
                     label: 'File',
                     items: [
                         {
                             label: 'New',
-                            action: () => puter.print('New file created'),
+                            action: () => mixt.print('New file created'),
                         },
                         {
                             label: 'Open',
-                            action: () => puter.print('Open dialog shown'),
+                            action: () => mixt.print('Open dialog shown'),
                         },
                         {
                             label: 'Save',
-                            action: () => puter.print('File saved'),
+                            action: () => mixt.print('File saved'),
                         },
                     ],
                 },
@@ -27,11 +27,11 @@
                     items: [
                         {
                             label: 'Undo',
-                            action: () => puter.print('Undo'),
+                            action: () => mixt.print('Undo'),
                         },
                         {
                             label: 'Redo',
-                            action: () => puter.print('Redo'),
+                            action: () => mixt.print('Redo'),
                         },
                     ],
                 },
@@ -40,7 +40,7 @@
                     items: [
                         {
                             label: 'About',
-                            action: () => puter.print('Puter.js Playground'),
+                            action: () => mixt.print('Mixt.js Playground'),
                         },
                     ],
                 },

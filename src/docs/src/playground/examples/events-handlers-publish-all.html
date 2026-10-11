@@ -1,12 +1,12 @@
 <html>
 <body>
-    <script src="/puter.js/v2"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
-            const name = `pipeline-${puter.randName()}`;
-            const app = await puter.apps.create(name, `https://example.com/${name}`);
+            const name = `pipeline-${mixt.randName()}`;
+            const app = await mixt.apps.create(name, `https://example.com/${name}`);
 
-            const published = await puter.events.handlers.publishAll([
+            const published = await mixt.events.handlers.publishAll([
                 {
                     name: 'ingestUpload',
                     handler: ({ event, ctx }) => fetch(ctx.ingest, { body: event.path }),
@@ -18,7 +18,7 @@
             ], { appUid: app.uid });
 
             for (const handler of published) {
-                puter.print(`${handler.name} → ${handler.outcome}<br>`);
+                mixt.print(`${handler.name} → ${handler.outcome}<br>`);
             }
         })();
     </script>

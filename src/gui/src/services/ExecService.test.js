@@ -62,7 +62,7 @@ beforeEach(() => {
     let n = 0;
     window.uuidv4 = () => `uuid-${++n}`;
     window.get_apps = async (name) => apps.get(name) ?? [];
-    globalThis.puter = { logger: { fields: () => ({ warn () {} }) } };
+    globalThis.mixt = { logger: { fields: () => ({ warn () {} }) } };
 });
 
 afterEach(() => {

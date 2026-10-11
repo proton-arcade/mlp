@@ -1,6 +1,6 @@
 ---
-title: puter.hosting.create()
-description: Create and host a website from a directory on Puter.
+title: mixt.hosting.create()
+description: Create and host a website from a directory on Mixt OS.
 platforms: [websites, apps, nodejs, workers]
 ---
 
@@ -9,8 +9,8 @@ Will create a new subdomain that will be served by the hosting service. You must
 ## Syntax
 
 ```js
-puter.hosting.create(subdomain, dirPath)
-puter.hosting.create(options)
+mixt.hosting.create(subdomain, dirPath)
+mixt.hosting.create(options)
 ```
 
 ## Parameters
@@ -43,21 +43,21 @@ A `Promise` that will resolve to a [`Subdomain`](/Objects/subdomain/) object whe
 ```html;hosting-create
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
             // (1) Create a random directory
-            let dirName = puter.randName();
-            await puter.fs.mkdir(dirName)
+            let dirName = mixt.randName();
+            await mixt.fs.mkdir(dirName)
 
             // (2) Create 'index.html' in the directory with the contents "Hello, world!"
-            await puter.fs.write(`${dirName}/index.html`, '<h1>Hello, world!</h1>');
+            await mixt.fs.write(`${dirName}/index.html`, '<h1>Hello, world!</h1>');
 
             // (3) Host the directory under a random subdomain
-            let subdomain = puter.randName();
-            const site = await puter.hosting.create(subdomain, dirName)
+            let subdomain = mixt.randName();
+            const site = await mixt.hosting.create(subdomain, dirName)
 
-            puter.print(`Website hosted at: <a href="https://${site.subdomain}.puter.site" target="_blank">https://${site.subdomain}.puter.site</a>`);
+            mixt.print(`Website hosted at: <a href="https://${site.subdomain}.mixt.site" target="_blank">https://${site.subdomain}.mixt.site</a>`);
         })();
     </script>
 </body>

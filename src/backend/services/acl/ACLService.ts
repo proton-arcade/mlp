@@ -18,8 +18,8 @@
  */
 
 import type { LayerInstances } from '../../types';
-import type { puterServices } from '../index';
-import { PuterService } from '../types';
+import type { mixtServices } from '../index';
+import { MixtService } from '../types';
 import type { Actor } from '../../core/actor';
 import {
     isAppActor,
@@ -82,7 +82,7 @@ const SET_USER_LOCK_ATTEMPTS = 25;
 // -- ACLService -------------------------------------------------------
 
 /**
- * ACLService enforces filesystem access-control semantics for Puter.
+ * ACLService enforces filesystem access-control semantics for Mixt.
  *
  * Design notes:
  *
@@ -96,8 +96,8 @@ const SET_USER_LOCK_ATTEMPTS = 25;
  * Tree-walks are done via `resolveAncestors()`, which returns a pre-resolved
  * ancestor chain from the caller's FS layer.
  */
-export class ACLService extends PuterService {
-    declare protected services: LayerInstances<typeof puterServices>;
+export class ACLService extends MixtService {
+    declare protected services: LayerInstances<typeof mixtServices>;
 
     // -- Public API ---------------------------------------------------
 

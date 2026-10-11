@@ -22,7 +22,7 @@ import type { IConfig } from '../../types';
 import { digestLines } from '../../services/share/shareNotifyTitle';
 import { EmailClient } from './EmailClient';
 
-const FROM = '"Puter" <no-reply@puter.test>';
+const FROM = '"Mixt" <no-reply@mixt.test>';
 
 /**
  * Nodemailer's JSON transport is a real transport that serializes the message
@@ -110,27 +110,27 @@ describe('EmailClient — sending', () => {
             to: 'user@example.test',
             subject: 'raw subject',
             html: '<p>hello</p>',
-            headers: { 'List-Unsubscribe': '<https://puter.test/u>' },
+            headers: { 'List-Unsubscribe': '<https://mixt.test/u>' },
         });
 
         const message = sentMessage(info);
         expect(message.subject).toBe('raw subject');
         expect(message.to[0].address).toBe('user@example.test');
-        expect(message.from.address).toBe('no-reply@puter.test');
+        expect(message.from.address).toBe('no-reply@mixt.test');
         expect(message.headers?.['List-Unsubscribe']).toBe(
-            '<https://puter.test/u>',
+            '<https://mixt.test/u>',
         );
     });
 
     it('lets the caller override the from address', async () => {
         const client = startClient();
         const info = await client.sendRaw({
-            from: 'ops@puter.test',
+            from: 'ops@mixt.test',
             to: 'user@example.test',
             subject: 's',
             text: 't',
         });
-        expect(sentMessage(info).from.address).toBe('ops@puter.test');
+        expect(sentMessage(info).from.address).toBe('ops@mixt.test');
     });
 
     it('falls back to the built-in sender when config has none', async () => {
@@ -142,7 +142,7 @@ describe('EmailClient — sending', () => {
             subject: 's',
             text: 't',
         });
-        expect(sentMessage(info).from.address).toBe('no-reply@puter.com');
+        expect(sentMessage(info).from.address).toBe('no-reply@mixt.mpl');
     });
 
     it('refuses an unknown template name', async () => {
@@ -201,7 +201,7 @@ describe('EmailClient — template rendering', () => {
             sender_email: null,
             app_title: "Bob's App & Games",
             app_name: 'bobs-app',
-            app_link: 'https://puter.example/app/bobs-app',
+            app_link: 'https://mixt.example/app/bobs-app',
             message: 'hi',
         });
 
@@ -272,7 +272,7 @@ describe('EmailClient — share notification templates', () => {
             {
                 username: 'bob',
                 count: 1,
-                items: [{ name: 'notes.md', link: 'https://puter.test/?shared=%2Fbob%2Fu1%2Fnotes.md' }],
+                items: [{ name: 'notes.md', link: 'https://mixt.test/?shared=%2Fbob%2Fu1%2Fnotes.md' }],
             },
             {
                 username: 'carol',
@@ -280,8 +280,8 @@ describe('EmailClient — share notification templates', () => {
                 items: [{ name: 'a.txt' }, { name: 'b.txt' }],
             },
         ]),
-        link: 'https://puter.test/?shared=%2Fbob%2Fu1%2Fnotes.md',
-        origin: 'https://puter.test',
+        link: 'https://mixt.test/?shared=%2Fbob%2Fu1%2Fnotes.md',
+        origin: 'https://mixt.test',
         unsubscribe_uuid: null,
     };
 
@@ -322,7 +322,7 @@ describe('EmailClient — share notification templates', () => {
     // encoded path, so it stays literal — an entity-escaped `=` would still
     // resolve, but the text part has no parser to undo it.
     it('links a named item to itself in both parts', async () => {
-        const link = 'https://puter.test/?shared=%2Fbob%2Fu1%2Fnotes.md';
+        const link = 'https://mixt.test/?shared=%2Fbob%2Fu1%2Fnotes.md';
         const { html, text } = await renderShare('file_shared_with_you', HOLDER);
 
         expect(html).toContain(`<a href="${link}"`);
@@ -369,15 +369,15 @@ describe('EmailClient — share notification templates', () => {
     // `&` and `=` in it — which must reach the client as written, in both parts.
     it('points the call to action at Shared with every item picked out', async () => {
         const link =
-            'https://puter.test/?shared=%2Fbob%2Fu1%2Fa.txt&shared=%2Fbob%2Fu2%2Fb.txt';
+            'https://mixt.test/?shared=%2Fbob%2Fu1%2Fa.txt&shared=%2Fbob%2Fu2%2Fb.txt';
         const { html, text } = await renderShare('file_shared_with_you', {
             ...HOLDER,
             link,
         });
 
         expect(html).toContain(`href="${link}"`);
-        expect(html).toContain('>Open Puter</a>');
-        expect(text).toContain(`Open Puter: ${link}`);
+        expect(html).toContain('>Open Mixt</a>');
+        expect(text).toContain(`Open Mixt: ${link}`);
         expect(html).not.toContain('&#x3D;');
         expect(html).not.toContain('&amp;shared');
     });
@@ -395,10 +395,10 @@ describe('EmailClient — share notification templates', () => {
             unsubscribe_uuid: 'a-uuid',
         });
         expect(withAccount.html).toContain(
-            'href="https://puter.test/unsubscribe?user_uuid=a-uuid"',
+            'href="https://mixt.test/unsubscribe?user_uuid=a-uuid"',
         );
         expect(withAccount.text).toContain(
-            'https://puter.test/unsubscribe?user_uuid=a-uuid',
+            'https://mixt.test/unsubscribe?user_uuid=a-uuid',
         );
 
         const anonymous = await renderShare('file_shared_with_you', HOLDER);
@@ -409,11 +409,11 @@ describe('EmailClient — share notification templates', () => {
     it('tells an invited address what to do with it', async () => {
         const { html, text } = await renderShare('file_shared_invite', {
             email: 'new@example.test',
-            subject_line: 'bob shared notes.md with you on Puter',
+            subject_line: 'bob shared notes.md with you on Mixt',
             shares: digestLines([
                 { username: 'bob', count: 1, items: [{ name: 'notes.md' }] },
             ]),
-            link: 'https://puter.test',
+            link: 'https://mixt.test',
         });
 
         for (const part of [html, text]) {
@@ -422,7 +422,7 @@ describe('EmailClient — share notification templates', () => {
             // An invite has no account to unsubscribe from.
             expect(part).not.toContain('/unsubscribe');
         }
-        expect(html).toContain('href="https://puter.test"');
+        expect(html).toContain('href="https://mixt.test"');
     });
 });
 

@@ -38,7 +38,7 @@ const mount = async ({ teams = [team], plan = null } = {}) => {
     window.team_billing_ui = false;
     window.api_origin = 'http://api.test';
     window.user = { username: 'boss' };
-    globalThis.puter = {
+    globalThis.mixt = {
         authToken: 'tok',
         teams: {
             list: vi.fn(async () => teams),
@@ -133,13 +133,13 @@ describe('the owner view', () => {
     });
 
     it('adds an account on form submit, so Enter works, and shows the credential with a copy button', async () => {
-        globalThis.puter.teams.createMember = vi.fn(async () => ({ username: 'gil', temporaryPassword: 'p4ss' }));
+        globalThis.mixt.teams.createMember = vi.fn(async () => ({ username: 'gil', temporaryPassword: 'p4ss' }));
         $w.find('.teams-new-username').val('gil');
         $w.find('.teams-form').trigger('submit');
         await flush();
         await flush();
         await flush();
-        expect(globalThis.puter.teams.createMember).toHaveBeenCalledWith('t1', { username: 'gil' });
+        expect(globalThis.mixt.teams.createMember).toHaveBeenCalledWith('t1', { username: 'gil' });
         const box = $w.find('.teams-credential');
         expect(box.is(':visible') || box.css('display') !== 'none').toBe(true);
         expect(box.find('.teams-credential-value').text()).toBe('p4ss');
@@ -176,11 +176,11 @@ describe('states', () => {
     it('offers a retry when the load fails', async () => {
         window.teams_ui = true;
         const $w = await mount();
-        globalThis.puter.teams.list = vi.fn(async () => { throw new Error('boom'); });
+        globalThis.mixt.teams.list = vi.fn(async () => { throw new Error('boom'); });
         await TabTeams.onActivate($w);
         await flush();
         expect($w.find('.teams-state .teams-retry')).toHaveLength(1);
-        globalThis.puter.teams.list = vi.fn(async () => [team]);
+        globalThis.mixt.teams.list = vi.fn(async () => [team]);
         $w.find('.teams-retry').trigger('click');
         expect($w.find('.teams-skeleton')).toHaveLength(1);
         await flush();

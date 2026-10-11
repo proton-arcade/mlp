@@ -21,7 +21,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { HttpError } from '../../core/http/HttpError.js';
 import { configContainer } from '../../exports.js';
-import { PuterServer } from '../../server.js';
+import { MixtServer } from '../../server.js';
 import { setupTestServer } from '../../testUtil.js';
 import type { IConfig } from '../../types';
 import { decodeCursor, encodeCursor } from '../../util/pagination.js';
@@ -78,7 +78,7 @@ describe('FSEntryStore', () => {
 // database booted by `setupTestServer()`; fixtures are inserted as rows,
 // never by stubbing the store's own methods.
 
-let server: PuterServer;
+let server: MixtServer;
 let store: FSEntryStore;
 
 beforeAll(async () => {
@@ -125,7 +125,7 @@ const createFile = async (
         path,
         size: 1,
         contentType: 'text/plain',
-        bucket: 'puter-local',
+        bucket: 'mixt-local',
         bucketRegion: 'us-west-2',
         ...over,
     });
@@ -182,7 +182,7 @@ describe('FSEntryStore subdomain aggregation', () => {
             kind: 'directory',
         });
 
-        for (const subdomain of ['my-site', 'workers.puter.my-worker']) {
+        for (const subdomain of ['my-site', 'workers.mixt.my-worker']) {
             await server.clients.db.write(
                 'INSERT INTO subdomains (uuid, subdomain, user_id, root_dir_id) VALUES (?, ?, ?, ?)',
                 [uuidv4(), subdomain, user.userId, dir.id],
@@ -192,7 +192,7 @@ describe('FSEntryStore subdomain aggregation', () => {
 
         const protocol = configContainer.protocol ?? 'https';
         const siteDomain =
-            configContainer.static_hosting_domain ?? 'puter.site';
+            configContainer.static_hosting_domain ?? 'mixt.site';
 
         const refreshed = (await store.getEntryByUuid(dir.uuid))!;
         expect(refreshed.subdomains).toEqual([
@@ -202,13 +202,13 @@ describe('FSEntryStore subdomain aggregation', () => {
                 address: `${protocol}://my-site.${siteDomain}`,
             },
         ]);
-        // Worker rows keep their `workers.puter.` prefix in the row but are
+        // Worker rows keep their `workers.mixt.` prefix in the row but are
         // advertised on the worker domain under the bare name.
         expect(refreshed.workers).toEqual([
             {
                 uuid: expect.any(String),
-                subdomain: 'workers.puter.my-worker',
-                address: `${protocol}://my-worker.puter.work`,
+                subdomain: 'workers.mixt.my-worker',
+                address: `${protocol}://my-worker.mixt.work`,
             },
         ]);
         expect(refreshed.hasWebsite).toBe(true);
@@ -676,7 +676,7 @@ describe('FSEntryStore entry creation', () => {
             uuid: uuidv4(),
             path: `${user.home}/Documents/twice.txt`,
             size: 1,
-            bucket: 'puter-local',
+            bucket: 'mixt-local',
             bucketRegion: 'us-west-2',
         });
 
@@ -697,7 +697,7 @@ describe('FSEntryStore entry creation', () => {
                 uuid: uuidv4(),
                 path: `${first.home}/Documents/multi.txt`,
                 size: 2,
-                bucket: 'puter-local',
+                bucket: 'mixt-local',
                 bucketRegion: 'us-west-2',
             },
             {
@@ -705,7 +705,7 @@ describe('FSEntryStore entry creation', () => {
                 uuid: uuidv4(),
                 path: `${second.home}/Documents/multi.txt`,
                 size: 3,
-                bucket: 'puter-local',
+                bucket: 'mixt-local',
                 bucketRegion: 'us-west-2',
             },
         ]);
@@ -735,7 +735,7 @@ describe('FSEntryStore entry creation', () => {
                 isPublic: true,
                 immutable: true,
                 thumbnail: 'data:image/png;base64,AA',
-                bucket: 'puter-local',
+                bucket: 'mixt-local',
                 bucketRegion: 'us-west-2',
             },
         ]);
@@ -1687,7 +1687,7 @@ describe('FSEntryStore pending upload sessions', () => {
         multipartPartSize: null,
         multipartPartCount: null,
         storageProvider: 's3',
-        bucket: 'puter-local',
+        bucket: 'mixt-local',
         bucketRegion: 'us-west-2',
         objectKey: uuidv4(),
         metadataJson: '{}',
@@ -1785,7 +1785,7 @@ describe('FSEntryStore pending upload sessions', () => {
             uuid: session.objectKey,
             path: session.targetPath,
             size: 4,
-            bucket: 'puter-local',
+            bucket: 'mixt-local',
             bucketRegion: 'us-west-2',
         });
 
@@ -1820,7 +1820,7 @@ describe('FSEntryStore pending upload sessions', () => {
                     uuid: first.objectKey,
                     path: first.targetPath,
                     size: 1,
-                    bucket: 'puter-local',
+                    bucket: 'mixt-local',
                     bucketRegion: 'us-west-2',
                 },
             },
@@ -1831,7 +1831,7 @@ describe('FSEntryStore pending upload sessions', () => {
                     uuid: second.objectKey,
                     path: second.targetPath,
                     size: 2,
-                    bucket: 'puter-local',
+                    bucket: 'mixt-local',
                     bucketRegion: 'us-west-2',
                 },
             },
@@ -1933,7 +1933,7 @@ describe('FSEntryStore lost-insert recovery', () => {
                     uuid,
                     path: `${user.home}/Documents/lost.txt`,
                     size: 1,
-                    bucket: 'puter-local',
+                    bucket: 'mixt-local',
                     bucketRegion: 'us-west-2',
                 },
             ]),
@@ -1959,7 +1959,7 @@ describe('FSEntryStore lost-insert recovery', () => {
                     path: `${user.home}/Documents/wonbydir`,
                     size: 1,
                     overwrite: true,
-                    bucket: 'puter-local',
+                    bucket: 'mixt-local',
                     bucketRegion: 'us-west-2',
                 },
             ]),
@@ -1988,7 +1988,7 @@ describe('FSEntryStore lost-insert recovery', () => {
                     uuid,
                     path: `${user.home}/Documents/wonbyfile.txt`,
                     size: 1,
-                    bucket: 'puter-local',
+                    bucket: 'mixt-local',
                     bucketRegion: 'us-west-2',
                 },
             ]),
@@ -2019,7 +2019,7 @@ describe('FSEntryStore lost-insert recovery', () => {
                 size: 77,
                 overwrite: true,
                 thumbnail: 'thumb',
-                bucket: 'puter-local',
+                bucket: 'mixt-local',
                 bucketRegion: 'us-west-2',
             },
         ]);

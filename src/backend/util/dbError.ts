@@ -19,7 +19,7 @@
 
 /**
  * True when `err` is a UNIQUE / PRIMARY KEY constraint violation, across the
- * three database drivers Puter runs on. Use to make an "insert if absent"
+ * three database drivers Mixt runs on. Use to make an "insert if absent"
  * idempotent in the face of a lost check-then-insert race — only a duplicate is
  * swallowed; CHECK / NOT NULL / FK / type violations still bubble up.
  *

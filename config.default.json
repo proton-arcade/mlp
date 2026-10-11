@@ -26,7 +26,7 @@
     },
     "jwt_secret_v2": "dev-jwt-secret-v2-change-me",
     "url_signature_secret": "dev-url-signature-secret-change-me",
-    "cookie_name": "puter_auth_token",
+    "cookie_name": "mixt_auth_token",
     "min_pass_length": 6,
     "disable_user_signup": false,
     "allow_system_login": false,
@@ -75,14 +75,14 @@
             }
         }
     },
-    "s3_bucket": "puter-local",
+    "s3_bucket": "mixt-local",
     "s3_region": "us-west-2",
     "region": "us-west-2",
     "storage_capacity": 104857600,
     "is_storage_limited": false,
     "available_device_storage": 0,
     "thumbnailStore": {
-        "name": "puter-local",
+        "name": "mixt-local",
         "endpoint": "",
         "credentials": {
             "accessKeyId": "",
@@ -91,7 +91,7 @@
     },
     "database": {
         "engine": "sqlite",
-        "path": "volatile/runtime/puter-database.sqlite",
+        "path": "volatile/runtime/mixt-database.sqlite",
         "host": "",
         "port": 3306,
         "user": "",
@@ -106,7 +106,7 @@
         }
     },
     "dynamo": {
-        "path": "volatile/runtime/puter-ddb"
+        "path": "volatile/runtime/mixt-ddb"
     },
     "redis": {
         "useMock": true,
@@ -144,7 +144,7 @@
             "enabled": false,
             "webhookUrl": "",
             "channel": "#alerts",
-            "username": "puter-alarms",
+            "username": "mixt-alarms",
             "minSeverity": "info",
             "maxSeverity": "info",
             "repeatThrottleMs": 900000
@@ -161,7 +161,7 @@
     "use_bundled_gui": false,
     "gui_bundle": "/dist/bundle.min.js",
     "gui_css": "/dist/bundle.min.css",
-    "gui_puterjs_bundle": "/sdk/puter.js",
+    "gui_mixtjs_bundle": "/sdk/mixt.js",
     "gui_params": {
         "title": "Mixt",
         "short_description": "A complete desktop computer in your browser",
@@ -169,7 +169,7 @@
     },
     "native_apps_root": "",
     "client_libs_root": "",
-    "puterjs_root": "./src/puter-js/dist",
+    "mixtjs_root": "./src/mixt-js/dist",
     "feature_flags": {
         "example_flag": false
     },

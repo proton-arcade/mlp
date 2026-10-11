@@ -6,8 +6,8 @@ import {
     S3Client,
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import { extension } from '@heyputer/backend/src/extensions';
-import { isMissingObjectError } from '@heyputer/backend/src/stores/fs/S3ObjectStore';
+import { extension } from '@mixt/backend/src/extensions';
+import { isMissingObjectError } from '@mixt/backend/src/stores/fs/S3ObjectStore';
 import crypto from 'node:crypto';
 import type { Readable } from 'node:stream';
 import sharp from 'sharp';
@@ -89,8 +89,8 @@ const isStoragePointer = (pointer: string, bucketEndpoint: string): boolean =>
 // S3 client + bucket config — lazily resolved after boot from config.
 let s3Client: S3Client | null = null;
 let s3PresignClient: S3Client | null = null;
-let thumbnailBucketName = 'puter-local';
-let extensionBucketEndpoint = 'http://127.0.0.1:4566/puter-local/';
+let thumbnailBucketName = 'mixt-local';
+let extensionBucketEndpoint = 'http://127.0.0.1:4566/mixt-local/';
 
 function resolveClients(): { send: S3Client; presign: S3Client } {
     if (s3Client && s3PresignClient) {
@@ -110,10 +110,10 @@ function resolveClients(): { send: S3Client; presign: S3Client } {
         // Dedicated thumbnail buckets use a single endpoint for both
         // server-side ops and browser-facing presigned URLs.
         s3PresignClient = s3Client;
-        thumbnailBucketName = thumbStore.name ?? 'puter-local';
+        thumbnailBucketName = thumbStore.name ?? 'mixt-local';
         extensionBucketEndpoint = thumbStore.endpoint;
     } else {
-        // Fall back to the project's S3 wrapper. `clients.s3` is the Puter
+        // Fall back to the project's S3 wrapper. `clients.s3` is the Mixt
         // `S3Client` wrapper (region-cache + lifecycle), not an AWS
         // `S3Client`. `.get()` is for server-side ops (uses the internal
         // `endpoint`); `.getForPresign()` is for browser-facing presigned

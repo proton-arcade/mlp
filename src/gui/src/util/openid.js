@@ -52,10 +52,10 @@ export const openRevalidatePopup = async (revalidateUrl) => {
         throw new Error('No revalidate URL');
     }
     let doneCalled = false;
-    const popup = window.open(url, 'puter-revalidate', POPUP_FEATURES);
+    const popup = window.open(url, 'mixt-revalidate', POPUP_FEATURES);
     const onMessage = ev => {
         if ( (ev.origin !== window.gui_origin) && (ev.origin !== window.location.origin) ) return;
-        if ( !ev.data || ev.data.type !== 'puter-revalidate-done' ) return;
+        if ( !ev.data || ev.data.type !== 'mixt-revalidate-done' ) return;
         if ( doneCalled ) return;
         doneCalled = true;
         window.removeEventListener('message', onMessage);

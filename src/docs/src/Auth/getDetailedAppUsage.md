@@ -1,5 +1,5 @@
 ---
-title: puter.auth.getDetailedAppUsage()
+title: mixt.auth.getDetailedAppUsage()
 description: Get detailed usage statistics for an application the user has accessed.
 platforms: [websites, apps, nodejs, workers]
 ---
@@ -16,7 +16,7 @@ Usage data is scoped to the calling app only.
 ## Syntax
 
 ```js
-puter.auth.getDetailedAppUsage(appId)
+mixt.auth.getDetailedAppUsage(appId)
 ```
 
 ## Parameters
@@ -34,10 +34,10 @@ A `Promise` that resolves to a [`DetailedAppUsage`](/Objects/detailedappusage) o
 ```html
 <html>
   <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
-      puter.auth.getDetailedAppUsage(appId).then(function (result) {
-        puter.print(`<pre>${JSON.stringify(result, null, 2)}</pre>`);
+      mixt.auth.getDetailedAppUsage(appId).then(function (result) {
+        mixt.print(`<pre>${JSON.stringify(result, null, 2)}</pre>`);
       });
     </script>
   </body>

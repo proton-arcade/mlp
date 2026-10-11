@@ -1,21 +1,21 @@
 ---
-title: puter.kv.set()
+title: mixt.kv.set()
 description: Save or update values in the user's own key-value store.
 platforms: [websites, apps, nodejs, workers]
 ---
 
 When passed a key and a value, will add it to the user's key-value store, or update that key's value if it already exists.
 
-<div class="info">Each app has its own key-value store within each user's account. Another app can only reach it if the user explicitly grants that with <a href="/Perms/appData/">puter.perms.request('appData', …)</a> — and never for entries you write with <code>disableSharing</code>.</div>
+<div class="info">Each app has its own key-value store within each user's account. Another app can only reach it if the user explicitly grants that with <a href="/Perms/appData/">mixt.perms.request('appData', …)</a> — and never for entries you write with <code>disableSharing</code>.</div>
 
 ## Syntax
 
 ```js
-puter.kv.set(key, value)
-puter.kv.set(key, value, expireAt)
-puter.kv.set({ key, value, expireAt })
-puter.kv.set([ { key, value, expireAt }, ... ])
-puter.kv.set({ items: [ { key, value, expireAt }, ... ] })
+mixt.kv.set(key, value)
+mixt.kv.set(key, value, expireAt)
+mixt.kv.set({ key, value, expireAt })
+mixt.kv.set([ { key, value, expireAt }, ... ])
+mixt.kv.set({ items: [ { key, value, expireAt }, ... ] })
 ```
 
 ## Parameters
@@ -38,7 +38,7 @@ A Unix timestamp in seconds at which the key should expire. Omit it, or pass `nu
 
 #### `disableSharing` (Boolean) (optional)
 
-Pass inside the trailing options object — `set(key, value, { disableSharing: true })` — to mark this entry private to your app. A private entry cannot be read, listed, changed, or deleted by any other app, even one the user has granted access to your app's data with [`puter.perms.request('appData', …)`](/Perms/appData/). It is also not watched by other apps, or by another user through a [share handle](/Events/onLocal/#sharing-key-value-events-with-another-user): those subscriptions get no event, key, or value for it. Use it for anything another app should never see, such as a cached access token: a user approving a request cannot see what your store holds.
+Pass inside the trailing options object — `set(key, value, { disableSharing: true })` — to mark this entry private to your app. A private entry cannot be read, listed, changed, or deleted by any other app, even one the user has granted access to your app's data with [`mixt.perms.request('appData', …)`](/Perms/appData/). It is also not watched by other apps, or by another user through a [share handle](/Events/onLocal/#sharing-key-value-events-with-another-user): those subscriptions get no event, key, or value for it. Use it for anything another app should never see, such as a cached access token: a user approving a request cannot see what your store holds.
 
 The batch form takes it too — `set([...items], { disableSharing: true })` marks every entry in the batch.
 
@@ -61,10 +61,10 @@ A `Promise` that will resolve to `true` when the key-value pair has been created
 ```html
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
-        puter.kv.set('accessToken', 'secret-value', { disableSharing: true })
-            .then(() => puter.print('Stored privately'));
+        mixt.kv.set('accessToken', 'secret-value', { disableSharing: true })
+            .then(() => mixt.print('Stored privately'));
     </script>
 </body>
 </html>
@@ -75,10 +75,10 @@ A `Promise` that will resolve to `true` when the key-value pair has been created
 ```html;kv-set
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
-        puter.kv.set('name', 'Puter Smith').then((success) => {
-            puter.print(`Key-value pair created/updated: ${success}`);
+        mixt.kv.set('name', 'Mixt OS Smith').then((success) => {
+            mixt.print(`Key-value pair created/updated: ${success}`);
         });
     </script>
 </body>
@@ -90,14 +90,14 @@ A `Promise` that will resolve to `true` when the key-value pair has been created
 ```html
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
-            await puter.kv.set([
-                { key: 'name', value: 'Puter Smith' },
+            await mixt.kv.set([
+                { key: 'name', value: 'Mixt OS Smith' },
                 { key: 'age',  value: 21 },
             ]);
-            puter.print('Batch set complete');
+            mixt.print('Batch set complete');
         })();
     </script>
 </body>

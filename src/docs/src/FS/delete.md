@@ -1,6 +1,6 @@
 ---
-title: puter.fs.delete()
-description: Deletes a file or directory in the user's own Puter file system.
+title: mixt.fs.delete()
+description: Deletes a file or directory in the user's own Mixt OS file system.
 platforms: [websites, apps, nodejs, workers]
 ---
 
@@ -9,9 +9,9 @@ Deletes a file or directory.
 ## Syntax
 
 ```js
-puter.fs.delete(paths)
-puter.fs.delete(paths, options)
-puter.fs.delete(options)
+mixt.fs.delete(paths)
+mixt.fs.delete(paths, options)
+mixt.fs.delete(options)
 ```
 
 ## Parameters
@@ -44,17 +44,17 @@ as deleting it here, and restoring it does not bring the shares back.
 ```html;fs-delete
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
             // (1) Create a random file
-            let filename = puter.randName();
-            await puter.fs.write(filename, 'Hello, world!');
-            puter.print('File created successfully<br>');
+            let filename = mixt.randName();
+            await mixt.fs.write(filename, 'Hello, world!');
+            mixt.print('File created successfully<br>');
 
             // (2) Delete the file
-            await puter.fs.delete(filename);
-            puter.print('File deleted successfully');
+            await mixt.fs.delete(filename);
+            mixt.print('File deleted successfully');
         })();
     </script>
 </body>
@@ -66,17 +66,17 @@ as deleting it here, and restoring it does not bring the shares back.
 ```html;fs-delete-directory
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
             // (1) Create a random directory
-            let dirname = puter.randName();
-            await puter.fs.mkdir(dirname);
-            puter.print('Directory created successfully<br>');
+            let dirname = mixt.randName();
+            await mixt.fs.mkdir(dirname);
+            mixt.print('Directory created successfully<br>');
 
             // (2) Delete the directory
-            await puter.fs.delete(dirname);
-            puter.print('Directory deleted successfully');
+            await mixt.fs.delete(dirname);
+            mixt.print('Directory deleted successfully');
         })();
     </script>
 </body>

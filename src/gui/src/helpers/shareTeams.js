@@ -32,7 +32,7 @@
 export const teams_for_sharing = async () => {
     if ( ! window.teams_ui ) return [];
     try {
-        const teams = await puter.teams.list();
+        const teams = await mixt.teams.list();
         return Array.isArray(teams) ? teams : [];
     } catch (e) {
         return [];
@@ -77,7 +77,7 @@ export const colleagues_for_sharing = async (teams) => {
         let settled;
         try {
             settled = await Promise.allSettled(list.map(
-                (team) => puter.teams.listMembers(team.uid, { limit: MEMBER_PAGE_CAP }),
+                (team) => mixt.teams.listMembers(team.uid, { limit: MEMBER_PAGE_CAP }),
             ));
         } catch {
             settled = [];

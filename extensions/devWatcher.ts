@@ -1,6 +1,6 @@
-import { extension } from '@heyputer/backend/src/extensions';
-import { PuterService } from '@heyputer/backend/src/services/types.js';
-import { nativeImport } from '@heyputer/backend/src/util/nativeImport.js';
+import { extension } from '@mixt/backend/src/extensions';
+import { MixtService } from '@mixt/backend/src/services/types.js';
+import { nativeImport } from '@mixt/backend/src/util/nativeImport.js';
 import { spawn, type ChildProcess } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
@@ -80,7 +80,7 @@ const findPackageRoot = (): string => {
         if (
             existsSync(path.join(dir, 'package.json')) &&
             existsSync(path.join(dir, 'src', 'gui')) &&
-            existsSync(path.join(dir, 'src', 'puter-js'))
+            existsSync(path.join(dir, 'src', 'mixt-js'))
         ) {
             return dir;
         }
@@ -98,18 +98,18 @@ const resolveFromRoot = (root: string, value: string): string =>
 
 const defaultWebpackEntries: WebpackEntry[] = [
     {
-        name: 'puter.js',
-        directory: 'src/puter-js',
+        name: 'mixt.js',
+        directory: 'src/mixt-js',
         onConfig: (config) => {
             const output = (config.output ?? {}) as Record<string, unknown>;
-            output.filename = 'puter.dev.js';
+            output.filename = 'mixt.dev.js';
             config.output = output;
             config.devtool = 'source-map';
         },
         env: {
-            PUTER_ORIGIN: ({ global_config }) =>
+            MIXT_ORIGIN: ({ global_config }) =>
                 String(global_config?.origin ?? ''),
-            PUTER_API_ORIGIN: ({ global_config }) =>
+            MIXT_API_ORIGIN: ({ global_config }) =>
                 String(global_config?.api_base_url ?? ''),
         },
     },
@@ -119,7 +119,7 @@ const defaultWebpackEntries: WebpackEntry[] = [
     },
 ];
 
-class DevWatcherService extends PuterService {
+class DevWatcherService extends MixtService {
     #processes: Array<{ name: string; proc: ChildProcess }> = [];
     #watchers: ReturnType<ReturnType<typeof webpack>['watch']>[] = [];
     #started = false;

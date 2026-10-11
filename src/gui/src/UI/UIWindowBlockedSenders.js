@@ -115,7 +115,7 @@ async function UIWindowBlockedSenders (options) {
         const resp = await fetch(`${window.api_origin}/share/blocks`, {
             method,
             headers: {
-                Authorization: `Bearer ${puter.authToken}`,
+                Authorization: `Bearer ${mixt.authToken}`,
                 'Content-Type': 'application/json',
             },
             ...(body ? { body: JSON.stringify(body) } : {}),

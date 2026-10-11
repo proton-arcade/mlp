@@ -19,8 +19,8 @@
 
 import type { Request, Response } from 'express';
 import { HttpError } from '../../core/http/HttpError.js';
-import type { PuterRouter } from '../../core/http/PuterRouter.js';
-import { PuterController } from '../types.js';
+import type { MixtRouter } from '../../core/http/MixtRouter.js';
+import { MixtController } from '../types.js';
 import {
     DEFAULT_FREE_SUBSCRIPTION,
     DEFAULT_TEMP_SUBSCRIPTION,
@@ -32,8 +32,8 @@ import {
  *
  * Config: `config.wisp.server` — WISP relay server address.
  */
-export class WispController extends PuterController {
-    registerRoutes(router: PuterRouter): void {
+export class WispController extends MixtController {
+    registerRoutes(router: MixtRouter): void {
         router.post(
             '/wisp/relay-token/create',
             {

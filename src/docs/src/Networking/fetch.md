@@ -1,16 +1,16 @@
 ---
-title: puter.net.fetch()
+title: mixt.net.fetch()
 description: Fetch web resources securely without being bound by CORS restrictions.
 platforms: [websites, apps]
 ---
 
-The puter fetch API lets you securely fetch a http/https resource without being bound by CORS restrictions.
+The mixt fetch API lets you securely fetch a http/https resource without being bound by CORS restrictions.
 
 ## Syntax
 
 ```js
-puter.net.fetch(url)
-puter.net.fetch(url, options)
+mixt.net.fetch(url)
+mixt.net.fetch(url, options)
 ```
 
 ## Parameters 
@@ -29,17 +29,17 @@ A `Promise` to a `Response` object.
 ```html;net-fetch
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
     (async () => { 
         // Send a GET request to example.com
-        const request = await puter.net.fetch("https://example.com");        
+        const request = await mixt.net.fetch("https://example.com");        
 
         // Get the response body as text
         const body = await request.text();
 
         // Print the body as a code block
-        puter.print(body, { code: true });
+        mixt.print(body, { code: true });
     })()
     </script>
 </body>

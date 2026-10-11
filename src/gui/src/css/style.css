@@ -1292,13 +1292,13 @@ span.header-sort-icon img {
     height: 100%;
 }
 
-.window-cover-page.window-puter-dialog {
+.window-cover-page.window-mixt-dialog {
     height: 100%;
     width: 100%;
     top: 0 !important;
 }
 
-.window-cover-page.window-puter-dialog .window-body {
+.window-cover-page.window-mixt-dialog .window-body {
     width: 100%;
     height: 100%;
     padding: 0 !important;
@@ -2278,7 +2278,7 @@ label {
     box-sizing: content-box;
 }
 
-/* In a sign-in popup: opener favicon, dashed link, Puter logo. */
+/* In a sign-in popup: opener favicon, dashed link, Mixt logo. */
 .auth-opener-logo {
     position: relative;
     width: 70px;
@@ -2303,7 +2303,7 @@ label {
     object-fit: contain;
 }
 
-/* The favicon fills the tile, like the Puter tile beside it. */
+/* The favicon fills the tile, like the Mixt tile beside it. */
 .auth-opener-logo-img {
     padding: 0;
 }
@@ -3928,7 +3928,7 @@ fieldset[name=number-code] {
     }
 
     .window-sidebar {
-        /* background-color: var(--puter-window-background); */
+        /* background-color: var(--mixt-window-background); */
         background-color: hsla(var(--window-sidebar-hue),
                 var(--window-sidebar-saturation),
                 var(--window-sidebar-lightness),
@@ -4266,17 +4266,17 @@ fieldset[name=number-code] {
 }
 
 
-.puter-auth-dialog {
+.mixt-auth-dialog {
     outline: none;
     display: block;
     width: 100% !important;
 }
 
-.puter-auth-dialog {
+.mixt-auth-dialog {
     outline: none;
 }
 
-.puter-auth-dialog-content {
+.mixt-auth-dialog-content {
     border: 1px solid var(--dashboard-hover);
     border-radius: 8px;
     padding: 20px;
@@ -4299,12 +4299,12 @@ fieldset[name=number-code] {
     align-items: center;
 }
 
-.puter-auth-dialog * {
+.mixt-auth-dialog * {
     max-width: 500px;
     font-family: "Helvetica Neue", HelveticaNeue, Helvetica, Arial, sans-serif;
 }
 
-.puter-auth-dialog p.about {
+.mixt-auth-dialog p.about {
     text-align: center;
     font-size: 17px;
     padding: 10px 30px;
@@ -4314,7 +4314,7 @@ fieldset[name=number-code] {
     box-sizing: border-box;
 }
 
-.puter-auth-dialog .buttons {
+.mixt-auth-dialog .buttons {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -4346,7 +4346,7 @@ fieldset[name=number-code] {
     margin: 10px 0 15px;
 }
 
-.puter-auth-dialog .close-btn {
+.mixt-auth-dialog .close-btn {
     position: absolute;
     right: 15px;
     top: 10px;
@@ -4355,7 +4355,7 @@ fieldset[name=number-code] {
     cursor: pointer;
 }
 
-.puter-auth-dialog .close-btn:hover {
+.mixt-auth-dialog .close-btn:hover {
     color: #000;
 }
 
@@ -4365,7 +4365,7 @@ fieldset[name=number-code] {
  * ------------------------------------
  */
 
-.puter-auth-dialog .button {
+.mixt-auth-dialog .button {
     color: #666666;
     background-color: #eeeeee;
     border-color: #eeeeee;
@@ -4396,11 +4396,11 @@ fieldset[name=number-code] {
     -webkit-font-smoothing: antialiased;
 }
 
-.puter-auth-dialog .button:focus-visible {
+.mixt-auth-dialog .button:focus-visible {
     border-color: rgb(118 118 118);
 }
 
-.puter-auth-dialog .button:active, .puter-auth-dialog .button.active, .puter-auth-dialog .button.is-active, .puter-auth-dialog .button.has-open-contextmenu {
+.mixt-auth-dialog .button:active, .mixt-auth-dialog .button.active, .mixt-auth-dialog .button.is-active, .mixt-auth-dialog .button.has-open-contextmenu {
     text-decoration: none;
     background-color: #eeeeee;
     border-color: #cfcfcf;
@@ -4411,7 +4411,7 @@ fieldset[name=number-code] {
     box-shadow: inset 0px 2px 3px rgb(0 0 0 / 36%), 0px 1px 0px white;
 }
 
-.puter-auth-dialog .button.disabled, .puter-auth-dialog .button.is-disabled, .puter-auth-dialog .button:disabled {
+.mixt-auth-dialog .button.disabled, .mixt-auth-dialog .button.is-disabled, .mixt-auth-dialog .button:disabled {
     top: 0 !important;
     background: #EEE !important;
     border: 1px solid #DDD !important;
@@ -4422,101 +4422,101 @@ fieldset[name=number-code] {
     pointer-events: none;
 }
 
-.puter-auth-dialog .button-action.disabled, .puter-auth-dialog .button-action.is-disabled, .puter-auth-dialog .button-action:disabled {
+.mixt-auth-dialog .button-action.disabled, .mixt-auth-dialog .button-action.is-disabled, .mixt-auth-dialog .button-action:disabled {
     background: #55a975 !important;
     border: 1px solid #60ab7d !important;
     text-shadow: none !important;
     color: #CCC !important;
 }
 
-.puter-auth-dialog .button-primary.disabled, .puter-auth-dialog .button-primary.is-disabled, .puter-auth-dialog .button-primary:disabled {
+.mixt-auth-dialog .button-primary.disabled, .mixt-auth-dialog .button-primary.is-disabled, .mixt-auth-dialog .button-primary:disabled {
     background: #8fc2e7 !important;
     border: 1px solid #98adbd !important;
     text-shadow: none !important;
     color: var(--dashboard-sidebar-background) !important;
 }
 
-.puter-auth-dialog .button-block {
+.mixt-auth-dialog .button-block {
     width: 100%;
 }
 
-.puter-auth-dialog .button-primary {
+.mixt-auth-dialog .button-primary {
     border-color: #088ef0;
     background: -webkit-gradient(linear, left top, left bottom, from(#34a5f8), to(#088ef0));
     background: linear-gradient(#34a5f8, #088ef0);
     color: white;
 }
 
-.puter-auth-dialog .button-danger {
+.mixt-auth-dialog .button-danger {
     border-color: #f00808;
     background: #f00808;
     color: white;
 }
 
-.puter-auth-dialog .button-primary:active,
-.puter-auth-dialog .button-primary.active,
-.puter-auth-dialog .button-primary.is-active,
-.puter-auth-dialog .button-primary-flat:active,
-.puter-auth-dialog .button-primary-flat.active,
-.puter-auth-dialog .button-primary-flat.is-active {
+.mixt-auth-dialog .button-primary:active,
+.mixt-auth-dialog .button-primary.active,
+.mixt-auth-dialog .button-primary.is-active,
+.mixt-auth-dialog .button-primary-flat:active,
+.mixt-auth-dialog .button-primary-flat.active,
+.mixt-auth-dialog .button-primary-flat.is-active {
     background-color: #2798eb;
     border-color: #2798eb;
     color: #bedef5;
 }
 
-.puter-auth-dialog .button-action {
+.mixt-auth-dialog .button-action {
     border-color: #08bf4e;
     background: -webkit-gradient(linear, left top, left bottom, from(#29d55d), to(#1ccd60));
     background: linear-gradient(#29d55d, #1ccd60);
     color: white;
 }
 
-.puter-auth-dialog .button-action:active,
-.puter-auth-dialog .button-action.active,
-.puter-auth-dialog .button-action.is-active,
-.puter-auth-dialog .button-action-flat:active,
-.puter-auth-dialog .button-action-flat.active,
-.puter-auth-dialog .button-action-flat.is-active {
+.mixt-auth-dialog .button-action:active,
+.mixt-auth-dialog .button-action.active,
+.mixt-auth-dialog .button-action.is-active,
+.mixt-auth-dialog .button-action-flat:active,
+.mixt-auth-dialog .button-action-flat.active,
+.mixt-auth-dialog .button-action-flat.is-active {
     background-color: #27eb41;
     border-color: #27eb41;
     color: #bef5ca;
 }
 
-.puter-auth-dialog .button-giant {
+.mixt-auth-dialog .button-giant {
     font-size: 28px;
     height: 70px;
     line-height: 70px;
     padding: 0 70px;
 }
 
-.puter-auth-dialog .button-jumbo {
+.mixt-auth-dialog .button-jumbo {
     font-size: 24px;
     height: 60px;
     line-height: 60px;
     padding: 0 60px;
 }
 
-.puter-auth-dialog .button-large {
+.mixt-auth-dialog .button-large {
     font-size: 20px;
     height: 50px;
     line-height: 50px;
     padding: 0 50px;
 }
 
-.puter-auth-dialog .button-normal {
+.mixt-auth-dialog .button-normal {
     font-size: 16px;
     height: 40px;
     line-height: 38px;
     padding: 0 40px;
 }
 
-.puter-auth-dialog .button-small {
+.mixt-auth-dialog .button-small {
     height: 30px;
     line-height: 29px;
     padding: 0 30px;
 }
 
-.puter-auth-dialog .button-tiny {
+.mixt-auth-dialog .button-tiny {
     font-size: 9.6px;
     height: 24px;
     line-height: 24px;
@@ -4530,16 +4530,16 @@ fieldset[name=number-code] {
     font-size: 15px;
 }
 
-.puter-auth-dialog .button-auth {
+.mixt-auth-dialog .button-auth {
     margin-bottom: 10px;
 }
 
-.puter-auth-dialog a, .puter-auth-dialog a:visited {
+.mixt-auth-dialog a, .mixt-auth-dialog a:visited {
     color: rgb(0 69 238);
     text-decoration: none;
 }
 
-.puter-auth-dialog a:hover {
+.mixt-auth-dialog a:hover {
     text-decoration: underline;
 }
 
@@ -4555,19 +4555,19 @@ fieldset[name=number-code] {
     .window-copy-auth-token .window-body {
         box-sizing: border-box !important;
     }
-    .puter-auth-dialog-content {
+    .mixt-auth-dialog-content {
         padding: 50px 20px;
     }
 
-    .puter-auth-dialog .buttons {
+    .mixt-auth-dialog .buttons {
         flex-direction: column-reverse;
     }
 
-    .puter-auth-dialog p.about {
+    .mixt-auth-dialog p.about {
         padding: 10px 0;
     }
 
-    .puter-auth-dialog .button-auth {
+    .mixt-auth-dialog .button-auth {
         width: 100% !important;
         margin: 0 !important;
         margin-bottom: 10px !important;

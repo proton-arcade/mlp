@@ -33,7 +33,7 @@ import { EventsService } from './events/EventsService';
 import { AppFeedbackService } from './feedback/AppFeedbackService';
 import { FSService } from './fs/FSService';
 import { ServerHealthService } from './health/ServerHealthService';
-import { PuterHomepageService } from './homepage/PuterHomepageService';
+import { MixtHomepageService } from './homepage/MixtHomepageService';
 import { LocalWorkerService } from './localworker/LocalWorkerService';
 import { MeteringService } from './metering/MeteringService';
 import { NotificationService } from './notification/NotificationService';
@@ -45,18 +45,18 @@ import { ShareService } from './share/ShareService';
 import { TeamService } from './team/TeamService';
 import { SocketService } from './socket/SocketService';
 import { SubdomainPermissionService } from './subdomain/SubdomainPermissionService';
-import type { IPuterServiceRegistry } from './types';
+import type { IMixtServiceRegistry } from './types';
 import { UserAccountService } from './user/UserAccountService';
 
 /**
- * Populate `IPuterServiceInstances` (declared in `./types`) with the concrete
+ * Populate `IMixtServiceInstances` (declared in `./types`) with the concrete
  * types of built-in services. Done via declaration merging instead of
- * `LayerInstances<typeof puterServices>` because every concrete service extends
- * `PuterService`, whose `protected services` field references this type — a
- * direct `typeof puterServices` lookup would self-cycle.
+ * `LayerInstances<typeof mixtServices>` because every concrete service extends
+ * `MixtService`, whose `protected services` field references this type — a
+ * direct `typeof mixtServices` lookup would self-cycle.
  */
 declare module './types' {
-    interface IPuterServiceInstances {
+    interface IMixtServiceInstances {
         metering: MeteringService;
         appOriginBlocklist: AppOriginBlocklistService;
         permission: PermissionService;
@@ -81,7 +81,7 @@ declare module './types' {
         oidc: OIDCService;
         appIcon: AppIconService;
         defaultUser: DefaultUserService;
-        homepage: PuterHomepageService;
+        homepage: MixtHomepageService;
         health: ServerHealthService;
         userAccount: UserAccountService;
         team: TeamService;
@@ -96,7 +96,7 @@ declare module './types' {
 // SocketService depends on AuthService (for handshake auth).
 // NotificationService depends on notification store (for DB) + event client (for socket push).
 // BroadcastService is independent — only needs the event client.
-export const puterServices = {
+export const mixtServices = {
     metering: MeteringService,
     // Declared before `auth` so AuthService sees it as a prior peer — it
     // queries the blocklist on app-token acquisition and per-request app
@@ -146,9 +146,9 @@ export const puterServices = {
     oidc: OIDCService,
     appIcon: AppIconService,
     defaultUser: DefaultUserService,
-    homepage: PuterHomepageService,
+    homepage: MixtHomepageService,
     // Health comes after socket so its default `socket-initialized`
     // check can reference the peer.
     health: ServerHealthService,
     localworkerservice: LocalWorkerService,
-} satisfies IPuterServiceRegistry;
+} satisfies IMixtServiceRegistry;

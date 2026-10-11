@@ -43,7 +43,7 @@ export const REMOVED_APPS_MAX = 500;
  * empty set rather than throwing: the worst outcome is a recommended tile
  * reappearing, never a broken Apps tab.
  *
- * @param {unknown} raw - value returned by `puter.kv.get`
+ * @param {unknown} raw - value returned by `mixt.kv.get`
  * @returns {Set<string>}
  */
 export function parseRemovedApps (raw) {

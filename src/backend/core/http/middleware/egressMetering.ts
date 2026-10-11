@@ -44,7 +44,7 @@ interface Layers {
 /**
  * Hosts whose responses are a user's own data or an account's app traffic, and
  * so are billed to that account. Everything else the origin serves — the
- * desktop shell, the SDK, the homepage, static assets — is Puter's own cost of
+ * desktop shell, the SDK, the homepage, static assets — is Mixt's own cost of
  * being reachable and is deliberately not charged to whoever happens to be
  * signed in while loading it.
  *

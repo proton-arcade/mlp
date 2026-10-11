@@ -1,12 +1,12 @@
 <html>
 <body>
     <button id="feedback">Send us feedback</button>
-    <script src="/puter.js/v2"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         document.getElementById('feedback').addEventListener('click', async () => {
-            const sent = await puter.ui.showFeedbackDialog();
+            const sent = await mixt.ui.showFeedbackDialog();
             if (sent) {
-                puter.print('Thanks for your feedback!');
+                mixt.print('Thanks for your feedback!');
             }
         });
     </script>

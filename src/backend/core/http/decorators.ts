@@ -18,7 +18,7 @@
  */
 
 import type { RequestHandler } from 'express';
-import type { PuterRouter } from './PuterRouter';
+import type { MixtRouter } from './MixtRouter';
 import {
     PREFIX_METADATA_KEY,
     ROUTES_METADATA_KEY,
@@ -33,10 +33,10 @@ import {
  * over imperative `registerRoutes(router)` bodies.
  *
  * Stage-3 decorators (TS 5+), matching the extensionController pattern. Every
- * method decorator pushes a `CollectedRoute` onto `prototype.__puterRoutes`
+ * method decorator pushes a `CollectedRoute` onto `prototype.__mixtRoutes`
  * during class initialization. `@Controller` seals the deal by installing a
  * `registerRoutes` method on the prototype that walks the collected routes and
- * feeds them to the `PuterRouter` passed in by `PuterServer`.
+ * feeds them to the `MixtRouter` passed in by `MixtServer`.
  *
  * Usage is optional — imperative controllers that override `registerRoutes`
  * directly work equally well.
@@ -47,7 +47,7 @@ import {
 interface DecoratedPrototype {
     [ROUTES_METADATA_KEY]?: CollectedRoute[];
     [PREFIX_METADATA_KEY]?: string;
-    registerRoutes?: (router: PuterRouter) => void;
+    registerRoutes?: (router: MixtRouter) => void;
 }
 
 const getOrInitRoutes = (proto: DecoratedPrototype): CollectedRoute[] => {
@@ -63,7 +63,7 @@ const getOrInitRoutes = (proto: DecoratedPrototype): CollectedRoute[] => {
 type AnyCtor = new (...args: any[]) => any;
 
 /**
- * Class decorator. Stores `prefix` on the prototype for `PuterServer`, and
+ * Class decorator. Stores `prefix` on the prototype for `MixtServer`, and
  * installs a default `registerRoutes` that walks decorator-collected routes
  * unless the class defines its own.
  */
@@ -82,7 +82,7 @@ export function Controller(prefix: string = '') {
         );
         if (hasOwnRegister) return;
 
-        proto.registerRoutes = function (router: PuterRouter): void {
+        proto.registerRoutes = function (router: MixtRouter): void {
             const routes = ((this as DecoratedPrototype)[ROUTES_METADATA_KEY] ??
                 []) as CollectedRoute[];
             for (const r of routes) {
@@ -110,7 +110,7 @@ export function Controller(prefix: string = '') {
                     path: RoutePath,
                     options: RouteOptions,
                     handler: RequestHandler,
-                ) => PuterRouter;
+                ) => MixtRouter;
                 routerMethod.call(router, r.path, r.options, bound);
             }
         };

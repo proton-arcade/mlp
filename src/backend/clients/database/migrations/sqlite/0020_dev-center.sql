@@ -36,7 +36,7 @@ INSERT INTO `apps` (
     'dev-center',
     'Dev Center',
     'This is the app that makes apps',
-    'https://builtins.namespaces.puter.com/dev-center',
+    'https://builtins.namespaces.mixt.mpl/dev-center',
     1, 1, 0,
     '2020-01-01 00:00:00',
     NULL,

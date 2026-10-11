@@ -26,7 +26,7 @@ import {
     it,
     vi,
 } from 'vitest';
-import { PuterServer } from '../../server.ts';
+import { MixtServer } from '../../server.ts';
 import { setupTestServer } from '../../testUtil.ts';
 import {
     INCR_EXPRESSION_BUDGET_BYTES,
@@ -134,7 +134,7 @@ describe('MeteringBufferStore', () => {
             expect(isBilledCounter(`metering:actor:${uuid}:apps:2026-08`)).toBe(
                 false,
             );
-            expect(isBilledCounter('metering:puter:412:2026-08')).toBe(false);
+            expect(isBilledCounter('metering:mixt:412:2026-08')).toBe(false);
             expect(isBilledCounter('metering:app:app-1:412:2026-08')).toBe(
                 false,
             );
@@ -160,7 +160,7 @@ describe('MeteringBufferStore', () => {
                     `metering:v2:actor:${uuid}:appdetail:app-1:5:2026-10`,
                 ),
             ).toBe(false);
-            expect(isBilledCounter('metering:v2:puter:412:2026-10')).toBe(
+            expect(isBilledCounter('metering:v2:mixt:412:2026-10')).toBe(
                 false,
             );
             expect(
@@ -185,7 +185,7 @@ describe('MeteringBufferStore', () => {
 
     // -- Behaviour against a booted backend ---------------------------
 
-    let server: PuterServer;
+    let server: MixtServer;
     let target: MeteringBufferStore;
     let kv: SystemKVStore;
 
@@ -1324,7 +1324,7 @@ describe('MeteringBufferStore', () => {
         });
 
         it('records an aggregate drop without paging', async () => {
-            const aggregate = `metering:puter:7:${currentMonth()}`;
+            const aggregate = `metering:mixt:7:${currentMonth()}`;
             const doomed = 'aggregate_poison_test.units';
             await target.incrAux({
                 key: aggregate,

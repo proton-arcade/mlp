@@ -1,5 +1,5 @@
 ---
-title: puter.events.fetch()
+title: mixt.events.fetch()
 description: Read what a subject recorded while nothing was listening.
 platforms: [websites, apps, nodejs, workers]
 ---
@@ -14,11 +14,11 @@ A scoped access token, such as the one in a [`getReadURL()`](/FS/getReadURL/) UR
 
 Only **`notif:`** (the notification mailbox) stores events. `fs:` and `kv:` are refused with `fetch_unsupported_subject` rather than answered with an empty page.
 
-On a website with nobody signed in, it asks the user to sign in first, as other Puter.js calls do. An app running on Puter is always signed in.
+On a website with nobody signed in, it asks the user to sign in first, as other Mixt.js calls do. An app running on Mixt OS is always signed in.
 
 ## Syntax
 ```js
-puter.events.fetch(options)
+mixt.events.fetch(options)
 ```
 
 ## Parameters
@@ -48,7 +48,7 @@ Each item is a notification event:
 | `type` | String | The kind of notification, from the published catalog: `share.received`, `app.worker.deployed`, and so on. |
 | `audience` | String | `account`, `developer`, or `app-user`. |
 | `appUid` | String \| null | The app it's about, or `null` for platform notifications. |
-| `notification` | Object | The stored payload. It always has `type`, and everything Puter sends has a `title`; other fields depend on `type` (below). |
+| `notification` | Object | The stored payload. It always has `type`, and everything Mixt OS sends has a `title`; other fields depend on `type` (below). |
 | `self` | Boolean | Always `true`: a mailbox is your own. |
 | `ts` | Number | When it was created, in milliseconds since the epoch. |
 | `seq` | Number | Position within the page. |
@@ -76,24 +76,24 @@ The promise rejects with `{ message, code }`: `auth_canceled` if nobody was sign
 ```html;events-fetch
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
             let cursor;
             let seen = 0;
             do {
-                const page = await puter.events.fetch({
+                const page = await mixt.events.fetch({
                     subject: 'notif:account',
                     cursor,
                 });
                 for (const event of page.items) {
-                    puter.print(`${event.type}: ${event.notification.title}<br>`);
+                    mixt.print(`${event.type}: ${event.notification.title}<br>`);
                     seen++;
                 }
                 cursor = page.cursor;
             } while (cursor);
 
-            if (!seen) puter.print('nothing missed<br>');
+            if (!seen) mixt.print('nothing missed<br>');
         })();
     </script>
 </body>
@@ -105,7 +105,7 @@ The promise rejects with `{ message, code }`: `auth_canceled` if nobody was sign
 ```html;events-fetch-then-listen
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
             const seen = new Set();
@@ -113,15 +113,15 @@ The promise rejects with `{ message, code }`: `auth_canceled` if nobody was sign
             const show = (event) => {
                 if (seen.has(event.id)) return;
                 seen.add(event.id);
-                puter.print(`${event.notification.title}<br>`);
+                mixt.print(`${event.notification.title}<br>`);
             };
 
             // Live first, so nothing arriving during the catch-up is lost —
             // `id` is what makes the overlap harmless.
-            const sub = await puter.events.onLocal('notif:account',
+            const sub = await mixt.events.onLocal('notif:account',
                 ({ event }) => show(event));
 
-            const page = await puter.events.fetch({ subject: 'notif:account' });
+            const page = await mixt.events.fetch({ subject: 'notif:account' });
             page.items.forEach(show);
 
             await sub.off();

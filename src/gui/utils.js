@@ -52,7 +52,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
  * });
  */
 async function build (options) {
-    const PUTER_ENV = process.env.PUTER_ENV || 'prod';
+    const MIXT_ENV = process.env.MIXT_ENV || 'prod';
     // -----------------------------------------------
     // Delete ./dist/ directory if it exists and create a new one
     // -----------------------------------------------
@@ -146,7 +146,7 @@ async function build (options) {
     const webpack_opts = {
         ...(await BaseConfig({
             ...options,
-            env: PUTER_ENV,
+            env: MIXT_ENV,
         })),
         mode: 'production',
         optimization: {
@@ -166,7 +166,7 @@ async function build (options) {
     // Copy index.js to dist/gui.js
     // Prepend `window.gui_env="prod";` to `./dist/gui.js`
     fs.writeFileSync(path.join(__dirname, 'dist', 'gui.js'),
-                    `window.gui_env="${PUTER_ENV}"; \n\n${ fs.readFileSync(path.join(__dirname, 'src', 'index.js'))}`);
+                    `window.gui_env="${MIXT_ENV}"; \n\n${ fs.readFileSync(path.join(__dirname, 'src', 'index.js'))}`);
 
     const copy_these = [
         'images',
@@ -207,7 +207,7 @@ async function build (options) {
  * @param {string} options.env - The environment in which the GUI is running (e.g., "dev" or "prod").
  * @param {string} options.api_origin - The origin of the API server.
  * @param {string} options.gui_origin - The origin the GUI is served from.
- * @param {string} options.app_domain - The domain apps and hosted sites live under (e.g., "puter.com").
+ * @param {string} options.app_domain - The domain apps and hosted sites live under (e.g., "mixt.mpl").
  * @param {string} options.title - The title of the GUI.
  * @param {string} options.company - The name of the company or organization.
  * @param {string} options.description - The description of the GUI.
@@ -321,9 +321,9 @@ function generateDevHtml (options) {
     h += '<body>';
 
     // To indicate that the GUI is running to any 3rd-party scripts that may be running on the page
-    // specifically, the `puter.js` script
+    // specifically, the `mixt.js` script
     // This line is also present verbatim in `src/index.js` for production builds
-    h += '<script>window.puter_gui_enabled = true;</script>';
+    h += '<script>window.mixt_gui_enabled = true;</script>';
 
     // DEV: load every JS library individually
     if ( options.env === 'dev' ) {
@@ -361,7 +361,7 @@ function generateDevHtml (options) {
 
     // PROD: the self-contained webpack bundle (includes the gui() bootstrap).
     // `window.gui_env` must be set before gui() runs — it selects which
-    // puter.js build gets loaded.
+    // mixt.js build gets loaded.
     if ( options.env === 'prod' ) {
         h += '<script>window.gui_env = "prod";</script>';
         h += '<script src="/dist/bundle.min.js"></script>';

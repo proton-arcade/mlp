@@ -31,12 +31,12 @@ router.get('/files/*path', ({ params }) => {
     return new Response(params.path);
 });
 
-// Authenticated handler: `user` is optional, but `user.puter` exposes the
-// caller's full Puter SDK surface.
+// Authenticated handler: `user` is optional, but `user.mixt` exposes the
+// caller's full Mixt SDK surface.
 router.post('/echo', async ({ request, user }) => {
     const body = await request.text();
     if (user) {
-        const profile = await user.puter.auth.getUser();
+        const profile = await user.mixt.auth.getUser();
         return { from: profile.username, body };
     }
     return { body };
@@ -44,22 +44,22 @@ router.post('/echo', async ({ request, user }) => {
 
 // Deployer's own resources via the `me` global.
 router.get('/kv/:key', async ({ params }) => {
-    const value = await me.puter.kv.get(params.key);
+    const value = await me.mixt.kv.get(params.key);
     return { value };
 });
 
 // Aliases for `me`.
 router.get('/kv-my/:key', async ({ params }) => {
-    return { value: await my.puter.kv.get(params.key) };
+    return { value: await my.mixt.kv.get(params.key) };
 });
 router.get('/kv-myself/:key', async ({ params }) => {
-    return { value: await myself.puter.kv.get(params.key) };
+    return { value: await myself.mixt.kv.get(params.key) };
 });
 
 // Env bindings.
 router.get('/env', () => ({
-    endpoint: puter_endpoint,
-    authPrefix: puter_auth.slice(0, 4),
+    endpoint: mixt_endpoint,
+    authPrefix: mixt_auth.slice(0, 4),
 }));
 
 // `custom` for non-standard methods.

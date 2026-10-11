@@ -58,7 +58,7 @@ describe('the account-deletion confirmation', () => {
         globalThis.window = {
             icons: { 'danger.svg': 'danger.svg' },
             user: { oidc_only: true, is_temp: false },
-            gui_origin: 'https://puter.test',
+            gui_origin: 'https://mixt.test',
             auth_token: 'tok-1',
             handleReauthRequired: vi.fn(),
             logout: vi.fn(),

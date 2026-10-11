@@ -20,7 +20,7 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { v4 as uuidv4 } from 'uuid';
 import { setupTestServer } from '../../testUtil.ts';
-import { PuterServer } from '../../server.ts';
+import { MixtServer } from '../../server.ts';
 import {
     APP_WINDOW_SECONDS,
     WEB_WINDOW_SECONDS,
@@ -28,7 +28,7 @@ import {
 } from './SessionStore.js';
 
 describe('SessionStore', () => {
-    let server: PuterServer;
+    let server: MixtServer;
     let target: any;
 
     beforeAll(async () => {

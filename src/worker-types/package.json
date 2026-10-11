@@ -1,18 +1,18 @@
 {
-    "name": "@heyputer/worker-types",
+    "name": "@mixt/worker-types",
     "version": "1.0.0",
-    "description": "TypeScript type definitions for the Puter Workers runtime (router, globals, handler events, env bindings).",
-    "homepage": "https://docs.puter.com/Workers/router",
+    "description": "TypeScript type definitions for the Mixt Workers runtime (router, globals, handler events, env bindings).",
+    "homepage": "https://docs.mixt.mpl/Workers/router",
     "license": "AGPL-3.0-only",
     "author": "Puter Technologies Inc.",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/HeyPuter/puter.git",
+        "url": "git+https://github.com/proton-arcade/mlp.git",
         "directory": "src/worker-types"
     },
     "keywords": [
-        "puter",
-        "puter-workers",
+        "mixt",
+        "mixt-workers",
         "workers",
         "types",
         "typescript"
@@ -36,10 +36,10 @@
         "registry": "https://registry.npmjs.org/"
     },
     "dependencies": {
-        "@heyputer/puter.js": "^2.5.0"
+        "@mixt/mixt.js": "^2.5.0"
     },
     "scripts": {
-        "pretypecheck": "cd ../puter-js && npm run build:types",
+        "pretypecheck": "cd ../mixt-js && npm run build:types",
         "typecheck": "tsc --noEmit -p tsconfig.json"
     }
 }

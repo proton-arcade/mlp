@@ -159,11 +159,11 @@ const new_context_menu_item = function (dirname, append_to_element) {
                     dirname: dirname,
                     append_to_element: append_to_element,
                     name: 'New Worker.worker.js',
-                    content: `/// <reference types="@heyputer/worker-types" />
-// This is an example application for Puter Workers.
+                    content: `/// <reference types="@mixt/worker-types" />
+// This is an example application for Mixt Workers.
 // The reference above gives editors like VS Code autocomplete for the
 // \`router\`, \`me\`, and other globals injected by the Workers runtime.
-// Install the types with: npm install --save-dev @heyputer/worker-types
+// Install the types with: npm install --save-dev @mixt/worker-types
 
 router.get('/', ({request}) => {
     return 'Hello World'; // returns a string
@@ -193,7 +193,7 @@ router.get('/*page', ({request, params}) => {
                 html: template.html,
                 icon: `<img src="${html_encode(window.icons[`file-${template.extension}.svg`])}" class="ctx-item-icon">`,
                 onClick: async function () {
-                    const content = await puter.fs.read(template.path);
+                    const content = await mixt.fs.read(template.path);
                     window.create_file({
                         dirname: dirname,
                         append_to_element: append_to_element,

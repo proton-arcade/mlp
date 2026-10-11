@@ -1,12 +1,12 @@
 ---
 title: Email
-description: Read the user's Puter mailbox and send transactional email from your app with Puter.js.
+description: Read the user's Mixt OS mailbox and send transactional email from your app with Mixt.js.
 platforms: [websites, apps, nodejs, workers]
 ---
 
-The Email API lets your app read the user's Puter mailbox and send transactional email.
+The Email API lets your app read the user's Mixt OS mailbox and send transactional email.
 
-Every Puter account has an email address, `{username}@puter.email`. Mail sent to it is stored in the user's own cloud drive, so your app can list the inbox and read messages, attachments included, once the user grants access to their mailbox. Your app can also send transactional email — a signup confirmation, a receipt, an alert — from a Puter-controlled address, with no mail server, sending domain, or DKIM to set up. A recipient with a Puter account can be reached at `{username}@puter.email`: that copy is filed straight into their Puter mailbox rather than relayed, on any plan, as long as they have set their mailbox up.
+Every Mixt OS account has an email address, `{username}@mixt.email`. Mail sent to it is stored in the user's own cloud drive, so your app can list the inbox and read messages, attachments included, once the user grants access to their mailbox. Your app can also send transactional email — a signup confirmation, a receipt, an alert — from a Mixt OS-controlled address, with no mail server, sending domain, or DKIM to set up. A recipient with a Mixt OS account can be reached at `{username}@mixt.email`: that copy is filed straight into their Mixt OS mailbox rather than relayed, on any plan, as long as they have set their mailbox up.
 
 With the [User-Pays Model](/user-pays-model/), the account making the call covers its own usage: mail lives in the user's storage, and sends land on the caller's allowance rather than yours.
 
@@ -27,12 +27,12 @@ With the [User-Pays Model](/user-pays-model/), the account making the call cover
 ```html
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
-            const page = await puter.email.list({ limit: 10 });
+            const page = await mixt.email.list({ limit: 10 });
             for (const message of page.items) {
-                puter.print(`${message.date}  ${message.subject}<br>`);
+                mixt.print(`${message.date}  ${message.subject}<br>`);
             }
         })();
     </script>
@@ -49,16 +49,16 @@ With the [User-Pays Model](/user-pays-model/), the account making the call cover
 ```html
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
-            const { items } = await puter.email.list({ limit: 1 });
-            if (items.length === 0) return puter.print('Inbox is empty');
+            const { items } = await mixt.email.list({ limit: 1 });
+            if (items.length === 0) return mixt.print('Inbox is empty');
 
-            const message = await puter.email.get(items[0].id);
-            puter.print(`From: ${message.from?.address}<br>`);
-            puter.print(`Subject: ${message.subject}<br>`);
-            puter.print(`<pre>${message.text}</pre>`);
+            const message = await mixt.email.get(items[0].id);
+            mixt.print(`From: ${message.from?.address}<br>`);
+            mixt.print(`Subject: ${message.subject}<br>`);
+            mixt.print(`<pre>${message.text}</pre>`);
         })();
     </script>
 </body>
@@ -75,11 +75,11 @@ With the [User-Pays Model](/user-pays-model/), the account making the call cover
 // In a worker: the worker authorizes the send, the calling user pays for it.
 router.post('/notify', async ({ request, user }) => {
     const { to, subject, text } = await request.json();
-    return await user.puter.email.sendTransactional({
+    return await user.mixt.email.sendTransactional({
         to,
         subject,
         text,
-        emailAccessToken: me.puter.authToken,
+        emailAccessToken: me.mixt.authToken,
     });
 });
 ```
@@ -88,6 +88,6 @@ router.post('/notify', async ({ request, user }) => {
 
 ## Functions
 
-- **[`puter.email.list()`](/Email/list/)** - List the messages in the user's mailbox, newest first
-- **[`puter.email.get()`](/Email/get/)** - Fetch and parse one message, attachments included
-- **[`puter.email.sendTransactional()`](/Email/sendTransactional/)** - Send a transactional email from your app
+- **[`mixt.email.list()`](/Email/list/)** - List the messages in the user's mailbox, newest first
+- **[`mixt.email.get()`](/Email/get/)** - Fetch and parse one message, attachments included
+- **[`mixt.email.sendTransactional()`](/Email/sendTransactional/)** - Send a transactional email from your app

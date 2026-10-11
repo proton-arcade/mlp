@@ -49,7 +49,7 @@ const createInput: PendingUploadCreateInput = {
     multipartPartSize: null,
     multipartPartCount: null,
     storageProvider: 's3',
-    bucket: 'puter-local',
+    bucket: 'mixt-local',
     bucketRegion: 'us-west-2',
     objectKey: 'object-key-1',
     metadataJson: '{}',

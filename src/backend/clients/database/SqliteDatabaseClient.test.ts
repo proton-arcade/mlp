@@ -570,7 +570,7 @@ describe('SqliteDatabaseClient — boot and migrations', { timeout: DISK_MIGRATI
             });
             const deployed = await seedLegacy(userId, {
                 source: 'worker',
-                title: 'Successfully deployed https://x.puter.work',
+                title: 'Successfully deployed https://x.mixt.work',
                 template: 'user-requesting-share',
             });
             const failed = await seedLegacy(userId, {
@@ -681,8 +681,8 @@ describe('SqliteDatabaseClient — boot and migrations', { timeout: DISK_MIGRATI
     });
 
     it('leaves an already-migrated database untouched on a second boot', async () => {
-        const dir = mkdtempSync(join(tmpdir(), 'puter-sqlite-'));
-        const path = join(dir, 'nested', 'puter.sqlite');
+        const dir = mkdtempSync(join(tmpdir(), 'mixt-sqlite-'));
+        const path = join(dir, 'nested', 'mixt.sqlite');
         try {
             const first = new SqliteDatabaseClient(
                 sqliteConfig({ inMemory: false, path }),
@@ -714,8 +714,8 @@ describe('SqliteDatabaseClient — boot and migrations', { timeout: DISK_MIGRATI
     });
 
     it('deduplicates pre-existing membership rows when 0078 applies', async () => {
-        const dir = mkdtempSync(join(tmpdir(), 'puter-sqlite-dedup-'));
-        const path = join(dir, 'puter.sqlite');
+        const dir = mkdtempSync(join(tmpdir(), 'mixt-sqlite-dedup-'));
+        const path = join(dir, 'mixt.sqlite');
         try {
             // Stop at 67 so the duplicates exist the way a live database's do:
             // written before the unique index, not after it.
@@ -801,7 +801,7 @@ describe(
     let dir: string;
 
     beforeEach(() => {
-        dir = mkdtempSync(join(tmpdir(), 'puter-sqlite-legacy-'));
+        dir = mkdtempSync(join(tmpdir(), 'mixt-sqlite-legacy-'));
     });
 
     afterEach(() => {

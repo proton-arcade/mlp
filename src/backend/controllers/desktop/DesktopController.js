@@ -18,7 +18,7 @@
  */
 
 import { HttpError } from '../../core/http/HttpError.js';
-import { PuterController } from '../types.js';
+import { MixtController } from '../types.js';
 
 const ALLOWED_LAYOUTS = ['icons', 'details', 'list'];
 const ALLOWED_SORT_BY = ['name', 'size', 'modified', 'type'];
@@ -45,7 +45,7 @@ const PREFERENCE_WRITE_LIMIT = {
     key: 'user',
 };
 
-export class DesktopController extends PuterController {
+export class DesktopController extends MixtController {
     constructor(config, clients, stores, services) {
         super(config, clients, stores, services);
     }

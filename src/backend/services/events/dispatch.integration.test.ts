@@ -27,7 +27,7 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { makeActor, type Actor } from '../../core/actor.js';
 import { runWithContext } from '../../core/context.js';
-import { setupPuterTestEnv, type PuterTestEnv } from '../../testUtil.js';
+import { setupMixtTestEnv, type MixtTestEnv } from '../../testUtil.js';
 import type { IConfig } from '../../types.js';
 import type { DeliveryEnvelope } from './EventsService.js';
 import { EVENTS_COALESCE_WINDOW_MS } from '../../controllers/events/limits.js';
@@ -35,7 +35,7 @@ import { EVENTS_COALESCE_WINDOW_MS } from '../../controllers/events/limits.js';
 const BOOT_TIMEOUT_MS = 120_000;
 const SOCKET_ID = 'integration-socket';
 
-let env: PuterTestEnv;
+let env: MixtTestEnv;
 let actor: Actor;
 let userId: number;
 let username: string;
@@ -58,7 +58,7 @@ const settle = (predicate: (envelope: DeliveryEnvelope) => boolean) =>
     });
 
 beforeAll(async () => {
-    env = await setupPuterTestEnv({
+    env = await setupMixtTestEnv({
         events: { enabled: true },
     } as IConfig);
     username = env.users.user.username;

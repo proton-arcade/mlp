@@ -29,8 +29,8 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { parseArgs } from 'node:util';
 import http from 'node:http';
-import { puterClients } from './clients';
-import { puterControllers } from './controllers';
+import { mixtClients } from './clients';
+import { mixtControllers } from './controllers';
 import { createAuthProbe } from './core/http/middleware/authProbe';
 import { createAdminLockdown } from './core/http/middleware/adminLockdown';
 import { createRequestContextMiddleware } from './core/http/middleware/requestContext';
@@ -84,8 +84,8 @@ import {
 } from './core/http/middleware/hostRedirects';
 import { createEgressMeteringMiddleware } from './core/http/middleware/egressMetering';
 import { createLocalWorkerProxyMiddleware } from './core/http/middleware/localWorkerProxy';
-import { createPuterSiteMiddleware } from './core/http/middleware/puterSite';
-import { PuterRouter } from './core/http/PuterRouter';
+import { createMixtSiteMiddleware } from './core/http/middleware/mixtSite';
+import { MixtRouter } from './core/http/MixtRouter';
 import {
     createRouteLifecycleMiddleware,
     routeEventKeyBase,
@@ -96,7 +96,7 @@ import {
     type RouteOptions,
 } from './core/http/types';
 import type { AuthService } from './services/auth/AuthService';
-import { puterDrivers } from './drivers';
+import { mixtDrivers } from './drivers';
 import {
     clientsContainers,
     configContainer,
@@ -106,8 +106,8 @@ import {
     storesContainers,
 } from './exports';
 import { extensionStore } from './extensions';
-import { puterServices } from './services';
-import { puterStores } from './stores';
+import { mixtServices } from './services';
+import { mixtStores } from './stores';
 import type {
     IConfig,
     LayerInstances,
@@ -132,12 +132,12 @@ const CLAIMED_ROUTE_OPTIONS = new Set([
     'errorRenderer',
 ]);
 
-export class PuterServer {
-    clients!: LayerInstances<typeof puterClients>;
-    stores!: LayerInstances<typeof puterStores>;
-    services!: LayerInstances<typeof puterServices>;
-    controllers!: LayerInstances<typeof puterControllers>;
-    drivers!: LayerInstances<typeof puterDrivers>;
+export class MixtServer {
+    clients!: LayerInstances<typeof mixtClients>;
+    stores!: LayerInstances<typeof mixtStores>;
+    services!: LayerInstances<typeof mixtServices>;
+    controllers!: LayerInstances<typeof mixtControllers>;
+    drivers!: LayerInstances<typeof mixtDrivers>;
     #config: IConfig;
     #app!: ReturnType<typeof express>;
     #server: ReturnType<ReturnType<typeof express>['listen']> | null = null;
@@ -149,11 +149,11 @@ export class PuterServer {
 
     constructor(
         config: IConfig,
-        clients: typeof puterClients = puterClients,
-        stores: typeof puterStores = puterStores,
-        services: typeof puterServices = puterServices,
-        controllers: typeof puterControllers = puterControllers,
-        drivers: typeof puterDrivers = puterDrivers,
+        clients: typeof mixtClients = mixtClients,
+        stores: typeof mixtStores = mixtStores,
+        services: typeof mixtServices = mixtServices,
+        controllers: typeof mixtControllers = mixtControllers,
+        drivers: typeof mixtDrivers = mixtDrivers,
     ) {
         this.#config = config;
         // Expose config to the extension API (extension.config)
@@ -168,11 +168,11 @@ export class PuterServer {
     }
 
     async #setupServer(
-        clients: typeof puterClients,
-        stores: typeof puterStores,
-        services: typeof puterServices,
-        controllers: typeof puterControllers,
-        drivers: typeof puterDrivers,
+        clients: typeof mixtClients,
+        stores: typeof mixtStores,
+        services: typeof mixtServices,
+        controllers: typeof mixtControllers,
+        drivers: typeof mixtDrivers,
     ) {
         // Load prod extensions from configured directories (dynamic)
         const extensionDirs = this.#config.extensions;
@@ -292,7 +292,7 @@ export class PuterServer {
         // Every subdomain gate reads `req.subdomains`, which express derives by
         // dropping `subdomain offset` labels from the right of the hostname.
         // The offset is the root domain's own label count, so a deployment on
-        // `puter.example.com` doesn't read `puter` as an active subdomain.
+        // `mixt.example.com` doesn't read `mixt` as an active subdomain.
         this.#app.set(
             'subdomain offset',
             subdomainOffsetForDomain(this.#config.domain),
@@ -459,7 +459,7 @@ export class PuterServer {
         this.#app.use(helmet.xssFilter());
         // Don't leak full URLs (which can carry signed tokens / file paths)
         // to cross-origin destinations. Per-user hosted sites tighten this
-        // further to `no-referrer` in the puterSite middleware.
+        // further to `no-referrer` in the mixtSite middleware.
         this.#app.use(
             helmet.referrerPolicy({
                 policy: 'strict-origin-when-cross-origin',
@@ -608,12 +608,12 @@ export class PuterServer {
         // hosted-site middleware so published sites are closed as well.
         this.#app.use(createAdminLockdown(this.stores.user));
 
-        // -- User-hosted sites (*.puter.site, *.puter.app) -----------
+        // -- User-hosted sites (*.mixt.site, *.mixt.app) -----------
         // Short-circuits hosting-domain hosts before any API/GUI
         // controller route has a chance to match. Needs DI layers for
         // subdomain lookup, private-app gate, and file streaming.
         this.#app.use(
-            createPuterSiteMiddleware(this.#config, {
+            createMixtSiteMiddleware(this.#config, {
                 clients: this.clients,
                 stores: this.stores,
                 services: this.services,
@@ -666,7 +666,7 @@ export class PuterServer {
             const allowed = this.#getAllowedDomains();
 
             if (
-                allowed.some((d) => PuterServer.#hostMatchesDomain(hostName, d))
+                allowed.some((d) => MixtServer.#hostMatchesDomain(hostName, d))
             ) {
                 next();
                 return;
@@ -694,14 +694,14 @@ export class PuterServer {
             cfg.private_app_hosting_domain,
             cfg.private_app_hosting_domain_alt,
         ];
-        const staticDomain = PuterServer.#normalizeDomain(
+        const staticDomain = MixtServer.#normalizeDomain(
             cfg.static_hosting_domain,
         );
         if (staticDomain) raw.push(`at.${staticDomain}`);
         if (cfg.allow_nipio_domains) raw.push('nip.io');
 
         this.#allowedDomainsCache = raw
-            .map(PuterServer.#normalizeDomain)
+            .map(MixtServer.#normalizeDomain)
             .filter((d): d is string => d !== null);
         return this.#allowedDomainsCache;
     }
@@ -766,7 +766,7 @@ export class PuterServer {
             const origin = req.headers.origin;
             const subdomain = activeSubdomain(req);
 
-            // Allow any origin. puter.js is meant to be consumed from
+            // Allow any origin. mixt.js is meant to be consumed from
             // arbitrary third-party sites, so reflect the caller's origin
             // (or fall back to `*` for non-browser clients).
             res.setHeader('Access-Control-Allow-Origin', origin ?? '*');
@@ -932,7 +932,7 @@ export class PuterServer {
     }
 
     /**
-     * Walk a controller's declared routes (via `PuterRouter`) and register each
+     * Walk a controller's declared routes (via `MixtRouter`) and register each
      * one against the underlying express app. Per-route option → middleware
      * translation lives here — when we add auth/subdomain/body-parsing options,
      * they get wired in at this single point without touching any controller
@@ -961,7 +961,7 @@ export class PuterServer {
         const prefix = (controller as unknown as Record<string, unknown>)[
             PREFIX_METADATA_KEY
         ] as string | undefined;
-        const router = new PuterRouter(prefix ?? '');
+        const router = new MixtRouter(prefix ?? '');
         controller.registerRoutes(router);
 
         for (const route of router.routes) {
@@ -979,7 +979,7 @@ export class PuterServer {
 
         // A route for a claimed subdomain lives behind that claim's
         // `authorize`, on its own router, never on the main app.
-        const claimed = PuterServer.#claimedSubdomainOf(
+        const claimed = MixtServer.#claimedSubdomainOf(
             opts,
             `route ${route.method.toUpperCase()} ${routerPrefix}${String(route.path)}`,
         );
@@ -1226,7 +1226,7 @@ export class PuterServer {
                         surface: routeEventKeyBase(
                             route.method,
                             route.path !== undefined
-                                ? PuterServer.#joinPath(
+                                ? MixtServer.#joinPath(
                                       routerPrefix,
                                       route.path,
                                   )
@@ -1335,7 +1335,7 @@ export class PuterServer {
 
         const fullPath =
             route.path !== undefined
-                ? PuterServer.#joinPath(routerPrefix, route.path)
+                ? MixtServer.#joinPath(routerPrefix, route.path)
                 : undefined;
 
         // 5. Per-endpoint lifecycle events. Skipped for `use` middleware
@@ -1615,17 +1615,17 @@ export class PuterServer {
             console.log(
                 '\n************************************************************',
             );
-            console.log(`* Puter is now live at: ${liveUrl}`);
+            console.log(`* Mixt is now live at: ${liveUrl}`);
             console.log(
                 '************************************************************\n',
             );
 
             await this.#fireOnServerStart();
-            console.log('PuterServer has fully booted.');
+            console.log('MixtServer has fully booted.');
 
-            // CLI: `--server` (optionally `--puter-backend=<gui-origin>`)
-            // runs the AuthMe flow against a remote Puter (default
-            // puter.com), then opens the local GUI already logged in and
+            // CLI: `--server` (optionally `--mixt-backend=<gui-origin>`)
+            // runs the AuthMe flow against a remote Mixt (default
+            // mixt.mpl), then opens the local GUI already logged in and
             // pointed at that backend. Restores the v1 WebServerService
             // `--server` behavior; works in any env. When set, it takes
             // over browser launch so we don't also open a plain tab.
@@ -1633,7 +1633,7 @@ export class PuterServer {
                 args: process.argv.slice(2),
                 options: {
                     server: { type: 'boolean' },
-                    'puter-backend': { type: 'string' },
+                    'mixt-backend': { type: 'string' },
                 },
                 strict: false,
             });
@@ -1648,7 +1648,7 @@ export class PuterServer {
                     ).href;
                     const authGui = (await import(authGuiUrl)).default;
                     await authGui(
-                        cliArgs['puter-backend'] as string | undefined,
+                        cliArgs['mixt-backend'] as string | undefined,
                     );
                 } catch (e) {
                     console.log(
@@ -1672,12 +1672,12 @@ export class PuterServer {
         } else {
             this.#server = {
                 close: (cb: (error?: Error) => void | undefined) => {
-                    console.debug('PuterServer mock close called');
+                    console.debug('MixtServer mock close called');
                     cb?.();
                 },
                 closeAllConnections: () => {
                     console.debug(
-                        'PuterServer mock closeAllConnections called',
+                        'MixtServer mock closeAllConnections called',
                     );
                 },
             } as unknown as http.Server;
@@ -1749,7 +1749,7 @@ export class PuterServer {
         if (this.#server) {
             this.#server.close(async () => {
                 console.log(
-                    'PuterServer has stopped accepting new connections',
+                    'MixtServer has stopped accepting new connections',
                 );
                 await this.#runPrepareShutdownHooks();
             });
@@ -1760,7 +1760,7 @@ export class PuterServer {
         this.#removeProcessGuards?.();
         this.#removeProcessGuards = null;
         if (this.#server) {
-            console.log('PuterServer is shutting down');
+            console.log('MixtServer is shutting down');
             // Prepare hooks come first: SocketService's hook closes
             // socket.io, disconnecting upgraded websocket connections that
             // `closeAllConnections()` does not cover — without this,

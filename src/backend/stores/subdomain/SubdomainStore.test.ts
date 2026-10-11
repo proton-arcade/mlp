@@ -19,7 +19,7 @@
 
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { v4 as uuidv4 } from 'uuid';
-import { PuterServer } from '../../server.js';
+import { MixtServer } from '../../server.js';
 import { setupTestServer } from '../../testUtil.js';
 import {
     WORKER_SUBDOMAIN_PREFIX,
@@ -28,12 +28,12 @@ import {
 
 // ── Test harness ────────────────────────────────────────────────────
 //
-// Boots one PuterServer (in-memory sqlite + mock redis) and drives the
+// Boots one MixtServer (in-memory sqlite + mock redis) and drives the
 // live SubdomainStore. These cases are about the read/write cache
 // interleaving specifically — the driver-level behaviour is covered by
 // SubdomainDriver.test.ts.
 
-let server: PuterServer;
+let server: MixtServer;
 let store: SubdomainStore;
 
 beforeAll(async () => {

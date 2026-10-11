@@ -1,5 +1,5 @@
 ---
-title: puter.kv.flush()
+title: mixt.kv.flush()
 description: Remove all key-value pairs from the user's own store for your app.
 platforms: [websites, apps, nodejs, workers]
 ---
@@ -8,7 +8,7 @@ Will remove all key-value pairs from the user's key-value store for the current 
 
 ## Syntax
 ```js
-puter.kv.flush()
+mixt.kv.flush()
 ```
 
 ## Parameters
@@ -22,26 +22,26 @@ A `Promise` that will resolve to `true` when the key-value store has been flushe
 ```html;kv-flush
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
             // (1) Create a number of key-value pairs
-            await puter.kv.set('name', 'Puter Smith');
-            await puter.kv.set('age', 21);
-            await puter.kv.set('isCool', true);
-            puter.print("Key-value pairs created/updated<br>");
+            await mixt.kv.set('name', 'Mixt OS Smith');
+            await mixt.kv.set('age', 21);
+            await mixt.kv.set('isCool', true);
+            mixt.print("Key-value pairs created/updated<br>");
 
             // (2) Rretrieve all keys
-            const keys = await puter.kv.list();
-            puter.print(`Keys are: ${keys}<br>`);
+            const keys = await mixt.kv.list();
+            mixt.print(`Keys are: ${keys}<br>`);
 
             // (3) Flush the key-value store
-            await puter.kv.flush();
-            puter.print('Key-value store flushed<br>');
+            await mixt.kv.flush();
+            mixt.print('Key-value store flushed<br>');
 
             // (4) Retrieve all keys again, should be empty
-            const keys2 = await puter.kv.list();
-            puter.print(`Keys are now: ${keys2}<br>`);
+            const keys2 = await mixt.kv.list();
+            mixt.print(`Keys are now: ${keys2}<br>`);
         })();
     </script>
 </body>

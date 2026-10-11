@@ -19,14 +19,14 @@ describe('buildSlackMessage', () => {
     it('renders severity, message and fields', () => {
         const msg = buildSlackMessage(alert(), {
             channel: '#alerts',
-            username: 'puter-alarms',
+            username: 'mixt-alarms',
             serverId: 'oregon',
         });
 
         expect(msg.text).toContain('[WARNING]');
         expect(msg.text).toContain('High AI log entries');
         expect(msg.channel).toBe('#alerts');
-        expect(msg.username).toBe('puter-alarms');
+        expect(msg.username).toBe('mixt-alarms');
         expect(msg.attachments[0].fields).toEqual([
             { title: 'count', value: '1200', short: true },
             { title: 'threshold', value: '1000', short: true },

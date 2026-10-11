@@ -19,21 +19,21 @@
 
 import { PermissionUtil } from '../permission/permissionUtil.js';
 import type { LayerInstances } from '../../types.js';
-import type { puterStores } from '../../stores/index.js';
-import type { puterServices } from '../index.js';
-import { PuterService } from '../types.js';
+import type { mixtStores } from '../../stores/index.js';
+import type { mixtServices } from '../index.js';
+import { MixtService } from '../types.js';
 
 /**
  * Permission rewriter for the `site:*` namespace — maps `site:<name>:mode` to
- * the uid form. Ported from v1 PuterSiteService.
+ * the uid form. Ported from v1 MixtSiteService.
  *
  * The v1 `in-site` implicator for SiteActorType is not ported — v2 serves
- * hosted sites through the PuterSite middleware without a dedicated site actor
+ * hosted sites through the MixtSite middleware without a dedicated site actor
  * type, so there's no callsite that could benefit from an implicit grant.
  */
-export class SubdomainPermissionService extends PuterService {
-    declare protected stores: LayerInstances<typeof puterStores>;
-    declare protected services: LayerInstances<typeof puterServices>;
+export class SubdomainPermissionService extends MixtService {
+    declare protected stores: LayerInstances<typeof mixtStores>;
+    declare protected services: LayerInstances<typeof mixtServices>;
 
     override onServerStart(): void {
         const permissions = this.services.permission;

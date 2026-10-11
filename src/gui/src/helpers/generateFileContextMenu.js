@@ -357,7 +357,7 @@ const generate_file_context_menu = async function (options) {
             html: i18n('share_remove_from_shared'),
             onClick: async function () {
                 try {
-                    await puter.fs.unshare(
+                    await mixt.fs.unshare(
                         $(el_item).attr('data-path'),
                         window.user.username,
                     );

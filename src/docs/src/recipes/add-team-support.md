@@ -1,13 +1,13 @@
 ---
 title: Add Team Support
-description: "Learn how to add team support with Puter.js, so your app can get the user's team and its members."
+description: "Learn how to add team support with Mixt.js, so your app can get the user's team and its members."
 tags: [teams, auth]
 order: 60
 ---
 
 <div class="info">The Teams API is in beta. Method shapes, limits, and behavior may change between releases.</div>
 
-On Puter, a user can create a team and add accounts to it. The user who creates
+On Mixt OS, a user can create a team and add accounts to it. The user who creates
 the team becomes its owner. When someone on a
 team signs in to your app, you can read which team they belong to and who else
 is on it. This lets your app greet them with their team's name and suggest
@@ -20,7 +20,7 @@ To get the teams the signed-in user belongs to, call
 [`list()`](/Teams/list/). An empty array means the user is not on a team:
 
 ```js
-const teams = await puter.teams.list();
+const teams = await mixt.teams.list();
 
 if (teams.length === 0) {
     console.log('Not on a team');
@@ -34,7 +34,7 @@ if (teams.length === 0) {
 Each team has a `name` and a `handle`, and either one may be `null`:
 
 ```js
-const [team] = await puter.teams.list();
+const [team] = await mixt.teams.list();
 
 console.log(team.name ?? team.handle ?? 'Unnamed team');
 console.log(team.createdAt);       // '2026-09-28T10:04:00Z'
@@ -55,7 +55,7 @@ stays the same when the user changes their username, so store the `uuid` if
 you save a reference to someone:
 
 ```js
-const entries = await puter.teams.listDirectory(team.uid);
+const entries = await mixt.teams.listDirectory(team.uid);
 
 for (const { username, uuid } of entries) {
     console.log(username, uuid);
@@ -73,16 +73,16 @@ Your app can see a team only after the team owner turns on its directory. It is
 off by default. Until the owner turns it on, [`list()`](/Teams/list/) leaves
 the team out of its result, and
 [`listDirectory()`](/Teams/listDirectory/) rejects with `team_not_found`. The
-same calls made from the user's own Puter session still return the team.
+same calls made from the user's own Mixt OS session still return the team.
 
 Each team has a `directoryEnabled` flag. Check it before listing the users in a team, so
 you can tell the user what to do:
 
 ```js
-const [team] = await puter.teams.list();
+const [team] = await mixt.teams.list();
 
 if (team.directoryEnabled) {
-    const entries = await puter.teams.listDirectory(team.uid);
+    const entries = await mixt.teams.listDirectory(team.uid);
     console.log(entries);
 } else {
     console.log('Ask the team owner to turn on the directory.');
@@ -96,7 +96,7 @@ as an array. For a large team, pass `stream: true` to read it one page at a
 time. Each page has an `items` array:
 
 ```js
-for await (const page of puter.teams.listDirectory(team.uid, { stream: true })) {
+for await (const page of mixt.teams.listDirectory(team.uid, { stream: true })) {
     for (const { username } of page.items) console.log(username);
 }
 ```
@@ -106,7 +106,7 @@ To load one page at a time yourself, such as behind a "Load more" button, pass
 pages remain:
 
 ```js
-const page = await puter.teams.listDirectory(team.uid, { limit: 50, cursor: null });
+const page = await mixt.teams.listDirectory(team.uid, { limit: 50, cursor: null });
 
 console.log(page.items);
 console.log(page.cursor);

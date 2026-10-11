@@ -134,7 +134,7 @@ const hu = {
         forgot_pass_c2a: 'Elfelejtetted a jelszavad?',
         from: 'Tól',
         general: 'Általános',
-        get_a_copy_of_on_puter: "Szerezz egy példányt a(z) '%%' Mixt.com-on!",
+        get_a_copy_of_on_mixt: "Szerezz egy példányt a(z) '%%' Mixt.com-on!",
         get_copy_link: 'Másolási link megszerzése',
         hide_all_windows: 'Minden ablak elrejtése',
         home: 'Otthon',
@@ -200,7 +200,7 @@ const hu = {
         picture: 'Kép',
         pictures: 'Képek',
         plural_suffix: 'k',
-        powered_by_puter_js: 'A Puter.js hajtja',
+        powered_by_mixt_js: 'A Mixt.js hajtja',
         preparing: 'Előkészítés...',
         preparing_for_upload: 'Feltöltés előkészítése...',
         print: 'Nyomtatás',
@@ -216,12 +216,12 @@ const hu = {
         public: 'Nyilvános',
         publish: 'Közzététel',
         publish_as_website: 'Közzététel weboldalként',
-        puter_description: 'A Mixt egy adatvédelmi elsőként kezelt személyes felhő, amelyben minden fájlodat, alkalmazásodat és játékodat egy biztonságos helyen tárolhatod, bárhonnan, bármikor elérhetően.',
+        mixt_description: 'A Mixt egy adatvédelmi elsőként kezelt személyes felhő, amelyben minden fájlodat, alkalmazásodat és játékodat egy biztonságos helyen tárolhatod, bárhonnan, bármikor elérhetően.',
         reading_file: 'Fájl olvasása: %strong%',
         recent: 'Legutóbbi',
         recommended: 'Ajánlott',
         recover_password: 'Jelszó visszaállítása',
-        refer_friends_c2a: 'Kapj 1 GB-ot minden barátodért, aki létrehoz és megerősít egy fiókot a Puteren. A barátod is kap 1 GB-ot!',
+        refer_friends_c2a: 'Kapj 1 GB-ot minden barátodért, aki létrehoz és megerősít egy fiókot a Mixten. A barátod is kap 1 GB-ot!',
         refer_friends_social_media_c2a: 'Kapj 1 GB ingyenes tárhelyet a Mixt.com-on!',
         refresh: 'Frissítés',
         release_address_confirmation: 'Biztosan felszabadítod ezt a címet?',
@@ -232,7 +232,7 @@ const hu = {
         replace_all: 'Összes cseréje',
         resend_confirmation_code: 'Megerősítő kód újraküldése',
         reset_colors: 'Színek visszaállítása',
-        restart_puter_confirm: 'Biztosan újraindítod a Putert?',
+        restart_mixt_confirm: 'Biztosan újraindítod a Mixtt?',
         restore: 'Visszaállítás',
         save: 'Mentés',
         saturation: 'Telítettség',
@@ -262,7 +262,7 @@ const hu = {
         shortcut_to: 'Parancsikon ide:',
         show_all_windows: 'Összes ablak megjelenítése',
         show_hidden: 'Rejtett megjelenítése',
-        sign_in_with_puter: 'Bejelentkezés Puterrel',
+        sign_in_with_mixt: 'Bejelentkezés Mixtrel',
         sign_up: 'Regisztráció',
         signing_in: 'Bejelentkezés...',
         size: 'Méret',
@@ -272,7 +272,7 @@ const hu = {
         start: 'Indítás',
         status: 'Állapot',
         storage_usage: 'Tárhely használat',
-        storage_puter_used: 'Mixt által használt',
+        storage_mixt_used: 'Mixt által használt',
         taking_longer_than_usual: 'Kicsit tovább tart, mint általában. Kérlek várj...',
         task_manager: 'Feladatkezelő',
         taskmgr_header_name: 'Név',
@@ -305,7 +305,7 @@ const hu = {
         visibility: 'Láthatóság',
         yes: 'Igen',
         yes_release_it: 'Igen, Engedd El',
-        you_have_been_referred_to_puter_by_a_friend: 'Egy barátod ajánlott téged a Puterhez!',
+        you_have_been_referred_to_mixt_by_a_friend: 'Egy barátod ajánlott téged a Mixthez!',
         zip: 'Zip',
         zipping_file: 'Tömörítés: %strong%',
 
@@ -464,7 +464,7 @@ const hu = {
         'window_title_public': 'Nyilvános', // English: "Public"
         'window_title_videos': 'Videók', // English: "Videos"
         'window_title_pictures': 'Képek', // English: "Pictures"
-        'window_title_puter': 'Mixt', // English: "Mixt"
+        'window_title_mixt': 'Mixt', // English: "Mixt"
         'window_folder_empty': 'Ez a mappa üres', // English: "This folder is empty"
         'manage_your_subdomains': 'Aldomainjeinek kezelése', // English: "Manage Your Subdomains"
         'open_containing_folder': 'A tartalmazó mappa megnyitása', // English: "Open Containing Folder"

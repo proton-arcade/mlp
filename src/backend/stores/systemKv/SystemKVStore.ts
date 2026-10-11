@@ -33,7 +33,7 @@ import {
     normalizeOffset,
 } from '../../util/pagination';
 import { runWithConcurrencyLimit } from '../../util/concurrency';
-import { PuterStore } from '../types';
+import { MixtStore } from '../types';
 import {
     cacheTtlSecondsFor,
     decodeCachedRead,
@@ -48,11 +48,11 @@ import {
     type KvCacheSettings,
 } from './readCache';
 import {
-    PUTER_KV_STORE_TABLE_DEFINITION,
-    PUTER_KV_STORE_TABLE_NAME,
+    MIXT_KV_STORE_TABLE_DEFINITION,
+    MIXT_KV_STORE_TABLE_NAME,
 } from './tableDefinition';
 
-const meter = metrics.getMeter('puter-backend');
+const meter = metrics.getMeter('mixt-backend');
 
 /**
  * What the read cache did with each key it was asked about, by `result`:
@@ -1153,7 +1153,7 @@ const createPathsLayerExpressionBytes = (
 
 /**
  * Underlying key-value store. Housed at the store layer so both services
- * (permissions, metering) and drivers (`puter-kvstore`) can share it.
+ * (permissions, metering) and drivers (`mixt-kvstore`) can share it.
  *
  * Every method returns `{ res, usage }` — `res` is the operation result,
  * `usage` is the DynamoDB consumed capacity split into read/write units so
@@ -1162,8 +1162,8 @@ const createPathsLayerExpressionBytes = (
  *
  * If `opts.actor` is omitted, operations are scoped to the system namespace.
  */
-export class SystemKVStore extends PuterStore {
-    private tableName = PUTER_KV_STORE_TABLE_NAME;
+export class SystemKVStore extends MixtStore {
+    private tableName = MIXT_KV_STORE_TABLE_NAME;
     private initialized: Promise<void> | null = null;
 
     #cache: KvCacheSettings = resolveKvCacheSettings(this.config);
@@ -1174,7 +1174,7 @@ export class SystemKVStore extends PuterStore {
         if (this.#cache.enabled) this.#subscribeRemoteInvalidations();
         this.clients.dynamo.registerKeySchema(
             this.tableName,
-            PUTER_KV_STORE_TABLE_DEFINITION.KeySchema!,
+            MIXT_KV_STORE_TABLE_DEFINITION.KeySchema!,
         );
 
         // For local/dynalite runs we need to create the table up front.
@@ -1186,7 +1186,7 @@ export class SystemKVStore extends PuterStore {
         if (ddbConfig.aws && !ddbConfig.bootstrapTables) return;
 
         this.initialized = this.clients.dynamo.createTableIfNotExists(
-            { ...PUTER_KV_STORE_TABLE_DEFINITION, TableName: this.tableName },
+            { ...MIXT_KV_STORE_TABLE_DEFINITION, TableName: this.tableName },
             'ttl',
         );
         await this.initialized;

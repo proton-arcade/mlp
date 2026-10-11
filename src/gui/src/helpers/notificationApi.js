@@ -25,7 +25,7 @@
 
 const authHeaders = () => ({
     'Content-Type': 'application/json',
-    Authorization: `Bearer ${window.auth_token ?? window.puter?.authToken}`,
+    Authorization: `Bearer ${window.auth_token ?? window.mixt?.authToken}`,
 });
 
 /**
@@ -63,7 +63,7 @@ export async function markNotificationShown (uid) {
             method: 'POST',
             headers: authHeaders(),
             body: JSON.stringify({
-                interface: 'puter-notifications',
+                interface: 'mixt-notifications',
                 driver: 'es:notification',
                 method: 'mark_shown',
                 args: { uid },
@@ -98,7 +98,7 @@ export async function listNotifications ({ predicate = 'unacknowledged', limit =
         method: 'POST',
         headers: authHeaders(),
         body: JSON.stringify({
-            interface: 'puter-notifications',
+            interface: 'mixt-notifications',
             driver: 'es:notification',
             method: 'select',
             args: predicate === 'all' ? { limit } : { predicate, limit },

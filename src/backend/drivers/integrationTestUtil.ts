@@ -21,8 +21,8 @@
 /**
  * Shared utilities for integration tests that need external services.
  *
- * Each test reads its credentials from `PUTER_TEST_*` env vars (loaded by the
- * vitest config's `PUTER_` prefix) and skips itself when the var is missing —
+ * Each test reads its credentials from `MIXT_TEST_*` env vars (loaded by the
+ * vitest config's `MIXT_` prefix) and skips itself when the var is missing —
  * tests run only on developer machines and in CI environments that supply the
  * right secrets.
  *
@@ -91,9 +91,9 @@ export const makeActorMatrix = (): Actor[] => {
 
 /** Identifiers `makeActorMatrix()` should produce, in matrix order. */
 export const ACTOR_MATRIX_IDENTIFIERS: (string | undefined)[] = [
-    'puter-u42',
-    'puter-u42-app-abc',
-    'puter-u42-app-abc',
+    'mixt-u42',
+    'mixt-u42-app-abc',
+    'mixt-u42-app-abc',
     undefined,
 ];
 

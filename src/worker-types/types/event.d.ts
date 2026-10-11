@@ -1,12 +1,12 @@
-import type { Puter } from '@heyputer/puter.js';
+import type { Mixt } from '@mixt/mixt.js';
 import type { Params } from './params.d.ts';
 
 /**
- * The deployer's Puter context. Exposed in the global scope as `me`, `my`,
+ * The deployer's Mixt context. Exposed in the global scope as `me`, `my`,
  * and `myself`, and authenticated with the worker's own credentials.
  */
-export interface PuterContext {
-    puter: Puter;
+export interface MixtContext {
+    mixt: Mixt;
 }
 
 /**
@@ -21,17 +21,17 @@ export interface WorkerEvent<TParams extends Params = Params> extends Extendable
     params: TParams;
 
     /**
-     * Present only when the worker was invoked with a `puter-auth` header
-     * (e.g. via `puter.workers.exec()`). When present, the deployer can act
-     * on the caller's behalf through `user.puter`.
+     * Present only when the worker was invoked with a `mixt-auth` header
+     * (e.g. via `mixt.workers.exec()`). When present, the deployer can act
+     * on the caller's behalf through `user.mixt`.
      */
-    user?: PuterContext;
+    user?: MixtContext;
 
     /** @deprecated Alias for {@link WorkerEvent.user}. May be removed at a future date. */
-    requestor?: PuterContext;
+    requestor?: MixtContext;
 
     /**
-     * The **`WorkerEvent.waitUntil()`** method tells the event dispatcher that work is ongoing. It can also be used to detect whether that work was successful. In puter workers, waitUntil() tells the worker that work is ongoing until the promise settles, and it shouldn't terminate the worker if it wants that work to complete.
+     * The **`WorkerEvent.waitUntil()`** method tells the event dispatcher that work is ongoing. It can also be used to detect whether that work was successful. In mixt workers, waitUntil() tells the worker that work is ongoing until the promise settles, and it shouldn't terminate the worker if it wants that work to complete.
      *
      * [MDN Reference](https://developer.mozilla.org/docs/Web/API/ExtendableEvent/waitUntil)
      */

@@ -23,7 +23,7 @@ const DEFAULT_SUBDOMAIN_OFFSET = 2;
 /**
  * How many labels express must drop from the right of a hostname before what's
  * left counts as a subdomain. Express defaults to 2, which only holds for a
- * two-label root domain — on `puter.example.com` it would report `puter` as an
+ * two-label root domain — on `mixt.example.com` it would report `mixt` as an
  * active subdomain of every root request, sending the root origin through the
  * user-site redirect instead of the routes that serve it.
  */

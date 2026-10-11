@@ -51,7 +51,7 @@ describe('eventsWorkerScript', () => {
 });
 
 describe('eventsWorkerScope', () => {
-    it('reads the same field `#cfDeploy` binds as `puter_endpoint`, and falls back to empty', () => {
+    it('reads the same field `#cfDeploy` binds as `mixt_endpoint`, and falls back to empty', () => {
         expect(eventsWorkerScope({})).toBe('');
         expect(
             eventsWorkerScope({ workers: { internetExposedUrl: 'https://x' } }),

@@ -133,7 +133,7 @@ const hi = {
         forgot_pass_c2a: 'पासवर्ड भूल गए?',
         from: 'से',
         general: 'सामान्य',
-        get_a_copy_of_on_puter: "Purer.com पर '%%' की एक कॉपी प्राप्त करें!",
+        get_a_copy_of_on_mixt: "Purer.com पर '%%' की एक कॉपी प्राप्त करें!",
         get_copy_link: 'कॉपी लिंक प्राप्त करें',
         hide_all_windows: 'सभी विंडोज़ छिपाएँ',
         home: 'घर',
@@ -199,7 +199,7 @@ const hi = {
         picture: 'चित्र',
         pictures: 'चित्रों',
         plural_suffix: 'एस',
-        powered_by_puter_js: '{{link=docs}}Puter.js{{/link}} द्वारा संचालित',
+        powered_by_mixt_js: '{{link=docs}}Mixt.js{{/link}} द्वारा संचालित',
         preparing: 'तैयार कर रहे हैं...',
         preparing_for_upload: 'अपलोड करने की तैयारी है...',
         print: 'छाप',
@@ -215,7 +215,7 @@ const hi = {
         public: 'लोग',
         publish: 'प्रकाशित',
         publish_as_website: 'वेबसाइट के रूप में प्रकाशित करें',
-        puter_description: 'पुटर एक गोपनीयता-प्रथम व्यक्तिगत क्लाउड है जो आपकी सभी फ़ाइलों, ऐप्स और गेम को एक सुरक्षित स्थान पर रखता है, जिसे किसी भी समय कहीं से भी एक्सेस किया जा सकता है।',
+        mixt_description: 'पुटर एक गोपनीयता-प्रथम व्यक्तिगत क्लाउड है जो आपकी सभी फ़ाइलों, ऐप्स और गेम को एक सुरक्षित स्थान पर रखता है, जिसे किसी भी समय कहीं से भी एक्सेस किया जा सकता है।',
         reading_file: 'पढ़ना  %strong%',
         recent: 'हाल ही में',
         recommended: 'अनुशंसित',
@@ -231,7 +231,7 @@ const hi = {
         replace_all: 'सबको बदली करें',
         resend_confirmation_code: 'पुष्टिकरण कोड पुनः भेजें',
         reset_colors: 'रंग रीसेट करें',
-        restart_puter_confirm: 'क्या आप वाकई पुटर को पुनः आरंभ करना चाहते हैं?',
+        restart_mixt_confirm: 'क्या आप वाकई पुटर को पुनः आरंभ करना चाहते हैं?',
         restore: 'पुनर्स्थापित',
         save: 'सहेजें',
         saturation: 'परिपूर्णता',
@@ -261,7 +261,7 @@ const hi = {
         shortcut_to: 'के लिए शॉर्टकट',
         show_all_windows: 'सभी विंडोज़ दिखाएँ',
         show_hidden: 'छिपा हुआ दिखाएं',
-        sign_in_with_puter: 'पुटर के साथ साइन इन करें',
+        sign_in_with_mixt: 'पुटर के साथ साइन इन करें',
         sign_up: 'साइन अप करें',
         signing_in: 'साइन कर रहे हैं…',
         size: 'आकार',
@@ -271,7 +271,7 @@ const hi = {
         start: 'शुरू',
         status: 'स्थिति',
         storage_usage: 'भंडारण उपयोग',
-        storage_puter_used: 'पुटर द्वारा उपयोग किया गया',
+        storage_mixt_used: 'पुटर द्वारा उपयोग किया गया',
         taking_longer_than_usual: 'सामान्य से थोड़ा अधिक समय लग रहा है. कृपया प्रतीक्षा करें...',
         task_manager: 'कार्य प्रबंधक',
         taskmgr_header_name: 'नाम',
@@ -304,7 +304,7 @@ const hi = {
         visibility: 'दृश्यता',
         yes: 'हाँ',
         yes_release_it: 'हाँ, इसे जारी करें',
-        you_have_been_referred_to_puter_by_a_friend: 'आपको एक मित्र ने पुटर के बारे में बताया है!',
+        you_have_been_referred_to_mixt_by_a_friend: 'आपको एक मित्र ने पुटर के बारे में बताया है!',
         zip: 'ज़िप',
         zipping_file: 'ज़िपिंग  %strong%',
 
@@ -463,7 +463,7 @@ const hi = {
         'window_title_public': 'सार्वजनिक', // In English: "Public"
         'window_title_videos': 'वीडियो', // In English: "Videos"
         'window_title_pictures': 'चित्र', // In English: "Pictures"
-        'window_title_puter': 'Mixt', // In English: "Mixt"
+        'window_title_mixt': 'Mixt', // In English: "Mixt"
         'window_folder_empty': 'यह फ़ोल्डर खाली है', // In English: "This folder is empty"
         'manage_your_subdomains': 'अपने सबडोमेन प्रबंधित करें', // In English: "Manage Your Subdomains"
         'open_containing_folder': 'समाहित फ़ोल्डर खोलें', // In English: "Open Containing Folder"

@@ -33,7 +33,7 @@ import { PostgresDatabaseClient } from './PostgresDatabaseClient';
 import { SqliteDatabaseClient } from './SqliteDatabaseClient';
 
 /**
- * Factory class registered in `puterClients`. PuterServer calls `new
+ * Factory class registered in `mixtClients`. MixtServer calls `new
  * DatabaseClientFactory(config)` — the constructor returns the concrete
  * subclass selected by `config.database.engine`.
  */

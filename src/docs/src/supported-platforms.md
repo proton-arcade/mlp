@@ -1,13 +1,13 @@
 ---
 title: Supported Platforms
-description: Use Puter.js on any platform with JavaScript support, including websites, Puter Apps, Node.js, and Serverless Workers.
+description: Use Mixt.js on any platform with JavaScript support, including websites, Mixt OS Apps, Node.js, and Serverless Workers.
 ---
 
-Puter.js works on any platform with JavaScript support. This includes websites, Puter Apps, Node.js, and Puter Serverless Workers.
+Mixt.js works on any platform with JavaScript support. This includes websites, Mixt OS Apps, Node.js, and Mixt OS Serverless Workers.
 
 ## **Websites**
 
-Use Puter.js in your websites to add powerful features like databases and cloud storage without worrying about infrastructure.
+Use Mixt.js in your websites to add powerful features like databases and cloud storage without worrying about infrastructure.
 
 You can use it across all kinds of web development technologies, from static HTML sites and single-page applications (React, Vue, Angular) to full-stack frameworks like Next.js, Nuxt, and SvelteKit, or any JavaScript-based web application.
 
@@ -21,23 +21,23 @@ You can use it across all kinds of web development technologies, from static HTM
 ### Installation via NPM
 
 ```plaintext
-npm install @heyputer/puter.js
+npm install @mixt/mixt.js
 ```
 
 <br>
 
-### Importing Puter.js
+### Importing Mixt.js
 
 ```js
 // ESM
-import { puter } from "@heyputer/puter.js";
+import { mixt } from "@mixt/mixt.js";
 // or
-import puter from "@heyputer/puter.js";
+import mixt from "@mixt/mixt.js";
 
 // CommonJS
-const { puter } = require("@heyputer/puter.js");
+const { mixt } = require("@mixt/mixt.js");
 // or
-const puter = require("@heyputer/puter.js");
+const mixt = require("@mixt/mixt.js");
 ```
 
 </div>
@@ -51,55 +51,55 @@ const puter = require("@heyputer/puter.js");
 
 ### Unsupported contexts
 
-Puter identifies your app by its origin, so a page the browser gives no origin to cannot be signed in:
+Mixt OS identifies your app by its origin, so a page the browser gives no origin to cannot be signed in:
 
 - **Pages opened straight from disk** (`file:///...`). Serve the file instead — `python3 -m http.server` or `npx http-server` is enough, and `http://localhost` works like any other origin.
-- **Iframes sandboxed without `allow-same-origin`.** Add `allow-same-origin` to the `sandbox` attribute, or load Puter.js from the parent page.
+- **Iframes sandboxed without `allow-same-origin`.** Add `allow-same-origin` to the `sandbox` attribute, or load Mixt.js from the parent page.
 
-In both cases Puter.js shows an "Unsupported Origin" dialog on load, and `puter.auth.signIn()` rejects with [`unsupported_origin`](/Auth/signIn/).
+In both cases Mixt.js shows an "Unsupported Origin" dialog on load, and `mixt.auth.signIn()` rejects with [`unsupported_origin`](/Auth/signIn/).
 
 ### Starter templates for web
 
-- [Angular](https://github.com/HeyPuter/angular)
-- [React](https://github.com/HeyPuter/react)
-- [Next.js](https://github.com/HeyPuter/next.js)
-- [Vue.js](https://github.com/HeyPuter/vue.js)
-- [Vanilla JS](https://github.com/HeyPuter/vanilla.js)
+- [Angular](https://github.com/proton-arcade/angular)
+- [React](https://github.com/proton-arcade/react)
+- [Next.js](https://github.com/proton-arcade/next.js)
+- [Vue.js](https://github.com/proton-arcade/vue.js)
+- [Vanilla JS](https://github.com/proton-arcade/vanilla.js)
 
-## **Puter Apps**
+## **Mixt OS Apps**
 
-Puter Apps are web-based applications that run in the [Puter](https://puter.com) web-based operating system.
+Mixt OS Apps are web-based applications that run in the [Mixt OS](https://mixt.mpl) web-based operating system.
 
-You can use Puter.js in Puter Apps just as you would in any website. They have full access to all web capabilities, plus the added benefits of Puter desktop, such as:
+You can use Mixt.js in Mixt OS Apps just as you would in any website. They have full access to all web capabilities, plus the added benefits of Mixt OS desktop, such as:
 
-- **Automatic authentication** - Users are automatically authenticated in the Puter environment
-- **Inter-app communication** - Interact with other Puter apps programmatically
-- **File system integration** - Direct access to the user's Puter file system
-- **Cloud desktop integration** - Apps run seamlessly in the Puter desktop environment
+- **Automatic authentication** - Users are automatically authenticated in the Mixt OS environment
+- **Inter-app communication** - Interact with other Mixt OS apps programmatically
+- **File system integration** - Direct access to the user's Mixt OS file system
+- **Cloud desktop integration** - Apps run seamlessly in the Mixt OS desktop environment
 
 <figure style="margin: 40px 0;">
-    <img src="https://assets.puter.site/puter.com-screenshot-3.webp" style="width: 100%; max-width: 600px; margin: 0px auto; display:block;">
-    <figcaption style="text-align: center; font-size: 13px; color: #777;">Puter cloud desktop environment</figcaption>
+    <img src="https://assets.mixt.site/mixt.mpl-screenshot-3.webp" style="width: 100%; max-width: 600px; margin: 0px auto; display:block;">
+    <figcaption style="text-align: center; font-size: 13px; color: #777;">Mixt OS cloud desktop environment</figcaption>
 </figure>
 
-The Puter ecosystem hosts over 60,000 live applications, from essential tools like Notepad, File Explorer, Code Editor, and many more specialized applications.
+The Mixt OS ecosystem hosts over 60,000 live applications, from essential tools like Notepad, File Explorer, Code Editor, and many more specialized applications.
 
 ## **Node.js**
 
-Puter.js works seamlessly in Node.js environments, allowing you to integrate databases and cloud storage with your Node.js applications. This makes it ideal for building backend services and APIs, performing server-side data processing, or creating CLI tools and automation scripts.
+Mixt.js works seamlessly in Node.js environments, allowing you to integrate databases and cloud storage with your Node.js applications. This makes it ideal for building backend services and APIs, performing server-side data processing, or creating CLI tools and automation scripts.
 
 ```js
-const { init } = require("@heyputer/puter.js/src/init.cjs");
+const { init } = require("@mixt/mixt.js/src/init.cjs");
 // or
-import { init } from "@heyputer/puter.js/src/init.cjs";
+import { init } from "@mixt/mixt.js/src/init.cjs";
 
-const puter = init(process.env.puterAuthToken); // uses your auth token
+const mixt = init(process.env.mixtAuthToken); // uses your auth token
 
 // Print a greeting
-puter.print("Hello from Mixt!");
+mixt.print("Hello from Mixt!");
 ```
 
-Get started quickly with the [Node.js + Express template](https://github.com/HeyPuter/node.js-express.js).
+Get started quickly with the [Node.js + Express template](https://github.com/proton-arcade/node.js-express.js).
 
 <div class="info">If your environment has browser access (e.g. CLI tools), you can use <code>getAuthToken()</code> to obtain a token via web-based login.</div>
 
@@ -107,7 +107,7 @@ Get started quickly with the [Node.js + Express template](https://github.com/Hey
 
 [Serverless Workers](/Workers/) let you run HTTP servers and backend APIs.
 
-Think of them as your serverless backend and API endpoints. Just like in other serverless platforms, you can use Puter.js in workers to access cloud storage, key-value stores, and databases.
+Think of them as your serverless backend and API endpoints. Just like in other serverless platforms, you can use Mixt.js in workers to access cloud storage, key-value stores, and databases.
 
 ```js
 // Simple GET endpoint

@@ -42,12 +42,12 @@ CREATE TABLE IF NOT EXISTS `audit_team_membership` (
     REFERENCES `user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CALL _puter_add_col('share', 'holder_group_id', '`holder_group_id` int unsigned DEFAULT NULL');
+CALL _mixt_add_col('share', 'holder_group_id', '`holder_group_id` int unsigned DEFAULT NULL');
 
-DROP PROCEDURE IF EXISTS _puter_add_group_share_constraints;
+DROP PROCEDURE IF EXISTS _mixt_add_group_share_constraints;
 
 DELIMITER //
-CREATE PROCEDURE _puter_add_group_share_constraints()
+CREATE PROCEDURE _mixt_add_group_share_constraints()
 BEGIN
   IF NOT EXISTS (
     SELECT 1 FROM INFORMATION_SCHEMA.STATISTICS
@@ -80,5 +80,5 @@ BEGIN
 END//
 DELIMITER ;
 
-CALL _puter_add_group_share_constraints();
-DROP PROCEDURE IF EXISTS _puter_add_group_share_constraints;
+CALL _mixt_add_group_share_constraints();
+DROP PROCEDURE IF EXISTS _mixt_add_group_share_constraints;

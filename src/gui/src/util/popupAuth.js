@@ -23,7 +23,7 @@
  * A popup boot (`?embedded_in_popup=true`) mints a user-app token on several
  * different paths — the plain token exchange, first-visit temp-user creation,
  * and manual signup when temp users are refused — and historically every one of
- * them posted `puter.token` to the opener. The SDK's global message listener
+ * them posted `mixt.token` to the opener. The SDK's global message listener
  * feeds that straight into `setAuthToken()`, so posting it signs the site in.
  *
  * That is only what the user asked for when the popup's whole purpose was
@@ -47,7 +47,7 @@ const isSignInPopup = (action) =>
     !action || SIGN_IN_POPUP_ACTIONS.has(action);
 
 /**
- * Whether a popup running `action` may post `puter.token` to its opener.
+ * Whether a popup running `action` may post `mixt.token` to its opener.
  *
  * Only sign-in popups and the pickers do. For `request-permission` the token
  * exchange itself still runs — it bootstraps the app row a permission grant
@@ -150,7 +150,7 @@ export const runsUserAppTokenExchange = (action) =>
  * An OIDC hop navigates the popup away and the provider sends it back to a
  * redirect URI the server builds, which is hard-coded to `/action/sign-in`
  * (OIDCController's popup branch). The popup therefore comes back believing it
- * is a plain sign-in popup: it posts `puter.token` to the opener — which the
+ * is a plain sign-in popup: it posts `mixt.token` to the opener — which the
  * SDK's global listener feeds straight into `setAuthToken()` — and never runs
  * the action it was opened for. For a permission prompt that is the exact
  * outcome `deliversTokenToOpener` exists to prevent: the site is signed in

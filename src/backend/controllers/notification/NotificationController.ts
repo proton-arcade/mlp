@@ -21,18 +21,18 @@ import type { Request, Response } from 'express';
 import { Controller, Post } from '../../core/http/decorators.js';
 import { HttpError } from '../../core/http/HttpError.js';
 import type { NotificationService } from '../../services/notification/NotificationService.js';
-import { PuterController } from '../types.js';
+import { MixtController } from '../types.js';
 
 /**
- * GUI-facing notification endpoint. Supplements the `puter-notifications`
+ * GUI-facing notification endpoint. Supplements the `mixt-notifications`
  * driver (which handles CRUD via `/drivers/call`) with the one mutation route
- * the puter desktop client calls directly.
+ * the mixt desktop client calls directly.
  *
  * It emits `outer.gui.notif.ack` via the NotificationService so other open tabs
  * for the same user see the state change immediately.
  */
 @Controller('/notif')
-export class NotificationController extends PuterController {
+export class NotificationController extends MixtController {
     /**
      * POST /notif/mark-ack — user dismissed a notification. Sets `acknowledged`
      * timestamp; pushes ack event to sockets.

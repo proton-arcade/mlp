@@ -18,7 +18,7 @@
  */
 
 import type { IConfig } from '../../types';
-import { PuterClient } from '../types';
+import { MixtClient } from '../types';
 import { COUNTRY_SMS_PRICES } from './countries.js';
 
 const PRELUDE_API_BASE = 'https://api.prelude.dev/v2';
@@ -74,7 +74,7 @@ export type PreludeCheckStatus =
  * is configured (so dev environments don't crash); `isConfigured()` lets
  * callers surface a clean "phone verification unavailable" error instead.
  */
-export class PreludeClient extends PuterClient {
+export class PreludeClient extends MixtClient {
     private apiKey: string | null = null;
 
     constructor(config: IConfig) {
@@ -143,7 +143,7 @@ export class PreludeClient extends PuterClient {
             locale: 'en-US',
         };
         // Branding lives in the Prelude dashboard (the message text is a
-        // template); these just select a Puter-branded template / sender when
+        // template); these just select a Mixt-branded template / sender when
         // configured. See IPreludeConfig.
         const { templateId, senderId } = this.config.prelude ?? {};
         if (templateId) options.template_id = templateId;

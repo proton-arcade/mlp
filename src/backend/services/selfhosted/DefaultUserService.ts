@@ -20,7 +20,7 @@
 import bcrypt from 'bcrypt';
 import crypto from 'node:crypto';
 import { v4 as uuidv4 } from 'uuid';
-import { PuterService } from '../types.js';
+import { MixtService } from '../types.js';
 import type { UserRow } from '../../stores/user/UserStore.js';
 import { generateDefaultFsentries } from '../../util/userProvisioning.js';
 import { LOCAL_UNLIMITED_USER } from '../../data/subPolicies/localUnlimitedUserPolicy.js';
@@ -43,7 +43,7 @@ const ADMIN_STORAGE_BYTES = 10 * 1024 * 1024 * 1024;
  * extract the default password). Once rotation is detected the stash is deleted
  * so the plaintext isn't retained longer than needed.
  */
-export class DefaultUserService extends PuterService {
+export class DefaultUserService extends MixtService {
     override async onServerStart(): Promise<void> {
         // Dev convenience: grant the bootstrap `admin` user unlimited metering.
         // Gated to env === 'dev' so prod deployments never get a free-usage

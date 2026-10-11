@@ -1,16 +1,16 @@
 <html>
 <body>
-    <script src="/puter.js/v2"></script>
+    <script src="/mixt.js/v2"></script>
     <button id="request-apps">Request Apps Read Access</button>
     <script>
         document.getElementById('request-apps').addEventListener('click', async () => {
-            const granted = await puter.perms.request('apps');
+            const granted = await mixt.perms.request('apps');
             if (granted) {
-                puter.print('Apps read access granted');
-                const apps = await puter.apps.list();
-                puter.print(`User has ${apps.length} apps`);
+                mixt.print('Apps read access granted');
+                const apps = await mixt.apps.list();
+                mixt.print(`User has ${apps.length} apps`);
             } else {
-                puter.print('Apps read access denied');
+                mixt.print('Apps read access denied');
             }
         });
     </script>

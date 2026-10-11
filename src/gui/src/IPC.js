@@ -51,7 +51,7 @@ window.ipc_handlers = {};
 const feedback_dialog_guard = createFeedbackDialogGuard();
 
 /**
- * In Puter, apps are loaded in iframes and communicate with the graphical user interface (GUI), and each other, using the postMessage API.
+ * In Mixt, apps are loaded in iframes and communicate with the graphical user interface (GUI), and each other, using the postMessage API.
  * The following sets up an Inter-Process Messaging System between apps and the GUI that enables communication
  * for various tasks such as displaying alerts, prompts, managing windows, handling file operations, and more.
  *
@@ -126,10 +126,10 @@ const ipc_listener = async (event, handled) => {
         const services = globalThis.services;
         const svc_process = services.get('process');
 
-        // Add version info to old puter.js messages
+        // Add version info to old mixt.js messages
         // (and coerce them into the format of new ones)
         if ( event.data.$ === undefined ) {
-            event.data.$ = 'puter-ipc';
+            event.data.$ = 'mixt-ipc';
             event.data.v = 1;
             event.data.parameters = { ...event.data };
             delete event.data.parameters.msg;
@@ -160,7 +160,7 @@ const ipc_listener = async (event, handled) => {
         const spec = window.ipc_handlers[event.data.msg];
         let retval = await spec.handler(event.data.parameters, { msg_id, ipc_context });
 
-        puter.util.rpc.send(iframe.contentWindow, msg_id, retval);
+        mixt.util.rpc.send(iframe.contentWindow, msg_id, retval);
 
         return;
     }
@@ -248,7 +248,7 @@ const ipc_listener = async (event, handled) => {
     // requestVerificationGate
     //--------------------------------------------------------
     else if ( event.data.msg === 'requestVerificationGate' ) {
-        // Raised by puter.js when a request hit a 403 account-verification
+        // Raised by mixt.js when a request hit a 403 account-verification
         // gate. The cached user object may not know about a gate applied
         // mid-session (or one cleared in another tab), so refresh it before
         // deciding; if the gate is off after the refresh, respond success so
@@ -503,7 +503,7 @@ const ipc_listener = async (event, handled) => {
         // app-side promise only settles when a message with its id comes back
         // — so a rejected call is answered anyway rather than left hanging
         // forever. Logged here because that is the only place it is visible.
-        puter.kv.set({
+        mixt.kv.set({
             key: event.data.key,
             value: event.data.value,
             app_uid: app_uuid,
@@ -518,7 +518,7 @@ const ipc_listener = async (event, handled) => {
     // getItem
     //--------------------------------------------------------
     else if ( event.data.msg === 'getItem' && event.data.key ) {
-        puter.kv.get({
+        mixt.kv.get({
             key: event.data.key,
             app_uid: app_uuid,
         }).catch(err => {
@@ -537,7 +537,7 @@ const ipc_listener = async (event, handled) => {
     // removeItem
     //--------------------------------------------------------
     else if ( event.data.msg === 'removeItem' && event.data.key ) {
-        puter.kv.del({
+        mixt.kv.del({
             key: event.data.key,
             app_uid: app_uuid,
         }).catch(err => console.warn('kv.removeItem failed for app:', err)).then(() => {
@@ -768,7 +768,7 @@ const ipc_listener = async (event, handled) => {
             return;
         }
 
-        const hydrator = puter.util.rpc.getHydrator({
+        const hydrator = mixt.util.rpc.getHydrator({
             target: target_iframe.contentWindow,
         });
         let value = hydrator.hydrate(event.data.value);
@@ -853,7 +853,7 @@ const ipc_listener = async (event, handled) => {
     else if ( event.data.msg === 'setMenubar' ) {
         const el_window = window.window_for_app_instance(event.data.appInstanceID);
 
-        const hydrator = puter.util.rpc.getHydrator({
+        const hydrator = mixt.util.rpc.getHydrator({
             target: target_iframe.contentWindow,
         });
         const value = hydrator.hydrate(event.data.value);
@@ -1299,7 +1299,7 @@ const ipc_listener = async (event, handled) => {
         // join with appdata dir
         const file_path = path.join(window.appdata_path, app_uuid, event.data.path);
 
-        puter.fs.sign(app_uuid, {
+        mixt.fs.sign(app_uuid, {
             path: file_path,
             action: 'write',
         }, function (signature) {
@@ -1335,12 +1335,12 @@ const ipc_listener = async (event, handled) => {
             }, '*');
         }
         // make app directory if it doesn't exist
-        puter.fs.mkdir({
+        mixt.fs.mkdir({
             path: path.join(window.appdata_path, app_uuid),
             rename: false,
             overwrite: false,
             success: function (dir) {
-                puter.fs.sign(app_uuid, {
+                mixt.fs.sign(app_uuid, {
                     uid: dir.uid,
                     action: 'write',
                     success: function (signature) {
@@ -1357,7 +1357,7 @@ const ipc_listener = async (event, handled) => {
             },
             error: function (err) {
                 if ( err.existing_fsentry || err.code === 'path_exists' ) {
-                    puter.fs.sign(app_uuid, {
+                    mixt.fs.sign(app_uuid, {
                         uid: err.existing_fsentry.uid,
                         action: 'write',
                         success: function (signature) {
@@ -1671,7 +1671,7 @@ const ipc_listener = async (event, handled) => {
             el_filedialog_window,
             res,
         }) => {
-            let file_signature = await puter.fs.sign(app_uuid, { uid: res.uid, action: 'write' });
+            let file_signature = await mixt.fs.sign(app_uuid, { uid: res.uid, action: 'write' });
             file_signature = file_signature.items;
 
             target_iframe.contentWindow.postMessage({
@@ -1728,7 +1728,7 @@ const ipc_listener = async (event, handled) => {
             target_path, el_filedialog_window,
             file_to_upload, overwrite,
         }) => {
-            const res = await puter.fs.write(
+            const res = await mixt.fs.write(
                 target_path,
                 file_to_upload,
                 {
@@ -1799,7 +1799,7 @@ const ipc_listener = async (event, handled) => {
             source_path, target_path, el_filedialog_window,
         }) => {
             // source path must be in appdata directory
-            const stat_info = await puter.fs.stat({ path: source_path, consistency: 'eventual' });
+            const stat_info = await mixt.fs.stat({ path: source_path, consistency: 'eventual' });
             if ( !stat_info.appdata_app || stat_info.appdata_app !== app_uuid ) {
                 const source_file_owner = stat_info?.appdata_app ?? 'the user';
                 if ( stat_info.appdata_app && stat_info.appdata_app !== app_uuid ) {
@@ -1851,19 +1851,19 @@ const ipc_listener = async (event, handled) => {
             const written = await window.handle_same_name_exists({
                 action: async ({ overwrite }) => {
                     if ( overwrite ) {
-                        await puter.fs.delete(target_path);
+                        await mixt.fs.delete(target_path);
                     }
 
                     if ( save_type === 'copy' ) {
                         const target_dir = path.dirname(target_path);
                         const new_name = path.basename(target_path);
-                        await puter.fs.copy(source_path, target_dir, {
+                        await mixt.fs.copy(source_path, target_dir, {
                             newName: new_name,
                         });
                     } else {
-                        await puter.fs.move(source_path, target_path);
+                        await mixt.fs.move(source_path, target_path);
                     }
-                    node = await puter.fs.stat(target_path);
+                    node = await mixt.fs.stat(target_path);
                 },
                 parent_uuid: $(el_filedialog_window).attr('data-element_uuid'),
             });
@@ -1927,22 +1927,22 @@ const ipc_listener = async (event, handled) => {
     //--------------------------------------------------------
     // These legacy handlers wrote into standard user folders with no
     // permission prompt — an app only had to post the message. They were
-    // never exposed through puter.js or documented, so the only callers are
+    // never exposed through mixt.js or documented, so the only callers are
     // hand-rolled postMessage. Removed rather than gated: the write needs
-    // the same consent as any other filesystem write, and `puter.fs.write`
+    // the same consent as any other filesystem write, and `mixt.fs.write`
     // already provides that path.
     //
     // Answered explicitly instead of falling through, so a legacy caller
     // fails fast rather than awaiting a reply that never arrives.
     else if (( event.data.msg === 'saveToPictures' || event.data.msg === 'saveToDesktop' || event.data.msg === 'saveToAppData' ||
         event.data.msg === 'saveToDocuments' || event.data.msg === 'saveToVideos' || event.data.msg === 'saveToAudio' )) {
-        console.warn(`The method ${event.data.msg} has been removed - use puter.fs.write() instead.`);
+        console.warn(`The method ${event.data.msg} has been removed - use mixt.fs.write() instead.`);
         target_iframe.contentWindow.postMessage({
             msg: 'error',
             original_msg_id: msg_id,
             error: {
                 code: 'method_removed',
-                message: `${event.data.msg} has been removed. Use puter.fs.write() instead.`,
+                message: `${event.data.msg} has been removed. Use mixt.fs.write() instead.`,
             },
         }, '*');
     }
@@ -2042,12 +2042,12 @@ const ipc_listener = async (event, handled) => {
     }
 };
 
-if ( ! window.when_puter_happens ) window.when_puter_happens = [];
-window.when_puter_happens.push(async () => {
-    // puter.services was removed during the recent puter.js refactor. If the
+if ( ! window.when_mixt_happens ) window.when_mixt_happens = [];
+window.when_mixt_happens.push(async () => {
+    // mixt.services was removed during the recent mixt.js refactor. If the
     // service layer exists (older builds), use it; otherwise, attach the IPC
     // listener directly so apps can still communicate with the GUI.
-    const svc_mgr = puter.services;
+    const svc_mgr = mixt.services;
     const svc_xdIncoming = svc_mgr?.get?.('xd-incoming');
     if ( svc_mgr?.wait_for_init && svc_xdIncoming?.register_filter_listener ) {
         await svc_mgr.wait_for_init(['xd-incoming']);

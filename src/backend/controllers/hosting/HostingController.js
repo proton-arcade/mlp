@@ -18,7 +18,7 @@
  */
 
 import { HttpError } from '../../core/http/HttpError.js';
-import { PuterController } from '../types.js';
+import { MixtController } from '../types.js';
 import {
     DEFAULT_FREE_SUBSCRIPTION,
     DEFAULT_TEMP_SUBSCRIPTION,
@@ -26,12 +26,12 @@ import {
 
 /**
  * Site hosting endpoints. Listing and create/update are not exposed as
- * controller routes — clients use the `puter-subdomains` driver (select /
+ * controller routes — clients use the `mixt-subdomains` driver (select /
  * create / update / read) so they get the v1-shape with uuids and nested
  * objects (no raw mysql ids). Only `/delete-site` lives here because v1 also
  * exposed it as a top-level POST.
  */
-export class HostingController extends PuterController {
+export class HostingController extends MixtController {
     constructor(config, clients, stores, services) {
         super(config, clients, stores, services);
     }
@@ -93,7 +93,7 @@ export class HostingController extends PuterController {
                     userId: req.actor.user.id,
                 });
 
-                // Same event the `puter-subdomains` driver fires on delete —
+                // Same event the `mixt-subdomains` driver fires on delete —
                 // listeners (CDN purge, abuse tracking, worker cleanup)
                 // depend on it.
                 try {

@@ -1,6 +1,6 @@
 ---
-title: puter.hosting.list()
-description: List all subdomains in your Puter account.
+title: mixt.hosting.list()
+description: List all subdomains in your Mixt OS account.
 platforms: [websites, apps, nodejs, workers]
 ---
 
@@ -8,8 +8,8 @@ Returns an array of all subdomains in the user's subdomains that this app has ac
 
 ## Syntax
 ```js
-puter.hosting.list()
-puter.hosting.list(options)
+mixt.hosting.list()
+mixt.hosting.list(options)
 ```
 
 ## Parameters
@@ -38,14 +38,14 @@ Requests without pagination params keep returning the full list as a plain array
 With `stream: true`, the method returns an async iterator of page objects instead:
 
 ```js
-for await (const page of puter.hosting.list({ stream: true })) {
+for await (const page of mixt.hosting.list({ stream: true })) {
     for (const site of page.items) {
         console.log(site.subdomain);
     }
 }
 ```
 
-Worker-backed subdomains are never included in the results — pages and `total` only count sites. Use [`puter.workers.list()`](/Workers/list/) to list workers.
+Worker-backed subdomains are never included in the results — pages and `total` only count sites. Use [`mixt.workers.list()`](/Workers/list/) to list workers.
 
 ## Examples
 
@@ -54,29 +54,29 @@ Worker-backed subdomains are never included in the results — pages and `total`
 ```html;hosting-list
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
             // (1) Generate 3 random subdomains
-            let site_1 = puter.randName();
-            let site_2 = puter.randName();
-            let site_3 = puter.randName();
+            let site_1 = mixt.randName();
+            let site_2 = mixt.randName();
+            let site_3 = mixt.randName();
 
             // (2) Create 3 empty websites with the subdomains we generated
-            await puter.hosting.create(site_1, '.');
-            await puter.hosting.create(site_2, '.');
-            await puter.hosting.create(site_3, '.');
+            await mixt.hosting.create(site_1, '.');
+            await mixt.hosting.create(site_2, '.');
+            await mixt.hosting.create(site_3, '.');
 
             // (3) Get all subdomains
-            let sites = await puter.hosting.list();
+            let sites = await mixt.hosting.list();
 
             // (4) Display the names of the websites
-            puter.print(sites.map(site => site.subdomain));
+            mixt.print(sites.map(site => site.subdomain));
 
             // Delete all sites (cleanup)
-            await puter.hosting.delete(site_1);
-            await puter.hosting.delete(site_2);
-            await puter.hosting.delete(site_3);
+            await mixt.hosting.delete(site_1);
+            await mixt.hosting.delete(site_2);
+            await mixt.hosting.delete(site_3);
         })();
     </script>
 </body>

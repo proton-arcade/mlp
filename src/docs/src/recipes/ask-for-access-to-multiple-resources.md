@@ -1,6 +1,6 @@
 ---
 title: Ask for Access to Multiple Resources
-description: "Learn how to request permission for multiple Puter resources at once, so users approve everything your app needs in a single prompt."
+description: "Learn how to request permission for multiple Mixt OS resources at once, so users approve everything your app needs in a single prompt."
 tags: [perms, auth]
 order: 16
 ---
@@ -14,18 +14,18 @@ call instead. The user sees a single prompt and answers once.
 ## Ask in One Prompt
 
 To ask for multiple resources, pass an array to
-[`puter.perms.request()`](/Perms/request/). Each entry is an object with a
+[`mixt.perms.request()`](/Perms/request/). Each entry is an object with a
 `resource` and the same details you would pass for that resource on its own:
 
 ```js
-const [documents, email, canReadApps] = await puter.perms.request([
+const [documents, email, canReadApps] = await mixt.perms.request([
     { resource: 'folder', name: 'Documents', access: 'write' },
     { resource: 'email' },
     { resource: 'apps' },
 ]);
 
 if (documents) {
-    await puter.fs.write(`${documents}/notes.txt`, 'Saved!');
+    await mixt.fs.write(`${documents}/notes.txt`, 'Saved!');
 }
 ```
 
@@ -45,7 +45,7 @@ before you use it.
 ## Check Multiple Resources at Once
 
 To read the current state of multiple resources without a prompt, pass the same
-array to [`puter.perms.check()`](/Perms/check/). It resolves to an array of
+array to [`mixt.perms.check()`](/Perms/check/). It resolves to an array of
 `true` or `false`, in the same order:
 
 ```js
@@ -54,13 +54,13 @@ const access = [
     { resource: 'email' },
 ];
 
-const [hasDocuments, hasEmail] = await puter.perms.check(access);
+const [hasDocuments, hasEmail] = await mixt.perms.check(access);
 
 documentsToggle.checked = hasDocuments;
 emailToggle.checked = hasEmail;
 ```
 
-[`puter.perms.check()`](/Perms/check/) answers with a boolean for every entry,
+[`mixt.perms.check()`](/Perms/check/) answers with a boolean for every entry,
 including the folder and the email address. Use it to render a settings screen
 with every toggle in its current state, then call
-[`puter.perms.request()`](/Perms/request/) with the entries the user turns on.
+[`mixt.perms.request()`](/Perms/request/) with the entries the user turns on.

@@ -1,14 +1,14 @@
 <html>
 <body>
-    <script src="/puter.js/v2"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
-            await puter.fs.write('report.txt', 'Quarterly numbers');
-            await puter.fs.share('report.txt', 'friend@example.com', 'read');
+            await mixt.fs.write('report.txt', 'Quarterly numbers');
+            await mixt.fs.share('report.txt', 'friend@example.com', 'read');
 
-            const shares = await puter.fs.getShares('report.txt');
+            const shares = await mixt.fs.getShares('report.txt');
             for (const share of shares) {
-                puter.print(`${share.holder}: ${share.mode} (from ${share.issuer})<br>`);
+                mixt.print(`${share.holder}: ${share.mode} (from ${share.issuer})<br>`);
             }
         })()
     </script>

@@ -34,7 +34,7 @@ import {
 import { Controller, Get } from './core/http/decorators.ts';
 import { HttpError } from './core/http/HttpError.ts';
 import { extension, extensionStore } from './extensions.ts';
-import { PuterServer } from './server.ts';
+import { MixtServer } from './server.ts';
 import { allocateEphemeralPort, setupTestServer } from './testUtil.ts';
 import type { IConfig } from './types';
 
@@ -81,8 +81,8 @@ const rawRequest = (
  * (host validation, CORS, IP gate) is exercised end to end — those gates are
  * installed imperatively on the express app and have no other entry point.
  */
-describe('PuterServer host header validation', () => {
-    let server: PuterServer;
+describe('MixtServer host header validation', () => {
+    let server: MixtServer;
     let port: number;
 
     beforeAll(async () => {
@@ -335,12 +335,12 @@ describe('PuterServer host header validation', () => {
 
 /**
  * Express reads subdomains relative to a fixed label count, so a root domain
- * deeper than two labels is the case that breaks: `puter` reads as an active
+ * deeper than two labels is the case that breaks: `mixt` reads as an active
  * subdomain of the root origin itself, which bounces every root request into
  * the user-subdomain 404.
  */
-describe('PuterServer subdomain routing on a multi-label root domain', () => {
-    let server: PuterServer;
+describe('MixtServer subdomain routing on a multi-label root domain', () => {
+    let server: MixtServer;
     let port: number;
 
     beforeAll(async () => {
@@ -348,13 +348,13 @@ describe('PuterServer subdomain routing on a multi-label root domain', () => {
         server = await setupTestServer(
             {
                 port,
-                domain: 'puter.example.localhost',
-                origin: `http://puter.example.localhost:${port}`,
-                api_base_url: `http://api.puter.example.localhost:${port}`,
-                static_hosting_domain: 'site.puter.example.localhost',
-                static_hosting_domain_alt: 'host.puter.example.localhost',
-                private_app_hosting_domain: 'app.puter.example.localhost',
-                private_app_hosting_domain_alt: 'dev.puter.example.localhost',
+                domain: 'mixt.example.localhost',
+                origin: `http://mixt.example.localhost:${port}`,
+                api_base_url: `http://api.mixt.example.localhost:${port}`,
+                static_hosting_domain: 'site.mixt.example.localhost',
+                static_hosting_domain_alt: 'host.mixt.example.localhost',
+                private_app_hosting_domain: 'app.mixt.example.localhost',
+                private_app_hosting_domain_alt: 'dev.mixt.example.localhost',
             } as unknown as IConfig,
             { listen: true },
         );
@@ -368,7 +368,7 @@ describe('PuterServer subdomain routing on a multi-label root domain', () => {
     // host against `domain`, which is how it arrives from a proxy in practice.
     it('serves the root origin instead of treating it as a user subdomain', async () => {
         const res = await rawRequest(port, '/', {
-            host: 'puter.example.localhost',
+            host: 'mixt.example.localhost',
         });
         expect(res.status).not.toBe(404);
         expect(res.headers.location).toBeUndefined();
@@ -376,7 +376,7 @@ describe('PuterServer subdomain routing on a multi-label root domain', () => {
 
     it('still 404s a user subdomain of that domain', async () => {
         const res = await rawRequest(port, '/some/path', {
-            host: 'alice.puter.example.localhost',
+            host: 'alice.mixt.example.localhost',
         });
         expect(res.status).toBe(404);
         expect(res.headers.location).toBeUndefined();
@@ -384,7 +384,7 @@ describe('PuterServer subdomain routing on a multi-label root domain', () => {
 
     it('still recognizes reserved subdomains of that domain', async () => {
         const res = await rawRequest(port, '/healthcheck', {
-            host: 'api.puter.example.localhost',
+            host: 'api.mixt.example.localhost',
             origin: 'https://third-party.example',
         });
         expect(res.headers.location).toBeUndefined();
@@ -392,8 +392,8 @@ describe('PuterServer subdomain routing on a multi-label root domain', () => {
     });
 });
 
-describe('PuterServer host header validation — permissive modes', () => {
-    let server: PuterServer;
+describe('MixtServer host header validation — permissive modes', () => {
+    let server: MixtServer;
     let port: number;
 
     beforeAll(async () => {
@@ -439,8 +439,8 @@ describe('PuterServer host header validation — permissive modes', () => {
  * end to end because the blanket OPTIONS responder, CORS and `subdomain: '*'`
  * routes only exist on the app.
  */
-describe('PuterServer claimed subdomains', () => {
-    let server: PuterServer;
+describe('MixtServer claimed subdomains', () => {
+    let server: MixtServer;
     let port: number;
     const seen: string[] = [];
 
@@ -664,7 +664,7 @@ describe('PuterServer claimed subdomains', () => {
     });
 });
 
-describe('PuterServer claimed subdomain route options', () => {
+describe('MixtServer claimed subdomain route options', () => {
     const noop = ((_req: Request, res: Response) =>
         res.end()) as unknown as RequestHandler;
 
@@ -810,7 +810,7 @@ describe('PuterServer claimed subdomain route options', () => {
  * run through the same materializer as controller routes, which makes them the
  * cheap way to drive it.
  */
-describe('PuterServer route option validation', () => {
+describe('MixtServer route option validation', () => {
     const noop = (() => undefined) as unknown as RequestHandler;
 
     afterEach(() => {
@@ -881,8 +881,8 @@ describe('PuterServer route option validation', () => {
  * occurrence, so what a thrower attached in `fields` has to travel with each
  * one — and a plain Error has to keep raising the same alarm without it.
  */
-describe('PuterServer HTTP alarm gate', () => {
-    let server: PuterServer;
+describe('MixtServer HTTP alarm gate', () => {
+    let server: MixtServer;
     let port: number;
 
     const attempts = [
@@ -1068,8 +1068,8 @@ describe('PuterServer HTTP alarm gate', () => {
  * close is observable; what matters is that the configured value reaches the
  * socket at all.
  */
-describe('PuterServer keep-alive timeout', () => {
-    let server: PuterServer;
+describe('MixtServer keep-alive timeout', () => {
+    let server: MixtServer;
     let port: number;
 
     beforeAll(async () => {
@@ -1115,7 +1115,7 @@ describe('PuterServer keep-alive timeout', () => {
  * ones it writes through) are still up, so teardown goes top-down: drivers,
  * controllers, services, stores, clients — the reverse of construction order.
  */
-describe('PuterServer shutdown order', () => {
+describe('MixtServer shutdown order', () => {
     it('tears layers down top-down: drivers, controllers, services, stores, clients', async () => {
         const port = await allocateEphemeralPort();
         const server = await setupTestServer({ port } as unknown as IConfig, {

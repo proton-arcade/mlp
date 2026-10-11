@@ -16,15 +16,15 @@
 -- along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 -- See sqlite/0084_share-anyone-with-link.sql for the column rationale.
--- No per-file applied-state tracking, so the column goes through _puter_add_col
+-- No per-file applied-state tracking, so the column goes through _mixt_add_col
 -- and the index through a guarded procedure, as mysql_mig_34 does.
 
-CALL _puter_add_col('share', 'anyone', '`anyone` tinyint(1) DEFAULT NULL');
+CALL _mixt_add_col('share', 'anyone', '`anyone` tinyint(1) DEFAULT NULL');
 
-DROP PROCEDURE IF EXISTS _puter_add_share_anyone_index;
+DROP PROCEDURE IF EXISTS _mixt_add_share_anyone_index;
 
 DELIMITER //
-CREATE PROCEDURE _puter_add_share_anyone_index()
+CREATE PROCEDURE _mixt_add_share_anyone_index()
 BEGIN
   -- Every other row leaves `anyone` NULL, so this binds only link shares.
   IF NOT EXISTS (
@@ -38,5 +38,5 @@ BEGIN
 END//
 DELIMITER ;
 
-CALL _puter_add_share_anyone_index();
-DROP PROCEDURE IF EXISTS _puter_add_share_anyone_index;
+CALL _mixt_add_share_anyone_index();
+DROP PROCEDURE IF EXISTS _mixt_add_share_anyone_index;

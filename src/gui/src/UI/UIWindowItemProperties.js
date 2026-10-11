@@ -103,7 +103,7 @@ async function UIWindowItemProperties (item_name, item_path, item_uid, left, top
     });
 
     // /stat
-    puter.fs.stat({
+    mixt.fs.stat({
         uid: item_uid,
         returnSubdomains: true,
         returnPermissions: true,
@@ -177,7 +177,7 @@ async function UIWindowItemProperties (item_name, item_path, item_uid, left, top
                 }
             }
             $(el_window).find('.disassociate-website-link').on('click', function (e) {
-                puter.hosting.update($(e.target).attr('data-subdomain'),
+                mixt.hosting.update($(e.target).attr('data-subdomain'),
                                 null).then(() => {
                     $(el_window).find(`.item-prop-website-entry[data-uuid="${$(e.target).attr('data-uuid')}"]`).remove();
                     if ( $(el_window).find('.item-prop-website-entry').length === 0 ) {

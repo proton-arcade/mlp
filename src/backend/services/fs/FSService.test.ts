@@ -34,7 +34,7 @@ import { makeActor, type Actor } from '../../core/actor.js';
 import { runWithContext } from '../../core/context.js';
 import { HttpError } from '../../core/http/HttpError.js';
 import { appDataPermission } from '../permission/appDataScopes.js';
-import { PuterServer } from '../../server.js';
+import { MixtServer } from '../../server.js';
 import type { FSEntry } from '../../stores/fs/FSEntry.js';
 import { toPendingUploadSessionKey } from '../../stores/fs/pendingUploadSessionHelpers.js';
 import { setupTestServer } from '../../testUtil.js';
@@ -45,13 +45,13 @@ import { UNLIMITED_STORAGE_ALLOWANCE } from './FSService.js';
 
 // ── Harness ─────────────────────────────────────────────────────────
 //
-// One real PuterServer (in-memory sqlite + in-memory S3 + mock redis).
+// One real MixtServer (in-memory sqlite + in-memory S3 + mock redis).
 // Tests drive the live FSService against real stores, so path resolution,
 // S3 round trips, quota accounting and cache invalidation are all exercised
 // for real. Only the S3 client is stubbed, and only where a specific
 // upstream failure has to be forced.
 
-let server: PuterServer;
+let server: MixtServer;
 let fs: FSService;
 
 beforeAll(async () => {
@@ -177,7 +177,7 @@ const entryAt = (user: TestUser, path: string) =>
  * state.
  */
 const clearUploadReservations = async (
-    testServer: PuterServer,
+    testServer: MixtServer,
     ownerId: number,
 ): Promise<void> => {
     const redis = testServer.clients.redis as unknown as {
@@ -682,7 +682,7 @@ describe('FSService overwrite and dedupe resolution', () => {
 });
 
 describe('FSService storage allowance', () => {
-    let limitedServer: PuterServer;
+    let limitedServer: MixtServer;
     let limitedFs: FSService;
 
     beforeAll(async () => {
@@ -1835,7 +1835,7 @@ describe('FSService signed (direct-to-S3) writes', () => {
 
         expect(response.uploadMode).toBe('single');
         expect(response.url).toContain(response.objectKey);
-        expect(response.bucket).toBe('puter-local');
+        expect(response.bucket).toBe('mixt-local');
         expect(response.bucketRegion).toBe('us-west-2');
         expect(response.contentType).toBe('text/plain');
 
@@ -2270,7 +2270,7 @@ describe('FSService signed (direct-to-S3) writes', () => {
         deleteObject.mockRestore();
     });
 
-    // The PUT never reaches Puter, so the completion is what puts it in place.
+    // The PUT never reaches Mixt, so the completion is what puts it in place.
     describe('an overwrite is staged until its completion is accepted', () => {
         const liveSize = async (entry: FSEntry) =>
             server.stores.s3Object.headObjectSize(
@@ -2456,7 +2456,7 @@ describe('FSService multipart part signing', () => {
             .abortMutipartUpload(
                 multipartUploadId,
                 'us-west-2',
-                'puter-local',
+                'mixt-local',
                 objectKey,
             )
             .catch(() => undefined);
@@ -4503,7 +4503,7 @@ describe('FSService copy', () => {
 });
 
 describe('FSService copy event dispatch', () => {
-    let eventsServer: PuterServer;
+    let eventsServer: MixtServer;
     let eventsFs: FSService;
     let user: TestUser;
 
@@ -5130,7 +5130,7 @@ describe('FSService ownership in a shared tree', () => {
 });
 
 describe('FSService storage allowance in a shared tree', () => {
-    let limitedServer: PuterServer;
+    let limitedServer: MixtServer;
     let limitedFs: FSService;
 
     beforeAll(async () => {
@@ -6282,7 +6282,7 @@ describe('FSService trash metadata across a share', () => {
 });
 
 describe('FSService home-region placement', () => {
-    let regionServer: PuterServer;
+    let regionServer: MixtServer;
     let regionFs: FSService;
 
     // A deployment that knows about two nodes. `node-far` is the home region
@@ -6290,15 +6290,15 @@ describe('FSService home-region placement', () => {
     // configured separately below so the two are distinguishable.
     beforeAll(async () => {
         regionServer = await setupTestServer({
-            s3_bucket: 'puter-local',
+            s3_bucket: 'mixt-local',
             s3_region: 'us-west-2',
             servers: {
                 'node-far': {
-                    bucket: 'puter-far',
+                    bucket: 'mixt-far',
                     bucketRegion: 'eu-central-1',
                 },
                 'node-here': {
-                    bucket: 'puter-local',
+                    bucket: 'mixt-local',
                     bucketRegion: 'us-west-2',
                 },
             },
@@ -6306,7 +6306,7 @@ describe('FSService home-region placement', () => {
         regionFs = regionServer.services.fs as unknown as FSService;
         await regionServer.clients.s3
             .get('eu-central-1')
-            .send(new CreateBucketCommand({ Bucket: 'puter-far' }));
+            .send(new CreateBucketCommand({ Bucket: 'mixt-far' }));
     });
 
     afterAll(async () => {
@@ -6367,7 +6367,7 @@ describe('FSService home-region placement', () => {
         const user = await regionUser();
         const entry = await writeIn(user, 'mail.eml', 'hello', 'node-far');
 
-        expect(entry.bucket).toBe('puter-far');
+        expect(entry.bucket).toBe('mixt-far');
         expect(entry.bucketRegion).toBe('eu-central-1');
         // The row is what reads resolve from, so a foreign bucket has to be
         // readable through the ordinary path.
@@ -6379,7 +6379,7 @@ describe('FSService home-region placement', () => {
         // A node id this deployment's config says nothing about.
         const entry = await writeIn(user, 'unmapped.eml', 'hi', 'node-absent');
 
-        expect(entry.bucket).toBe('puter-local');
+        expect(entry.bucket).toBe('mixt-local');
         expect(entry.bucketRegion).toBe('us-west-2');
         expect(await readFrom(entry)).toBe('hi');
     });
@@ -6388,14 +6388,14 @@ describe('FSService home-region placement', () => {
         const user = await regionUser();
         const entry = await writeIn(user, 'plain.txt', 'unchanged');
 
-        expect(entry.bucket).toBe('puter-local');
+        expect(entry.bucket).toBe('mixt-local');
         expect(entry.bucketRegion).toBe('us-west-2');
     });
 
     it('keeps an overwrite where the row already points, home region or not', async () => {
         const user = await regionUser();
         const first = await writeIn(user, 'pinned.eml', 'first', 'node-far');
-        expect(first.bucket).toBe('puter-far');
+        expect(first.bucket).toBe('mixt-far');
 
         // The entry outranks the hint: moving the bytes would repoint the row
         // and strand the original object.
@@ -6410,7 +6410,7 @@ describe('FSService home-region placement', () => {
         );
 
         expect(second.uuid).toBe(first.uuid);
-        expect(second.bucket).toBe('puter-far');
+        expect(second.bucket).toBe('mixt-far');
         expect(second.bucketRegion).toBe('eu-central-1');
         expect(await readFrom(second)).toBe('second');
     });

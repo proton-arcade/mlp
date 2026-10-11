@@ -75,7 +75,7 @@ const nn = {
         forgot_pass_c2a: 'Gløymt passord?',
         from: 'Frå',
         general: 'Generelt',
-        get_a_copy_of_on_puter: "Få ein kopi av '%%' på Mixt.com!",
+        get_a_copy_of_on_mixt: "Få ein kopi av '%%' på Mixt.com!",
         get_copy_link: 'Få kopilenkje',
         hide_all_windows: 'Skjul alle vindauge',
         html_document: 'HTML-dokument',
@@ -115,7 +115,7 @@ const nn = {
         paste_into_folder: 'Lim inn i mappe',
         pick_name_for_website: 'Vel eit namn for nettstaden din:',
         picture: 'Bilete',
-        powered_by_puter_js: 'Dreve av {{link=docs}}Puter.js{{/link}}',
+        powered_by_mixt_js: 'Dreve av {{link=docs}}Mixt.js{{/link}}',
         preparing: 'Førebur…',
         preparing_for_upload: 'Førebur opplasting…',
         properties: 'Eigenskapar',
@@ -146,7 +146,7 @@ const nn = {
         share_to: 'Del',
         show_all_windows: 'Vis alle vindauge',
         show_hidden: 'Vis skjulte',
-        sign_in_with_puter: 'Logg inn med Mixt',
+        sign_in_with_mixt: 'Logg inn med Mixt',
         sign_up: 'Registrer deg',
         signing_in: 'Logger inn…',
         size: 'Storleik',
@@ -155,7 +155,7 @@ const nn = {
         taking_longer_than_usual: 'Dette tar litt lengre tid enn vanleg. Vennligst vent...',
         text_document: 'Tekstdokument',
         tos_fineprint:
-      "Ved å klikke på 'Opprett gratis konto' godtek du Puters {{link=terms}}tenestevilkår{{/link}} og {{link=privacy}}personvernpolitikk{{/link}}.",
+      "Ved å klikke på 'Opprett gratis konto' godtek du Mixts {{link=terms}}tenestevilkår{{/link}} og {{link=privacy}}personvernpolitikk{{/link}}.",
         trash: 'Papirkorg',
         type: 'Type',
         undo: 'Angra',
@@ -166,7 +166,7 @@ const nn = {
         username_changed: 'Brukarnamn oppdatert.',
         versions: 'Versjonar',
         yes_release_it: 'Ja, slepp den',
-        you_have_been_referred_to_puter_by_a_friend: 'Du har blitt referert til Mixt av ein ven!',
+        you_have_been_referred_to_mixt_by_a_friend: 'Du har blitt referert til Mixt av ein ven!',
         zip: 'Zip',
 
         // Updated translations for previously missing keys
@@ -277,7 +277,7 @@ const nn = {
         process_type_init: 'Init',
         process_type_ui: 'Brukargrensesnitt',
         public: 'Offentleg',
-        puter_description:
+        mixt_description:
       'Mixt er ein personleg skyteknologi med fokus på personvern, der du kan lagre alle filene, appane og spela dine på ein sikker stad, tilgjengeleg frå overalt til ei kvar tid.',
         reading: 'Leser %strong%',
         writing: 'Skriv %strong%',
@@ -285,7 +285,7 @@ const nn = {
         replace: 'Erstatt',
         replace_all: 'Erstatt alle',
         reset_colors: 'Nullstill fargar',
-        restart_puter_confirm: 'Er du sikker på at du vil starte Mixt på nytt?',
+        restart_mixt_confirm: 'Er du sikker på at du vil starte Mixt på nytt?',
         save: 'Lagre',
         saturation: 'Metting',
         save_account: 'Lagre konto',
@@ -305,7 +305,7 @@ const nn = {
         something_went_wrong: 'Noko gjekk galt.',
         status: 'Status',
         storage_usage: 'Lagringsbruk',
-        storage_puter_used: 'brukt av Mixt',
+        storage_mixt_used: 'brukt av Mixt',
         task_manager: 'Oppgavehandsaming',
         taskmgr_header_name: 'Namn',
         taskmgr_header_status: 'Status',
@@ -488,7 +488,7 @@ const nn = {
         window_title_public: 'Offentleg', // "Original English: Public"
         window_title_videos: 'Videoar', // "Original English: Videos"
         window_title_pictures: 'Bilete', // "Original English: Pictures"
-        window_title_puter: 'Mixt', // "Original English: Mixt - Brand name kept unchanged"
+        window_title_mixt: 'Mixt', // "Original English: Mixt - Brand name kept unchanged"
         window_folder_empty: 'Denne mappa er tom', // "Original English: This folder is empty"
         manage_your_subdomains: 'Administrer underdomene dine', // "Original English: Manage Your Subdomains"
         open_containing_folder: 'Opne innhaldsmappa', // "Original English: Open Containing Folder"

@@ -28,12 +28,12 @@
 
 import { v4 as uuidv4 } from 'uuid';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
-import { setupPuterTestEnv, type PuterTestEnv } from '../../testUtil.js';
+import { setupMixtTestEnv, type MixtTestEnv } from '../../testUtil.js';
 import type { IConfig } from '../../types.js';
 
 const BOOT_TIMEOUT_MS = 120_000;
 
-let env: PuterTestEnv;
+let env: MixtTestEnv;
 let userId: number;
 let userUuid: string;
 let otherId: number;
@@ -96,7 +96,7 @@ const clearMailboxes = async (): Promise<void> => {
 };
 
 beforeAll(async () => {
-    env = await setupPuterTestEnv({
+    env = await setupMixtTestEnv({
         events: { enabled: true },
         unlimitedMetering: true,
     } as IConfig);
@@ -484,7 +484,7 @@ describe('cross-user isolation', () => {
 
 describe('fetch with events disabled', () => {
     it('answers `events_disabled` rather than reading the mailbox', async () => {
-        const off = await setupPuterTestEnv({} as IConfig);
+        const off = await setupMixtTestEnv({} as IConfig);
         try {
             const response = await fetch(
                 new URL('/events/fetch?subject=notif:account', off.apiOrigin),

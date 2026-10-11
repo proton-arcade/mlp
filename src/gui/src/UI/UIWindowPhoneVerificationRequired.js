@@ -62,15 +62,15 @@ import {
 // reasons fall back to the server's own message.
 const SEND_REASON_MESSAGES = {
     phone_already_used:
-        'This phone number has already been used to verify the maximum number of accounts. Please use a different number, or email support@puter.com for help.',
+        'This phone number has already been used to verify the maximum number of accounts. Please use a different number, or email support@mixt.mpl for help.',
     phone_verify_limit:
-        'This phone number cannot be used to verify this account. Please use a different number, or email support@puter.com for help.',
+        'This phone number cannot be used to verify this account. Please use a different number, or email support@mixt.mpl for help.',
     phone_send_limit:
         'This phone number has received too many verification codes recently. Please try again later, or use a different number.',
     phone_verify_attempts_exhausted:
-        "You've used all of your phone verification attempts. Email support@puter.com for assistance.",
+        "You've used all of your phone verification attempts. Email support@mixt.mpl for assistance.",
     device_unverifiable:
-        "We couldn't verify your device. Please email support@puter.com for assistance.",
+        "We couldn't verify your device. Please email support@mixt.mpl for assistance.",
     phone_virtual_number:
         "This number can't be used for verification. Please use a mobile number, or verify with a card instead.",
 };
@@ -422,7 +422,7 @@ function UIWindowPhoneVerificationRequired(options) {
         h += `<p class="phone-subtitle">${T.subtitle}</p>`;
         // Offer a friendly human fallback so verification is never a dead end —
         // worded as help, not as an accusation.
-        h += `<p style="text-align:center; font-size:12px; line-height:1.4; color:#8a99a8; margin:-12px auto 18px; max-width:320px;">Need help? Email <a href="mailto:support@puter.com" style="color:#3b82f6; text-decoration:none;">support@puter.com</a> and we'll assist creating your account.</p>`;
+        h += `<p style="text-align:center; font-size:12px; line-height:1.4; color:#8a99a8; margin:-12px auto 18px; max-width:320px;">Need help? Email <a href="mailto:support@mixt.mpl" style="color:#3b82f6; text-decoration:none;">support@mixt.mpl</a> and we'll assist creating your account.</p>`;
         h += '<div class="error" role="alert" aria-live="assertive"></div>';
         h += `<label class="phone-field-label" id="phone-number-label" for="phone-verif-input">${T.number_label}</label>`;
         h += '<div class="phone-input-group">';

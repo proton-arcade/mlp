@@ -1,6 +1,6 @@
 // This test checks everything in WorkerDriver up to the cloudflare level. 
 // Full deployments are not tested as this would require Cloudflare Workerd,
-//  however the interactions with the Puter API are
+//  however the interactions with the Mixt API are
 import {
     afterAll,
     beforeAll,
@@ -11,14 +11,14 @@ import {
 } from 'vitest';
 import { Actor, makeActor as resolveActor } from '../../core/actor.js';
 import { runWithContext } from '../../core/context.js';
-import { PuterServer } from '../../server.js';
+import { MixtServer } from '../../server.js';
 import { setupTestServer } from '../../testUtil.js';
 import { decodeCursor } from '../../util/pagination.js';
 import { INTERNAL_ADMISSION_BYPASS } from './WorkerDriver.js';
 import type { WorkerDriver } from './WorkerDriver.js';
 
 describe('WorkerDriver', () => {
-    let server: PuterServer;
+    let server: MixtServer;
     let target: WorkerDriver;
 
     beforeAll(async () => {
@@ -337,7 +337,7 @@ describe('WorkerDriver', () => {
             const name = tag;
             await server.stores.subdomain.create({
                 userId: owner.id,
-                subdomain: `workers.puter.${name}`,
+                subdomain: `workers.mixt.${name}`,
                 rootDirId: null,
                 associatedAppId: null,
                 appOwner,
@@ -431,7 +431,7 @@ describe('WorkerDriver', () => {
             const seed = async (name: string, appOwner: number | null) =>
                 await server.stores.subdomain.create({
                     userId: owner.id,
-                    subdomain: `workers.puter.${name}`,
+                    subdomain: `workers.mixt.${name}`,
                     rootDirId: null,
                     associatedAppId: null,
                     appOwner,
@@ -471,7 +471,7 @@ describe('WorkerDriver', () => {
             ] as Array<[string, number | null]>) {
                 await server.stores.subdomain.create({
                     userId: owner.id,
-                    subdomain: `workers.puter.${name}`,
+                    subdomain: `workers.mixt.${name}`,
                     rootDirId: null,
                     associatedAppId: null,
                     appOwner,
@@ -503,14 +503,14 @@ describe('WorkerDriver', () => {
             );
             await server.stores.subdomain.create({
                 userId: owner.id,
-                subdomain: `workers.puter.${tag}-bound`,
+                subdomain: `workers.mixt.${tag}-bound`,
                 rootDirId: null,
                 associatedAppId: null,
                 appOwner: app.id,
             });
             await server.stores.subdomain.create({
                 userId: owner.id,
-                subdomain: `workers.puter.${tag}-plain`,
+                subdomain: `workers.mixt.${tag}-plain`,
                 rootDirId: null,
                 associatedAppId: null,
                 appOwner: null,
@@ -551,7 +551,7 @@ describe('WorkerDriver', () => {
                 names.push(name);
                 await server.stores.subdomain.create({
                     userId,
-                    subdomain: `workers.puter.${name}`,
+                    subdomain: `workers.mixt.${name}`,
                     rootDirId: null,
                     associatedAppId: null,
                     appOwner: null,
@@ -732,7 +732,7 @@ describe('WorkerDriver', () => {
             store.listByUserIdAndPrefix = (async () => {
                 listCalls++;
                 return Array.from({ length: 100 }, (_, i) => ({
-                    subdomain: `workers.puter.w${i}`,
+                    subdomain: `workers.mixt.w${i}`,
                 })) as never;
             }) as typeof store.listByUserIdAndPrefix;
 

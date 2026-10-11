@@ -27,7 +27,7 @@ const state = vi.hoisted(() => ({
     takeFeedback: true,
 }));
 
-vi.mock('@heyputer/backend/src/extensions', () => ({
+vi.mock('@mixt/backend/src/extensions', () => ({
     extension: {
         get config() {
             return state.config;
@@ -182,7 +182,7 @@ describe('temporary accounts cannot receive', () => {
     test('mail for a temp account is accepted and dropped', async () => {
         state.users.set('tempy', temp(1, 'tempy'));
 
-        const { status, ended, drained } = await ingress('tempy@puter.email');
+        const { status, ended, drained } = await ingress('tempy@mixt.email');
         // Accepted, so the relay neither retries nor bounces to the sender.
         expect(status).toBe(200);
         expect(ended).toBe(true);
@@ -194,7 +194,7 @@ describe('temporary accounts cannot receive', () => {
     test('mail for a permanent account still lands in the mailbox', async () => {
         state.users.set('bob', permanent(2, 'bob'));
 
-        const { status } = await ingress('bob@puter.email');
+        const { status } = await ingress('bob@mixt.email');
         expect(status).toBe(200);
         expect(state.writes).toHaveLength(1);
         expect(state.writes[0].userId).toBe(2);
@@ -202,7 +202,7 @@ describe('temporary accounts cannot receive', () => {
     });
 
     test('an unknown address is still rejected outright', async () => {
-        const { status } = await ingress('nobody@puter.email');
+        const { status } = await ingress('nobody@mixt.email');
         expect(status).toBe(404);
         expect(state.writes).toEqual([]);
     });
@@ -224,7 +224,7 @@ describe('inbound mail is placed in the recipient home region', () => {
     test("uses the recipient's own home region when they have one", async () => {
         state.users.set('bob', placed(2, 'bob', { home: 'frankfurt' }));
 
-        await ingress('bob@puter.email');
+        await ingress('bob@mixt.email');
         expect(state.writes[0].homeRegion).toBe('frankfurt');
     });
 
@@ -235,14 +235,14 @@ describe('inbound mail is placed in the recipient home region', () => {
             placed(2, 'bob', { home: null, signup_server: 'london' }),
         );
 
-        await ingress('bob@puter.email');
+        await ingress('bob@mixt.email');
         expect(state.writes[0].homeRegion).toBe('london');
     });
 
     test('falls back to the primary region when neither is set', async () => {
         state.users.set('bob', placed(2, 'bob', {}));
 
-        await ingress('bob@puter.email');
+        await ingress('bob@mixt.email');
         expect(state.writes[0].homeRegion).toBe('oregon');
     });
 
@@ -252,7 +252,7 @@ describe('inbound mail is placed in the recipient home region', () => {
             placed(2, 'bob', { home: 'sydney', signup_server: 'london' }),
         );
 
-        await ingress('bob@puter.email');
+        await ingress('bob@mixt.email');
         expect(state.writes[0].homeRegion).toBe('sydney');
     });
 });
@@ -262,7 +262,7 @@ describe('refusals dispose of the body nobody read', () => {
         // The secret checked out and the length is under the cap, so the body
         // was ours to read: discard it rather than resetting a usable socket.
         const { status, drained, destroyed } =
-            await ingress('nobody@puter.email');
+            await ingress('nobody@mixt.email');
         expect(status).toBe(404);
         expect(drained).toBe(true);
         expect(destroyed).toBe(false);
@@ -271,7 +271,7 @@ describe('refusals dispose of the body nobody read', () => {
     test('a bad secret closes rather than reading the upload', async () => {
         state.users.set('bob', permanent(2, 'bob'));
 
-        const { status, destroyed } = await ingress('bob@puter.email', {
+        const { status, destroyed } = await ingress('bob@mixt.email', {
             secret: 'not-the-secret',
         });
         expect(status).toBe(403);
@@ -283,7 +283,7 @@ describe('refusals dispose of the body nobody read', () => {
     test('no content-length is refused with 411', async () => {
         state.users.set('bob', permanent(2, 'bob'));
 
-        const { status, destroyed } = await ingress('bob@puter.email', {
+        const { status, destroyed } = await ingress('bob@mixt.email', {
             contentLength: null,
         });
         expect(status).toBe(411);
@@ -294,7 +294,7 @@ describe('refusals dispose of the body nobody read', () => {
     test('a declared length over the cap is refused with 413', async () => {
         state.users.set('bob', permanent(2, 'bob'));
 
-        const { status, destroyed } = await ingress('bob@puter.email', {
+        const { status, destroyed } = await ingress('bob@mixt.email', {
             contentLength: String(25 * 1024 * 1024 + 1),
         });
         expect(status).toBe(413);
@@ -305,18 +305,18 @@ describe('refusals dispose of the body nobody read', () => {
 
 describe('feedback addresses', () => {
     test('are handed to a listener and reach no mailbox', async () => {
-        const { status, ended } = await ingress('fbl@puter.email');
+        const { status, ended } = await ingress('fbl@mixt.email');
         expect(status).toBe(200);
         expect(ended).toBe(true);
         expect(state.feedback).toHaveLength(1);
-        expect(state.feedback[0].to).toBe('fbl@puter.email');
+        expect(state.feedback[0].to).toBe('fbl@mixt.email');
         expect(state.feedback[0].from).toBe('someone@example.com');
         expect(state.feedback[0].raw.toString()).toContain('hello');
         expect(state.writes).toEqual([]);
     });
 
     test('match the local part case-insensitively', async () => {
-        await ingress('Abuse@puter.email');
+        await ingress('Abuse@mixt.email');
         expect(state.feedback).toHaveLength(1);
     });
 
@@ -324,7 +324,7 @@ describe('feedback addresses', () => {
         state.takeFeedback = false;
         state.users.set('abuse', permanent(3, 'abuse'));
 
-        const { status } = await ingress('abuse@puter.email');
+        const { status } = await ingress('abuse@mixt.email');
         expect(status).toBe(200);
         expect(state.feedback).toHaveLength(1);
         // The body was already read, so the buffered copy is what is stored.
@@ -334,18 +334,18 @@ describe('feedback addresses', () => {
 
     test('an unclaimed one with no such account is still a 404', async () => {
         state.takeFeedback = false;
-        const { status } = await ingress('postmaster@puter.email');
+        const { status } = await ingress('postmaster@mixt.email');
         expect(status).toBe(404);
     });
 
-    test('only count on a Puter mail domain', async () => {
+    test('only count on a Mixt mail domain', async () => {
         state.users.set('abuse', permanent(3, 'abuse'));
         await ingress('abuse@example.com');
         expect(state.feedback).toEqual([]);
     });
 
     test('are refused over the feedback size cap without being read', async () => {
-        const { status, destroyed } = await ingress('fbl@puter.email', {
+        const { status, destroyed } = await ingress('fbl@mixt.email', {
             contentLength: String(5 * 1024 * 1024 + 1),
         });
         expect(status).toBe(413);

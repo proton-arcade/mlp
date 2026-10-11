@@ -3,7 +3,7 @@ title: KVListPage
 description: The KVListPage object containing paginated key-value list results.
 ---
 
-The `KVListPage` object containing paginated results from [`puter.kv.list()`](/KV/list/).
+The `KVListPage` object containing paginated results from [`mixt.kv.list()`](/KV/list/).
 
 ## Attributes
 
@@ -16,7 +16,7 @@ An array containing either:
 
 #### `cursor` (String) (optional)
 
-A pagination cursor to fetch the next page of results. Present only when there are more results to fetch. Pass this value to the next `puter.kv.list()` call to retrieve the next page.
+A pagination cursor to fetch the next page of results. Present only when there are more results to fetch. Pass this value to the next `mixt.kv.list()` call to retrieve the next page.
 
 A page may hold fewer than `limit` items while `cursor` is still present — always iterate until `cursor` is absent.
 

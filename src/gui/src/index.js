@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-window.puter_gui_enabled = true;
+window.mixt_gui_enabled = true;
 
 /**
  * Initializes and configures the GUI (Graphical User Interface) settings based on the provided options.
@@ -26,8 +26,8 @@ window.puter_gui_enabled = true;
  * It also handles loading different resources depending on the environment (development or production).
  *
  * @param {Object} options - Configuration options to initialize the GUI.
- * @param {string} [options.gui_origin='https://puter.com'] - The origin URL for the GUI.
- * @param {string} [options.api_origin='https://api.puter.com'] - The origin URL for the API.
+ * @param {string} [options.gui_origin='https://mixt.mpl'] - The origin URL for the GUI.
+ * @param {string} [options.api_origin='https://api.mixt.mpl'] - The origin URL for the API.
  * @param {number} [options.max_item_name_length=500] - Maximum allowed length for an item name.
  * @param {boolean} [options.require_email_verification_to_publish_website=true] - Flag to decide whether email verification is required to publish a website.
  * @param {boolean} [options.disable_temp_users=false] - Flag to disable auto-generated temporary users.
@@ -49,10 +49,10 @@ window.gui = async (options) => {
     options = options ?? {};
     // app_origin is deprecated, use gui_origin instead
     window.gui_params = options;
-    window.gui_origin = options.gui_origin ?? options.app_origin ?? 'https://puter.com';
+    window.gui_origin = options.gui_origin ?? options.app_origin ?? 'https://mixt.mpl';
     window.app_domain = options.app_domain ?? new URL(window.gui_origin).hostname;
-    window.hosting_domain = options.hosting_domain ?? 'puter.site';
-    window.api_origin = options.api_origin ?? 'https://api.puter.com';
+    window.hosting_domain = options.hosting_domain ?? 'mixt.site';
+    window.api_origin = options.api_origin ?? 'https://api.mixt.mpl';
     window.max_item_name_length = options.max_item_name_length ?? 500;
     window.require_email_verification_to_publish_website = options.require_email_verification_to_publish_website ?? true;
     // window.disable_temp_users might be set somewhere else, so we need to check if it is already set and if not, use the value from the options
@@ -62,11 +62,11 @@ window.gui = async (options) => {
 
     // DEV: Load the initgui.js file if we are in development mode
     if ( !window.gui_env || window.gui_env === 'dev' ) {
-        await window.loadScript('/sdk/puter.dev.js');
+        await window.loadScript('/sdk/mixt.dev.js');
     }
 
     if ( window.gui_env === 'dev2' ) {
-        await window.loadScript('/puter.js/v2');
+        await window.loadScript('/mixt.js/v2');
         await window.loadCSS('/dist/bundle.min.css');
     }
 
@@ -74,9 +74,9 @@ window.gui = async (options) => {
     // note: the order of the bundles is important
     // note: Build script will prepend `window.gui_env="prod"` to the top of the file
     else if ( window.gui_env === 'prod' ) {
-        // This stuff is now handled in the backend in PuterHomepageService
+        // This stuff is now handled in the backend in MixtHomepageService
 
-        await window.loadScript(options.puterjs_bundle ?? 'https://js.puter.com/v2/');
+        await window.loadScript(options.mixtjs_bundle ?? 'https://js.mixt.mpl/v2/');
         // Load the minified bundles
         // await window.loadCSS('/dist/bundle.min.css');
     }

@@ -60,8 +60,8 @@ interface ReqInit {
     originalUrl?: string;
 }
 
-// `req.subdomains` in express is right-to-left (`['com', 'puter', 'foo']`
-// for `foo.puter.com`), with the active subdomain at the end.
+// `req.subdomains` in express is right-to-left (`['com', 'mixt', 'foo']`
+// for `foo.mixt.mpl`), with the active subdomain at the end.
 const makeReq = (init: ReqInit): Request =>
     ({
         subdomains: init.subdomains ?? [],
@@ -90,7 +90,7 @@ const expectNotFound = (next: ReturnType<typeof vi.fn>) => {
 // ── createWwwRedirect ───────────────────────────────────────────────
 
 describe('createWwwRedirect', () => {
-    const config = { domain: 'puter.com' } as IConfig;
+    const config = { domain: 'mixt.mpl' } as IConfig;
 
     it('redirects www.<domain> → <domain> (path dropped on purpose)', () => {
         // www → apex is a canonicalization, not a route — the original
@@ -98,12 +98,12 @@ describe('createWwwRedirect', () => {
         const { out, next } = run(
             createWwwRedirect(config),
             makeReq({
-                subdomains: ['com', 'puter', 'www'],
-                host: 'www.puter.com',
+                subdomains: ['com', 'mixt', 'www'],
+                host: 'www.mixt.mpl',
                 originalUrl: '/some/path?x=1',
             }),
         );
-        expect(out.redirectArgs).toEqual(['https://puter.com']);
+        expect(out.redirectArgs).toEqual(['https://mixt.mpl']);
         expect(next).not.toHaveBeenCalled();
     });
 
@@ -111,8 +111,8 @@ describe('createWwwRedirect', () => {
         const { out, next } = run(
             createWwwRedirect(config),
             makeReq({
-                subdomains: ['com', 'puter', 'api'],
-                host: 'api.puter.com',
+                subdomains: ['com', 'mixt', 'api'],
+                host: 'api.mixt.mpl',
             }),
         );
         expect(out.redirectArgs).toBeUndefined();
@@ -122,7 +122,7 @@ describe('createWwwRedirect', () => {
     it('passes through when no subdomain is present', () => {
         const { next } = run(
             createWwwRedirect(config),
-            makeReq({ subdomains: [], host: 'puter.com' }),
+            makeReq({ subdomains: [], host: 'mixt.mpl' }),
         );
         expect(next).toHaveBeenCalledTimes(1);
     });
@@ -131,8 +131,8 @@ describe('createWwwRedirect', () => {
         const { out, next } = run(
             createWwwRedirect({} as IConfig),
             makeReq({
-                subdomains: ['com', 'puter', 'www'],
-                host: 'www.puter.com',
+                subdomains: ['com', 'mixt', 'www'],
+                host: 'www.mixt.mpl',
             }),
         );
         expect(out.redirectArgs).toBeUndefined();
@@ -143,12 +143,12 @@ describe('createWwwRedirect', () => {
         const { out } = run(
             createWwwRedirect(config),
             makeReq({
-                subdomains: ['com', 'puter', 'www'],
-                host: 'www.puter.com',
+                subdomains: ['com', 'mixt', 'www'],
+                host: 'www.mixt.mpl',
                 protocol: 'http',
             }),
         );
-        expect(out.redirectArgs).toEqual(['http://puter.com']);
+        expect(out.redirectArgs).toEqual(['http://mixt.mpl']);
     });
 });
 
@@ -156,16 +156,16 @@ describe('createWwwRedirect', () => {
 
 describe('createUserSubdomainNotFound', () => {
     const config = {
-        domain: 'puter.com',
-        static_hosting_domain: 'puter.site',
+        domain: 'mixt.mpl',
+        static_hosting_domain: 'mixt.site',
     } as IConfig;
 
     it('404s a user subdomain on the main domain (never redirects)', () => {
         const { out, next } = run(
             createUserSubdomainNotFound(config),
             makeReq({
-                subdomains: ['com', 'puter', 'foo'],
-                host: 'foo.puter.com',
+                subdomains: ['com', 'mixt', 'foo'],
+                host: 'foo.mixt.mpl',
                 originalUrl: '/bar?x=1',
             }),
         );
@@ -175,13 +175,13 @@ describe('createUserSubdomainNotFound', () => {
 
     it('passes through reserved subdomains (api, js, native apps, etc.)', () => {
         // `api`, `js`, `dav`, `docs`, `developer`, `editor`, `pdf`,
-        // `puter-app-icons`, `onlyoffice`, etc. all bypass.
-        for (const sub of ['api', 'js', 'docs', 'editor', 'puter-app-icons']) {
+        // `mixt-app-icons`, `onlyoffice`, etc. all bypass.
+        for (const sub of ['api', 'js', 'docs', 'editor', 'mixt-app-icons']) {
             const { out, next } = run(
                 createUserSubdomainNotFound(config),
                 makeReq({
-                    subdomains: ['com', 'puter', sub],
-                    host: `${sub}.puter.com`,
+                    subdomains: ['com', 'mixt', sub],
+                    host: `${sub}.mixt.mpl`,
                 }),
             );
             expect(out.redirectArgs).toBeUndefined();
@@ -192,7 +192,7 @@ describe('createUserSubdomainNotFound', () => {
     it('passes through when no subdomain is present (root)', () => {
         const { next } = run(
             createUserSubdomainNotFound(config),
-            makeReq({ subdomains: [], host: 'puter.com' }),
+            makeReq({ subdomains: [], host: 'mixt.mpl' }),
         );
         expect(next).toHaveBeenCalledWith();
     });
@@ -211,24 +211,24 @@ describe('createUserSubdomainNotFound', () => {
     it('returns a no-op middleware when no static_hosting_domain is configured', () => {
         // Self-hosted deployments without a separate hosting domain may serve
         // sites on the main domain; don't 404 them.
-        const noStatic = { domain: 'puter.com' } as IConfig;
+        const noStatic = { domain: 'mixt.mpl' } as IConfig;
         const { next } = run(
             createUserSubdomainNotFound(noStatic),
             makeReq({
-                subdomains: ['com', 'puter', 'foo'],
-                host: 'foo.puter.com',
+                subdomains: ['com', 'mixt', 'foo'],
+                host: 'foo.mixt.mpl',
             }),
         );
         expect(next).toHaveBeenCalledWith();
     });
 
     it('returns a no-op middleware when no main domain is configured', () => {
-        const noDomain = { static_hosting_domain: 'puter.site' } as IConfig;
+        const noDomain = { static_hosting_domain: 'mixt.site' } as IConfig;
         const { next } = run(
             createUserSubdomainNotFound(noDomain),
             makeReq({
-                subdomains: ['com', 'puter', 'foo'],
-                host: 'foo.puter.com',
+                subdomains: ['com', 'mixt', 'foo'],
+                host: 'foo.mixt.mpl',
             }),
         );
         expect(next).toHaveBeenCalledWith();
@@ -236,12 +236,12 @@ describe('createUserSubdomainNotFound', () => {
 
     it('lowercases the active subdomain when comparing against the reserved set', () => {
         // Reserved-subdomain matching must be case-insensitive — otherwise
-        // a request to `API.puter.com` would accidentally 404.
+        // a request to `API.mixt.mpl` would accidentally 404.
         const { next } = run(
             createUserSubdomainNotFound(config),
             makeReq({
-                subdomains: ['com', 'puter', 'API'],
-                host: 'API.puter.com',
+                subdomains: ['com', 'mixt', 'API'],
+                host: 'API.mixt.mpl',
             }),
         );
         expect(next).toHaveBeenCalledWith();
@@ -255,7 +255,7 @@ describe('createUserSubdomainNotFound', () => {
         const { next } = run(
             createUserSubdomainNotFound(localConfig),
             makeReq({
-                subdomains: ['localhost', 'puter', 'foo'],
+                subdomains: ['localhost', 'mixt', 'foo'],
                 host: 'foo.localhost:4100',
                 originalUrl: '/x',
                 protocol: 'http',
@@ -276,7 +276,7 @@ describe('createUserSubdomainNotFound', () => {
         const { next } = run(
             createUserSubdomainNotFound(selfHosted),
             makeReq({
-                subdomains: ['localhost', 'puter', 'foo'],
+                subdomains: ['localhost', 'mixt', 'foo'],
                 host: 'foo.localhost',
                 originalUrl: '/bar?x=1',
                 protocol: 'http',
@@ -289,7 +289,7 @@ describe('createUserSubdomainNotFound', () => {
         const { next } = run(
             createUserSubdomainNotFound(selfHosted),
             makeReq({
-                subdomains: ['localhost', 'puter', 'site', 'foo'],
+                subdomains: ['localhost', 'mixt', 'site', 'foo'],
                 host: 'foo.site.localhost',
                 originalUrl: '/',
             }),
@@ -308,7 +308,7 @@ describe('createUserSubdomainNotFound', () => {
                 makeReq({
                     subdomains: [
                         'localhost',
-                        'puter',
+                        'mixt',
                         host.split('.')[1],
                         'foo',
                     ],
@@ -323,7 +323,7 @@ describe('createUserSubdomainNotFound', () => {
         const { next } = run(
             createUserSubdomainNotFound(selfHosted),
             makeReq({
-                subdomains: ['localhost', 'puter', 'site'],
+                subdomains: ['localhost', 'mixt', 'site'],
                 host: 'site.localhost',
             }),
         );
@@ -343,7 +343,7 @@ describe('createUserSubdomainNotFound', () => {
         ]) {
             const { next } = run(
                 createUserSubdomainNotFound(portlessConfig),
-                makeReq({ subdomains: ['localhost', 'puter', 'foo'], host }),
+                makeReq({ subdomains: ['localhost', 'mixt', 'foo'], host }),
             );
             expectNotFound(next);
         }
@@ -364,7 +364,7 @@ describe('createUserSubdomainNotFound', () => {
         const workerHost = 'hello.workers.localhost:4100';
         const req = () =>
             makeReq({
-                subdomains: ['localhost', 'puter', 'workers', 'hello'],
+                subdomains: ['localhost', 'mixt', 'workers', 'hello'],
                 host: workerHost,
             });
         const on = run(
@@ -384,8 +384,8 @@ describe('createUserSubdomainNotFound', () => {
 
 describe('createUserSubdomainNotFound with claimed subdomains', () => {
     const config = {
-        domain: 'puter.com',
-        static_hosting_domain: 'puter.site',
+        domain: 'mixt.mpl',
+        static_hosting_domain: 'mixt.site',
     } as IConfig;
 
     // Express derives these with the root domain's labels already dropped.
@@ -418,7 +418,7 @@ describe('createUserSubdomainNotFound with claimed subdomains', () => {
     const unclaimedError = async () => {
         const [err] = await runClaimed(
             createUserSubdomainNotFound(config),
-            hostReq('foo.puter.com', ['foo']),
+            hostReq('foo.mixt.mpl', ['foo']),
         );
         return err as HttpError;
     };
@@ -438,7 +438,7 @@ describe('createUserSubdomainNotFound with claimed subdomains', () => {
         });
         const next = vi.fn();
         const res = {} as Response;
-        const req = hostReq('portal.puter.com', ['portal']);
+        const req = hostReq('portal.mixt.mpl', ['portal']);
         createUserSubdomainNotFound(
             config,
             lookup({ portal: { authorize, handler } }),
@@ -461,7 +461,7 @@ describe('createUserSubdomainNotFound with claimed subdomains', () => {
                     config,
                     lookup({ portal: { authorize, handler } }),
                 ),
-                hostReq('portal.puter.com', ['portal']),
+                hostReq('portal.mixt.mpl', ['portal']),
             );
             expect(handler).not.toHaveBeenCalled();
             await expectUnclaimed404(err);
@@ -484,7 +484,7 @@ describe('createUserSubdomainNotFound with claimed subdomains', () => {
                         config,
                         lookup({ portal: { authorize, handler: vi.fn() } }),
                     ),
-                    hostReq('portal.puter.com', ['portal']),
+                    hostReq('portal.mixt.mpl', ['portal']),
                 );
                 await expectUnclaimed404(err);
             }
@@ -507,7 +507,7 @@ describe('createUserSubdomainNotFound with claimed subdomains', () => {
                     },
                 }),
             ),
-            hostReq('portal.puter.com', ['portal']),
+            hostReq('portal.mixt.mpl', ['portal']),
         );
         expect(err).toBe(forbidden);
     });
@@ -518,7 +518,7 @@ describe('createUserSubdomainNotFound with claimed subdomains', () => {
                 config,
                 lookup({ portal: { authorize: allow } }),
             ),
-            hostReq('portal.puter.com', ['portal']),
+            hostReq('portal.mixt.mpl', ['portal']),
         );
         await expectUnclaimed404(err);
     });
@@ -536,7 +536,7 @@ describe('createUserSubdomainNotFound with claimed subdomains', () => {
                         },
                     }),
                 ),
-                hostReq('portal.puter.com', ['portal']),
+                hostReq('portal.mixt.mpl', ['portal']),
             );
             await expectUnclaimed404(err);
         }
@@ -559,7 +559,7 @@ describe('createUserSubdomainNotFound with claimed subdomains', () => {
                     config,
                     lookup({ portal: { authorize: allow, handler } }),
                 ),
-                hostReq('portal.puter.com', ['portal']),
+                hostReq('portal.mixt.mpl', ['portal']),
             );
             expect(err).toBe(expected);
         }
@@ -576,7 +576,7 @@ describe('createUserSubdomainNotFound with claimed subdomains', () => {
                 },
             }),
         )(
-            hostReq('portal.puter.com', ['portal']),
+            hostReq('portal.mixt.mpl', ['portal']),
             { headersSent: true } as Response,
             next,
         );
@@ -591,7 +591,7 @@ describe('createUserSubdomainNotFound with claimed subdomains', () => {
                 config,
                 lookup({ portal: { authorize, handler: vi.fn() } }),
             ),
-            hostReq('portal.x.puter.com', ['x', 'portal']),
+            hostReq('portal.x.mixt.mpl', ['x', 'portal']),
         );
         expect(authorize).not.toHaveBeenCalled();
         expect((err as HttpError).statusCode).toBe(404);
@@ -604,7 +604,7 @@ describe('createUserSubdomainNotFound with claimed subdomains', () => {
                 config,
                 lookup({ portal: { authorize, handler: vi.fn() } }),
             ),
-            hostReq('foo.puter.com', ['portal']),
+            hostReq('foo.mixt.mpl', ['portal']),
         );
         expect(authorize).not.toHaveBeenCalled();
         expect((err as HttpError).statusCode).toBe(404);
@@ -617,7 +617,7 @@ describe('createUserSubdomainNotFound with claimed subdomains', () => {
                 config,
                 lookup({ portal: { authorize: allow, handler } }),
             ),
-            hostReq('portal.puter.com:4100', ['portal']),
+            hostReq('portal.mixt.mpl:4100', ['portal']),
         );
         expect(handler).toHaveBeenCalledTimes(1);
         expect((err as HttpError).statusCode).toBe(404);
@@ -645,7 +645,7 @@ describe('createUserSubdomainNotFound with claimed subdomains', () => {
         const middleware = createUserSubdomainNotFound(config, lookup(claims));
         const handler = vi.fn((_req, _res, next: NextFunction) => next());
         claims.late = { authorize: allow, handler };
-        await runClaimed(middleware, hostReq('late.puter.com', ['late']));
+        await runClaimed(middleware, hostReq('late.mixt.mpl', ['late']));
         expect(handler).toHaveBeenCalledTimes(1);
     });
 });
@@ -810,7 +810,7 @@ describe('createNativeAppStatic', () => {
         const { out, next } = await runStatic(
             createNativeAppStatic(config),
             staticReq({
-                subdomains: ['localhost', 'puter', 'editor'],
+                subdomains: ['localhost', 'mixt', 'editor'],
                 path: '/index.html',
             }),
         );
@@ -822,7 +822,7 @@ describe('createNativeAppStatic', () => {
         const { out, next } = await runStatic(
             withRoot(),
             staticReq({
-                subdomains: ['localhost', 'puter', 'api'],
+                subdomains: ['localhost', 'mixt', 'api'],
                 path: '/index.html',
             }),
         );
@@ -842,7 +842,7 @@ describe('createNativeAppStatic', () => {
         const { out, next } = await runStatic(
             withRoot(),
             staticReq({
-                subdomains: ['localhost', 'puter', 'editor'],
+                subdomains: ['localhost', 'mixt', 'editor'],
                 path: '/index.html',
             }),
         );
@@ -857,7 +857,7 @@ describe('createNativeAppStatic', () => {
         const { out } = await runStatic(
             withRoot(),
             staticReq({
-                subdomains: ['localhost', 'puter', 'EDITOR'],
+                subdomains: ['localhost', 'mixt', 'EDITOR'],
                 path: '/index.html',
             }),
         );
@@ -868,7 +868,7 @@ describe('createNativeAppStatic', () => {
         const { out } = await runStatic(
             withRoot(),
             staticReq({
-                subdomains: ['localhost', 'puter', 'docs'],
+                subdomains: ['localhost', 'mixt', 'docs'],
                 path: '/index.html',
             }),
         );
@@ -882,7 +882,7 @@ describe('createNativeAppStatic', () => {
         const { out, next } = await runStatic(
             withRoot(),
             staticReq({
-                subdomains: ['localhost', 'puter', 'editor'],
+                subdomains: ['localhost', 'mixt', 'editor'],
                 path: '/assets',
                 originalUrl: '/assets?v=2',
             }),
@@ -898,7 +898,7 @@ describe('createNativeAppStatic', () => {
         const { out } = await runStatic(
             withRoot(),
             staticReq({
-                subdomains: ['localhost', 'puter', 'editor'],
+                subdomains: ['localhost', 'mixt', 'editor'],
                 path: '/assets/',
             }),
         );
@@ -910,7 +910,7 @@ describe('createNativeAppStatic', () => {
         const { out, next } = await runStatic(
             withRoot(),
             staticReq({
-                subdomains: ['localhost', 'puter', 'editor'],
+                subdomains: ['localhost', 'mixt', 'editor'],
                 path: '/nope.html',
             }),
         );
@@ -922,7 +922,7 @@ describe('createNativeAppStatic', () => {
         const { next } = await runStatic(
             withRoot(),
             staticReq({
-                subdomains: ['localhost', 'puter', 'editor'],
+                subdomains: ['localhost', 'mixt', 'editor'],
                 path: '/index.html',
             }),
             new Error('send failed'),
@@ -935,7 +935,7 @@ describe('createNativeAppStatic', () => {
             runStatic(
                 withRoot(),
                 staticReq({
-                    subdomains: ['localhost', 'puter', 'editor'],
+                    subdomains: ['localhost', 'mixt', 'editor'],
                     path: '/../../etc/passwd',
                 }),
             ),

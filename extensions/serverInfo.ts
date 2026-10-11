@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { extension } from '@heyputer/backend/src/extensions';
+import { extension } from '@mixt/backend/src/extensions';
 import fs from 'fs/promises';
 import os from 'os';
 

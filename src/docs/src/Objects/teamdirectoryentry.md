@@ -3,13 +3,13 @@ title: TeamDirectoryEntry
 description: The TeamDirectoryEntry object containing information about a team member.
 ---
 
-The `TeamDirectoryEntry` object contains information about a team member, returned by [`puter.teams.listDirectory()`](/Teams/listDirectory/).
+The `TeamDirectoryEntry` object contains information about a team member, returned by [`mixt.teams.listDirectory()`](/Teams/listDirectory/).
 
 ## Attributes
 
 #### `username` (String)
 
-The member's Puter username.
+The member's Mixt OS username.
 
 #### `uuid` (String)
 

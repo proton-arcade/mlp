@@ -35,7 +35,7 @@ import {
     assertTeam2fa,
     assertVerifiedAccount,
 } from '../../core/http/middleware/gates.js';
-import type { PuterRouter } from '../../core/http/PuterRouter.js';
+import type { MixtRouter } from '../../core/http/MixtRouter.js';
 import type { ACLService } from '../../services/acl/ACLService.js';
 import { assertActorHasCredits } from '../../services/metering/enforcement.js';
 import type { FSEntry } from '../../stores/fs/FSEntry.js';
@@ -65,7 +65,7 @@ import { applyInlineContentSecurity } from '../../util/inlineContentSecurity.js'
 import { listClientShares } from '../share/clientShare.js';
 import { SHARE_LIST_LIMIT } from '../share/limits.js';
 import { consumeRouteRateLimit } from '../../core/http/middleware/rateLimit.js';
-import { PuterController } from '../types.js';
+import { MixtController } from '../types.js';
 import {
     FS_BATCH_CONCURRENT,
     FS_BATCH_LIMIT,
@@ -173,10 +173,10 @@ async function loadAdditionalRouter(
 
 // -- Controller ------------------------------------------------------
 
-export class LegacyFSController extends PuterController {
+export class LegacyFSController extends MixtController {
     #additionalCache: RouterCache = new Map();
 
-    registerRoutes(router: PuterRouter): void {
+    registerRoutes(router: MixtRouter): void {
         const apiOptions = {
             subdomain: 'api',
             requireVerified: true,
@@ -335,7 +335,7 @@ export class LegacyFSController extends PuterController {
             },
             this.down,
         );
-        // /itemMetadata is deprecated; not called by puter-js. Return 410 Gone.
+        // /itemMetadata is deprecated; not called by mixt-js. Return 410 Gone.
         router.get('/itemMetadata', apiOptions, (_req, res) => {
             res.status(410).json({
                 error: 'itemMetadata is deprecated; use /fs/stat',
@@ -392,7 +392,7 @@ export class LegacyFSController extends PuterController {
                             Boolean(app),
                         );
 
-                    // Don't hand out an index_url whose puter-hosted backing is
+                    // Don't hand out an index_url whose mixt-hosted backing is
                     // gone or reclaimed. The taskbar launches recents by name (so
                     // AppDriver's guard applies), but this list is a
                     // launch-metadata producer like any other — a future consumer
@@ -428,7 +428,7 @@ export class LegacyFSController extends PuterController {
                             ...(backingGone
                                 ? { privateAccess: buildHostedBackingDenial() }
                                 : {}),
-                            // An app with no owner isn't owned by a Puter user —
+                            // An app with no owner isn't owned by a Mixt user —
                             // it's an "external" (origin-bootstrapped) app.
                             external:
                                 app.owner_user_id == null ||
@@ -447,7 +447,7 @@ export class LegacyFSController extends PuterController {
             this.suggestApps,
         );
 
-        // puter-js polls this to decide whether to purge its in-memory FS
+        // mixt-js polls this to decide whether to purge its in-memory FS
         // cache. SocketService bumps a per-user Redis key on every
         // `outer.gui.item.*` mutation — read it back here.
         router.get(
@@ -1284,7 +1284,7 @@ export class LegacyFSController extends PuterController {
         });
 
         // Force `application/octet-stream` on this endpoint for wire parity
-        // with v1. puter-js's `parseResponse` branches on Content-Type —
+        // with v1. mixt-js's `parseResponse` branches on Content-Type —
         // `application/octet-stream` returns the raw Blob while other
         // types wrap in `{success, result: Blob}`. Clients (including the
         // GUI) expect the raw-Blob shape. Use `/fs/read` for type-aware
@@ -1942,7 +1942,7 @@ export class LegacyFSController extends PuterController {
      *
      * `check: true` answers whether the caller may claim it and stops there,
      * for callers asking the question rather than acting on the answer —
-     * otherwise `puter.perms.check('appRootDir', …)` would provision a
+     * otherwise `mixt.perms.check('appRootDir', …)` would provision a
      * directory just by being asked. Answering is the whole response: a caller
      * that may not claim it gets the 403 below either way.
      */
@@ -2236,7 +2236,7 @@ export class LegacyFSController extends PuterController {
     // -- Batch route -----------------------------------------------------
     //
     // `/batch` interleaves multipart JSON operations with optional file
-    // uploads. puter-js uses it for `write`, `shortcut`, `mkdir`, `move`,
+    // uploads. mixt-js uses it for `write`, `shortcut`, `mkdir`, `move`,
     // `delete`, and `symlink` — `write` ops are paired with `file` blob
     // parts (by `item_upload_id`, then fallback position) and matching
     // `fileinfo` JSON.
@@ -2287,7 +2287,7 @@ export class LegacyFSController extends PuterController {
 
                 if (op === 'write') {
                     // Pair with a file part — prefer `item_upload_id`
-                    // index (what puter-js sets), fall back to the op's
+                    // index (what mixt-js sets), fall back to the op's
                     // order among write ops for safety.
                     const uploadIdRaw = record.item_upload_id;
                     let fileIdx =

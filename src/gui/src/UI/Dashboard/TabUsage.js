@@ -45,7 +45,7 @@ const TabUsage = {
                     <h2>${i18n('usage')}</h2>
                     <a href="#" class="billing-plan-btn usage-plan-btn" style="display: none;"></a>
                 </div>
-                <p>Puter resources usage</p>
+                <p>Mixt resources usage</p>
             </div>
             <div class="driver-usage">
                 <div class="driver-usage-header">
@@ -56,7 +56,7 @@ const TabUsage = {
                         <span id="storage-used"></span>
                         <span> used of </span>
                         <span id="storage-capacity"></span>
-                        <span id="storage-puter-used-w" style="display:none;">&nbsp;(<span id="storage-puter-used"></span> ${i18n('storage_puter_used')})</span>
+                        <span id="storage-mixt-used-w" style="display:none;">&nbsp;(<span id="storage-mixt-used"></span> ${i18n('storage_mixt_used')})</span>
                     </div>
                 </div>
                 <div id="storage-bar-wrapper">
@@ -89,7 +89,7 @@ const TabUsage = {
     },
     init: ($el_window) => {
         setupPlanButton($el_window);
-        // Guard the click: UIUpgradeAccount only exists on hosted puter.com, and
+        // Guard the click: UIUpgradeAccount only exists on hosted mixt.mpl, and
         // without the guard clicking would throw a TypeError.
         $($el_window).find('.usage-plan-btn').on('click', (e) => {
             e.preventDefault();
@@ -154,7 +154,7 @@ let planBtnRetryTimer = null;
 function setupPlanButton ($el_window, retryDelay = 250) {
     const $planBtn = $($el_window).find('.usage-plan-btn');
     clearTimeout(planBtnRetryTimer);
-    // UIUpgradeAccount is only present on hosted puter.com; on a self-hosted
+    // UIUpgradeAccount is only present on hosted mixt.mpl; on a self-hosted
     // install the button has no working target, so hide it entirely rather
     // than showing a dead control. Hosted deployments can attach it *after*
     // the dashboard initializes, though — retry with decaying backoff so a
@@ -282,7 +282,7 @@ function renderUsageTable () {
 }
 
 async function update_usage_details ($el_window) {
-    const monthlyUsagePromise = puter.auth.getMonthlyUsage().then(res => {
+    const monthlyUsagePromise = mixt.auth.getMonthlyUsage().then(res => {
         const budget = usageBudget(res.usage, res.allowanceInfo);
         const addonLeft = addonCreditsRemaining(res.allowanceInfo);
         // The server reports credits (already scaled) or raw amounts (no
@@ -352,7 +352,7 @@ async function update_usage_details ($el_window) {
         }
     });
 
-    const spacePromise = puter.fs.space().then(res => {
+    const spacePromise = mixt.fs.space().then(res => {
         // Guard capacity 0 — otherwise 0/0 renders literally as "NaN%".
         let usage_percentage = res.capacity ? (res.used / res.capacity * 100).toFixed(0) : '0';
         usage_percentage = usage_percentage > 100 ? 100 : usage_percentage;
@@ -361,8 +361,8 @@ async function update_usage_details ($el_window) {
 
         let host_usage_percentage = 0;
         if ( res.host_used ) {
-            $('#storage-puter-used').html(window.byte_format(res.used));
-            $('#storage-puter-used-w').show();
+            $('#storage-mixt-used').html(window.byte_format(res.used));
+            $('#storage-mixt-used-w').show();
 
             general_used = res.host_used;
             host_usage_percentage = ((res.host_used - res.used) / res.capacity * 100).toFixed(0);

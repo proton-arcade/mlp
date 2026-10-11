@@ -19,18 +19,18 @@
 
 import type { RequestHandler } from 'express';
 import { Readable } from 'node:stream';
-import type { puterClients } from '../../../clients';
-import type { puterServices } from '../../../services';
-import type { puterStores } from '../../../stores';
+import type { mixtClients } from '../../../clients';
+import type { mixtServices } from '../../../services';
+import type { mixtStores } from '../../../stores';
 import type { IConfig, LayerInstances } from '../../../types';
 
 interface Layers {
-    clients: LayerInstances<typeof puterClients>;
-    stores: LayerInstances<typeof puterStores>;
-    services: LayerInstances<typeof puterServices>;
+    clients: LayerInstances<typeof mixtClients>;
+    stores: LayerInstances<typeof mixtStores>;
+    services: LayerInstances<typeof mixtServices>;
 }
 
-// Local analogue of the production `<name>.puter.work` worker domain. Requests
+// Local analogue of the production `<name>.mixt.work` worker domain. Requests
 // to `<name>.workers.localhost` are dispatched into a Miniflare instance
 // by `LocalWorkerService`, which mirrors the real Cloudflare dispatch path.
 const WORKER_HOST_SUFFIX = 'workers.localhost';

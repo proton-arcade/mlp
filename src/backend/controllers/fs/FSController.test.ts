@@ -24,7 +24,7 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { makeActor, type Actor } from '../../core/actor.js';
 import { runWithContext } from '../../core/context.js';
 import { consumeRouteRateLimit } from '../../core/http/middleware/rateLimit.js';
-import { PuterServer } from '../../server.js';
+import { MixtServer } from '../../server.js';
 import { setupTestServer } from '../../testUtil.js';
 import { generateDefaultFsentries } from '../../util/userProvisioning.js';
 import { SHARE_LIST_LIMIT } from '../share/limits.js';
@@ -37,11 +37,11 @@ import type {
 
 // ── Test harness ────────────────────────────────────────────────────
 //
-// Boots one real PuterServer (in-memory sqlite + dynamo + s3 + mock redis).
+// Boots one real MixtServer (in-memory sqlite + dynamo + s3 + mock redis).
 // Each test creates its own user via `makeUser` and exercises the live
 // FSController against the wired services / stores.
 
-let server: PuterServer;
+let server: MixtServer;
 let controller: FSController;
 
 beforeAll(async () => {
@@ -570,7 +570,7 @@ describe('FSController.completeBatchWrites', () => {
         expect(targetEntry).not.toBeNull();
         await server.stores.subdomain.create({
             userId,
-            subdomain: `workers.puter.${username}-worker`,
+            subdomain: `workers.mixt.${username}-worker`,
             rootDirId: targetEntry!.id,
         });
 
@@ -640,7 +640,7 @@ describe('FSController.completeBatchWrites', () => {
             type: expect.stringMatching(/^application\/javascript/),
             workers: [
                 expect.objectContaining({
-                    subdomain: `workers.puter.${username}-worker`,
+                    subdomain: `workers.mixt.${username}-worker`,
                     address: expect.stringContaining(`${username}-worker`),
                 }),
             ],
@@ -2854,7 +2854,7 @@ describe('FSController associatedAppId entitlement gate', () => {
                 uid,
                 uid,
                 'Gate App',
-                'https://gate-app.puter.site/',
+                'https://gate-app.mixt.site/',
                 ownerUserId,
                 opts.is_private ? 1 : 0,
             ],

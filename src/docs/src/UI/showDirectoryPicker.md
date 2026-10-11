@@ -1,15 +1,15 @@
 ---
-title: puter.ui.showDirectoryPicker()
-description: Presents a directory picker dialog for selecting directories from Puter cloud storage.
+title: mixt.ui.showDirectoryPicker()
+description: Presents a directory picker dialog for selecting directories from Mixt OS cloud storage.
 platforms: [websites, apps]
 ---
 
-Presents the user with a directory picker dialog allowing them to pick a directory from their Puter cloud storage.
+Presents the user with a directory picker dialog allowing them to pick a directory from their Mixt OS cloud storage.
 
 ## Syntax
 ```js
-puter.ui.showDirectoryPicker()
-puter.ui.showDirectoryPicker(options)
+mixt.ui.showDirectoryPicker()
+mixt.ui.showDirectoryPicker(options)
 ```
 
 ## Parameters
@@ -26,7 +26,7 @@ A `Promise` that resolves to either one [`FSItem`](/Objects/fsitem) or an array 
 ```html
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
 
     <button id="open-directory">Open directory</button>
 
@@ -35,7 +35,7 @@ A `Promise` that resolves to either one [`FSItem`](/Objects/fsitem) or an array 
 
     <script>
         document.getElementById('open-directory').addEventListener('click', ()=>{
-            puter.ui.showDirectoryPicker().then(async (directory)=>{
+            mixt.ui.showDirectoryPicker().then(async (directory)=>{
                 // print directory name
                 document.getElementById('directory-name').innerHTML = directory.name;
                 // print directory content

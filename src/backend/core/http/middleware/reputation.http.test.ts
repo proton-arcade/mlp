@@ -20,7 +20,7 @@
 import type { Request, RequestHandler, Response } from 'express';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { extensionStore } from '../../../extensions.js';
-import { setupPuterTestEnv, type PuterTestEnv } from '../../../testUtil.js';
+import { setupMixtTestEnv, type MixtTestEnv } from '../../../testUtil.js';
 import type { IConfig } from '../../../types';
 
 /**
@@ -34,7 +34,7 @@ import type { IConfig } from '../../../types';
  * every controller route.
  */
 describe('requireReputation over HTTP', () => {
-    let env: PuterTestEnv;
+    let env: MixtTestEnv;
 
     const ok = ((_req: Request, res: Response) =>
         res.json({ ok: true })) as unknown as RequestHandler;
@@ -54,7 +54,7 @@ describe('requireReputation over HTTP', () => {
                 handler: ok,
             },
         );
-        env = await setupPuterTestEnv({
+        env = await setupMixtTestEnv({
             reputationGate: { tiers: { standard: 60 } },
         } as unknown as IConfig);
     }, 120_000);

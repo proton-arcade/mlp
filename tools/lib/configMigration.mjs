@@ -140,7 +140,7 @@ export const transformToV2 = (source) => {
     // = per-extension config bag. JSON.parse keeps only the last declaration
     // per key, so in prod files where both appear we typically only see the
     // object. Promote object-shape entries onto top-level keys (scoped npm
-    // names → camelCase: `@heyputer/app-store-and-purchases` → `appStoreAndPurchases`).
+    // names → camelCase: `@mixt/app-store-and-purchases` → `appStoreAndPurchases`).
     // v1 also had `mod_directories: string[]` with `{repo}/...` placeholders.
     // v2 uses `extensions: string[]` of plain directory paths; post-cutover the
     // only dir that survives is the repo-root `./extensions`, so synthesize that
@@ -250,17 +250,17 @@ export const transformToV2 = (source) => {
     // Captcha
     if ( svc.captcha ) out.captcha = svc.captcha;
 
-    // Homepage GUI bundle promotion (services.puter-homepage.* → top-level).
-    if ( svc['puter-homepage'] ) {
-        const h = svc['puter-homepage'];
+    // Homepage GUI bundle promotion (services.mixt-homepage.* → top-level).
+    if ( svc['mixt-homepage'] ) {
+        const h = svc['mixt-homepage'];
         copyIfSet(h, 'gui_bundle', out);
-        copyIfSet(h, 'gui_puterjs_bundle', out);
+        copyIfSet(h, 'gui_mixtjs_bundle', out);
         copyIfSet(h, 'gui_css', out);
     }
 
     // Billing / Stripe consolidation. v1 split these across `stripe`,
     // `offerings`, and `__subs-serve`; v2 lands everything under the
-    // `appStoreAndPurchases` extension (puter-paid subscriptions, the
+    // `appStoreAndPurchases` extension (mixt-paid subscriptions, the
     // marketplace, and webhook handling all share one Stripe client).
     const appStoreAndPurchases = (out.appStoreAndPurchases ?? {});
     if ( svc.stripe ) {
@@ -271,8 +271,8 @@ export const transformToV2 = (source) => {
         appStoreAndPurchases.stripe_publishable_key = svc['__subs-serve'].stripe_publishable_key;
     }
     if ( svc.offerings?.price_ids ) {
-        appStoreAndPurchases.puterPaid = appStoreAndPurchases.puterPaid ?? {};
-        appStoreAndPurchases.puterPaid.price_ids = svc.offerings.price_ids;
+        appStoreAndPurchases.mixtPaid = appStoreAndPurchases.mixtPaid ?? {};
+        appStoreAndPurchases.mixtPaid.price_ids = svc.offerings.price_ids;
     }
     // Forward an already-migrated `legacyBilling` block too, in case the
     // input config was migrated against an older version of this tool.
@@ -283,8 +283,8 @@ export const transformToV2 = (source) => {
             appStoreAndPurchases.stripe_publishable_key ??= source.legacyBilling.stripe_publishable_key;
         }
         if ( source.legacyBilling.price_ids ) {
-            appStoreAndPurchases.puterPaid = appStoreAndPurchases.puterPaid ?? {};
-            appStoreAndPurchases.puterPaid.price_ids ??= source.legacyBilling.price_ids;
+            appStoreAndPurchases.mixtPaid = appStoreAndPurchases.mixtPaid ?? {};
+            appStoreAndPurchases.mixtPaid.price_ids ??= source.legacyBilling.price_ids;
         }
     }
     if ( Object.keys(appStoreAndPurchases).length ) out.appStoreAndPurchases = appStoreAndPurchases;
@@ -338,7 +338,7 @@ export const transformToV2 = (source) => {
     // we don't double-emit; known-dead v1 services are listed in
     // `droppedServiceKeys` so their data is intentionally discarded.
     const consumedServiceKeys = new Set([
-        'database', 'dynamo', 'email', 'captcha', 'puter-homepage',
+        'database', 'dynamo', 'email', 'captcha', 'mixt-homepage',
         'stripe', 'offerings', '__subs-serve',
         'oidc', 'wisp', 'peer', 'broadcast', 'worker-service', 'entri-service',
         'thumbnails', 'onlyoffice-app', 'cloudflare-turnstile', 'replicate',
@@ -355,7 +355,7 @@ export const transformToV2 = (source) => {
         // SNS bounce handler not ported to v2 — no v2 SNSService.
         'sns',
         // v1 config-only orphans: never actually read by v1 backend
-        // (confirmed via git grep on puter@main), no v2 consumers.
+        // (confirmed via git grep on mixt@main), no v2 consumers.
         'ipgeo', 'newsdata', 'weather', 'user-send-mail',
         // `ai-chat.concurrentRequests` — v1 concurrency limiter not ported
         // yet; see TODO in v2 drivers/ai-chat/ChatCompletionDriver.ts. Config
@@ -364,7 +364,7 @@ export const transformToV2 = (source) => {
         'ai-chat',
         // v1-only services with no v2 analogue.
         'web-server',          // `disable_ip_validate_event` — flag gone
-        'puter-kvstore',       // v2 uses `dynamo` for system KV
+        'mixt-kvstore',       // v2 uses `dynamo` for system KV
     ]);
     for ( const [k, v] of Object.entries(svc) ) {
         if ( consumedServiceKeys.has(k) || droppedServiceKeys.has(k) ) continue;
@@ -375,9 +375,9 @@ export const transformToV2 = (source) => {
     // Silently dropped — everything else falls through to the preservation
     // loop below in case it belongs to a prod extension we're not aware of.
     const droppedTopKeys = new Set([
-        // `puter_hosted_data.puter_versions` — set in v1 config.js but never
+        // `mixt_hosted_data.mixt_versions` — set in v1 config.js but never
         // read. Planted for a version-check feature that never shipped.
-        'puter_hosted_data',
+        'mixt_hosted_data',
         // v1 dev-only toggles with no v2 equivalent. Dev vs prod behaviour
         // in v2 branches off `env === 'dev'` and `config.abuse.enabled`.
         'disable_abuse_checks',

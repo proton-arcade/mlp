@@ -69,8 +69,8 @@ describe('maskedSharePath', () => {
 
 describe('shareDeepLink', () => {
     it('puts the whole path in one encoded parameter', () => {
-        expect(shareDeepLink('https://puter.com', `/alice/${UID}/a.txt`)).toBe(
-            `https://puter.com/?shared=%2Falice%2F${UID}%2Fa.txt`,
+        expect(shareDeepLink('https://mixt.mpl', `/alice/${UID}/a.txt`)).toBe(
+            `https://mixt.mpl/?shared=%2Falice%2F${UID}%2Fa.txt`,
         );
     });
 
@@ -86,7 +86,7 @@ describe('shareDeepLink', () => {
     // would truncate the path, so the encoding is what keeps the link whole.
     it('encodes a name that would otherwise break the query string', () => {
         const link = shareDeepLink(
-            'https://puter.com',
+            'https://mixt.mpl',
             `/alice/${UID}/a&b#c d.txt`,
         );
         expect(link).toContain('%26b%23c%20d.txt');
@@ -103,15 +103,15 @@ describe('sharedViewLink', () => {
         const recipientUuid = 'aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee';
         const path = `/alice/${UID}/a.txt`;
         const link = sharedViewLink(
-            'https://puter.com',
+            'https://mixt.mpl',
             [path],
             null,
             recipientUuid,
         );
         expect(link).toBe(
-            `https://puter.com/?shared=${encodeURIComponent(path)}&${SHARE_RECIPIENT_PARAM}=${recipientUuid}`,
+            `https://mixt.mpl/?shared=${encodeURIComponent(path)}&${SHARE_RECIPIENT_PARAM}=${recipientUuid}`,
         );
-        expect(shareDeepLink('https://puter.com', path, null, recipientUuid))
+        expect(shareDeepLink('https://mixt.mpl', path, null, recipientUuid))
             .toBe(link);
     });
 
@@ -119,7 +119,7 @@ describe('sharedViewLink', () => {
         const recipientUuid = 'aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee';
         const path = `/alice/${UID}/a.txt`;
         const params = new URL(
-            shareDeepLink('https://puter.com', path, 'draw-app', recipientUuid),
+            shareDeepLink('https://mixt.mpl', path, 'draw-app', recipientUuid),
         ).searchParams;
         expect(params.getAll('shared')).toEqual([path]);
         expect(params.get('shared_app')).toBe('draw-app');
@@ -134,7 +134,7 @@ describe('sharedViewLink', () => {
         const recipientUuid = 'aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee';
         const app = `app-${'x'.repeat(60)}`;
         const link = sharedViewLink(
-            'https://puter.com',
+            'https://mixt.mpl',
             paths,
             app,
             recipientUuid,
@@ -146,12 +146,12 @@ describe('sharedViewLink', () => {
     });
 
     it('repeats the parameter once per item, in order', () => {
-        const link = sharedViewLink('https://puter.com', [
+        const link = sharedViewLink('https://mixt.mpl', [
             `/alice/${UID}/a.txt`,
             `/bob/${UID}/b.txt`,
         ]);
         expect(link).toBe(
-            `https://puter.com/?shared=%2Falice%2F${UID}%2Fa.txt&shared=%2Fbob%2F${UID}%2Fb.txt`,
+            `https://mixt.mpl/?shared=%2Falice%2F${UID}%2Fa.txt&shared=%2Fbob%2F${UID}%2Fb.txt`,
         );
         // Round-trips: the GUI reads back every path, as it was.
         expect(new URL(link).searchParams.getAll('shared')).toEqual([
@@ -163,8 +163,8 @@ describe('sharedViewLink', () => {
     // Nothing addressable still deserves a way in: the parameter alone opens
     // Shared, the same place a link with items lands.
     it('still opens Shared when there is nothing to pick out', () => {
-        expect(sharedViewLink('https://puter.com', [])).toBe(
-            'https://puter.com/?shared=',
+        expect(sharedViewLink('https://mixt.mpl', [])).toBe(
+            'https://mixt.mpl/?shared=',
         );
     });
 
@@ -174,26 +174,26 @@ describe('sharedViewLink', () => {
     it('keeps the first item even when it alone outgrows the length cap', () => {
         const long = `/alice/${UID}/${'\u5831\u544a'.repeat(120)}.pdf`;
         const short = `/alice/${UID}/a.txt`;
-        expect(shareDeepLink('https://puter.com', long).length).toBeGreaterThan(
+        expect(shareDeepLink('https://mixt.mpl', long).length).toBeGreaterThan(
             SHARE_DEEP_LINK_MAX_LENGTH,
         );
         expect(
             new URL(
-                shareDeepLink('https://puter.com', long),
+                shareDeepLink('https://mixt.mpl', long),
             ).searchParams.getAll('shared'),
         ).toEqual([long]);
         // Nothing fits after it, and nothing later is taken instead.
         expect(
             new URL(
-                sharedViewLink('https://puter.com', [long, short]),
+                sharedViewLink('https://mixt.mpl', [long, short]),
             ).searchParams.getAll('shared'),
         ).toEqual([long]);
     });
 
     it('names an item once however often it was queued', () => {
         const path = `/alice/${UID}/a.txt`;
-        expect(sharedViewLink('https://puter.com', [path, path])).toBe(
-            shareDeepLink('https://puter.com', path),
+        expect(sharedViewLink('https://mixt.mpl', [path, path])).toBe(
+            shareDeepLink('https://mixt.mpl', path),
         );
     });
 
@@ -203,27 +203,27 @@ describe('sharedViewLink', () => {
             (_, i) => `/alice/${UID}/file-${i}.txt`,
         );
         const shared = new URL(
-            sharedViewLink('https://puter.com', paths),
+            sharedViewLink('https://mixt.mpl', paths),
         ).searchParams.getAll('shared');
         expect(shared).toEqual(paths.slice(0, SHARE_DEEP_LINK_ITEMS_LIMIT));
     });
 
     it('carries the issuing app as its own parameter, or not at all', () => {
         const path = `/alice/${UID}/a.txt`;
-        const link = sharedViewLink('https://puter.com', [path], 'draw-app');
+        const link = sharedViewLink('https://mixt.mpl', [path], 'draw-app');
         expect(link).toBe(
-            `https://puter.com/?shared=${encodeURIComponent(path)}&shared_app=draw-app`,
+            `https://mixt.mpl/?shared=${encodeURIComponent(path)}&shared_app=draw-app`,
         );
         expect(new URL(link).searchParams.get('shared_app')).toBe('draw-app');
         // No app, no parameter — for a null the same as for an omission.
-        expect(sharedViewLink('https://puter.com', [path], null)).toBe(
-            sharedViewLink('https://puter.com', [path]),
+        expect(sharedViewLink('https://mixt.mpl', [path], null)).toBe(
+            sharedViewLink('https://mixt.mpl', [path]),
         );
-        expect(shareDeepLink('https://puter.com', path, 'draw-app')).toBe(link);
+        expect(shareDeepLink('https://mixt.mpl', path, 'draw-app')).toBe(link);
     });
 
     it('encodes an app value that would otherwise break the query string', () => {
-        const link = sharedViewLink('https://puter.com', [], 'a&b=c');
+        const link = sharedViewLink('https://mixt.mpl', [], 'a&b=c');
         expect(new URL(link).searchParams.get('shared_app')).toBe('a&b=c');
     });
 
@@ -233,7 +233,7 @@ describe('sharedViewLink', () => {
             (_, i) => `/alice/${UID}/${'quarterly report '.repeat(8)}${i}.pdf`,
         );
         const app = `app-${'x'.repeat(60)}`;
-        const link = sharedViewLink('https://puter.com', paths, app);
+        const link = sharedViewLink('https://mixt.mpl', paths, app);
         expect(link.length).toBeLessThanOrEqual(SHARE_DEEP_LINK_MAX_LENGTH);
         // The app survives however many items wanted the space.
         expect(new URL(link).searchParams.get('shared_app')).toBe(app);
@@ -246,7 +246,7 @@ describe('sharedViewLink', () => {
             { length: SHARE_DEEP_LINK_ITEMS_LIMIT },
             (_, i) => `/alice/${UID}/${'quarterly report '.repeat(8)}${i}.pdf`,
         );
-        const link = sharedViewLink('https://puter.com', paths);
+        const link = sharedViewLink('https://mixt.mpl', paths);
         expect(link.length).toBeLessThanOrEqual(SHARE_DEEP_LINK_MAX_LENGTH);
         const shared = new URL(link).searchParams.getAll('shared');
         // Only a leading run made it — the first items, none skipped.
@@ -263,14 +263,14 @@ describe('sharedViewLink', () => {
 describe('shareTargetLink', () => {
     it('links an addressable target and nothing else', () => {
         expect(
-            shareTargetLink('https://puter.com', {
+            shareTargetLink('https://mixt.mpl', {
                 name: 'a.txt',
                 uid: UID,
                 ownerUsername: 'alice',
             }),
-        ).toBe(`https://puter.com/?shared=%2Falice%2F${UID}%2Fa.txt`);
+        ).toBe(`https://mixt.mpl/?shared=%2Falice%2F${UID}%2Fa.txt`);
         expect(
-            shareTargetLink('https://puter.com', {
+            shareTargetLink('https://mixt.mpl', {
                 name: 'a.txt',
                 uid: '',
                 ownerUsername: 'alice',

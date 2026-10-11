@@ -21,18 +21,18 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { v4 as uuidv4 } from 'uuid';
 import { makeActor, type Actor } from '../../core/actor.js';
 import { runWithContext } from '../../core/context.js';
-import { PuterServer } from '../../server.js';
+import { MixtServer } from '../../server.js';
 import { setupTestServer } from '../../testUtil.js';
 import type { NotificationDriver } from './NotificationDriver.js';
 
 // ── Test harness ────────────────────────────────────────────────────
 //
-// Boots one PuterServer (in-memory sqlite + dynamo + s3 + mock redis)
+// Boots one MixtServer (in-memory sqlite + dynamo + s3 + mock redis)
 // and exercises the live NotificationDriver against the wired stores.
 // Each test allocates its own user via `makeUser` so notification rows
 // from one test don't leak into another's `select` results.
 
-let server: PuterServer;
+let server: MixtServer;
 let driver: NotificationDriver;
 
 beforeAll(async () => {

@@ -1,4 +1,4 @@
-import { defaultThumbnailGenerator } from '../../../../puter-js/src/modules/FileSystem/operations/upload/thumbnails.js';
+import { defaultThumbnailGenerator } from '../../../../mixt-js/src/modules/FileSystem/operations/upload/thumbnails.js';
 import {
     PDFJS_VERSION,
     PDF_THUMBNAIL_ASSET_PATH,

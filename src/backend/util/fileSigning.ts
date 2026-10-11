@@ -83,7 +83,7 @@ function computeOwnerBoundSignature(
     // Purpose-labelled key, so no other token signed with the platform secret
     // can be replayed as a file signature.
     const key = createHmac('sha256', secret)
-        .update('puter-fs:signed-url')
+        .update('mixt-fs:signed-url')
         .digest();
     return createHmac('sha256', key)
         .update(`${uid}/${action}/${ownerUserId}/${expires}`)

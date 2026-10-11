@@ -1,5 +1,5 @@
 ---
-title: puter.fs.getShares()
+title: mixt.fs.getShares()
 description: List who has access to a shared file or directory.
 platforms: [websites, apps, nodejs, workers]
 ---
@@ -21,8 +21,8 @@ Being handed the item is not enough for an **app or API token**: the credential 
 ## Syntax
 
 ```js
-puter.fs.getShares(path)
-puter.fs.getShares(options)
+mixt.fs.getShares(path)
+mixt.fs.getShares(options)
 ```
 
 ## Parameters
@@ -65,15 +65,15 @@ If you cannot see the item at all, this rejects the same way a missing file woul
 ```html;fs-getShares
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
-            await puter.fs.write('report.txt', 'Quarterly numbers');
-            await puter.fs.share('report.txt', 'friend@example.com', 'read');
+            await mixt.fs.write('report.txt', 'Quarterly numbers');
+            await mixt.fs.share('report.txt', 'friend@example.com', 'read');
 
-            const shares = await puter.fs.getShares('report.txt');
+            const shares = await mixt.fs.getShares('report.txt');
             for (const share of shares) {
-                puter.print(`${share.holder}: ${share.mode} (from ${share.issuer})<br>`);
+                mixt.print(`${share.holder}: ${share.mode} (from ${share.issuer})<br>`);
             }
         })()
     </script>
@@ -84,13 +84,13 @@ If you cannot see the item at all, this rejects the same way a missing file woul
 <strong class="example-title">Withdraw everyone's access</strong>
 
 ```js
-const shares = await puter.fs.getShares('report.txt');
+const shares = await mixt.fs.getShares('report.txt');
 for (const share of shares) {
-    await puter.fs.unshare('report.txt', share.holder);
+    await mixt.fs.unshare('report.txt', share.holder);
 }
 ```
 
 ## Related
 
-- [`puter.fs.share()`](/FS/share/) - Grant access
-- [`puter.fs.unshare()`](/FS/unshare/) - Withdraw access
+- [`mixt.fs.share()`](/FS/share/) - Grant access
+- [`mixt.fs.unshare()`](/FS/unshare/) - Withdraw access

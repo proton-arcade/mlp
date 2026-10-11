@@ -65,7 +65,7 @@ export function normalizeGroupName (name) {
  * worse than a plain tile, so it is dropped and its member becomes loose.
  * Corrupt input degrades to "no folders", never to a broken Apps tab.
  *
- * @param {unknown} raw - value returned by `puter.kv.get`
+ * @param {unknown} raw - value returned by `mixt.kv.get`
  * @returns {AppGroup[]}
  */
 export function parseAppGroups (raw) {

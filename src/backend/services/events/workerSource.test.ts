@@ -22,7 +22,7 @@
  *
  * The runtime file is the one production prepends — loaded here into a `vm`
  * context with the handful of globals a worker provides (`Response`, `URL`,
- * `fetch`, an `init_puter_portable` stub, the invoke-key binding) — so the
+ * `fetch`, an `init_mixt_portable` stub, the invoke-key binding) — so the
  * whole invoke protocol is pinned without a worker runtime to boot.
  */
 
@@ -93,8 +93,8 @@ const loadWorker = (
         fetch: () => Promise.resolve(new Response('')),
         console,
         events_invoke_key: options.invokeKey ?? INVOKE_KEY,
-        puter_endpoint: 'https://api.example',
-        init_puter_portable: (token: string) => {
+        mixt_endpoint: 'https://api.example',
+        init_mixt_portable: (token: string) => {
             userTokens.push(token);
             return { authToken: token };
         },
@@ -139,7 +139,7 @@ const invoke = (worker: LoadedWorker, options: InvokeOptions = {}) => {
                 method,
                 headers: {
                     'content-type': 'application/json',
-                    'x-puter-events-key': options.key ?? INVOKE_KEY,
+                    'x-mixt-events-key': options.key ?? INVOKE_KEY,
                 },
                 ...(method === 'GET' || method === 'HEAD'
                     ? {}
@@ -180,7 +180,7 @@ describe('the generated worker inside its runtime', () => {
         const { sandbox } = loadWorker([handler('a', SINK)]);
 
         // The three the ordinary runtime defines, and the token behind them.
-        for (const name of ['me', 'my', 'myself', 'router', 'puter_auth'])
+        for (const name of ['me', 'my', 'myself', 'router', 'mixt_auth'])
             expect(sandbox[name]).toBeUndefined();
         // The invoke key is read once and taken out of reach of handler code.
         expect(sandbox.events_invoke_key).toBeUndefined();
@@ -359,7 +359,7 @@ describe('the generated worker inside its runtime', () => {
 
     it('catches a source that parses as `return (...)` but not as the emitted register call', async () => {
         // Valid as `return (\n${source}\n);` but a SyntaxError once embedded
-        // as `__puterEvents.register(key, (\n${source}\n));` — the old check
+        // as `__mixtEvents.register(key, (\n${source}\n));` — the old check
         // validated the wrong text and would have taken the whole script down.
         const source = '1); globalThis.x = 2; (function(){}';
         const worker = loadWorker([handler('good', SINK), handler('bad', source)]);
@@ -380,17 +380,17 @@ describe('the handled marker', () => {
         ]);
 
         const ok = await invoke(worker, { body: delivery({ handler: 'ok' }) });
-        expect(ok.headers.get('x-puter-events-handled')).toBe('1');
+        expect(ok.headers.get('x-mixt-events-handled')).toBe('1');
 
         const notFound = await invoke(worker, {
             body: delivery({ handler: 'missing' }),
         });
-        expect(notFound.headers.get('x-puter-events-handled')).toBe('1');
+        expect(notFound.headers.get('x-mixt-events-handled')).toBe('1');
 
         const threw = await invoke(worker, {
             body: delivery({ handler: 'boom' }),
         });
-        expect(threw.headers.get('x-puter-events-handled')).toBe('1');
+        expect(threw.headers.get('x-mixt-events-handled')).toBe('1');
     });
 
     it('names the runtime`s own failure with a machine-readable error code', async () => {
@@ -417,7 +417,7 @@ describe('the handled marker', () => {
         for (const [options, code] of cases)
             expect(
                 (await invoke(worker, options)).headers.get(
-                    'x-puter-events-error',
+                    'x-mixt-events-error',
                 ),
             ).toBe(code);
     });
@@ -428,7 +428,7 @@ describe('the handled marker', () => {
                 'hijack',
                 `async () => {
                     globalThis.Response = class {
-                        constructor() { this.status = 200; this.headers = new Map([['x-puter-events-handled', '0']]); }
+                        constructor() { this.status = 200; this.headers = new Map([['x-mixt-events-handled', '0']]); }
                     };
                 }`,
             ),
@@ -438,7 +438,7 @@ describe('the handled marker', () => {
         });
         // The runtime's own answer, built from the Response it captured
         // before this handler ran — not the one the handler installed.
-        expect(res.headers.get('x-puter-events-handled')).toBe('1');
+        expect(res.headers.get('x-mixt-events-handled')).toBe('1');
     });
 });
 
@@ -462,7 +462,7 @@ describe('generateEventsWorkerSource', () => {
         try {
             const generated = generateEventsWorkerSource([a, b]);
             expect(generated.broken).toEqual(['a', 'b']);
-            expect(generated.source).not.toContain('__puterEvents.register');
+            expect(generated.source).not.toContain('__mixtEvents.register');
             expect(generated.source).toContain('markBroken("a")');
             expect(generated.source).toContain('markBroken("b")');
         } finally {

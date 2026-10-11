@@ -5,26 +5,26 @@ tags: [workers, kv, auth]
 order: 40
 ---
 
-Everything you store with [`puter.kv`](/KV/) or [`puter.fs`](/FS/) lives in the
+Everything you store with [`mixt.kv`](/KV/) or [`mixt.fs`](/FS/) lives in the
 user's own account, which works differently than a traditional backend. If your app requires users reading and writing to the same data, use a [serverless worker](/Workers/) instead. This allows you to run server-side JavaScript code and you can have your users accessing the same data, which belongs to you as the developer.
 
 ## Worker Context and User Context
 
-Inside a worker you get your own Puter context in the `me.puter` global object,
+Inside a worker you get your own Mixt OS context in the `me.mixt` global object,
 so you can store data in your [key-value database](/KV/). That centralizes the
 data and keeps it server-side for your users.
 
-You also get the caller's Puter context in the `user.puter` parameter when the
+You also get the caller's Mixt OS context in the `user.mixt` parameter when the
 request is authenticated, which is how you get information about the user.
 
 Data only its owner reads has no reason to make this trip.
-[Store data](/recipes/store-data/) covers [`puter.kv`](/KV/) in app code, which
+[Store data](/recipes/store-data/) covers [`mixt.kv`](/KV/) in app code, which
 is already per-user and costs no round trip through your worker.
 
 ## Write a Record
 
-The handler writes to your own [key-value database](/KV/) through `me.puter`, so
-every player's row lands in the same store, and it uses `user.puter` to find out
+The handler writes to your own [key-value database](/KV/) through `me.mixt`, so
+every player's row lands in the same store, and it uses `user.mixt` to find out
 who is calling:
 
 ```js
@@ -36,13 +36,13 @@ router.post('/scores', async ({ request, user }) => {
         return new Response('sign in required', { status: 401 });
     }
 
-    const { uuid, username } = await user.puter.getUser();
+    const { uuid, username } = await user.mixt.getUser();
     const { score } = await request.json();
     if ( typeof score !== 'number' ) {
         return new Response('invalid score', { status: 400 });
     }
 
-    await me.puter.kv.set(`${ PREFIX }${ uuid }`, { username, score, at: Date.now() });
+    await me.mixt.kv.set(`${ PREFIX }${ uuid }`, { username, score, at: Date.now() });
     return { username, score };
 });
 ```
@@ -51,11 +51,11 @@ The key is built from the caller's `uuid`, so a request can only ever touch its
 own row, whatever the request body says.
 
 For `user` to be there at all, your app has to call the worker with the
-[`puter.workers.exec()`](/Workers/exec/) method, which attaches the signed-in
+[`mixt.workers.exec()`](/Workers/exec/) method, which attaches the signed-in
 user's session:
 
 ```js
-await puter.workers.exec(`${ API }/scores`, { method: 'POST', body });
+await mixt.workers.exec(`${ API }/scores`, { method: 'POST', body });
 ```
 
 A plain `fetch()` of the same URL arrives without a session, so the `! user`
@@ -64,12 +64,12 @@ side in full.
 
 ## Read the Records
 
-To read the data back, use the same `me.puter` context and list it with the
-[`puter.kv.list()`](/KV/list/) method:
+To read the data back, use the same `me.mixt` context and list it with the
+[`mixt.kv.list()`](/KV/list/) method:
 
 ```js
 router.get('/scores', async () => {
-    const rows = await me.puter.kv.list(PREFIX, true);
+    const rows = await me.mixt.kv.list(PREFIX, true);
     return rows
         .map(row => row.value)
         .sort((a, b) => b.score - a.score)
@@ -84,21 +84,21 @@ the `POST` handler addresses exactly one key inside it. See
 
 ## Deploy the Worker
 
-The worker is one file you write to your Puter account and create once, which
-gives it a permanent URL such as `https://leaderboard-api.puter.work`. See
+The worker is one file you write to your Mixt OS account and create once, which
+gives it a permanent URL such as `https://leaderboard-api.mixt.work`. See
 [deployment](/Workers/#deployment) for the steps.
 
 ## Call It From Your App
 
 To call the worker with the signed-in user's session attached, use the
-[`puter.workers.exec()`](/Workers/exec/) method, which takes the same arguments
+[`mixt.workers.exec()`](/Workers/exec/) method, which takes the same arguments
 as `fetch()`:
 
 ```js
-const API = 'https://leaderboard-api.puter.work';
+const API = 'https://leaderboard-api.mixt.work';
 
 // Submit this player's score
-const res = await puter.workers.exec(`${ API }/scores`, {
+const res = await mixt.workers.exec(`${ API }/scores`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ score: 120 }),
@@ -106,7 +106,7 @@ const res = await puter.workers.exec(`${ API }/scores`, {
 await res.json();    // { username: 'grace', score: 120 }
 
 // Read the whole board
-const board = await (await puter.workers.exec(`${ API }/scores`)).json();
+const board = await (await mixt.workers.exec(`${ API }/scores`)).json();
 // [ { username: 'ada',   score: 450, at: 1788820000000 },
 //   { username: 'grace', score: 120, at: 1788827048741 } ]
 ```

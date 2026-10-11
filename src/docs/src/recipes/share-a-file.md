@@ -1,12 +1,12 @@
 ---
 title: Share a File
-description: "Learn how to add file sharing to your app with Puter.js, so users can share files in their Puter account with other people."
+description: "Learn how to add file sharing to your app with Mixt.js, so users can share files in their Mixt OS account with other people."
 tags: [fs, auth]
 order: 45
 ---
 
-Every file in Puter lives inside one user's Puter account, and only that user
-can open it. When another Puter user needs the same file, share it with them
+Every file in Mixt OS lives inside one user's Mixt OS account, and only that user
+can open it. When another Mixt OS user needs the same file, share it with them
 using the [filesystem API](/FS/). They can then open it from their own account,
 without anyone copying the file or sending a link.
 
@@ -18,7 +18,7 @@ on a file.
 Pass the path and who to share it with:
 
 ```js
-await puter.fs.share('report.txt', 'alice');
+await mixt.fs.share('report.txt', 'alice');
 ```
 
 A string with an `@` in it is read as an email address, anything else as a
@@ -26,11 +26,11 @@ username. You can also be explicit, which is worth doing when the value comes
 from user input:
 
 ```js
-await puter.fs.share('report.txt', { username: 'alice' });
-await puter.fs.share('report.txt', { email: 'alice@example.com' });
+await mixt.fs.share('report.txt', { username: 'alice' });
+await mixt.fs.share('report.txt', { email: 'alice@example.com' });
 ```
 
-Sharing with an email address that has no Puter account yet sends an
+Sharing with an email address that has no Mixt OS account yet sends an
 invitation instead, which grants access once that address is confirmed.
 
 ## Choose how much access
@@ -38,7 +38,7 @@ invitation instead, which grants access once that address is confirmed.
 The third argument is the mode, and it defaults to `'read'`:
 
 ```js
-await puter.fs.share('budget.xlsx', 'alice', 'write');
+await mixt.fs.share('budget.xlsx', 'alice', 'write');
 ```
 
 - `'read'`: open it.
@@ -52,7 +52,7 @@ instead of adding a second share, so changing someone from read to write is one
 more call:
 
 ```js
-const [share] = await puter.fs.share('budget.xlsx', 'alice', 'write');
+const [share] = await mixt.fs.share('budget.xlsx', 'alice', 'write');
 
 share.mode;    // 'write'
 share.isNew;   // false, she already had access, at a different mode
@@ -65,7 +65,7 @@ confirmation.
 ## See what has been shared with you
 
 ```js
-const { items } = await puter.fs.listShared();
+const { items } = await mixt.fs.listShared();
 
 for (const item of items) {
     console.log(item.name, item.mode, item.owner);
@@ -76,12 +76,12 @@ This resolves to an object with an `items` array, not to an
 array. Your own files are never in it.
 
 Shared items appear at a **masked path** of the form `/<owner>/<uid>/<name>`.
-It works with any `puter.fs` method, so you can read one directly from the
+It works with any `mixt.fs` method, so you can read one directly from the
 listing:
 
 ```js
 const [first] = items;
-const blob = await puter.fs.read(first.path);
+const blob = await mixt.fs.read(first.path);
 console.log(await blob.text());
 ```
 
@@ -92,7 +92,7 @@ path has no meaningful folder to show.
 ## See who you shared something with
 
 ```js
-const shares = await puter.fs.getShares('report.txt');
+const shares = await mixt.fs.getShares('report.txt');
 
 for (const share of shares) {
     console.log(share.holder, share.mode);
@@ -106,7 +106,7 @@ yours, so an owner can see who else it was shared with by the people they gave
 ## Take access back
 
 ```js
-const { revoked } = await puter.fs.unshare('report.txt', 'alice');
+const { revoked } = await mixt.fs.unshare('report.txt', 'alice');
 ```
 
 `revoked` counts the grants actually removed. `0` means there was nothing to

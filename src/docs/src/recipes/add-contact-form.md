@@ -1,6 +1,6 @@
 ---
 title: Add a Contact Form
-description: "Learn how to add a contact form to your app or website with Puter.js, so every message a visitor sends lands in your email inbox."
+description: "Learn how to add a contact form to your app or website with Mixt.js, so every message a visitor sends lands in your email inbox."
 tags: [workers, email]
 order: 39
 ---
@@ -10,8 +10,8 @@ you publishing your email address. Sending that message to your inbox needs
 code that runs outside the visitor's browser, which usually means running a
 mail server or signing up for a form service.
 
-With Puter.js, a [serverless worker](/Workers/) receives the form and sends it
-to your email with [`puter.email.sendTransactional()`](/Email/sendTransactional/).
+With Mixt.js, a [serverless worker](/Workers/) receives the form and sends it
+to your email with [`mixt.email.sendTransactional()`](/Email/sendTransactional/).
 There is no server or sending domain to set up.
 
 ## Write the Worker
@@ -28,7 +28,7 @@ router.post('/contact', async ({ request }) => {
         return new Response('name, email and message are required', { status: 400 });
     }
 
-    await me.puter.email.sendTransactional({
+    await me.mixt.email.sendTransactional({
         to: CONTACT_TO,
         replyTo: email,
         subject: `Contact form: ${name}`,
@@ -43,7 +43,7 @@ The recipient is fixed in the worker, so the form can only ever send mail to
 you. `replyTo` is set to the visitor's address, so pressing reply in your inbox
 writes back to them.
 
-The email is sent with `me.puter`, which is your own Puter account as the
+The email is sent with `me.mixt`, which is your own Mixt OS account as the
 worker's owner. Sends are billed to you, and
 [transactional email](/Email/sendTransactional/) needs your account to be on a
 paid plan.
@@ -53,7 +53,7 @@ request body and add them to `text`.
 
 ## Deploy the Worker
 
-Deploy the worker to get its URL, such as `https://my-contact.puter.work`. The
+Deploy the worker to get its URL, such as `https://my-contact.mixt.work`. The
 [Workers deployment guide](/Workers/#deployment) covers each way to deploy.
 
 ## Add the Form
@@ -74,7 +74,7 @@ The form is plain HTML with one input per field the worker reads:
 When the form is submitted, post its fields to the worker as JSON:
 
 ```js
-const WORKER_URL = 'https://my-contact.puter.work';
+const WORKER_URL = 'https://my-contact.mixt.work';
 const form = document.getElementById('contact-form');
 
 form.addEventListener('submit', async (e) => {
@@ -99,7 +99,7 @@ form.addEventListener('submit', async (e) => {
 });
 ```
 
-The request is a plain `fetch()`, so visitors do not need a Puter account to
+The request is a plain `fetch()`, so visitors do not need a Mixt OS account to
 use the form.
 
 Every message sent through the form now arrives in your email inbox.
@@ -108,7 +108,7 @@ Every message sent through the form now arrives in your email inbox.
 
 Anyone who knows the worker's URL can call the `/contact` route, and every call
 sends an email billed to you. To keep a bot from flooding your inbox, add a
-rate limit. Record the visitor's IP address in [`puter.kv`](/KV/) with an
+rate limit. Record the visitor's IP address in [`mixt.kv`](/KV/) with an
 expiry time, and while the key exists, the route answers `429` and sends
 nothing.
 
@@ -136,12 +136,12 @@ function toPrefix48(addr) {
 async function isRateLimited (request) {
     const key = `contact:${toPrefix48(request.headers.get('x-real-ip'))}`;
 
-    if ( await me.puter.kv.get(key) ) {
+    if ( await me.mixt.kv.get(key) ) {
         return true;
     }
 
     const expireAt = Math.floor(Date.now() / 1000) + COOLDOWN_SECONDS;
-    await me.puter.kv.set(key, true, expireAt);
+    await me.mixt.kv.set(key, true, expireAt);
     return false;
 }
 
@@ -155,7 +155,7 @@ router.post('/contact', async ({ request }) => {
         return new Response('Please wait a few minutes before sending another message', { status: 429 });
     }
 
-    await me.puter.email.sendTransactional({
+    await me.mixt.email.sendTransactional({
         to: CONTACT_TO,
         replyTo: email,
         subject: `Contact form: ${name}`,
@@ -169,7 +169,7 @@ router.post('/contact', async ({ request }) => {
 The `x-real-ip` header carries the visitor's IP address, and it cannot be faked to get around
 the limit. The `toPrefix48()` helper handles both IPv4 and IPv6. An IPv4 address is used
 as is. One IPv6 connection usually comes with a whole block of addresses, so an
-IPv6 address is rate limited by its /48 prefix instead of the single address. The [`puter.kv.set()`](/KV/set/) method takes the expiry as a Unix
+IPv6 address is rate limited by its /48 prefix instead of the single address. The [`mixt.kv.set()`](/KV/set/) method takes the expiry as a Unix
 timestamp in seconds, and once it passes, the key is removed and the visitor
 can send again.
 

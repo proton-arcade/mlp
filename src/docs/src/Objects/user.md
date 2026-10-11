@@ -1,9 +1,9 @@
 ---
 title: User
-description: The User object containing Puter user details.
+description: The User object containing Mixt OS user details.
 ---
 
-The `User` object contains Puter user details.
+The `User` object contains Mixt OS user details.
 
 ## Attributes
 

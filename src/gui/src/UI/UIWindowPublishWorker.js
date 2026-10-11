@@ -37,7 +37,7 @@ async function UIWindowPublishWorker (target_dir_uid, target_dir_name, target_di
     // worker name
     h += '<div style="overflow: hidden;">';
     h += `<label style="margin-bottom: 10px;">${i18n('pick_name_for_worker')}</label>`;
-    h += `<div style="font-family: monospace;">${html_encode(window.extractProtocol(window.url))}://<input class="publish-worker-name" style="width:235px;" type="text" autocomplete="subdomain" spellcheck="false" autocorrect="off" autocapitalize="off" data-gramm_editor="false"/>${html_encode('.puter.work')}</div>`;
+    h += `<div style="font-family: monospace;">${html_encode(window.extractProtocol(window.url))}://<input class="publish-worker-name" style="width:235px;" type="text" autocomplete="subdomain" spellcheck="false" autocorrect="off" autocapitalize="off" data-gramm_editor="false"/>${html_encode('.mixt.work')}</div>`;
     h += '</div>';
     // uid
     h += `<input class="publishWebsiteTargetDirUID" type="hidden" value="${html_encode(target_dir_uid)}"/>`;
@@ -103,12 +103,12 @@ async function UIWindowPublishWorker (target_dir_uid, target_dir_name, target_di
         const sandboxed = $(el_window).find('.publish-worker-sandboxed').is(':checked');
         const createOptions = sandboxed ? { sandbox: true } : { sandbox: false };
 
-        puter.workers.create(
+        mixt.workers.create(
             worker_name,
             target_dir_path,
             createOptions,
         ).then((res) => {
-            let url = `https://${ worker_name }.puter.work`;
+            let url = `https://${ worker_name }.mixt.work`;
             $(el_window).find('.window-publishWorker-form').hide(100, function () {
                 $(el_window).find('.publishWorker-published-link').attr('href', url);
                 $(el_window).find('.publishWorker-published-link').text(url);

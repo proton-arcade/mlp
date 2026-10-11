@@ -1,26 +1,26 @@
 ---
-title: puter.auth.signIn()
-description: Initiate sign in process in your application with user's Puter account.
+title: mixt.auth.signIn()
+description: Initiate sign in process in your application with user's Mixt OS account.
 platforms: [websites]
 ---
 
-Initiates the sign in process for the user. This will open a popup window with the appropriate authentication method. Puter automatically handles the authentication process and will resolve the promise when the user has signed in.
+Initiates the sign in process for the user. This will open a popup window with the appropriate authentication method. Mixt OS automatically handles the authentication process and will resolve the promise when the user has signed in.
 
-It is important to note that all essential methods in Puter handle authentication automatically. This method is only necessary if you want to handle authentication manually, for example if you want to build your own custom authentication flow.
+It is important to note that all essential methods in Mixt OS handle authentication automatically. This method is only necessary if you want to handle authentication manually, for example if you want to build your own custom authentication flow.
 
-This is a website-only method. An app running on Puter is already signed in as the user who launched it, so calling it there rejects with `not_available_in_app`.
+This is a website-only method. An app running on Mixt OS is already signed in as the user who launched it, so calling it there rejects with `not_available_in_app`.
 
 <div class="info">
 
-The `puter.auth.signIn()` function must be triggered by a user action (such as a click event) because it opens a popup window. Most browsers block popups that are not initiated by user interactions.
+The `mixt.auth.signIn()` function must be triggered by a user action (such as a click event) because it opens a popup window. Most browsers block popups that are not initiated by user interactions.
 
 </div>
 
 ## Syntax
 
 ```js
-puter.auth.signIn()
-puter.auth.signIn(options)
+mixt.auth.signIn()
+mixt.auth.signIn(options)
 ```
 
 ## Parameters
@@ -29,9 +29,9 @@ puter.auth.signIn(options)
 
 `options` is an object with the following properties:
 
-- `attempt_temp_user_creation`: A boolean value that indicates whether to Puter should automatically create a temporary user. This is useful if you want to quickly onboard a user without requiring them to sign up. They can always sign up later if they want to.
+- `attempt_temp_user_creation`: A boolean value that indicates whether to Mixt OS should automatically create a temporary user. This is useful if you want to quickly onboard a user without requiring them to sign up. They can always sign up later if they want to.
 
-- `request_auth`: A boolean value that asks the popup to let the user re-pick their account, even when your site already holds a token for them. Puter otherwise skips that prompt for a site it has seen before. Useful for an explicit "switch account" button.
+- `request_auth`: A boolean value that asks the popup to let the user re-pick their account, even when your site already holds a token for them. Mixt OS otherwise skips that prompt for a site it has seen before. Useful for an explicit "switch account" button.
 
 ## Return value
 
@@ -45,9 +45,9 @@ The promise will reject with an object containing an `error` code and a human-re
 
 - `auth_window_closed`: The user closed the sign-in window (or cancelled the consent dialog) without completing the sign-in process.
 
-- `not_available_in_app`: `signIn()` was called from an app running on Puter. An app is already signed in as the user who launched it — the Puter session hands it a token at launch — so there is nothing for the popup to do. Use `puter.auth.getUser()` to read who that is.
+- `not_available_in_app`: `signIn()` was called from an app running on Mixt OS. An app is already signed in as the user who launched it — the Mixt OS session hands it a token at launch — so there is nothing for the popup to do. Use `mixt.auth.getUser()` to read who that is.
 
-- `unsupported_origin`: the page has no origin the browser will vouch for, so there is no app for Puter to issue a token to and no address to deliver it to. This happens when the page is opened straight from disk (`file://`) or sits in an iframe sandboxed without `allow-same-origin`. Serve the page over `http://localhost` or a real domain, or add `allow-same-origin` to the iframe's `sandbox` attribute.
+- `unsupported_origin`: the page has no origin the browser will vouch for, so there is no app for Mixt OS to issue a token to and no address to deliver it to. This happens when the page is opened straight from disk (`file://`) or sits in an iframe sandboxed without `allow-same-origin`. Serve the page over `http://localhost` or a real domain, or add `allow-same-origin` to the iframe's `sandbox` attribute.
 
 The promise may also reject with the failure response returned by the authentication window itself.
 
@@ -56,14 +56,14 @@ The promise may also reject with the failure response returned by the authentica
 ```html;auth-sign-in
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <button id="sign-in">Sign in</button>
     <script>
         // Because signIn() opens a popup window, it must be called from a user action.
         document.getElementById('sign-in').addEventListener('click', async () => {
             // signIn() will resolve when the user has signed in.
-            await puter.auth.signIn().then((res) => {
-                puter.print('Signed in<br>' + JSON.stringify(res));
+            await mixt.auth.signIn().then((res) => {
+                mixt.print('Signed in<br>' + JSON.stringify(res));
             });
         });
     </script>

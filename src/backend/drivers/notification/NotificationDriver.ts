@@ -36,7 +36,7 @@ import {
     resolveNotificationWrite,
     type NotificationTypeName,
 } from '../../services/notification/notificationTypes.js';
-import { PuterDriver } from '../types.js';
+import { MixtDriver } from '../types.js';
 import type { Actor } from '../../core/actor.js';
 import type { DriverConcurrentConfig, DriverRateLimitConfig } from '../meta.js';
 
@@ -60,7 +60,7 @@ const inScope = (
 };
 
 /**
- * Driver exposing the `puter-notifications` interface.
+ * Driver exposing the `mixt-notifications` interface.
  *
  * Wraps NotificationStore with owner-scoped permission checks. Methods follow
  * the `crud-q` shape: create, read, select.
@@ -90,9 +90,9 @@ const inScope = (
  * - `'unacknowledged'` — acknowledged IS NULL (may be shown)
  * - `'acknowledged'` — acknowledged IS NOT NULL
  */
-export class NotificationDriver extends PuterDriver {
-    readonly driverInterface = 'puter-notifications';
-    // Matches origin/main's `iface_to_driver['puter-notifications']` and the
+export class NotificationDriver extends MixtDriver {
+    readonly driverInterface = 'mixt-notifications';
+    // Matches origin/main's `iface_to_driver['mixt-notifications']` and the
     // hardcoded `service:es\Cnotification:…` permission keys.
     readonly driverName = 'es:notification';
     readonly isDefault = true;

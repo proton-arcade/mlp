@@ -19,7 +19,7 @@
 
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
-// vitest.bench.config.ts - Vitest benchmark configuration for Puter backend
+// vitest.bench.config.ts - Vitest benchmark configuration for Mixt backend
 var config_1 = require('vitest/config');
 exports.default = (0, config_1.defineConfig)({
     test: {

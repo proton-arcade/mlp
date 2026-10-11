@@ -11,8 +11,8 @@ beforeAll(() => {
         String(str ?? '').replace(/&/g, '&amp;').replace(/"/g, '&quot;');
 });
 
-const CDN = 'https://puter-app-icons.puter.site/app-1-256.png';
-const ENDPOINT = 'https://api.puter.com/app-icon/app-1';
+const CDN = 'https://mixt-app-icons.mixt.site/app-1-256.png';
+const ENDPOINT = 'https://api.mixt.mpl/app-icon/app-1';
 
 describe('appIconSrc', () => {
     it('loads the subdomain URL first and keeps the endpoint as a retry', () => {

@@ -37,7 +37,7 @@ function buildRecentAppsHTML() {
         // Show up to 6 recent apps (2 columns x 3 rows)
         const recentApps = window.launch_apps.recent.slice(0, 6);
         for (const app_info of recentApps) {
-            // External apps (not owned by a Puter user) can report an opaque
+            // External apps (not owned by a Mixt user) can report an opaque
             // app-… id as their title (uid === name === title); in that case show
             // the hostname of index_url instead of the opaque app id.
             if (
@@ -287,9 +287,9 @@ const TabHome = {
         this.loadRecentApps($el_window);
         this.loadUsageData($el_window);
         // Auto-refresh sources:
-        //   1. `puter:subscription:changed` — fired by upgrade dialog
+        //   1. `mixt:subscription:changed` — fired by upgrade dialog
         //      after subscribe / change / cancel / uncancel.
-        //   2. Visibility / focus — user returning to puter (e.g. from
+        //   2. Visibility / focus — user returning to mixt (e.g. from
         //      Stripe Customer Portal in another tab). Portal mutations
         //      bypass our dispatch, so we re-pull state + broadcast.
         // Deliberate refreshes (subscription changed, returning from the
@@ -305,17 +305,17 @@ const TabHome = {
             // leave the cards stale for the rest of the session.
             try {
                 await Promise.race([
-                    window.refresh_user_data?.(puter.authToken),
+                    window.refresh_user_data?.(mixt.authToken),
                     new Promise((resolve) => setTimeout(resolve, 8000)),
                 ]);
             } catch {}
             try {
                 window.dispatchEvent(
-                    new CustomEvent('puter:subscription:changed'),
+                    new CustomEvent('mixt:subscription:changed'),
                 );
             } catch {}
         };
-        window.addEventListener('puter:subscription:changed', refresh);
+        window.addEventListener('mixt:subscription:changed', refresh);
         // A single return-to-tab fires both `focus` and `visibilitychange`;
         // coalesce them so we don't run the refresh (and refresh_user_data)
         // twice in a row.
@@ -448,7 +448,7 @@ const TabHome = {
         try {
             const resp = await fetch(
                 `${window.api_origin}/marketplace/subscriptions/current`,
-                { headers: { Authorization: `Bearer ${puter.authToken}` } },
+                { headers: { Authorization: `Bearer ${mixt.authToken}` } },
             );
             // A refusal is not a free plan: a seat owing a password change 403s.
             if (!resp.ok) return;
@@ -574,7 +574,7 @@ const TabHome = {
 
         // Load storage data
         try {
-            const res = await puter.fs.space();
+            const res = await mixt.fs.space();
             // Guard capacity 0 — 0/0 would render literally as "NaN%".
             let usage_percentage = res.capacity
                 ? ((res.used / res.capacity) * 100).toFixed(0)
@@ -605,7 +605,7 @@ const TabHome = {
 
         // Load monthly usage data
         try {
-            const res = await puter.auth.getMonthlyUsage();
+            const res = await mixt.auth.getMonthlyUsage();
             const budget = usageBudget(res.usage, res.allowanceInfo);
             const addonLeft = addonCreditsRemaining(res.allowanceInfo);
             // The server reports credits (already scaled) or raw amounts

@@ -72,7 +72,7 @@ jobs:
               with:
                   images: |
                       ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-                      heyputer/puter
+                      mixt/mixt
                   # type=ref,event=tag only emits on tag pushes, so manual runs skip
                   # the calver tag and just publish whichever of latest / main the
                   # dispatch inputs asked for. On a tag push, both default to true.
@@ -99,5 +99,5 @@ jobs:
               with:
                   username: ${{ secrets.DOCKERHUB_USERNAME }}
                   password: ${{ secrets.DOCKERHUB_TOKEN }}
-                  repository: heyputer/puter
+                  repository: mixt/mixt
                   readme-filepath: ./README.md

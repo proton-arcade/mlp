@@ -19,12 +19,12 @@
 
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import type { Actor } from '../../core/actor.js';
-import { PuterServer } from '../../server.js';
+import { MixtServer } from '../../server.js';
 import { createTestUser, setupTestServer } from '../../testUtil.js';
 import type { ResolvedShare } from './ShareService';
 
 describe('ShareNotificationService', () => {
-    let server: PuterServer;
+    let server: MixtServer;
 
     beforeAll(async () => {
         server = await setupTestServer();
@@ -382,7 +382,7 @@ describe('ShareNotificationService', () => {
  * read from config, and the point is that they are.
  */
 describe('ShareNotificationService budgets', () => {
-    let server: PuterServer;
+    let server: MixtServer;
 
     beforeAll(async () => {
         server = await setupTestServer({

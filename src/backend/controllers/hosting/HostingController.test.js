@@ -19,11 +19,11 @@
 
 import { v4 as uuidv4 } from 'uuid';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
-import { PuterRouter } from '../../core/http/PuterRouter.js';
+import { MixtRouter } from '../../core/http/MixtRouter.js';
 import { setupTestServer } from '../../testUtil.js';
 
 // `/delete-site` is the only hosting route exposed as a controller endpoint
-// (everything else goes through the `puter-subdomains` driver), and it is an
+// (everything else goes through the `mixt-subdomains` driver), and it is an
 // ownership-gated destructive operation — so the interesting cases are the
 // refusals.
 
@@ -32,7 +32,7 @@ let deleteSite;
 
 beforeAll(async () => {
     server = await setupTestServer();
-    const router = new PuterRouter();
+    const router = new MixtRouter();
     server.controllers.hosting.registerRoutes(router);
     deleteSite = router.routes.find(
         (route) => route.path === '/delete-site',

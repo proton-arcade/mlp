@@ -35,7 +35,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import type { Actor } from '../../core/actor.js';
 import { runWithContext } from '../../core/context.js';
-import { PuterServer } from '../../server.js';
+import { MixtServer } from '../../server.js';
 import { createTestUser, setupTestServer } from '../../testUtil.js';
 import { PermissionUtil } from '../permission/permissionUtil';
 
@@ -61,7 +61,7 @@ interface Snapshot {
 const report: string[] = [];
 
 describe('share consistency across KV, SQL and Redis', () => {
-    let server: PuterServer;
+    let server: MixtServer;
 
     beforeAll(async () => {
         server = await setupTestServer();

@@ -48,7 +48,7 @@ export class BroadcastService extends Service {
     sendSavedBroadcastsTo (appInstanceID) {
         const iframe = $(`.window[data-element_uuid="${appInstanceID}"] .window-app-iframe[data-appUsesSDK=true]`).get(0);
         if ( ! iframe ) {
-            console.error(`Attempted to send saved broadcasts to app instance ${appInstanceID}, which is not using the Puter SDK`);
+            console.error(`Attempted to send saved broadcasts to app instance ${appInstanceID}, which is not using the Mixt SDK`);
             return;
         }
         for ( const [name, data] of this.#broadcastsToSendToNewAppInstances ) {

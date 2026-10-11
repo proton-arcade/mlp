@@ -574,7 +574,7 @@ window.check_fsentry_against_allowed_file_types_string = function (fsentry, allo
 window.refresh_user_data = async (auth_token) => {
     let whoami;
     try {
-        whoami = await puter.os.user({ query: 'icon_size=64' });
+        whoami = await mixt.os.user({ query: 'icon_size=64' });
     } catch (e) {
         // Ignored
     }
@@ -627,7 +627,7 @@ window.update_auth_data = async (auth_token, user) => {
     // load the user's profile
     // ----------------------------------------------------
     user.profile = {};
-    puter.auth.getProfile().then((profile) => {
+    mixt.auth.getProfile().then((profile) => {
         if ( profile?.picture ) {
             window.user.profile.picture = html_encode(profile.picture);
             $('.profile-pic').css('background-image', `url(${window.user.profile.picture})`);
@@ -650,8 +650,8 @@ window.update_auth_data = async (auth_token, user) => {
     window.user = user;
     localStorage.setItem('user', JSON.stringify(to_storable_user(user)));
 
-    // re-initialize the Puter.js objects with the new auth token
-    puter.setAuthToken(auth_token, window.api_origin);
+    // re-initialize the Mixt.js objects with the new auth token
+    mixt.setAuthToken(auth_token, window.api_origin);
 
     //update the logged_in_users array entry for this user
     if ( window.user ) {
@@ -683,7 +683,7 @@ window.update_auth_data = async (auth_token, user) => {
     window.desktop_path = `/${ window.user.username }/Desktop`;
     window.home_path = `/${ window.user.username}`;
     window.public_path = `/${ window.user.username }/Public`;
-    window.shared_path = 'puter://shared';
+    window.shared_path = 'mixt://shared';
 
     if ( window.user !== null && !window.user.is_temp ) {
         $('.user-options-login-btn, .user-options-create-account-btn').hide();
@@ -697,7 +697,7 @@ window.update_auth_data = async (auth_token, user) => {
 window.mutate_user_preferences = function (user_preferences_delta) {
     for ( const [key, value] of Object.entries(user_preferences_delta) ) {
         // Don't wait for set to be done for better efficiency
-        puter.kv.set(`user_preferences.${key}`, value)
+        mixt.kv.set(`user_preferences.${key}`, value)
             .catch(err => console.warn(`Could not save user_preferences.${key}:`, err));
     }
     // There may be syncing issues across multiple devices
@@ -731,7 +731,7 @@ window.sendWindowWillCloseMsg = function (iframe_element) {
 
 window.logout = () => {
     // clear cache
-    puter._cache.flushall();
+    mixt._cache.flushall();
     // Clear both old and new token keys. Cookie clear is handled by
     // the backend logout endpoint.
     try {
@@ -770,7 +770,7 @@ if ( typeof window !== 'undefined' && window.addEventListener ) {
             // A peer tab just (re)authed. Pick up the fresh token so
             // subsequent requests stop bouncing on reauth_required.
             window.auth_token = event.newValue;
-            try { puter?.setAuthToken?.(event.newValue, window.api_origin); } catch ( e ) { /* ignore */ }
+            try { mixt?.setAuthToken?.(event.newValue, window.api_origin); } catch ( e ) { /* ignore */ }
             // If our own reauth modal is up, the new token from a peer
             // tab is good enough — dismiss and reload to pick up the new
             // session.
@@ -982,11 +982,11 @@ window.sendItemChangeEventToWatchingApps = function (item_uid, event_data) {
 window.show_save_account_notice_if_needed = function (message) {
     // A failed read must not read as "not shown yet" — that would repeat the
     // notice on every save — so the catch goes on the end of the chain.
-    puter.kv.get({
+    mixt.kv.get({
         key: 'save_account_notice_shown',
     }).then(async function (value) {
         if ( !value && window.user?.is_temp ) {
-            puter.kv.set({
+            mixt.kv.set({
                 key: 'save_account_notice_shown',
                 value: true,
             }).catch(err => console.warn('Could not save save_account_notice_shown:', err));
@@ -1113,7 +1113,7 @@ window.create_folder = async (basedir, appendto_element) => {
 
     // create folder
     try {
-        await puter.fs.mkdir({
+        await mixt.fs.mkdir({
             path: `${dirname }/${folder_name}`,
             rename: true,
             overwrite: false,
@@ -1147,7 +1147,7 @@ window.create_file = async (options) => {
 
     // create file
     try {
-        puter.fs.upload(new File(content, filename), dirname, {
+        mixt.fs.upload(new File(content, filename), dirname, {
             generateThumbnails: true,
             thumbnailGenerator: createUploadThumbnailGenerator(),
             success: async function (data) {
@@ -1177,7 +1177,7 @@ window.available_templates = () => {
     const loadTemplates = async () => {
         try {
             // Directly check the templates directory
-            const hasTemplateFiles = await puter.fs.readdir(templatesPath, { consistency: 'eventual' });
+            const hasTemplateFiles = await mixt.fs.readdir(templatesPath, { consistency: 'eventual' });
 
             if ( hasTemplateFiles.length == 0 ) {
                 window.file_templates = [];
@@ -1232,7 +1232,7 @@ window.create_shortcut = async (filename, is_dir, basedir, appendto_element, sho
 
     // create file shortcut
     try {
-        await puter.fs.upload(new File([], filename), basedir, {
+        await mixt.fs.upload(new File([], filename), basedir, {
             overwrite: false,
             shortcutTo: shortcut_to_path ?? shortcut_to,
             dedupeName: true,
@@ -1298,7 +1298,7 @@ window.copy_clipboard_items = async function (dest_path, dest_container_element)
 
                 // perform copy
                 try {
-                    let resp = await puter.fs.copy({
+                    let resp = await mixt.fs.copy({
                         source: copy_path,
                         destination: dest_path,
                         overwrite: overwrite || overwrite_all,
@@ -1437,7 +1437,7 @@ window.copy_items = function (el_items, dest_path) {
                     return;
                 }
                 try {
-                    let resp = await puter.fs.copy({
+                    let resp = await mixt.fs.copy({
                         source: copy_path,
                         destination: dest_path,
                         overwrite: overwrite || overwrite_all,
@@ -1550,7 +1550,7 @@ window.delete_item = async function (el_item, descendants_only = false) {
     });
 
     try {
-        await puter.fs.delete({
+        await mixt.fs.delete({
             paths: $(el_item).attr('data-path'),
             descendantsOnly: descendants_only,
             recursive: true,
@@ -1664,7 +1664,7 @@ window.trigger_download = (paths) => {
 
         downloadFile(e.download, {
             anti_csrf,
-            auth_token: puter.authToken,
+            auth_token: mixt.authToken,
         });
         return;
 
@@ -1699,7 +1699,7 @@ window.refresh_trash_state = async function () {
     // 'strong' consistency: an 'eventual' stat can be served from the SDK
     // cache, which is stale right after a trash mutation and — when seeded
     // by readdir — lacks the `is_empty` field entirely.
-    const trash = await puter.fs.stat({ path: window.trash_path, consistency: 'eventual' });
+    const trash = await mixt.fs.stat({ path: window.trash_path, consistency: 'eventual' });
     if ( window.socket ) {
         window.socket.emit('trash.is_empty', { is_empty: trash.is_empty });
     }
@@ -1899,7 +1899,7 @@ window.move_items = async function (el_items, dest_path, is_undo = false) {
                 progwin?.set_status(latest_status);
 
                 // execute move
-                let resp = await puter.fs.move({
+                let resp = await mixt.fs.move({
                     source: $(el_item).attr('data-uid'),
                     destination: item_dest_path,
                     overwrite: overwrite || overwrite_all,
@@ -1971,7 +1971,7 @@ window.move_items = async function (el_items, dest_path, is_undo = false) {
                         // disassociate all its websites
                         // todo, some client-side check to see if this dir has at least one associated website before sending ajax request
                         // FIXME: dir_uuid is not defined, is this the same as the data-uid attribute?
-                        // puter.hosting.delete(dir_uuid)
+                        // mixt.hosting.delete(dir_uuid)
 
                         $(`.mywebsites-dir-path[data-uuid="${$(el_item).attr('data-uid')}"]`).remove();
                         // remove the website badge from all instances of the dir
@@ -2174,7 +2174,7 @@ window.determine_website_url = function (fsentry_path) {
 };
 
 window.update_sites_cache = function () {
-    return puter.hosting.list((sites) => {
+    return mixt.hosting.list((sites) => {
         if ( sites && sites.length > 0 ) {
             window.sites = sites;
         } else {
@@ -2214,7 +2214,7 @@ window.updateSubdomainsForItems = async function (fsentries, container) {
     }
 
     try {
-        const subdomainResults = await puter.fs.readdirSubdomains({ directory_ids: directoryIds });
+        const subdomainResults = await mixt.fs.readdirSubdomains({ directory_ids: directoryIds });
 
         // Create a map of directory_id -> subdomain data
         const subdomainMap = new Map();
@@ -2257,12 +2257,12 @@ window.updateSubdomainsForItems = async function (fsentries, container) {
 
                 // Update cache with subdomain data
                 if ( fsentry.path ) {
-                    const key = puter.fsCacheKey('item', fsentry.path);
-                    const cachedItem = await puter._cache.get(key);
+                    const key = mixt.fsCacheKey('item', fsentry.path);
+                    const cachedItem = await mixt._cache.get(key);
                     if ( cachedItem ) {
                         cachedItem.subdomains = subdomains;
                         cachedItem.has_website = has_website;
-                        puter._cache.set(key, cachedItem);
+                        mixt._cache.set(key, cachedItem);
                     }
                 }
             } else {
@@ -2356,7 +2356,7 @@ window.upload_items = async function (items, dest_path) {
         return;
     }
 
-    puter.fs.upload(
+    mixt.fs.upload(
         // what to upload
         items,
         // where to upload
@@ -2474,7 +2474,7 @@ window.empty_trash = async function () {
         progwin.set_status(i18n('emptying_trash'));
     }, 500);
 
-    await puter.fs.delete({
+    await mixt.fs.delete({
         paths: window.trash_path,
         descendantsOnly: true,
         recursive: true,
@@ -2674,7 +2674,7 @@ window.zipItems = async function (el_items, targetDirPath, download = true) {
 
                     // read file content
                     progwin?.set_status(i18n('sequencing', child.relativePath));
-                    let content = await puter.fs.read(child.path);
+                    let content = await mixt.fs.read(child.path);
                     try {
                         toBeZipped = {
                             ...toBeZipped,
@@ -2691,7 +2691,7 @@ window.zipItems = async function (el_items, targetDirPath, download = true) {
         // if item is a file, add the file to be zipped
         else {
             progwin?.set_status(i18n('reading', path.basename($(el_items[0]).attr('data-path'))));
-            let content = await puter.fs.read(targetPath);
+            let content = await mixt.fs.read(targetPath);
             toBeZipped = {
                 ...toBeZipped,
                 [path.basename(targetPath)]: [await blobToUint8Array(content), { level: 9 }],
@@ -2746,7 +2746,7 @@ window.zipItems = async function (el_items, targetDirPath, download = true) {
                 progwin?.set_status(i18n('writing', `${zipName }.zip`));
                 currentProgress += window.zippingProgressConfig.WRITING;
                 progwin?.set_progress(currentProgress.toPrecision(2));
-                await puter.fs.write(`${targetDirPath }/${ zipName }.zip`, zippedBlob, { overwrite: false, dedupeName: true });
+                await mixt.fs.write(`${targetDirPath }/${ zipName }.zip`, zippedBlob, { overwrite: false, dedupeName: true });
                 progwin?.set_progress(window.zippingProgressConfig.TOTAL);
             }
 
@@ -2763,7 +2763,7 @@ async function readDirectoryRecursive (path, baseDir = '') {
     let allFiles = [];
 
     // Read the directory
-    const entries = await puter.fs.readdir(path, { consistency: 'eventual' });
+    const entries = await mixt.fs.readdir(path, { consistency: 'eventual' });
 
     if ( entries.length === 0 ) {
         allFiles.push({ path });
@@ -2825,7 +2825,7 @@ window.unzipItem = async function (itemPath) {
     let currentProgress = window.zippingProgressConfig.SEQUENCING;
 
     progwin?.set_status(i18n('sequencing', path.basename(filePath)));
-    let file = await blobToUint8Array(await puter.fs.read(filePath));
+    let file = await blobToUint8Array(await mixt.fs.read(filePath));
     progwin?.set_progress(currentProgress.toPrecision(2));
 
     progwin?.set_status(i18n('unzipping', path.basename(filePath)));
@@ -2840,7 +2840,7 @@ window.unzipItem = async function (itemPath) {
                 progwin?.close();
             }, Math.max(0, window.copy_progress_hide_delay - (Date.now() - start_ts)));
         } else {
-            const rootdir = await puter.fs.mkdir(`${path.dirname(filePath) }/${ path.basename(filePath, '.zip')}`, { dedupeName: true });
+            const rootdir = await mixt.fs.mkdir(`${path.dirname(filePath) }/${ path.basename(filePath, '.zip')}`, { dedupeName: true });
             let perItemProgress = window.zippingProgressConfig.WRITING / Object.keys(unzipped).length;
             let queuedFileWrites = [];
             Object.keys(unzipped).forEach(fileItem => {
@@ -2856,7 +2856,7 @@ window.unzipItem = async function (itemPath) {
                     UIAlert(e.message);
                 }
             });
-            queuedFileWrites.length && puter.fs.upload(
+            queuedFileWrites.length && mixt.fs.upload(
                 // what to upload
                 queuedFileWrites,
                 // where to upload
@@ -2938,7 +2938,7 @@ window.tarItems = async function (el_items, targetDirPath, download = true) {
                 } else {
                     let relativePath = el_items.length === 1 ? child.relativePath : `${path.basename(targetPath) }/${ child.relativePath}`;
                     progwin?.set_status(i18n('sequencing', child.relativePath));
-                    let content = await puter.fs.read(child.path);
+                    let content = await mixt.fs.read(child.path);
                     files.push({ name: relativePath, content: await blobToUint8Array(content), isDir: false });
                 }
                 currentProgress += perItemAdditionProgress / children.length;
@@ -2947,7 +2947,7 @@ window.tarItems = async function (el_items, targetDirPath, download = true) {
         }
         else {
             progwin?.set_status(i18n('reading', path.basename($(el_items[0]).attr('data-path'))));
-            let content = await puter.fs.read(targetPath);
+            let content = await mixt.fs.read(targetPath);
             files.push({ name: path.basename(targetPath), content: await blobToUint8Array(content), isDir: false });
             currentProgress += perItemAdditionProgress;
             progwin?.set_progress(currentProgress.toPrecision(2));
@@ -2978,7 +2978,7 @@ window.tarItems = async function (el_items, targetDirPath, download = true) {
             progwin?.set_status(i18n('writing', `${tarName }.tar`));
             currentProgress += window.zippingProgressConfig.WRITING;
             progwin?.set_progress(currentProgress.toPrecision(2));
-            await puter.fs.write(`${targetDirPath }/${ tarName }.tar`, tarBlob, { overwrite: false, dedupeName: true });
+            await mixt.fs.write(`${targetDirPath }/${ tarName }.tar`, tarBlob, { overwrite: false, dedupeName: true });
             progwin?.set_progress(window.zippingProgressConfig.TOTAL);
         }
 
@@ -3086,7 +3086,7 @@ window.untarItem = async function (itemPath) {
     let currentProgress = window.zippingProgressConfig.SEQUENCING;
 
     progwin?.set_status(i18n('sequencing', path.basename(filePath)));
-    let file = await blobToUint8Array(await puter.fs.read(filePath));
+    let file = await blobToUint8Array(await mixt.fs.read(filePath));
     progwin?.set_progress(currentProgress.toPrecision(2));
 
     progwin?.set_status(i18n('untarring', path.basename(filePath)));
@@ -3096,7 +3096,7 @@ window.untarItem = async function (itemPath) {
         currentProgress += window.zippingProgressConfig.ZIPPING;
         progwin?.set_progress(currentProgress.toPrecision(2));
 
-        const rootdir = await puter.fs.mkdir(`${path.dirname(filePath) }/${ path.basename(filePath, '.tar')}`, { dedupeName: true });
+        const rootdir = await mixt.fs.mkdir(`${path.dirname(filePath) }/${ path.basename(filePath, '.tar')}`, { dedupeName: true });
         let perItemProgress = window.zippingProgressConfig.WRITING / files.length;
         let queuedFileWrites = [];
 
@@ -3111,7 +3111,7 @@ window.untarItem = async function (itemPath) {
             }
         }
 
-        queuedFileWrites.length && puter.fs.upload(
+        queuedFileWrites.length && mixt.fs.upload(
             queuedFileWrites,
             `${rootdir.path }/`,
             {
@@ -3188,7 +3188,7 @@ function parseTar (data) {
 }
 
 window.rename_file = async (options, new_name, old_name, old_path, el_item, el_item_name, el_item_icon, el_item_name_editor, website_url, is_undo = false) => {
-    puter.fs.rename({
+    mixt.fs.rename({
         uid: options.uid === 'null' ? null : options.uid,
         new_name: new_name,
         excludeSocketID: window.socket?.id,
@@ -3316,7 +3316,7 @@ window.rename_file = async (options, new_name, old_name, old_path, el_item, el_i
  */
 window.delete_item_with_path = async function (path) {
     try {
-        await puter.fs.delete({
+        await mixt.fs.delete({
             paths: path,
             descendantsOnly: false,
             recursive: true,
@@ -3383,7 +3383,7 @@ window.undo_delete = async (items) => {
 
 window.store_auto_arrange_preference = (preference) => {
     // localStorage still carries it for this device either way.
-    puter.kv.set('user_preferences.auto_arrange_desktop', preference)
+    mixt.kv.set('user_preferences.auto_arrange_desktop', preference)
         .catch(err => console.warn('Could not save auto_arrange_desktop:', err));
     localStorage.setItem('auto_arrange', preference);
 };
@@ -3391,9 +3391,9 @@ window.store_auto_arrange_preference = (preference) => {
 window.get_auto_arrange_data = async () => {
     // Best-effort, like every other preference read: falling back to the
     // default keeps the desktop arranging itself rather than not appearing.
-    const preferenceValue = await puter.kv.get('user_preferences.auto_arrange_desktop').catch(() => null);
+    const preferenceValue = await mixt.kv.get('user_preferences.auto_arrange_desktop').catch(() => null);
     window.is_auto_arrange_enabled = preferenceValue === null ? true : preferenceValue;
-    const positions = await puter.kv.get('desktop_item_positions').catch(() => null);
+    const positions = await mixt.kv.get('desktop_item_positions').catch(() => null);
     window.desktop_item_positions = (!positions || typeof positions !== 'object' || Array.isArray(positions)) ? {} : positions;
 };
 
@@ -3422,13 +3422,13 @@ window.set_desktop_item_positions = async (el_desktop) => {
 };
 
 window.save_desktop_item_positions = () => {
-    puter.kv.set('desktop_item_positions', window.desktop_item_positions)
+    mixt.kv.set('desktop_item_positions', window.desktop_item_positions)
         .catch(err => console.warn('Could not save desktop_item_positions:', err));
 };
 
 window.delete_desktop_item_positions = () => {
     window.desktop_item_positions = {};
-    puter.kv.del('desktop_item_positions')
+    mixt.kv.del('desktop_item_positions')
         .catch(err => console.warn('Could not clear desktop_item_positions:', err));
 };
 
@@ -3444,7 +3444,7 @@ window.iframe_for_app_instance = (instance_id) => {
 
 // Run any callbacks to say that the app has closed
 // ref(./services/ExecService.js): this is called from ExecService.js on
-//   close if the app does not use puter.js
+//   close if the app does not use mixt.js
 window.report_app_closed = (instance_id, status_code) => {
     const el_window = window.window_for_app_instance(instance_id);
 
@@ -3506,7 +3506,7 @@ window.countSubstr = (str, substring) => {
 // Updates the signed-in user's profile; `username` is kept for callers that
 // still pass it.
 window.update_profile = function (username, key_vals) {
-    return puter.auth.updateProfile(key_vals).then((profile) => {
+    return mixt.auth.updateProfile(key_vals).then((profile) => {
         window.user.profile = window.user.profile ?? {};
         for ( const key in key_vals ) {
             window.user.profile[key] = profile?.[key] ?? key_vals[key];
@@ -3528,7 +3528,7 @@ window.blob2str = (blob) => {
 
 // Another user's picture is only available while they are on a paid plan.
 window.get_profile_picture = async function (username) {
-    return (await puter.auth.getProfilePicture(username)) ?? undefined;
+    return (await mixt.auth.getProfilePicture(username)) ?? undefined;
 };
 
 window.format_with_units = (num, { mulUnits, divUnits, precision = 3 }) => {

@@ -1,12 +1,12 @@
 <html>
 <body>
-    <script src="/puter.js/v2"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
-            const page = await puter.fs.listShared({ includeTotal: true });
-            puter.print(`About ${page.total} item(s) shared with you<br>`);
+            const page = await mixt.fs.listShared({ includeTotal: true });
+            mixt.print(`About ${page.total} item(s) shared with you<br>`);
             for (const share of page.items) {
-                puter.print(`${share.path} — ${share.mode} from ${share.issuer}<br>`);
+                mixt.print(`${share.path} — ${share.mode} from ${share.issuer}<br>`);
             }
         })()
     </script>

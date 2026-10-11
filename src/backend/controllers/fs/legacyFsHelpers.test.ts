@@ -48,7 +48,7 @@ const appRow = (
     description: 'desc',
     godmode: 1,
     maximize_on_start: 1,
-    index_url: 'https://an-app.puter.site/',
+    index_url: 'https://an-app.mixt.site/',
     background: 1,
     metadata: { secret: true },
     is_private: 0,
@@ -78,7 +78,7 @@ describe('loadLegacyAssociatedApps associated_app redaction', () => {
             [entryWithApp(1)],
         );
         const app = out.get(1)!;
-        expect(app.index_url).toBe('https://an-app.puter.site/');
+        expect(app.index_url).toBe('https://an-app.mixt.site/');
         expect(app.godmode).toBe(1);
         expect(app.maximize_on_start).toBe(1);
     });

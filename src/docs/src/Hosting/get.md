@@ -1,6 +1,6 @@
 ---
-title: puter.hosting.get()
-description: Get information on a subdomain hosted on Puter.
+title: mixt.hosting.get()
+description: Get information on a subdomain hosted on Mixt OS.
 platforms: [websites, apps, nodejs, workers]
 ---
 
@@ -9,7 +9,7 @@ Returns a subdomain. If the subdomain does not exist, the promise will be reject
 ## Syntax
 
 ```js
-puter.hosting.get(subdomain)
+mixt.hosting.get(subdomain)
 ```
 
 ## Parameters
@@ -26,20 +26,20 @@ A `Promise` that will resolve to a [`Subdomain`](/Objects/subdomain/) object whe
 ```html;hosting-get
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
             // (1) Create a random website
-            let subdomain = puter.randName();
-            const site = await puter.hosting.create(subdomain, '.')
-            puter.print(`Website hosted at: ${site.subdomain}.puter.site (This is an empty website with no files)<br>`);
+            let subdomain = mixt.randName();
+            const site = await mixt.hosting.create(subdomain, '.')
+            mixt.print(`Website hosted at: ${site.subdomain}.mixt.site (This is an empty website with no files)<br>`);
 
             // (2) Retrieve the website using get()
-            const site2 = await puter.hosting.get(site.subdomain);
-            puter.print(`Website retrieved: subdomain=${site2.subdomain}.puter.site UID=${site2.uid}<br>`);
+            const site2 = await mixt.hosting.get(site.subdomain);
+            mixt.print(`Website retrieved: subdomain=${site2.subdomain}.mixt.site UID=${site2.uid}<br>`);
 
             // (3) Delete the website (cleanup)
-            await puter.hosting.delete(subdomain);
+            await mixt.hosting.delete(subdomain);
         })();
     </script>
 </body>

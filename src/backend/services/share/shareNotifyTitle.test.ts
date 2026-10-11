@@ -149,9 +149,9 @@ describe('email digests', () => {
                     { username: 'alice', count: 1, items: [item('a.txt')] },
                     { username: 'bob', count: 2, items: [item('b.txt')] },
                 ],
-                { suffix: 'on Puter' },
+                { suffix: 'on Mixt' },
             ),
-        ).toBe('alice and bob shared 3 items with you on Puter');
+        ).toBe('alice and bob shared 3 items with you on Mixt');
     });
 
     it('keeps a name to one line in the subject', () => {

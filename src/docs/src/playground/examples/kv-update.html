@@ -1,17 +1,17 @@
 <html>
 <body>
-    <script src="/puter.js/v2"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
-            await puter.kv.set('profile', { name: 'Puter', stats: { score: 10 } });
+            await mixt.kv.set('profile', { name: 'Mixt OS', stats: { score: 10 } });
 
-            const updated = await puter.kv.update(
+            const updated = await mixt.kv.update(
                 'profile',
-                { 'stats.score': 11, 'name': 'Puter Smith' },
+                { 'stats.score': 11, 'name': 'Mixt OS Smith' },
                 3600
             );
 
-            puter.print(`Updated profile: ${JSON.stringify(updated)}`);
+            mixt.print(`Updated profile: ${JSON.stringify(updated)}`);
         })();
     </script>
 </body>

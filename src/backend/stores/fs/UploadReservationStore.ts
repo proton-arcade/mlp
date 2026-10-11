@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { PuterStore } from '../types.js';
+import { MixtStore } from '../types.js';
 
 // -- Constants --------------------------------------------------------
 
@@ -247,7 +247,7 @@ type ScriptRunner = {
  * instead of dropping it, since its bytes take a moment to reach the replica a
  * normal allowance check reads from.
  */
-export class UploadReservationStore extends PuterStore {
+export class UploadReservationStore extends MixtStore {
     #definedScripts = false;
 
     get #redis(): ScriptRunner {

@@ -32,7 +32,7 @@ const list_all_shared = async () => {
     let cursor;
 
     do {
-        const page = await window.puter.fs.listShared({
+        const page = await window.mixt.fs.listShared({
             limit: PAGE_SIZE,
             ...(cursor ? { cursor } : {}),
         });

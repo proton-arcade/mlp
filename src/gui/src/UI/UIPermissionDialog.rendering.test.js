@@ -104,7 +104,7 @@ describe('UIPermissionDialog key-value delegation rendering', () => {
     };
 
     beforeAll(() => {
-        globalThis.puter = { auth: { whoami: async () => ({ uuid: OWNER }) } };
+        globalThis.mixt = { auth: { whoami: async () => ({ uuid: OWNER }) } };
     });
 
     // The region is a key prefix an app names in its own `grant-user-app`

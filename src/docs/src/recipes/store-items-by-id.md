@@ -1,6 +1,6 @@
 ---
 title: Store Items by ID
-description: "Learn how to keep a list in one Puter.js key-value entry with each item stored under a unique ID, so you can edit or delete any item by its ID. It fits a few thousand small items."
+description: "Learn how to keep a list in one Mixt.js key-value entry with each item stored under a unique ID, so you can edit or delete any item by its ID. It fits a few thousand small items."
 tags: [kv, data-modeling]
 order: 20
 ---
@@ -13,17 +13,17 @@ delete the wrong item.
 Storing the list as an object keyed by item ID avoids that. Each item has a
 fixed ID, so an edit or delete always targets the correct item. The list is
 still one key-value entry, and you read all of it with a single
-[`puter.kv.get()`](/KV/get/) call.
+[`mixt.kv.get()`](/KV/get/) call.
 
 ## Add an Item
 
-To add an item, use the [`puter.kv.update()`](/KV/update/) method with the id as
+To add an item, use the [`mixt.kv.update()`](/KV/update/) method with the id as
 the path:
 
 ```js
 const id = crypto.randomUUID();
 
-await puter.kv.update('todos', {
+await mixt.kv.update('todos', {
     [id]: { text: 'Buy milk', done: false, at: Date.now() },
 });
 ```
@@ -32,11 +32,11 @@ The id becomes the key you reference later to update or delete that item. Becaus
 
 ## Show the List
 
-To load the list, use the [`puter.kv.get()`](/KV/get/) method. One read returns
+To load the list, use the [`mixt.kv.get()`](/KV/get/) method. One read returns
 every item:
 
 ```js
-const todos = await puter.kv.get('todos') ?? {};
+const todos = await mixt.kv.get('todos') ?? {};
 
 const items = Object.entries(todos)
     .map(([id, todo]) => ({ id, ...todo }))
@@ -49,22 +49,22 @@ At sizes that fit in one entry, sorting in memory costs nothing measurable.
 
 ## Edit an Item
 
-To change one field of one item, use the [`puter.kv.update()`](/KV/update/)
+To change one field of one item, use the [`mixt.kv.update()`](/KV/update/)
 method with the item's id and the field you are changing:
 
 ```js
-await puter.kv.update('todos', { [`${ id }.done`]: true });
+await mixt.kv.update('todos', { [`${ id }.done`]: true });
 ```
 
 This changes that one item and leaves the rest of the list as it was.
 
 ## Delete an Item
 
-To remove an item, use the [`puter.kv.remove()`](/KV/remove/) method with its
+To remove an item, use the [`mixt.kv.remove()`](/KV/remove/) method with its
 id:
 
 ```js
-await puter.kv.remove('todos', id);
+await mixt.kv.remove('todos', id);
 ```
 
 It also takes several paths in one call, so `remove('todos', idA, idB)` deletes

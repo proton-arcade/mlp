@@ -139,7 +139,7 @@ describe('UIPermissionDialog app-data descriptions', () => {
 describe('UIPermissionDialog key-value delegation descriptions', () => {
     beforeEach(() => {
         stubApp({ uid: CALENDAR, name: 'calendar', title: 'Calendar' });
-        globalThis.puter = { auth: { whoami: async () => ({ uuid: OWNER }) } };
+        globalThis.mixt = { auth: { whoami: async () => ({ uuid: OWNER }) } };
         delete window.getAppUIDFromOrigin;
     });
 

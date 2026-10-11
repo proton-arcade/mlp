@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { setupPuterTestEnv } from './testUtil.ts';
+import { setupMixtTestEnv } from './testUtil.ts';
 
 // Exercises the client-facing test environment: a real HTTP listener on an
 // ephemeral port, deterministic seeded users, and both auth paths clients
 // use (pre-minted session token, and a real password login).
-describe('setupPuterTestEnv', () => {
+describe('setupMixtTestEnv', () => {
     it('boots a reachable server with working credentials', async () => {
-        const env = await setupPuterTestEnv();
+        const env = await setupMixtTestEnv();
         try {
             const who = await fetch(`${env.apiOrigin}/whoami`, {
                 headers: {

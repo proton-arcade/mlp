@@ -23,7 +23,7 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { v4 as uuidv4 } from 'uuid';
 import { makeActor, type Actor } from '../../actor';
 import type { AuthService } from '../../../services/auth/AuthService';
-import { PuterServer } from '../../../server';
+import { MixtServer } from '../../../server';
 import { setupTestServer } from '../../../testUtil';
 import { createAuthProbe } from './authProbe';
 
@@ -173,7 +173,7 @@ describe('createAuthProbe — token extraction precedence', () => {
         const stub = makeStubAuth();
         const probe = createAuthProbe({
             authService: stub.service,
-            cookieName: 'puter_token',
+            cookieName: 'mixt_token',
         });
         await runProbe(
             probe,
@@ -183,7 +183,7 @@ describe('createAuthProbe — token extraction precedence', () => {
                     authorization: 'Bearer header-tok',
                     'x-api-key': 'xapi-tok',
                 },
-                cookieHeader: 'puter_token=cookie-tok',
+                cookieHeader: 'mixt_token=cookie-tok',
                 query: { auth_token: 'query-tok' },
                 handshakeQuery: { auth_token: 'hs-tok' },
             }),
@@ -195,7 +195,7 @@ describe('createAuthProbe — token extraction precedence', () => {
         const stub = makeStubAuth();
         const probe = createAuthProbe({
             authService: stub.service,
-            cookieName: 'puter_token',
+            cookieName: 'mixt_token',
         });
         await runProbe(
             probe,
@@ -204,7 +204,7 @@ describe('createAuthProbe — token extraction precedence', () => {
                     authorization: 'Bearer header-tok',
                     'x-api-key': 'xapi-tok',
                 },
-                cookieHeader: 'puter_token=cookie-tok',
+                cookieHeader: 'mixt_token=cookie-tok',
                 query: { auth_token: 'query-tok' },
                 handshakeQuery: { auth_token: 'hs-tok' },
             }),
@@ -216,13 +216,13 @@ describe('createAuthProbe — token extraction precedence', () => {
         const stub = makeStubAuth();
         const probe = createAuthProbe({
             authService: stub.service,
-            cookieName: 'puter_token',
+            cookieName: 'mixt_token',
         });
         await runProbe(
             probe,
             makeReq({
                 headers: { 'x-api-key': 'xapi-tok' },
-                cookieHeader: 'puter_token=cookie-tok',
+                cookieHeader: 'mixt_token=cookie-tok',
                 query: { auth_token: 'query-tok' },
             }),
         );
@@ -233,12 +233,12 @@ describe('createAuthProbe — token extraction precedence', () => {
         const stub = makeStubAuth();
         const probe = createAuthProbe({
             authService: stub.service,
-            cookieName: 'puter_token',
+            cookieName: 'mixt_token',
         });
         await runProbe(
             probe,
             makeReq({
-                cookieHeader: 'puter_token=cookie-tok',
+                cookieHeader: 'mixt_token=cookie-tok',
                 query: { auth_token: 'query-tok' },
                 handshakeQuery: { auth_token: 'hs-tok' },
             }),
@@ -277,7 +277,7 @@ describe('createAuthProbe — tokenSource', () => {
         ['body', { body: { auth_token: 'tok' } }],
         ['header', { headers: { authorization: 'Bearer tok' } }],
         ['x-api-key', { headers: { 'x-api-key': 'tok' } }],
-        ['cookie', { cookieHeader: 'puter_token=tok' }],
+        ['cookie', { cookieHeader: 'mixt_token=tok' }],
         ['query', { query: { auth_token: 'tok' } }],
         ['handshake', { handshakeQuery: { auth_token: 'tok' } }],
     ];
@@ -288,7 +288,7 @@ describe('createAuthProbe — tokenSource', () => {
         const stub = makeStubAuth(actor);
         const probe = createAuthProbe({
             authService: stub.service,
-            cookieName: 'puter_token',
+            cookieName: 'mixt_token',
         });
         const { req } = await runProbe(probe, makeReq(init));
         expect(req.tokenSource).toBe(expected);
@@ -386,13 +386,13 @@ describe('createAuthProbe — cookie reading', () => {
         const stub = makeStubAuth();
         const probe = createAuthProbe({
             authService: stub.service,
-            cookieName: 'puter_token',
+            cookieName: 'mixt_token',
         });
         await runProbe(
             probe,
             makeReq({
                 cookieHeader:
-                    'other=val; puter_token=session-abc; trailing=last',
+                    'other=val; mixt_token=session-abc; trailing=last',
             }),
         );
         expect(stub.seenTokens).toEqual(['session-abc']);
@@ -402,10 +402,10 @@ describe('createAuthProbe — cookie reading', () => {
         const stub = makeStubAuth();
         const probe = createAuthProbe({
             authService: stub.service,
-            cookieName: 'puter_token',
+            cookieName: 'mixt_token',
         });
         // Quoted + percent-encoded value: `"a b"` → `a b`
-        await runProbe(probe, makeReq({ cookieHeader: 'puter_token="a%20b"' }));
+        await runProbe(probe, makeReq({ cookieHeader: 'mixt_token="a%20b"' }));
         expect(stub.seenTokens).toEqual(['a b']);
     });
 
@@ -414,7 +414,7 @@ describe('createAuthProbe — cookie reading', () => {
         const probe = createAuthProbe({ authService: stub.service });
         await runProbe(
             probe,
-            makeReq({ cookieHeader: 'puter_token=session-abc' }),
+            makeReq({ cookieHeader: 'mixt_token=session-abc' }),
         );
         expect(stub.seenTokens).toEqual([]);
     });
@@ -423,17 +423,17 @@ describe('createAuthProbe — cookie reading', () => {
         const stub = makeStubAuth();
         const probe = createAuthProbe({
             authService: stub.service,
-            cookieName: 'puter_token',
+            cookieName: 'mixt_token',
         });
         const { req } = await runProbe(
             probe,
             makeReq({
                 protocol: 'https',
                 headers: {
-                    host: 'api.puter.test',
+                    host: 'api.mixt.test',
                     origin: 'https://attacker.example',
                 },
-                cookieHeader: 'puter_token=session-abc',
+                cookieHeader: 'mixt_token=session-abc',
             }),
         );
 
@@ -446,7 +446,7 @@ describe('createAuthProbe — cookie reading', () => {
         const stub = makeStubAuth();
         const probe = createAuthProbe({
             authService: stub.service,
-            cookieName: 'puter_token',
+            cookieName: 'mixt_token',
         });
         await runProbe(
             probe,
@@ -454,10 +454,10 @@ describe('createAuthProbe — cookie reading', () => {
                 protocol: 'https',
                 headers: {
                     authorization: 'Bearer header-tok',
-                    host: 'api.puter.test',
+                    host: 'api.mixt.test',
                     origin: 'https://app.example',
                 },
-                cookieHeader: 'puter_token=session-abc',
+                cookieHeader: 'mixt_token=session-abc',
             }),
         );
 
@@ -468,17 +468,17 @@ describe('createAuthProbe — cookie reading', () => {
         const stub = makeStubAuth();
         const probe = createAuthProbe({
             authService: stub.service,
-            cookieName: 'puter_token',
+            cookieName: 'mixt_token',
         });
         await runProbe(
             probe,
             makeReq({
                 protocol: 'https',
                 headers: {
-                    host: 'api.puter.test',
-                    origin: 'https://api.puter.test',
+                    host: 'api.mixt.test',
+                    origin: 'https://api.mixt.test',
                 },
-                cookieHeader: 'puter_token=session-abc',
+                cookieHeader: 'mixt_token=session-abc',
             }),
         );
 
@@ -489,17 +489,17 @@ describe('createAuthProbe — cookie reading', () => {
         const stub = makeStubAuth();
         const probe = createAuthProbe({
             authService: stub.service,
-            cookieName: 'puter_token',
+            cookieName: 'mixt_token',
         });
         await runProbe(
             probe,
             makeReq({
                 protocol: 'https',
                 headers: {
-                    host: 'api.puter.test:443',
-                    origin: 'https://api.puter.test',
+                    host: 'api.mixt.test:443',
+                    origin: 'https://api.mixt.test',
                 },
-                cookieHeader: 'puter_token=session-abc',
+                cookieHeader: 'mixt_token=session-abc',
             }),
         );
 
@@ -510,17 +510,17 @@ describe('createAuthProbe — cookie reading', () => {
         const stub = makeStubAuth();
         const probe = createAuthProbe({
             authService: stub.service,
-            cookieName: 'puter_token',
+            cookieName: 'mixt_token',
         });
         await runProbe(
             probe,
             makeReq({
                 protocol: 'https',
                 headers: {
-                    host: 'api.puter.test',
-                    origin: 'http://api.puter.test',
+                    host: 'api.mixt.test',
+                    origin: 'http://api.mixt.test',
                 },
-                cookieHeader: 'puter_token=session-abc',
+                cookieHeader: 'mixt_token=session-abc',
             }),
         );
 
@@ -814,7 +814,7 @@ describe('createAuthProbe — reauth signal', () => {
 // section validates that a real session token round-trips through the
 // real AuthService into a real Actor.
 
-let server: PuterServer;
+let server: MixtServer;
 let authService: AuthService;
 
 beforeAll(async () => {

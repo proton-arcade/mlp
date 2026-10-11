@@ -126,7 +126,7 @@ const shareEmailLayout = (parts: {
 <!--[if mso]><table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0"><tr><td><![endif]-->
 <table role="presentation" class="col" width="600" cellpadding="0" cellspacing="0" border="0" style="width: 100%; max-width: 600px; text-align: left;">
     <tr>
-        <td class="pad mark" style="padding: 0 4px 14px; font-family: ${FONT}; font-size: 15px; line-height: 20px; font-weight: 700; letter-spacing: 0.01em; color: ${ACCENT};">Puter</td>
+        <td class="pad mark" style="padding: 0 4px 14px; font-family: ${FONT}; font-size: 15px; line-height: 20px; font-weight: 700; letter-spacing: 0.01em; color: ${ACCENT};">Mixt</td>
     </tr>
     <tr>
         <td class="card" style="background-color: ${CARD_BG}; border: 1px solid ${CARD_BORDER}; border-radius: 14px;">
@@ -224,14 +224,14 @@ export const EMAIL_TEMPLATES = {
         html: `
 <p>Hi there,</p>
 <p>
-Exciting news! <a href="https://puter.com/app/{{app_name}}">{{app_title}}</a> is now approved and live on <a href="https://puter.com/app/app-center" target="_blank">Puter App Center</a>. It's now ready for users worldwide to discover and enjoy.
+Exciting news! <a href="https://mixt.mpl/app/{{app_name}}">{{app_title}}</a> is now approved and live on <a href="https://mixt.mpl/app/app-center" target="_blank">Mixt App Center</a>. It's now ready for users worldwide to discover and enjoy.
 </p>
 <p>
-<strong>Next Step</strong>: As your app begins to gain traction with more users, we will conduct periodic reviews to assess its performance and user engagement. Once your app meets our criteria, we'll invite you to our Incentive Program. This exclusive program will allow you to earn revenue each time users open your app. So, keep an eye out for updates and stay tuned for this exciting opportunity! Make sure to share your app with your fans, friends and family to help it gain traction: <a href="https://puter.com/app/{{app_name}}">https://puter.com/app/{{app_name}}</a>
+<strong>Next Step</strong>: As your app begins to gain traction with more users, we will conduct periodic reviews to assess its performance and user engagement. Once your app meets our criteria, we'll invite you to our Incentive Program. This exclusive program will allow you to earn revenue each time users open your app. So, keep an eye out for updates and stay tuned for this exciting opportunity! Make sure to share your app with your fans, friends and family to help it gain traction: <a href="https://mixt.mpl/app/{{app_name}}">https://mixt.mpl/app/{{app_name}}</a>
 </p>
 
 <p>Best,<br />
-The Puter Team
+The Mixt Team
 </p>
         `,
     },
@@ -240,14 +240,14 @@ The Puter Team
         html: `
 <p>Hi{{#if owner_username}} {{owner_username}}{{/if}},</p>
 <p>
-Thanks for submitting <a href="https://puter.com/app/{{app_name}}">{{app_title}}</a> for the Puter App Center. We reviewed your listing and have rejected it for the following reason(s):
+Thanks for submitting <a href="https://mixt.mpl/app/{{app_name}}">{{app_title}}</a> for the Mixt App Center. We reviewed your listing and have rejected it for the following reason(s):
 </p>
 <blockquote>{{{nl2br reason}}}</blockquote>
 <p>
 Please update your app listing and resubmit when ready. If you have questions, just reply to this email.
 </p>
 <p>Best,<br />
-The Puter Team
+The Mixt Team
 </p>
         `,
     },
@@ -256,12 +256,12 @@ The Puter Team
         html: `
 <p>Hi{{#if owner_username}} {{owner_username}}{{/if}},</p>
 <p>
-Please update <a href="https://puter.com/app/{{app_name}}">{{app_title}}</a>.
+Please update <a href="https://mixt.mpl/app/{{app_name}}">{{app_title}}</a>.
 </p>
 <p><strong>Requested updates:</strong></p>
 <blockquote>{{nl2br message}}</blockquote>
 <p>Best,<br />
-The Puter Team
+The Mixt Team
 </p>
         `,
     },
@@ -280,7 +280,7 @@ You're receiving this because feedback is enabled for
 <a href="{{dev_center_link}}">Dev Center</a> under your app's settings.
 </p>
 <p>Best,<br />
-The Puter Team
+The Mixt Team
 </p>
         `,
     },
@@ -289,7 +289,7 @@ The Puter Team
         html: `
 <p>Hi there,</p>
 <p>
-We received a request to link this email to the user "{{username}}" on Puter. If you made this request, please click the link below to confirm the change. If you did not make this request, please ignore this email.
+We received a request to link this email to the user "{{username}}" on Mixt. If you made this request, please click the link below to confirm the change. If you did not make this request, please ignore this email.
 </p>
 
 <p>
@@ -304,7 +304,7 @@ We received a request to link this email to the user "{{username}}" on Puter. If
 <p>
 We're sending an email to let you know about a change to your account.
 We have sent a confirmation to "{{new_email}}" to confirm an email change request.
-If this was not you, please contact support@puter.com immediately.
+If this was not you, please contact support@mixt.mpl immediately.
 </p>
         `,
     },
@@ -315,7 +315,7 @@ If this was not you, please contact support@puter.com immediately.
 <p>
 We're sending an email to let you know about a change to your account.
 Your password was recently changed. If this was not you, please contact
-support@puter.com immediately.
+support@mixt.mpl immediately.
 </p>
         `,
     },
@@ -325,7 +325,7 @@ support@puter.com immediately.
 <p>Hi there,</p>
 <p><strong>{{code}}</strong> is your email confirmation code.</p>
 <p>Sincerely,</p>
-<p>Puter</p>
+<p>Mixt</p>
         `,
     },
     email_verification_link: {
@@ -334,7 +334,7 @@ support@puter.com immediately.
 <p>Hi there,</p>
 <p>Please confirm your email address using this link: <strong><a href="{{link}}">{{link}}</a></strong>.</p>
 <p>Sincerely,</p>
-<p>Puter</p>
+<p>Mixt</p>
         `,
     },
     email_password_recovery: {
@@ -344,14 +344,14 @@ support@puter.com immediately.
 <p>A password recovery request was issued for your account, please follow the link below to reset your password:</p>
 <p><a href="{{link}}">{{link}}</a></p>
 <p>Sincerely,</p>
-<p>Puter</p>
+<p>Mixt</p>
         `,
     },
     team_account_created: {
-        subject: 'Your {{team_name}} account on Puter',
+        subject: 'Your {{team_name}} account on Mixt',
         html: `
 <p>Hi there,</p>
-<p>{{team_name}} has created a Puter account for you.</p>
+<p>{{team_name}} has created a Mixt account for you.</p>
 <p>Username: <b>{{username}}</b></p>
 <p>{{team_name}} will give you a temporary password. You will be asked to choose
 your own the first time you sign in. The temporary one stops working then, and it
@@ -364,14 +364,14 @@ expires on its own if unused.</p>
 as you. Choose your own password promptly.</li>
 </ul>
 <p>Sincerely,</p>
-<p>Puter</p>
+<p>Mixt</p>
         `,
     },
     team_account_reissued: {
         subject: 'A new temporary password for your {{team_name}} account',
         html: `
 <p>Hi there,</p>
-<p>{{team_name}} has issued a new temporary password for your Puter account
+<p>{{team_name}} has issued a new temporary password for your Mixt account
 <b>{{username}}</b>. Any temporary password you were given before this one has
 stopped working.</p>
 <p>{{team_name}} will give you the new one. You will be asked to choose your own
@@ -379,47 +379,47 @@ password the first time you sign in; the temporary one stops working then, and
 it expires on its own if unused.</p>
 <p>If you were not expecting this, ask {{team_name}} -- only they can issue it.</p>
 <p>Sincerely,</p>
-<p>Puter</p>
+<p>Mixt</p>
         `,
     },
     team_account_disabled: {
         subject: 'Your {{team_name}} account has been disabled',
         html: `
 <p>Hi there,</p>
-<p>{{team_name}} has disabled your Puter account <b>{{username}}</b>. You can no
+<p>{{team_name}} has disabled your Mixt account <b>{{username}}</b>. You can no
 longer sign in to it.</p>
 <p>Nothing has been deleted. Your files, apps and data are as you left them, and
 {{team_name}} can re-enable the account at any time. If you believe this is a
 mistake, ask them.</p>
 <p>Sincerely,</p>
-<p>Puter</p>
+<p>Mixt</p>
         `,
     },
     team_closed: {
         subject: '{{team_name}} has been closed',
         html: `
 <p>Hi there,</p>
-<p>{{team_name}} has closed its Puter team, and your account
+<p>{{team_name}} has closed its Mixt team, and your account
 <b>{{username}}</b> has been disabled along with it. You can no longer sign in to
 it.</p>
 <p>Nothing has been deleted. Your files and data are still there; closing the
 team does not destroy the accounts it created, and each one would have to be
 deleted on its own request.</p>
 <p>Sincerely,</p>
-<p>Puter</p>
+<p>Mixt</p>
         `,
     },
     team_password_reset: {
         subject: 'Your {{team_name}} account password was reset',
         html: `
 <p>Hi there,</p>
-<p>An administrator of {{team_name}} reset the password on your Puter account
+<p>An administrator of {{team_name}} reset the password on your Mixt account
 <b>{{username}}</b>. They will send you a temporary password separately, and you
 will be asked to choose your own the next time you sign in.</p>
 <p>If you did not expect this, the record of who reset it and when is in your
 team activity, along with every sign-in to your account.</p>
 <p>Sincerely,</p>
-<p>Puter</p>
+<p>Mixt</p>
         `,
     },
     team_2fa_reset: {
@@ -428,14 +428,14 @@ team activity, along with every sign-in to your account.</p>
         html: `
 <p>Hi there,</p>
 <p>An administrator of {{team_name}} reset two-factor authentication on your
-Puter account <b>{{username}}</b>, so you can set it up again from a device you
+Mixt account <b>{{username}}</b>, so you can set it up again from a device you
 still have. You have been signed out everywhere.</p>
 <p>Your password is unchanged. If your team requires two-factor authentication,
 you will be asked to enrol the next time you sign in.</p>
 <p>If you did not expect this, the record of who reset it and when is in your
 team activity, along with every sign-in to your account.</p>
 <p>Sincerely,</p>
-<p>Puter</p>
+<p>Mixt</p>
         `,
     },
     enabled_2fa: {
@@ -444,10 +444,10 @@ team activity, along with every sign-in to your account.</p>
 <p>Hi there,</p>
 <p>We're sending you this email to let you know 2FA was successfully enabled
 on your account</p>
-<p>If you did not perform this action please contact support@puter.com
+<p>If you did not perform this action please contact support@mixt.mpl
 immediately</p>
 <p>Sincerely,</p>
-<p>Puter</p>
+<p>Mixt</p>
         `,
     },
     disabled_2fa: {
@@ -455,10 +455,10 @@ immediately</p>
         html: `
 <p>Hi there,</p>
 <p>We hope you did this on purpose! 2FA Was disabled on your account.</p>
-<p>If you did not perform this action please contact support@puter.com
+<p>If you did not perform this action please contact support@mixt.mpl
 immediately</p>
 <p>Sincerely,</p>
-<p>Puter</p>
+<p>Mixt</p>
         `,
     },
     /**
@@ -476,29 +476,29 @@ immediately</p>
                 greetingRow('Hi{{#if recipient}} {{recipient}}{{/if}},') +
                 headingRow('Shared with you') +
                 SHARE_LIST_ROW +
-                buttonRow('Open Puter') +
+                buttonRow('Open Mixt') +
                 textRow(
                     'Shared items live under <span style="font-weight: 600;">Shared</span> in your files.',
                     '24px 0 0',
                 ),
-            footer: `You're receiving this because someone shared with your Puter account.{{#if unsubscribe_uuid}}
+            footer: `You're receiving this because someone shared with your Mixt account.{{#if unsubscribe_uuid}}
             <br /><a href="{{origin}}/unsubscribe?user_uuid={{unsubscribe_uuid}}" style="color: inherit; text-decoration: underline;">Unsubscribe from notification emails</a>{{/if}}`,
         }),
         text: `
             Hi{{#if recipient}} {{recipient}}{{/if}},
 
-            Shared with you on Puter:
+            Shared with you on Mixt:
             {{#each shares}}
             - {{this.sender}} shared {{this.what}}{{#if this.via}} via {{this.via}}{{/if}}
             {{#each this.items}}{{#if this.link}}  {{this.name}}: {{this.link}}
             {{/if}}{{/each}}{{/each}}
 
-            Open Puter: {{link}}
+            Open Mixt: {{link}}
 
             Shared items live under "Shared" in your files.
 
             --
-            You're receiving this because someone shared with your Puter account.
+            You're receiving this because someone shared with your Mixt account.
             {{#if unsubscribe_uuid}}Unsubscribe from notification emails:
             {{origin}}/unsubscribe?user_uuid={{unsubscribe_uuid}}{{/if}}
         `,
@@ -507,17 +507,17 @@ immediately</p>
     file_shared_invite: {
         subject: '{{subject_line}}',
         html: shareEmailLayout({
-            preheader: 'Claim it with a free Puter account.',
+            preheader: 'Claim it with a free Mixt account.',
             content:
                 greetingRow('Hi there,') +
-                headingRow('Shared with you on Puter') +
+                headingRow('Shared with you on Mixt') +
                 SHARE_LIST_ROW +
                 textRow(
-                    'There\'s no Puter account for <span style="font-weight: 600;">{{email}}</span> yet. Create one with this address, confirm it, and everything above will be waiting for you. It\'s free and takes about a minute.',
+                    'There\'s no Mixt account for <span style="font-weight: 600;">{{email}}</span> yet. Create one with this address, confirm it, and everything above will be waiting for you. It\'s free and takes about a minute.',
                 ) +
                 buttonRow('Create your free account') +
                 textRow(
-                    'Already on Puter? Add {{email}} to your account and confirm it to get the same access.',
+                    'Already on Mixt? Add {{email}} to your account and confirm it to get the same access.',
                     '24px 0 0',
                 ),
             footer: `You're receiving this because someone shared with {{email}}. Nothing is shared until the address is confirmed, so you can ignore this email and nothing happens.`,
@@ -525,18 +525,18 @@ immediately</p>
         text: `
             Hi there,
 
-            Shared with you on Puter:
+            Shared with you on Mixt:
             {{#each shares}}
             - {{this.sender}} shared {{this.what}}{{#if this.via}} via {{this.via}}{{/if}}
             {{/each}}
 
-            There's no Puter account for {{email}} yet. Create one with this
+            There's no Mixt account for {{email}} yet. Create one with this
             address, confirm it, and everything above will be waiting for you.
             It's free and takes about a minute.
 
             Create your free account: {{link}}
 
-            Already on Puter? Add {{email}} to your account and confirm it to get
+            Already on Mixt? Add {{email}} to your account and confirm it to get
             the same access.
 
             --

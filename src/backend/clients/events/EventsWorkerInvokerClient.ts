@@ -22,7 +22,7 @@
 import '../../util/nodeFetchDispatcherGuard.js';
 
 import { Agent, fetch as undiciFetch } from 'undici';
-import { PuterClient } from '../types.js';
+import { MixtClient } from '../types.js';
 
 /**
  * The call that leaves the platform and runs an app's own code.
@@ -32,17 +32,17 @@ import { PuterClient } from '../types.js';
  * answers on its own hostname behind the internal secret.
  *
  *     POST <events dispatcher>/invoke
- *     x-puter-internal-auth:  <internal secret>
- *     x-puter-events-script:  <script the handler set deploys as>
- *     x-puter-events-app:     <app uid, for the deploy-on-miss callback>
- *     x-puter-events-key:     <key derived for that script>
+ *     x-mixt-internal-auth:  <internal secret>
+ *     x-mixt-events-script:  <script the handler set deploys as>
+ *     x-mixt-events-app:     <app uid, for the deploy-on-miss callback>
+ *     x-mixt-events-key:     <key derived for that script>
  *     { handler, event, ctx, token }
  *
  * The delivery token rides in the body, not a header, so nothing between here
  * and the isolate can treat it as its own authorization.
  *
  * On a miss, a handler set here may deploy the script itself and retry once
- * with `x-puter-events-deployed: 1`, skipping the dispatcher's own callback.
+ * with `x-mixt-events-deployed: 1`, skipping the dispatcher's own callback.
  */
 
 /** The one route an events worker answers. */
@@ -55,7 +55,7 @@ export const EVENTS_DISPATCH_PATH = '/invoke';
  * Header the dispatcher marks its own failures with. Anything carrying it never
  * reached a handler, so its status says nothing about the delivery.
  */
-export const EVENTS_DISPATCH_ERROR_HEADER = 'x-puter-events-dispatch';
+export const EVENTS_DISPATCH_ERROR_HEADER = 'x-mixt-events-dispatch';
 
 /**
  * Header a script's own answer carries, whatever its status — set by the
@@ -63,17 +63,17 @@ export const EVENTS_DISPATCH_ERROR_HEADER = 'x-puter-events-dispatch';
  * nor the dispatch-error header came from neither (an edge 404, a WAF) and is
  * retriable rather than a handler's refusal.
  */
-export const EVENTS_HANDLED_HEADER = 'x-puter-events-handled';
+export const EVENTS_HANDLED_HEADER = 'x-mixt-events-handled';
 
 /** Machine-readable reason on the runtime's own failure answers. */
-export const EVENTS_ERROR_HEADER = 'x-puter-events-error';
+export const EVENTS_ERROR_HEADER = 'x-mixt-events-error';
 
 /**
  * Set on the retry after this backend deploys a missing script itself, so the
  * dispatcher skips its own deploy-on-miss callback and negative cache and goes
  * straight to retrying the namespace.
  */
-export const EVENTS_DEPLOYED_HEADER = 'x-puter-events-deployed';
+export const EVENTS_DEPLOYED_HEADER = 'x-mixt-events-deployed';
 
 /**
  * Dispatch-error reasons this backend can resolve itself by deploying, rather
@@ -172,7 +172,7 @@ export interface WorkerInvokeResult {
 const NO_TRANSPORT =
     'no events dispatcher configured (url and internal secret)';
 
-export class EventsWorkerInvokerClient extends PuterClient {
+export class EventsWorkerInvokerClient extends MixtClient {
     /** Set only where invocations do not leave the process — local development. */
     #transport: EventsInvokeTransport | null = null;
     #dispatcher: DispatcherInvokeTransport | null = null;
@@ -321,10 +321,10 @@ export class DispatcherInvokeTransport implements EventsInvokeTransport {
                 method: 'POST',
                 headers: {
                     'content-type': 'application/json',
-                    'x-puter-internal-auth': this.#secret,
-                    'x-puter-events-script': call.script,
-                    'x-puter-events-app': call.appUid,
-                    'x-puter-events-key': call.key,
+                    'x-mixt-internal-auth': this.#secret,
+                    'x-mixt-events-script': call.script,
+                    'x-mixt-events-app': call.appUid,
+                    'x-mixt-events-key': call.key,
                     ...(call.deployed ? { [EVENTS_DEPLOYED_HEADER]: '1' } : {}),
                 },
                 body: call.body,

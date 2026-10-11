@@ -1,22 +1,22 @@
 ---
-title: puter.events.onPersistent()
+title: mixt.events.onPersistent()
 description: Subscribe to changes with a subscription that keeps running when your app is closed.
 platforms: [websites, apps, nodejs, workers]
 ---
 
 <div class="info">The Events API is in beta. Event shapes, limits, and behavior may change between releases.</div>
 
-Creates a subscription that outlives this connection. It's stored on the account, keeps matching while your app is closed, and runs a handler your app published with [`puter.events.handlers.publish()`](/Events/handlers/). Compare [`puter.events.onLocal()`](/Events/onLocal/), which ends with the page.
+Creates a subscription that outlives this connection. It's stored on the account, keeps matching while your app is closed, and runs a handler your app published with [`mixt.events.handlers.publish()`](/Events/handlers/). Compare [`mixt.events.onLocal()`](/Events/onLocal/), which ends with the page.
 
 The subscription is live immediately in the region where it was created. Changes made in other regions can take a moment longer (usually well under a second) to reach it right after this call resolves.
 
 See [`onLocal()`](/Events/onLocal/#subjects) for the subject grammar and the event shape.
 
-On a website with nobody signed in, it asks the user to sign in first, as other Puter.js calls do. An app running on Puter is always signed in.
+On a website with nobody signed in, it asks the user to sign in first, as other Mixt.js calls do. An app running on Mixt OS is always signed in.
 
 ## Syntax
 ```js
-puter.events.onPersistent(options)
+mixt.events.onPersistent(options)
 ```
 
 ## Parameters
@@ -38,7 +38,7 @@ puter.events.onPersistent(options)
 Running your handler while the user isn't there needs its own per-app permission, **`events:background`**. Subscribing with `worker` among the `targets` (the default for an app) without it fails with `events_background_consent_required`. Request it like any other permission:
 
 ```js
-await puter.perms.request(['events:background']);
+await mixt.perms.request(['events:background']);
 ```
 
 The user can revoke it wherever they manage the app's access. That suspends every worker-target subscription the app holds for them with `permission_revoked`, and granting it again doesn't resume them: subscribe again. A subscription that only wants deliveries while your app is open needs no consent: pass `targets: ['socket']`.
@@ -61,13 +61,13 @@ Whichever place runs it, it's the same code, called with:
 | --- | --- |
 | `event` | The [event](/Events/onLocal/#the-event), or a [gap marker](/Events/onLocal/#gaps). |
 | `ctx` | The frozen `context` this subscription was created with. |
-| `user` | A `puter` bound to the account holding the subscription, with the same access your app has for that user in a tab. In a client, it's the ambient `puter`. |
-| `fetch` | [`puter.net.fetch`](/Networking/fetch/) where it exists, otherwise the environment's `fetch`. |
+| `user` | A `mixt` bound to the account holding the subscription, with the same access your app has for that user in a tab. In a client, it's the ambient `mixt`. |
+| `fetch` | [`mixt.net.fetch`](/Networking/fetch/) where it exists, otherwise the environment's `fetch`. |
 | `ack` | On a `single` subscription only; see below. |
 
 Only a **function** `handler` runs in this client. A source string or `{ file }` is only used for its hash. The connection reconnects on its own when it drops, so this client keeps taking deliveries unless `onError` is called.
 
-Those five bindings are the handler's whole environment. The events worker has no ambient `puter`: a handler that names `puter` or `me` is refused at publish time. Use `user` instead.
+Those five bindings are the handler's whole environment. The events worker has no ambient `mixt`: a handler that names `mixt` or `me` is refused at publish time. Use `user` instead.
 
 ### Handlers that trigger handlers
 
@@ -95,17 +95,17 @@ In the events worker, the worker's response decides:
 
 ## `context` is captured once, up to 4 KB
 
-A handler can't use outside variables (see [`puter.events.handlers`](/Events/handlers/)), so `context` is how values reach it. It's evaluated **once, at this call**. Below, `ctx.endpoint` stays whatever `process.env.INGEST_URL` was when you subscribed, until you subscribe again:
+A handler can't use outside variables (see [`mixt.events.handlers`](/Events/handlers/)), so `context` is how values reach it. It's evaluated **once, at this call**. Below, `ctx.endpoint` stays whatever `process.env.INGEST_URL` was when you subscribed, until you subscribe again:
 
 ```js
-await puter.events.onPersistent({
+await mixt.events.onPersistent({
     subject: 'fs:~/inbox',
     handlerName: 'ingestUpload',
     context: { endpoint: process.env.INGEST_URL, apiKey: process.env.INGEST_KEY },
 });
 ```
 
-Over **4 KB** serialized, the call fails with `events_context_too_large` before any request is made. Context is stored in plaintext and only read when delivering. [`puter.events.list()`](/Events/list/) returns its **key names and a hash**, never the values. For more than 4 KB, put the data in a file and pass the path in `context`.
+Over **4 KB** serialized, the call fails with `events_context_too_large` before any request is made. Context is stored in plaintext and only read when delivering. [`mixt.events.list()`](/Events/list/) returns its **key names and a hash**, never the values. For more than 4 KB, put the data in a file and pass the path in `context`.
 
 ## Suspended subscriptions
 
@@ -132,7 +132,7 @@ Clients connect to the nearest region. Events reach a client wherever it's conne
 
 A `Promise` that resolves to the subscription:
 
-- `subId` (String): Its id, which [`puter.events.unsubscribe()`](/Events/unsubscribe/) takes. It never changes.
+- `subId` (String): Its id, which [`mixt.events.unsubscribe()`](/Events/unsubscribe/) takes. It never changes.
 - `subject` (String): For `kv:` and `notif:`, the subject in full form: `kv:cart` comes back as `kv:<appId>:cart`. For `fs:`, as you passed it, except a relative path comes back resolved the same way [`onLocal()`](/Events/onLocal/) returns it.
 - `anchor`, `match`, `op`: as `onLocal()` returns them.
 - `delivery` (String), `targets` (Array), `handlerName` (String | null), `includeValue` (Boolean).
@@ -140,7 +140,7 @@ A `Promise` that resolves to the subscription:
 - `contextKeys` (Array | null), `contextHash` (String | null): the key names and a hash of the stored context, never its values.
 - `createdAt`, `expiresAt` (Number | null): unix seconds.
 - `suspendedAt` (Number | null), `suspendedReason` (String | null): set when the subscription is [suspended](#suspended-subscriptions).
-- `off()` (Function): Ends the subscription and stops running its handler here. Same as [`puter.events.unsubscribe(subId)`](/Events/unsubscribe/).
+- `off()` (Function): Ends the subscription and stops running its handler here. Same as [`mixt.events.unsubscribe(subId)`](/Events/unsubscribe/).
 
 The promise rejects with `{ message, code }`:
 
@@ -176,16 +176,16 @@ The promise rejects with `{ message, code }`:
 ```html;events-persistent
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
             // (1) An app of your own to publish the handler under
-            const name = `ingest-${puter.randName()}`;
-            const app = await puter.apps.create(name, `https://example.com/${name}`);
+            const name = `ingest-${mixt.randName()}`;
+            const app = await mixt.apps.create(name, `https://example.com/${name}`);
 
             // (2) Publish the handler. It closes over nothing — everything it
             //     needs arrives as `ctx`.
-            await puter.events.handlers.publish(
+            await mixt.events.handlers.publish(
                 'ingestUpload',
                 async ({ event, ctx }) => {
                     await fetch(ctx.endpoint, {
@@ -197,18 +197,18 @@ The promise rejects with `{ message, code }`:
             );
 
             // (3) Subscribe. `context` is read now and never again.
-            const dir = puter.randName();
-            await puter.fs.mkdir(dir);
-            const sub = await puter.events.onPersistent({
+            const dir = mixt.randName();
+            await mixt.fs.mkdir(dir);
+            const sub = await mixt.events.onPersistent({
                 subject: `fs:${dir}`,
                 handlerName: 'ingestUpload',
                 context: { endpoint: 'https://example.com/ingest', apiKey: 'k-123' },
             });
 
-            puter.print(`watching ${dir} as ${sub.subId}<br>`);
+            mixt.print(`watching ${dir} as ${sub.subId}<br>`);
 
             // (4) It outlives this page. End it explicitly when you are done.
-            await puter.events.unsubscribe(sub.subId);
+            await mixt.events.unsubscribe(sub.subId);
         })();
     </script>
 </body>
@@ -220,30 +220,30 @@ The promise rejects with `{ message, code }`:
 ```html;events-persistent-pinned
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
-            const name = `pinned-${puter.randName()}`;
-            const app = await puter.apps.create(name, `https://example.com/${name}`);
+            const name = `pinned-${mixt.randName()}`;
+            const app = await mixt.apps.create(name, `https://example.com/${name}`);
 
             const handler = ({ event, ctx }) => console.log(ctx.label, event.path);
-            await puter.events.handlers.publish('onWrite', handler, { appUid: app.uid });
+            await mixt.events.handlers.publish('onWrite', handler, { appUid: app.uid });
 
-            const dir = puter.randName();
-            await puter.fs.mkdir(dir);
+            const dir = mixt.randName();
+            await mixt.fs.mkdir(dir);
 
             // Passing the function sends its hash: if somebody redeployed
             // `onWrite` in the meantime, this fails rather than binding you to
             // code you never saw.
-            const sub = await puter.events.onPersistent({
+            const sub = await mixt.events.onPersistent({
                 subject: `fs:${dir}`,
                 handlerName: 'onWrite',
                 handler,
                 context: { label: 'inbox' },
             });
 
-            puter.print(`bound to ${sub.handlerName}<br>`);
-            await puter.events.unsubscribe(sub.subId);
+            mixt.print(`bound to ${sub.handlerName}<br>`);
+            await mixt.events.unsubscribe(sub.subId);
         })();
     </script>
 </body>

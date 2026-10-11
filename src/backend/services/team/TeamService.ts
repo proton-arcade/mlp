@@ -69,7 +69,7 @@ import {
     temporaryPasswordExpiry,
 } from '../../util/temporaryPassword.js';
 import { generateDefaultFsentries } from '../../util/userProvisioning.js';
-import { PuterService } from '../types';
+import { MixtService } from '../types';
 
 /** Why an account was disabled. Free text in `0063`; this is the team one. */
 export const DISABLED_BY_TEAM = 'disabled_by_team';
@@ -134,7 +134,7 @@ const epochSeconds = (value: unknown): number => {
     return Number.isNaN(parsed) ? 0 : Math.floor(parsed / 1000);
 };
 
-export class TeamService extends PuterService {
+export class TeamService extends MixtService {
     /** Half the free plan for a seat, unless a paid tier outranks it. */
     override async onServerStart(): Promise<void> {
         if (this.config.teams_enabled !== true) return;
@@ -1395,7 +1395,7 @@ export class TeamService extends PuterService {
         });
         // Only the team's own suspension; a platform one must not lift.
         if (user?.suspended && user.suspended_reason !== DISABLED_BY_TEAM) {
-            throw new HttpError(409, 'That account was suspended by Puter', {
+            throw new HttpError(409, 'That account was suspended by Mixt', {
                 legacyCode: 'conflict',
             });
         }
@@ -1448,7 +1448,7 @@ export class TeamService extends PuterService {
         }
         // Only the team's own suspension may be deleted, as `enableMember` holds.
         if (user.suspended_reason !== DISABLED_BY_TEAM) {
-            throw new HttpError(409, 'That account was suspended by Puter', {
+            throw new HttpError(409, 'That account was suspended by Mixt', {
                 legacyCode: 'conflict',
             });
         }

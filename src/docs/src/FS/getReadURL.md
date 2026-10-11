@@ -1,6 +1,6 @@
 ---
-title: puter.fs.getReadURL()
-description: Generate a temporary URL that lets anyone read one file from the user's own Puter file system.
+title: mixt.fs.getReadURL()
+description: Generate a temporary URL that lets anyone read one file from the user's own Mixt OS file system.
 platforms: [websites, apps, nodejs, workers]
 ---
 
@@ -9,8 +9,8 @@ Generates a URL that can be used to read a file. To stop it from working before 
 ## Syntax
 
 ```js
-puter.fs.getReadURL(path)
-puter.fs.getReadURL(path, expiresIn)
+mixt.fs.getReadURL(path)
+mixt.fs.getReadURL(path, expiresIn)
 ```
 
 ## Parameters
@@ -30,5 +30,5 @@ A promise that resolves to a URL string that can be used to read the file.
 ## Example
 
 ```javascript
-const url = await puter.fs.getReadURL("~/myfile.txt");
+const url = await mixt.fs.getReadURL("~/myfile.txt");
 ```

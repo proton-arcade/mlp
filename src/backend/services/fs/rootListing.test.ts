@@ -20,7 +20,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { makeActor, type Actor } from '../../core/actor.js';
-import { PuterServer } from '../../server.js';
+import { MixtServer } from '../../server.js';
 import type { FSEntryStore } from '../../stores/fs/FSEntryStore.js';
 import { setupTestServer } from '../../testUtil.js';
 import { generateDefaultFsentries } from '../../util/userProvisioning.js';
@@ -28,7 +28,7 @@ import { FULL_API_ACCESS } from '../permission/consts.js';
 import type { PermissionService } from '../permission/PermissionService.js';
 import { clientParentUid, listRootEntries } from './rootListing.js';
 
-let server: PuterServer;
+let server: MixtServer;
 let fsEntryStore: FSEntryStore;
 let permissionService: PermissionService;
 

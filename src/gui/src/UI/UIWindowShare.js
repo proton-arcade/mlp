@@ -261,7 +261,7 @@ async function UIWindowShare (options) {
 
     const refresh = async () => {
         try {
-            render(await puter.fs.getShares(item_path));
+            render(await mixt.fs.getShares(item_path));
         } catch (e) {
             show_error(e?.message ?? i18n('share_failed'));
         }
@@ -293,7 +293,7 @@ async function UIWindowShare (options) {
         $link_mode.prop('disabled', true);
         try {
             if ( mode ) {
-                const created = await with_verification_gate(() => puter.fs.share({
+                const created = await with_verification_gate(() => mixt.fs.share({
                     path: item_path,
                     recipient: { anyone: true },
                     mode,
@@ -301,7 +301,7 @@ async function UIWindowShare (options) {
                 item_uid ??= created?.[0]?.entryUid ?? null;
                 show_success(i18n(mode === 'write' ? 'share_link_on_write' : 'share_link_on_read'));
             } else {
-                await puter.fs.unshare(item_path, { anyone: true });
+                await mixt.fs.unshare(item_path, { anyone: true });
                 show_success(i18n('share_link_off'));
             }
         } catch (e) {
@@ -347,7 +347,7 @@ async function UIWindowShare (options) {
 
         $(this).prop('disabled', true);
         try {
-            const created = await with_verification_gate(() => puter.fs.share({
+            const created = await with_verification_gate(() => mixt.fs.share({
                 path: item_path,
                 recipient: chosen.value,
                 mode: $(el_window).find('.share-mode').val(),
@@ -379,7 +379,7 @@ async function UIWindowShare (options) {
         const mode = $(this).val();
         $(this).prop('disabled', true);
         try {
-            await with_verification_gate(() => puter.fs.share({ path: item_path, recipient, mode }));
+            await with_verification_gate(() => mixt.fs.share({ path: item_path, recipient, mode }));
             show_success(i18n('share_access_updated', { recipient: name }));
             invalidate_shared_roots();
             await refresh();
@@ -416,7 +416,7 @@ async function UIWindowShare (options) {
         if ( ! confirmed ) return;
         $(this).prop('disabled', true);
         try {
-            await puter.fs.unshare(item_path, team ? { team: team.uid } : holder);
+            await mixt.fs.unshare(item_path, team ? { team: team.uid } : holder);
             // `i18n()` encodes what it returns, replacements included, so the
             // raw value goes in — encoding first would show the entities to
             // anyone whose address or username contains one.
@@ -435,7 +435,7 @@ async function UIWindowShare (options) {
 
     // The uid the link is built on; the copy button waits for it.
     if ( allow_manage && ! item_uid ) {
-        puter.fs.stat(item_path).then((stat) => {
+        mixt.fs.stat(item_path).then((stat) => {
             item_uid = stat?.uid ?? null;
             render_link_access();
         }).catch(() => { /* the button just stays hidden */ });

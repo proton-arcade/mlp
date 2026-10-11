@@ -17,18 +17,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import type { IPuterClientRegistry } from './clients/types';
-import type { IPuterControllerRegistry } from './controllers/types';
-import type { IPuterDriverRegistry } from './drivers/types';
-import type { IPuterServiceRegistry } from './services/types';
-import type { IPuterStoreRegistry } from './stores/types';
+import type { IMixtClientRegistry } from './clients/types';
+import type { IMixtControllerRegistry } from './controllers/types';
+import type { IMixtDriverRegistry } from './drivers/types';
+import type { IMixtServiceRegistry } from './services/types';
+import type { IMixtStoreRegistry } from './stores/types';
 import type { IConfig, LayerInstances } from './types';
 
 export const configContainer: IConfig = {} as IConfig;
 
-export const clientsContainers: LayerInstances<IPuterClientRegistry> = {};
-export const storesContainers: LayerInstances<IPuterStoreRegistry> = {};
-export const servicesContainers: LayerInstances<IPuterServiceRegistry> = {};
-export const controllersContainers: LayerInstances<IPuterControllerRegistry> =
+export const clientsContainers: LayerInstances<IMixtClientRegistry> = {};
+export const storesContainers: LayerInstances<IMixtStoreRegistry> = {};
+export const servicesContainers: LayerInstances<IMixtServiceRegistry> = {};
+export const controllersContainers: LayerInstances<IMixtControllerRegistry> =
     {};
-export const driversContainers: LayerInstances<IPuterDriverRegistry> = {};
+export const driversContainers: LayerInstances<IMixtDriverRegistry> = {};

@@ -20,7 +20,7 @@
 /**
  * Traslation notes:
  *  - Change all "Email" to "Correo electrónico"
- *  - puter_description the most acurated translation for "privacy-first personal cloud" I could think of is "servicio de nube personal enfocado en privacidad"
+ *  - mixt_description the most acurated translation for "privacy-first personal cloud" I could think of is "servicio de nube personal enfocado en privacidad"
  *  - plural_suffix: 's' has no direct translation to spanish. There are multiple plural suffix in spanish 'as' || "es" || "os || "s". Leave "s" as it is only been used on item: 'elemento' and will end up as 'elementos'
  */
 
@@ -156,7 +156,7 @@ const es = {
         forgot_pass_c2a: '¿Olvidaste tu contraseña?',
         from: 'De',
         general: 'General',
-        get_a_copy_of_on_puter: '¡Consigue una copia de \'%%\' en Mixt.com!',
+        get_a_copy_of_on_mixt: '¡Consigue una copia de \'%%\' en Mixt.com!',
         get_copy_link: 'Copiar el enlace',
         hide_all_windows: 'Ocultar todas las ventanas',
         home: 'Inicio',
@@ -231,7 +231,7 @@ const es = {
         picture: 'Imagen',
         pictures: 'Imagenes',
         plural_suffix: 's',
-        powered_by_puter_js: 'Creado por {{link=docs}}Puter.js{{/link}}',
+        powered_by_mixt_js: 'Creado por {{link=docs}}Mixt.js{{/link}}',
         preparing: 'Preparando...',
         preparing_for_upload: 'Preparando para la subida...',
         print: 'Imprimir',
@@ -247,7 +247,7 @@ const es = {
         public: 'Publico',
         publish: 'Publicar',
         publish_as_website: 'Publicar como página web',
-        puter_description: 'Mixt es un servicio de nube personal enfocado en privacidad que mantiene tus archivos, aplicaciónes, y juegos en un solo lugar, accesible desde cualquier lugar en cualquier momento.',
+        mixt_description: 'Mixt es un servicio de nube personal enfocado en privacidad que mantiene tus archivos, aplicaciónes, y juegos en un solo lugar, accesible desde cualquier lugar en cualquier momento.',
         reading_file: 'Leyendo %strong%',
         recent: 'Reciente',
         recommended: 'Recomendado',
@@ -264,7 +264,7 @@ const es = {
         replace_all: 'Replace All',
         resend_confirmation_code: 'Reenviar Código de Confirmación',
         reset_colors: 'Restablecer colores',
-        restart_puter_confirm: '¿Estás seguro que deseas reiniciar Mixt?',
+        restart_mixt_confirm: '¿Estás seguro que deseas reiniciar Mixt?',
         restore: 'Restaurar',
         save: 'Guardar',
         saturation: 'Saturación',
@@ -297,7 +297,7 @@ const es = {
         shortcut_to: 'Acceso directo a',
         show_all_windows: 'Mostrar todas las ventanas',
         show_hidden: 'Mostrar ocultos',
-        sign_in_with_puter: 'Inicia sesión con Mixt',
+        sign_in_with_mixt: 'Inicia sesión con Mixt',
         sign_up: 'Registrarse',
         signing_in: 'Registrándose…',
         size: 'Tamaño',
@@ -307,7 +307,7 @@ const es = {
         start: 'Inicio',
         status: 'Estado',
         storage_usage: 'Uso del almacenamiento',
-        storage_puter_used: 'Usado por Mixt',
+        storage_mixt_used: 'Usado por Mixt',
         taking_longer_than_usual:
       'Tardando un poco más de lo habitual. Por favor, espere...',
         task_manager: 'Administrador de tareas',
@@ -342,7 +342,7 @@ const es = {
         visibility: 'Visibilidad',
         yes: 'Si',
         yes_release_it: 'Sí, libéralo',
-        you_have_been_referred_to_puter_by_a_friend:
+        you_have_been_referred_to_mixt_by_a_friend:
       '¡Has sido invitado a Mixt por un amigo!',
         zip: 'Zip',
         zipping_file: 'Compriminendo %strong%',
@@ -524,7 +524,7 @@ const es = {
         'window_title_public': 'Público', // In English: "Public"
         'window_title_videos': 'Videos', // In English: "Videos"
         'window_title_pictures': 'Imágenes', // In English: "Pictures"
-        'window_title_puter': 'Mixt', // In English: "Mixt"
+        'window_title_mixt': 'Mixt', // In English: "Mixt"
         'window_folder_empty': 'Esta carpeta está vacía', // In English: "This folder is empty"
         'manage_your_subdomains': 'Administra tus sub dominios', // In English: "Manage Your Subdomains"
         'open_containing_folder': 'Abrir carpeta que lo contiene', // In English: "Open Containing Folder"

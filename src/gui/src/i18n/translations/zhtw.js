@@ -151,7 +151,7 @@ const zhtw = {
         forgot_pass_c2a: '忘記密碼？',
         from: '來自',
         general: '一般',
-        get_a_copy_of_on_puter: '在 Mixt.com 上獲取 \'%%\' 的副本！',
+        get_a_copy_of_on_mixt: '在 Mixt.com 上獲取 \'%%\' 的副本！',
         get_copy_link: '獲取副本連結',
         hide_all_windows: '隱藏所有視窗',
         home: '首頁',
@@ -217,7 +217,7 @@ const zhtw = {
         picture: '圖片',
         pictures: '圖片',
         plural_suffix: '個',
-        powered_by_puter_js: '由 {{link=docs}}Puter.js{{/link}} 提供支援',
+        powered_by_mixt_js: '由 {{link=docs}}Mixt.js{{/link}} 提供支援',
         preparing: '準備中...',
         preparing_for_upload: '準備上傳...',
         print: '列印',
@@ -233,7 +233,7 @@ const zhtw = {
         public: '公開',
         publish: '發布',
         publish_as_website: '發布為網站',
-        puter_description: 'Mixt 是一個以隱私為先的個人雲端，可將您所有的檔案、應用程式和遊戲保存在一個安全的地方，隨時隨地都能存取。',
+        mixt_description: 'Mixt 是一個以隱私為先的個人雲端，可將您所有的檔案、應用程式和遊戲保存在一個安全的地方，隨時隨地都能存取。',
         reading_file: '正在讀取 %strong%',
         recent: '最近',
         recommended: '推薦',
@@ -249,7 +249,7 @@ const zhtw = {
         replace_all: '全部取代',
         resend_confirmation_code: '重新發送確認碼',
         reset_colors: '重設顏色',
-        restart_puter_confirm: '您確定要重新啟動 Mixt 嗎？',
+        restart_mixt_confirm: '您確定要重新啟動 Mixt 嗎？',
         restore: '還原',
         save: '儲存',
         saturation: '飽和度',
@@ -279,7 +279,7 @@ const zhtw = {
         shortcut_to: '捷徑到',
         show_all_windows: '顯示所有視窗',
         show_hidden: '顯示隱藏項目',
-        sign_in_with_puter: '使用 Mixt 登入',
+        sign_in_with_mixt: '使用 Mixt 登入',
         sign_up: '註冊',
         signing_in: '正在登入…',
         size: '大小',
@@ -289,7 +289,7 @@ const zhtw = {
         start: '開始',
         status: '狀態',
         storage_usage: '儲存空間使用量',
-        storage_puter_used: '由 Mixt 使用',
+        storage_mixt_used: '由 Mixt 使用',
         taking_longer_than_usual: '正在花費比平常更長的時間。請稍候...',
         task_manager: '工作管理員',
         taskmgr_header_name: '名稱',
@@ -322,7 +322,7 @@ const zhtw = {
         visibility: '可見性',
         yes: '是',
         yes_release_it: '是的，釋放它',
-        you_have_been_referred_to_puter_by_a_friend: '您已被朋友推薦到 Mixt！',
+        you_have_been_referred_to_mixt_by_a_friend: '您已被朋友推薦到 Mixt！',
         zip: '壓縮',
         zipping_file: '正在壓縮 %strong%',
 
@@ -486,7 +486,7 @@ const zhtw = {
         'window_title_public': "公開", // In English: "Public"
         'window_title_videos': "影片", // In English: "Videos"
         'window_title_pictures': "圖片", // In English: "Pictures"
-        'window_title_puter': "Mixt", // In English: "Mixt"
+        'window_title_mixt': "Mixt", // In English: "Mixt"
         'window_folder_empty': "此資料夾是空的", // In English: "This folder is empty"
         'manage_your_subdomains': "管理您的子網域", // In English: "Manage Your Subdomains"
         'open_containing_folder': "開啟所在的資料夾", // In English: "Open containing folder"

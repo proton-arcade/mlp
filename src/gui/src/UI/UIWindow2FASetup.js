@@ -619,7 +619,7 @@ const UIWindow2FASetup = async function UIWindow2FASetup () {
         const res = await fetch(`${window.api_origin}/auth/configure-2fa/${endpoint}`, {
             method: 'POST',
             headers: {
-                Authorization: `Bearer ${puter.authToken}`,
+                Authorization: `Bearer ${mixt.authToken}`,
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(body),

@@ -24,7 +24,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import type { Actor } from '../../core/actor.js';
 import { runWithContext } from '../../core/context.js';
-import { PuterServer } from '../../server.js';
+import { MixtServer } from '../../server.js';
 import { setupTestServer } from '../../testUtil.js';
 import { generateDefaultFsentries } from '../../util/userProvisioning.js';
 import type { FSController } from './FSController.js';
@@ -42,7 +42,7 @@ import type { AbortWriteRequest, SignMultipartPartsRequest } from './types.js';
 // Driven against a real in-memory server so the S3 object store, the pending
 // session rows and the storage-allowance checks are all live.
 
-let server: PuterServer;
+let server: MixtServer;
 let controller: FSController;
 
 beforeAll(async () => {
@@ -144,7 +144,7 @@ type MultipartPart =
     | { kind: 'field'; name: string; value: string }
     | { kind: 'file'; name: string; filename: string; content: string };
 
-const BOUNDARY = 'puter-test-boundary';
+const BOUNDARY = 'mixt-test-boundary';
 
 const buildMultipartBody = (parts: MultipartPart[]): Buffer => {
     const chunks: string[] = [];
@@ -717,7 +717,7 @@ describe('batch write handlers at the item cap', () => {
 });
 
 describe('FSController.write storage allowance', () => {
-    let limitedServer: PuterServer;
+    let limitedServer: MixtServer;
     let limitedController: FSController;
 
     beforeAll(async () => {
@@ -1526,7 +1526,7 @@ describe('FSController.batchWrites (json)', () => {
         ).toBeNull();
     });
 
-    it('accepts the `text/plain;actually=json` content type puter.js sends', async () => {
+    it('accepts the `text/plain;actually=json` content type mixt.js sends', async () => {
         const { actor, username } = await makeUser();
         const { res, captured } = makeRes();
         await withActor(actor, () =>

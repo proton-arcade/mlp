@@ -1,6 +1,6 @@
 ---
-title: puter.apps.get()
-description: Retrieve details of your Puter app.
+title: mixt.apps.get()
+description: Retrieve details of your Mixt OS app.
 platforms: [websites, apps, nodejs, workers]
 ---
 
@@ -9,8 +9,8 @@ Returns an app with the given name. If the app does not exist, the promise will 
 ## Syntax
 
 ```js
-puter.apps.get(name)
-puter.apps.get(name, options)
+mixt.apps.get(name)
+mixt.apps.get(name, options)
 ```
 
 ## Parameters
@@ -38,22 +38,22 @@ A `Promise` that will resolve to the [`App`](/Objects/app/) object with the give
 ```html;app-get
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
             // (1) Generate a random app name to make sure it doesn't already exist
-            let appName = puter.randName();
+            let appName = mixt.randName();
 
             // (2) Create the app
-            await puter.apps.create(appName, "https://example.com");
-            puter.print(`"${appName}" created<br>`);
+            await mixt.apps.create(appName, "https://example.com");
+            mixt.print(`"${appName}" created<br>`);
 
             // (3) Retrieve the app using get()
-            let app = await puter.apps.get(appName);
-            puter.print(`"${appName}" retrieved using get(): id: ${app.uid}<br>`);
+            let app = await mixt.apps.get(appName);
+            mixt.print(`"${appName}" retrieved using get(): id: ${app.uid}<br>`);
 
             // (4) Delete the app (cleanup)
-            await puter.apps.delete(appName);
+            await mixt.apps.delete(appName);
         })();
     </script>
 </body>

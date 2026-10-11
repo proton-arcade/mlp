@@ -19,10 +19,10 @@
 
 -- Both steps sit behind the index check: mysql re-runs this file on every boot, and
 -- guarding them together stops a rolling deploy deleting and indexing concurrently.
-DROP PROCEDURE IF EXISTS _puter_add_membership_pair_index;
+DROP PROCEDURE IF EXISTS _mixt_add_membership_pair_index;
 
 DELIMITER //
-CREATE PROCEDURE _puter_add_membership_pair_index()
+CREATE PROCEDURE _mixt_add_membership_pair_index()
 BEGIN
   IF NOT EXISTS (
     SELECT 1 FROM INFORMATION_SCHEMA.STATISTICS
@@ -43,5 +43,5 @@ BEGIN
 END//
 DELIMITER ;
 
-CALL _puter_add_membership_pair_index();
-DROP PROCEDURE IF EXISTS _puter_add_membership_pair_index;
+CALL _mixt_add_membership_pair_index();
+DROP PROCEDURE IF EXISTS _mixt_add_membership_pair_index;

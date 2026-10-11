@@ -65,8 +65,8 @@ export async function checkSignupBonus(
     events: EventClient | undefined,
     code: string,
     { ip, fingerprint }: { ip: string | null; fingerprint: string | null },
-): Promise<EventMap['puter.signup-bonus.check']> {
-    const event: EventMap['puter.signup-bonus.check'] = {
+): Promise<EventMap['mixt.signup-bonus.check']> {
+    const event: EventMap['mixt.signup-bonus.check'] = {
         code,
         ip,
         fingerprint,
@@ -76,7 +76,7 @@ export async function checkSignupBonus(
         requirements: null,
     };
     try {
-        await events?.emitAndWait('puter.signup-bonus.check', event, {});
+        await events?.emitAndWait('mixt.signup-bonus.check', event, {});
     } catch (e) {
         console.warn('[signup] bonus check hook failed:', e);
     }
@@ -84,7 +84,7 @@ export async function checkSignupBonus(
 }
 
 export type SignupBonusContext = Omit<
-    EventMap['puter.signup-bonus.validate'],
+    EventMap['mixt.signup-bonus.validate'],
     'code' | 'accepted'
 >;
 
@@ -98,7 +98,7 @@ export type SignupBonusVerdict =
 
 /**
  * Offer a canonical bonus code to listeners for a signup that already passed
- * `puter.signup.validate`. With no listener installed nothing accepts, so a
+ * `mixt.signup.validate`. With no listener installed nothing accepts, so a
  * code is refused rather than silently ignored.
  */
 export async function validateSignupBonus(
@@ -106,13 +106,13 @@ export async function validateSignupBonus(
     code: string,
     context: SignupBonusContext,
 ): Promise<SignupBonusVerdict> {
-    const event: EventMap['puter.signup-bonus.validate'] = {
+    const event: EventMap['mixt.signup-bonus.validate'] = {
         ...context,
         code,
         accepted: false,
     };
     try {
-        await events?.emitAndWait('puter.signup-bonus.validate', event, {});
+        await events?.emitAndWait('mixt.signup-bonus.validate', event, {});
     } catch (e) {
         console.warn('[signup] bonus validate hook failed:', e);
     }

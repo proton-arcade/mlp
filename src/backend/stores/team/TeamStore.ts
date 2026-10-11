@@ -24,7 +24,7 @@ import {
     sealCursor,
     type PageResult,
 } from '../../util/pagination.js';
-import { PuterStore } from '../types';
+import { MixtStore } from '../types';
 
 /** A team: a `group` row with `kind = 'team'`. */
 export interface TeamRow {
@@ -131,9 +131,9 @@ const RESERVED_HANDLES = new Set([
     'owner',
     'payment',
     'payments',
-    'puter',
-    'puter-support',
-    'puterteam',
+    'mixt',
+    'mixt-support',
+    'mixtteam',
     'root',
     'security',
     'settings',
@@ -172,7 +172,7 @@ export const checkHandle = (handle: string): HandleRejection | null => {
     return null;
 };
 
-export class TeamStore extends PuterStore {
+export class TeamStore extends MixtStore {
     /** Postgres indexes lower(handle); the others are already insensitive. */
     #handleMatch(): string {
         return this.clients.db.case({

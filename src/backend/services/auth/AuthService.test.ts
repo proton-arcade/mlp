@@ -29,7 +29,7 @@ vi.mock('../../util/serverWhitelist.js', async (importOriginal) => ({
     isServerUserAllowed: async () => true,
 }));
 import { makeActor, type Actor } from '../../core/actor.js';
-import { PuterServer } from '../../server.js';
+import { MixtServer } from '../../server.js';
 import { setupTestServer } from '../../testUtil.js';
 import { generateDefaultFsentries } from '../../util/userProvisioning.js';
 import { FULL_API_ACCESS } from '../permission/consts.js';
@@ -104,7 +104,7 @@ describe('AuthService.createAccessToken', () => {
 // ── Real-server integration tests ───────────────────────────────────
 
 describe('AuthService (integration)', () => {
-    let server: PuterServer;
+    let server: MixtServer;
     let authService: AuthService;
 
     beforeAll(async () => {
@@ -1473,7 +1473,7 @@ describe('AuthService (integration)', () => {
                 }) as unknown as Actor;
 
             // The credential AuthMe hands the MCP connector and the CLI. Its
-            // reach is the user's own, and `puter.workers.create` binds every
+            // reach is the user's own, and `mixt.workers.create` binds every
             // deploy to a `sandbox-<name>` app it creates under that user.
             it('mints a token for a full-access token actor on its own app', async () => {
                 const user = await makeUser();
@@ -2032,7 +2032,7 @@ describe('AuthService (integration)', () => {
 
     describe('subdomainOwnerIdFromOrigin', () => {
         // Test servers inherit the four hosting domains (production:
-        // puter.site / puter.host / puter.app / puter.dev) from
+        // mixt.site / mixt.host / mixt.app / mixt.dev) from
         // config.default.json.
         it.each([
             'site.localhost',
@@ -2492,7 +2492,7 @@ describe('AuthService (integration)', () => {
         // inside its own AppData. Without the `app-owns-appdata`
         // implicator the issuer-subset gate 403s these — even though
         // ACLService already allows the equivalent fs.read via its own
-        // short-circuit. puter-js getReadURL is the canonical caller.
+        // short-circuit. mixt-js getReadURL is the canonical caller.
         it('app-under-user actor can mint fs:<uuid>:read for a file inside its own AppData', async () => {
             const user = await makeUser();
             await generateDefaultFsentries(
@@ -2697,7 +2697,7 @@ describe('AuthService (integration)', () => {
     describe('private-asset / public hosted-actor tokens', () => {
         it('private-asset cookie name and options shape', () => {
             expect(authService.getPrivateAssetCookieName()).toBe(
-                'puter.private.asset.token',
+                'mixt.private.asset.token',
             );
             const opts = authService.getPrivateAssetCookieOptions({
                 requestHostname: 'example.test',
@@ -2710,7 +2710,7 @@ describe('AuthService (integration)', () => {
 
         it('public hosted-actor cookie name', () => {
             expect(authService.getPublicHostedActorCookieName()).toBe(
-                'puter.public.hosted.actor.token',
+                'mixt.public.hosted.actor.token',
             );
         });
 
@@ -2804,10 +2804,10 @@ describe('AuthService (integration)', () => {
 
         it('v2 cookie names', () => {
             expect(authService.getPrivateAssetCookieNameV2()).toBe(
-                'puter_private_asset_token_v2',
+                'mixt_private_asset_token_v2',
             );
             expect(authService.getPublicHostedActorCookieNameV2()).toBe(
-                'puter_public_hosted_actor_token_v2',
+                'mixt_public_hosted_actor_token_v2',
             );
         });
 
@@ -3175,7 +3175,7 @@ describe('AuthService (integration)', () => {
 // -- Origin alias groups ----------------------------------------------
 
 describe('AuthService.appUidFromOrigin — aliased hosts', () => {
-    let server: PuterServer;
+    let server: MixtServer;
     let authService: AuthService;
 
     beforeAll(async () => {
@@ -3254,7 +3254,7 @@ describe('AuthService.appUidFromOrigin — aliased hosts', () => {
 });
 
 describe('AuthService.subdomainOwnerIdFromOrigin — edge cases', () => {
-    let server: PuterServer;
+    let server: MixtServer;
     let authService: AuthService;
 
     beforeAll(async () => {

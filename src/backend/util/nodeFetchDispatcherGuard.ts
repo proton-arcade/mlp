@@ -52,7 +52,7 @@ void fetch('data:text/plain,dispatcher-guard').catch(() => {
 const OUTBOUND_FETCH_TIMEOUT_MS = 10 * 60 * 1000;
 // Symbol.for so a re-imported copy of this module (fresh module registry,
 // same process) recognizes an already-wrapped dispatcher and doesn't re-wrap.
-const TIMEOUTS_APPLIED = Symbol.for('puter.outboundFetchTimeouts');
+const TIMEOUTS_APPLIED = Symbol.for('mixt.outboundFetchTimeouts');
 
 type DispatchFn = (opts: Record<string, unknown>, handler: unknown) => boolean;
 interface ComposableDispatcher {

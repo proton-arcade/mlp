@@ -60,7 +60,7 @@ export const urlFileLaunchOptions = (value) => {
 export const confirmUrlFileAccess = async (
     { path, uid, appUid, appName },
     {
-        stat = (target) => puter.fs.stat({ ...target, consistency: 'eventual' }),
+        stat = (target) => mixt.fs.stat({ ...target, consistency: 'eventual' }),
         permissionDialog = UIPermissionDialog,
         appHoldsPermissions = defaultAppHoldsPermissions,
     } = {},

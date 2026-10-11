@@ -1,6 +1,6 @@
 // Recursively list regular files in a local directory.
 // Returns { full, rel } where `rel` is a POSIX path relative to the root,
-// suitable for building remote Puter paths.
+// suitable for building remote Mixt paths.
 
 import fs from 'node:fs';
 import path from 'node:path';

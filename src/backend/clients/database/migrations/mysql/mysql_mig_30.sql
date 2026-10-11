@@ -22,9 +22,9 @@
 -- Idempotent: the guarded procedure, as mig_27. There is no per-file
 -- applied-state tracking, so a replay has to be a no-op.
 
-DROP PROCEDURE IF EXISTS _puter_widen_event_subscriptions_anchor_uid;
+DROP PROCEDURE IF EXISTS _mixt_widen_event_subscriptions_anchor_uid;
 DELIMITER //
-CREATE PROCEDURE _puter_widen_event_subscriptions_anchor_uid()
+CREATE PROCEDURE _mixt_widen_event_subscriptions_anchor_uid()
 BEGIN
   IF EXISTS (
     SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS
@@ -39,5 +39,5 @@ BEGIN
 END //
 DELIMITER ;
 
-CALL _puter_widen_event_subscriptions_anchor_uid();
-DROP PROCEDURE IF EXISTS _puter_widen_event_subscriptions_anchor_uid;
+CALL _mixt_widen_event_subscriptions_anchor_uid();
+DROP PROCEDURE IF EXISTS _mixt_widen_event_subscriptions_anchor_uid;

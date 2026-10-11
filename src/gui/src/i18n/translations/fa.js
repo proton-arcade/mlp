@@ -150,7 +150,7 @@ const fa = {
         forgot_pass_c2a: 'رمز عبور را فراموش کرده اید؟',
         from: 'از',
         general: 'عمومی',
-        get_a_copy_of_on_puter: 'یک نسخه از \'%%\' را در Mixt.com بگیرید!',
+        get_a_copy_of_on_mixt: 'یک نسخه از \'%%\' را در Mixt.com بگیرید!',
         get_copy_link: 'گرفتن لینک کپی',
         hide_all_windows: 'پنهان کردن همه پنجره ها',
         home: 'خانه',
@@ -221,7 +221,7 @@ const fa = {
         picture: 'تصویر',
         pictures: 'تصاویر',
         plural_suffix: 'ها',
-        powered_by_puter_js: 'پشتیبانی شده توسط {{link=docs}}Puter.js{{/link}}',
+        powered_by_mixt_js: 'پشتیبانی شده توسط {{link=docs}}Mixt.js{{/link}}',
         preparing: 'در حال آماده سازی...',
         preparing_for_upload: 'آماده سازی برای بارگذاری...',
         print: 'چاپ',
@@ -237,7 +237,7 @@ const fa = {
         public: 'عمومی',
         publish: 'انتشار',
         publish_as_website: 'انتشار به عنوان وبسایت',
-        puter_description:
+        mixt_description:
       'پیوتر یک کلاود با اولویت حفظ حریم خصوصی است که همه فایل‌ها، برنامه‌ها و بازی‌های شما را در یک فضای امن نگه می‌دارد که از هر جا و هر زمان قابل دسترسی است',
         reading: '%strong%درحال خواندن',
         writing: '%strong%درحال نوشتن',
@@ -256,7 +256,7 @@ const fa = {
         replace_all: 'جایگزینی همه',
         resend_confirmation_code: 'ارسال مجدد کد تأیید',
         reset_colors: 'بازنشانی رنگ ها',
-        restart_puter_confirm:
+        restart_mixt_confirm:
       'آیا مطمئن هستید که می‌خواهید پیوتر را مجددا راه اندازی کنید',
         restore: 'بازیابی',
         save: 'ذخیره',
@@ -289,7 +289,7 @@ const fa = {
         shortcut_to: 'میانبر به',
         show_all_windows: 'نمایش همه پنجره ها',
         show_hidden: 'نمایش مخفی',
-        sign_in_with_puter: 'ورود با Mixt',
+        sign_in_with_mixt: 'ورود با Mixt',
         sign_up: 'ثبت نام',
         signing_in: 'ورود…',
         size: 'اندازه',
@@ -299,7 +299,7 @@ const fa = {
         start: 'شروع',
         status: 'وضعیت',
         storage_usage: 'میزان استفاده شده از فضای ذخیره سازی',
-        storage_puter_used: 'استفاده شده توسط Mixt',
+        storage_mixt_used: 'استفاده شده توسط Mixt',
         taking_longer_than_usual: 'کمی بیشتر از معمول طول می کشد. لطفا صبر کنید...',
         task_manager: 'مدیر وظایف',
         taskmgr_header_name: 'نام',
@@ -334,7 +334,7 @@ const fa = {
         visibility: 'قابلیت دیده شدن',
         yes: 'بله',
         yes_release_it: 'بله، آن را آزاد کن',
-        you_have_been_referred_to_puter_by_a_friend:
+        you_have_been_referred_to_mixt_by_a_friend:
       'شما توسط یک دوست به Mixt معرفی شده اید!',
         zip: 'فشرده سازی',
         sequencing: '%strong%ترتیب بندی',
@@ -495,7 +495,7 @@ const fa = {
         'window_title_public': 'عمومی',
         'window_title_videos': 'ویدئوها',
         'window_title_pictures': 'تصاویر',
-        'window_title_puter': 'Mixt',
+        'window_title_mixt': 'Mixt',
         'window_folder_empty': 'این پوشه خالی است',
         'manage_your_subdomains': 'زیر دامنه‌های خود را مدیریت کنید',
         'open_containing_folder': 'باز کردن پوشه شامل',

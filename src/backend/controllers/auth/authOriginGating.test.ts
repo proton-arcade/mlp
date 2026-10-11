@@ -84,7 +84,7 @@ describe('guiOriginOnly wiring on AuthController', () => {
         },
     );
 
-    // The popup relay is the third-party sign-in path: `puter.auth.signIn()`
+    // The popup relay is the third-party sign-in path: `mixt.auth.signIn()`
     // polls `/login/wait` from whatever origin the app is served from, and
     // `/login/set` is posted by the popup. Gating either to our own origin
     // would break every third-party app, and neither needs it — the token

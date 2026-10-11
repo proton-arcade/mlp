@@ -1548,7 +1548,7 @@ input.myapps-group-name:focus {
     cursor: default;
 }
 
-/* App feedback modal (puter.ui.showFeedbackDialog) — a from-scratch,
+/* App feedback modal (mixt.ui.showFeedbackDialog) — a from-scratch,
    theme-aware overlay in the spirit of the modals above, but used from more
    than the dashboard (the desktop app-IPC path and the standalone popup too).
    Self-contained color tokens (light default + dark override) so it themes

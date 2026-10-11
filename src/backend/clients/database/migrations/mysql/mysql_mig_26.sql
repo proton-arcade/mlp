@@ -23,17 +23,17 @@
 --
 -- `app_uid` is char(40) to match `apps`.`uid`, which is `app-` plus a uuid.
 --
--- Idempotent: columns go through `_puter_add_col` (mig_1), the index through
+-- Idempotent: columns go through `_mixt_add_col` (mig_1), the index through
 -- the guarded procedure. There is no per-file applied-state tracking, so every
 -- statement here tolerates a re-run.
 
-CALL _puter_add_col('notification', 'app_uid', '`app_uid` char(40) COLLATE utf8mb4_unicode_ci DEFAULT NULL');
-CALL _puter_add_col('notification', 'audience', '`audience` varchar(16) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT ''account''');
-CALL _puter_add_col('notification', 'type', '`type` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT ''''');
+CALL _mixt_add_col('notification', 'app_uid', '`app_uid` char(40) COLLATE utf8mb4_unicode_ci DEFAULT NULL');
+CALL _mixt_add_col('notification', 'audience', '`audience` varchar(16) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT ''account''');
+CALL _mixt_add_col('notification', 'type', '`type` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT ''''');
 
-DROP PROCEDURE IF EXISTS _puter_add_notification_scope_index;
+DROP PROCEDURE IF EXISTS _mixt_add_notification_scope_index;
 DELIMITER //
-CREATE PROCEDURE _puter_add_notification_scope_index()
+CREATE PROCEDURE _mixt_add_notification_scope_index()
 BEGIN
   -- Serves both the scoped list and the unacknowledged count.
   IF NOT EXISTS (
@@ -47,8 +47,8 @@ BEGIN
   END IF;
 END //
 DELIMITER ;
-CALL _puter_add_notification_scope_index();
-DROP PROCEDURE IF EXISTS _puter_add_notification_scope_index;
+CALL _mixt_add_notification_scope_index();
+DROP PROCEDURE IF EXISTS _mixt_add_notification_scope_index;
 
 -- Backfill from the markers the payload actually carried. `type = ''` is the
 -- not-yet-classified state, so re-running matches nothing the first pass

@@ -146,7 +146,7 @@ const ku = {
         forgot_pass_c2a: 'وشەی تێپەڕت لەبیرچووە؟',
         from: 'لە',
         general: 'گشتی',
-        get_a_copy_of_on_puter: 'کۆپیێک وەرگرتنەوەی \'%%\' لە پوتەر.com!',
+        get_a_copy_of_on_mixt: 'کۆپیێک وەرگرتنەوەی \'%%\' لە پوتەر.com!',
         get_copy_link: 'کۆپی بەستەر وەرگرتن',
         hide_all_windows: 'شاردنەوەی هەموو پەنجەکان',
         home: 'ماڵەوە',
@@ -219,7 +219,7 @@ const ku = {
         picture: 'وێنە',
         pictures: 'وێنەکان',
         plural_suffix: 'کان',
-        powered_by_puter_js: 'پێشکەشکراوە لە {{link=docs}}پوتەر.js{{/link}}',
+        powered_by_mixt_js: 'پێشکەشکراوە لە {{link=docs}}پوتەر.js{{/link}}',
         preparing: 'ئامادەکردن...',
         preparing_for_upload: 'ئامادەکردن بۆ بارکردن...',
         print: 'چاپکردن',
@@ -235,7 +235,7 @@ const ku = {
         public: 'گشتی',
         publish: 'بڵاوکردنەوە',
         publish_as_website: 'بڵاوکردنەوە وەک وێبسایت',
-        puter_description: 'پوتەر پێشکەشکراوە بۆ پاراستنی تایبەتیە کەسایەتی، جێگایەکی ئازاد بۆ گەیاندنی هەموو فایلەکان، ئەپەکان، و یارییەکان لە هەر شوێنێک بێ هەموو کاتێک.',
+        mixt_description: 'پوتەر پێشکەشکراوە بۆ پاراستنی تایبەتیە کەسایەتی، جێگایەکی ئازاد بۆ گەیاندنی هەموو فایلەکان، ئەپەکان، و یارییەکان لە هەر شوێنێک بێ هەموو کاتێک.',
         reading_file: 'خوێندنی %strong%',
         recent: 'نوێترین',
         recommended: 'پێشنیارکراوەکان',
@@ -252,7 +252,7 @@ const ku = {
         replace_all: 'لە نوێکردنەوەی هەموو',
         resend_confirmation_code: 'دووبارە ناردنی کۆدی پشتڕاستکردنەوە',
         reset_colors: 'ڕێکخستنی ڕەنگەکان',
-        restart_puter_confirm: 'دڵنیایت کە ئەتەوێت پوتەر دووبارە دەستپێبکەیت؟',
+        restart_mixt_confirm: 'دڵنیایت کە ئەتەوێت پوتەر دووبارە دەستپێبکەیت؟',
         restore: 'گەڕاندنەوە',
         save: 'پاشەکەوت',
         saturation: 'سەرەخۆشی',
@@ -284,7 +284,7 @@ const ku = {
         shortcut_to: 'شارتی بۆ',
         show_all_windows: 'پیشاندانی هەموو پەنجەکان',
         show_hidden: 'پیشاندانی شاردراوەکان',
-        sign_in_with_puter: 'چوونەژوورەوە بە پوتەر',
+        sign_in_with_mixt: 'چوونەژوورەوە بە پوتەر',
         sign_up: 'خۆتۆمارکردن',
         signing_in: 'چوونەژوورەوە...',
         size: 'قەبارە',
@@ -294,7 +294,7 @@ const ku = {
         start: 'دەستپێکردن',
         status: 'دۆخ',
         storage_usage: 'بەکاربردنی پارێزگا',
-        storage_puter_used: 'بەکاربردنی لەلایەن پوتەر',
+        storage_mixt_used: 'بەکاربردنی لەلایەن پوتەر',
         taking_longer_than_usual: 'کەمێک زیاتر کەوتە، تکایە چاوەڕوانبە...',
         task_manager: 'بەڕێوەبەری کارەکان',
         taskmgr_header_name: 'ناو',
@@ -328,7 +328,7 @@ const ku = {
         visibility: 'پیشاندانی',
         yes: 'بەڵێ',
         yes_release_it: 'بەڵێ، بڵاوکردنەوە',
-        you_have_been_referred_to_puter_by_a_friend:
+        you_have_been_referred_to_mixt_by_a_friend:
       'هاوڕێکت پەیوەندیداری پوتەر کردووە!',
         zip: 'زیپ',
         zipping_file: 'زیپ کردنەوەی %strong%',
@@ -497,7 +497,7 @@ const ku = {
         'window_title_public': 'گشتی', // In English: "Public"
         'window_title_videos': 'ڤیدیۆ', // In English: "Videos"
         'window_title_pictures': 'وێنە', // In English: "Pictures"
-        'window_title_puter': 'پوتێر', // In English: "Mixt"
+        'window_title_mixt': 'پوتێر', // In English: "Mixt"
         'window_folder_empty': 'ئەم بوخچەیە بەتاڵە', // In English: "This folder is empty"
         'manage_your_subdomains': 'بەڕێوەبردنی ژێر دۆمەینەکانت', // In English: "Manage Your Subdomains"
         'open_containing_folder': 'کردنەوەی بوخچەیەکەی کە پەڕگەکە تێدایە', // In English: "Open Containing Folder"

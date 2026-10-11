@@ -19,14 +19,14 @@
 
 const default_implicit_user_app_permissions = {
     'driver:helloworld:greet': {},
-    'driver:puter-kvstore': {},
-    'driver:puter-ocr:recognize': {},
-    'driver:puter-chat-completion': {},
-    'driver:puter-image-generation': {},
-    'driver:puter-video-generation': {},
-    'driver:puter-tts': {},
-    'driver:puter-apps': {},
-    'driver:puter-subdomains': {},
+    'driver:mixt-kvstore': {},
+    'driver:mixt-ocr:recognize': {},
+    'driver:mixt-chat-completion': {},
+    'driver:mixt-image-generation': {},
+    'driver:mixt-video-generation': {},
+    'driver:mixt-tts': {},
+    'driver:mixt-apps': {},
+    'driver:mixt-subdomains': {},
     'driver:temp-email': {},
     service: {},
     feature: {},
@@ -43,24 +43,24 @@ const implicit_user_app_permissions = [
             'app-7bdca1a4-6373-4c98-ad97-03ff2d608ca1', // recorder
             'app-240a43f4-43b1-49bc-b9fc-c8ae719dab77', // dev-center
             'app-a2ae72a4-1ba3-4a29-b5c0-6de1be5cf178', // app-center
-            'app-74378e84-b9cd-5910-bcb1-3c50fa96d6e7', // https://nj.puter.site
+            'app-74378e84-b9cd-5910-bcb1-3c50fa96d6e7', // https://nj.mixt.site
             'app-13a38aeb-f9f6-54f0-9bd3-9d4dd655ccfe', // https://cdpn.io
             'app-dce8f797-82b0-5d95-a2f8-ebe4d71b9c54', // https://null.jsbin.com
-            'app-93005ce0-80d1-50d9-9b1e-9c453c375d56', // https://markus.puter.com
+            'app-93005ce0-80d1-50d9-9b1e-9c453c375d56', // https://markus.mixt.mpl
         ],
         permissions: {
             'driver:helloworld:greet': {},
-            'driver:puter-ocr:recognize': {},
-            'driver:puter-kvstore:get': {},
-            'driver:puter-kvstore:set': {},
-            'driver:puter-kvstore:del': {},
-            'driver:puter-kvstore:list': {},
-            'driver:puter-kvstore:flush': {},
-            'driver:puter-chat-completion:complete': {},
-            'driver:puter-image-generation:generate': {},
-            'driver:puter-video-generation:generate': {},
-            'driver:puter-analytics:create_trace': {},
-            'driver:puter-analytics:record': {},
+            'driver:mixt-ocr:recognize': {},
+            'driver:mixt-kvstore:get': {},
+            'driver:mixt-kvstore:set': {},
+            'driver:mixt-kvstore:del': {},
+            'driver:mixt-kvstore:list': {},
+            'driver:mixt-kvstore:flush': {},
+            'driver:mixt-chat-completion:complete': {},
+            'driver:mixt-image-generation:generate': {},
+            'driver:mixt-video-generation:generate': {},
+            'driver:mixt-analytics:create_trace': {},
+            'driver:mixt-analytics:record': {},
         },
     },
     {
@@ -73,12 +73,12 @@ const implicit_user_app_permissions = [
         ],
         permissions: {
             'driver:helloworld:greet': {},
-            'driver:puter-ocr:recognize': {},
-            'driver:puter-kvstore:get': {},
-            'driver:puter-kvstore:set': {},
-            'driver:puter-kvstore:del': {},
-            'driver:puter-kvstore:list': {},
-            'driver:puter-kvstore:flush': {},
+            'driver:mixt-ocr:recognize': {},
+            'driver:mixt-kvstore:get': {},
+            'driver:mixt-kvstore:set': {},
+            'driver:mixt-kvstore:del': {},
+            'driver:mixt-kvstore:list': {},
+            'driver:mixt-kvstore:flush': {},
         },
     },
 ];
@@ -86,7 +86,7 @@ const implicit_user_app_permissions = [
 // Permissions every user actor holds, regardless of group membership.
 //
 // Roots only: a grant subsumes everything beneath it, so `service` already
-// answers `service:puter-kvstore:ii:puter-kvstore`. Listing descendants adds
+// answers `service:mixt-kvstore:ii:mixt-kvstore`. Listing descendants adds
 // entries no check can ever need.
 //
 // A floor, not a ceiling — anything that depends on *who* the user is belongs

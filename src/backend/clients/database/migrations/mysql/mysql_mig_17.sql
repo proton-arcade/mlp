@@ -17,7 +17,7 @@
 
 -- Admin-managed blocklist of app origins. Mirrors SQLite migration 0062.
 -- An app whose `index_url` host (or a request origin) matches an entry is
--- denied access to Puter resources: it cannot obtain an app token and
+-- denied access to Mixt resources: it cannot obtain an app token and
 -- already-issued app tokens are rejected on each request. `include_subdomains
 -- = 1` also blocks every subdomain of `domain`. Enforced in AuthService via
 -- AppOriginBlocklistService.

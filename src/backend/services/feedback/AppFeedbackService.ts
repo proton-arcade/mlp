@@ -18,7 +18,7 @@
  */
 
 import { HttpError } from '../../core/http/HttpError.js';
-import { PuterService } from '../types.js';
+import { MixtService } from '../types.js';
 
 /**
  * User-to-developer app feedback ("send feedback to this app's developer").
@@ -26,13 +26,13 @@ import { PuterService } from '../types.js';
  * Feedback is gated per app by the `apps.feedback_enabled` column — off unless
  * enabled. The Dev Center enables it when it creates an app (its "User
  * Feedback" settings toggle turns it off); apps created through
- * `puter.apps.create`/`update` default to off and opt in via `feedbackEnabled`
- * in puter.js. Submissions are stored in `app_feedback` and a copy is emailed
+ * `mixt.apps.create`/`update` default to off and opt in via `feedbackEnabled`
+ * in mixt.js. Submissions are stored in `app_feedback` and a copy is emailed
  * to the app owner's confirmed email, subject to the caps below.
  *
  * Trust model: the submit endpoint only accepts user actors (never app tokens),
  * so an app cannot submit feedback programmatically — every message passes
- * through the GUI dialog (desktop) or the puter.com popup (external sites),
+ * through the GUI dialog (desktop) or the mixt.mpl popup (external sites),
  * i.e. through a page the user actually typed into. App identity is likewise
  * never taken from the app: the desktop resolves it from its own process
  * registry, and the popup resolves it from the browser-attested opener origin
@@ -49,7 +49,7 @@ import { PuterService } from '../types.js';
  *    owner regardless of how many distinct users submit. Feedback past the cap
  *    is still stored, just not emailed.
  */
-export class AppFeedbackService extends PuterService {
+export class AppFeedbackService extends MixtService {
     /** Max feedback message length, in characters (after normalization). */
     static readonly MESSAGE_MAX_LENGTH = 4000;
     /** Max feedback rows one user may create for one app per day. */
@@ -332,7 +332,7 @@ export class AppFeedbackService extends PuterService {
                 'app-user-feedback',
                 {
                     owner_username: owner.username,
-                    sender_username: sender?.username ?? 'A Puter user',
+                    sender_username: sender?.username ?? 'A Mixt user',
                     sender_email: senderEmail,
                     // Collapse whitespace so a crafted title can't break the
                     // subject header or spoof extra lines in the body.

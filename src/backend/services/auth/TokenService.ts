@@ -18,7 +18,7 @@
  */
 
 import jwt, { type SignOptions } from 'jsonwebtoken';
-import { PuterService } from '../types';
+import { MixtService } from '../types';
 
 // Clock-skew tolerance for `iat` / `exp` checks. 30s matches the
 // design-doc allowance and absorbs ordinary NTP drift between nodes
@@ -198,7 +198,7 @@ const SHIPPED_PLACEHOLDER_SECRETS = new Set([
     'dev-url-signature-secret-change-me',
 ]);
 
-export class TokenService extends PuterService {
+export class TokenService extends MixtService {
     // Secrets are read straight from `this.config`, which is populated at
     // construction (before any onServerStart runs). They are deliberately NOT
     // copied into fields during onServerStart: the http socket starts

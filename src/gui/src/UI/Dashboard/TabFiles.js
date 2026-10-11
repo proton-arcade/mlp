@@ -48,7 +48,7 @@ import parse_item_metadata from '../../helpers/parseItemMetadata.js';
 const { html_encode, SelectionArea } = window;
 
 /**
- * TabFiles - File browser tab component for the Puter Dashboard.
+ * TabFiles - File browser tab component for the Mixt Dashboard.
  *
  * Provides a full-featured file management interface including:
  * - Directory navigation with breadcrumb path
@@ -288,10 +288,10 @@ const TabFiles = {
         // out together: awaited one by one they cost four round-trips before
         // the first listing could even start.
         const [savedView, savedSortColumn, savedSortDirection, savedWidths] = await Promise.all([
-            puter.kv.get('view_mode').catch(() => null),
-            puter.kv.get('sort_column').catch(() => null),
-            puter.kv.get('sort_direction').catch(() => null),
-            puter.kv.get('column_widths').catch(() => null),
+            mixt.kv.get('view_mode').catch(() => null),
+            mixt.kv.get('sort_column').catch(() => null),
+            mixt.kv.get('sort_direction').catch(() => null),
+            mixt.kv.get('column_widths').catch(() => null),
         ]);
         this.currentView = savedView || 'list';
 
@@ -1096,7 +1096,7 @@ const TabFiles = {
         }
 
         // Get read URL for the actual image
-        const imageUrl = await puter.fs.getReadURL(filePath);
+        const imageUrl = await mixt.fs.getReadURL(filePath);
 
         // Remove any existing preview
         $('.image-preview-popover').remove();
@@ -1320,7 +1320,7 @@ const TabFiles = {
             let upload_progress_window;
             let opid;
 
-            puter.fs.upload(files, _this.currentPath, {
+            mixt.fs.upload(files, _this.currentPath, {
                 generateThumbnails: true,
                 thumbnailGenerator: createUploadThumbnailGenerator(),
                 init: async (operation_id, xhr) => {
@@ -1698,7 +1698,7 @@ const TabFiles = {
 
             $(document).on('mouseup.colresize', function () {
                 $(document).off('mousemove.colresize mouseup.colresize');
-                puter.kv.set('column_widths', JSON.stringify(_this.columnWidths))
+                mixt.kv.set('column_widths', JSON.stringify(_this.columnWidths))
                     .catch(err => console.warn('Could not save column_widths:', err));
             });
         });
@@ -1743,7 +1743,7 @@ const TabFiles = {
             // Apply the new width
             _this.columnWidths[column] = Math.ceil(maxWidth);
             _this.applyColumnWidths();
-            puter.kv.set('column_widths', JSON.stringify(_this.columnWidths))
+            mixt.kv.set('column_widths', JSON.stringify(_this.columnWidths))
                 .catch(err => console.warn('Could not save column_widths:', err));
         });
     },
@@ -2133,7 +2133,7 @@ const TabFiles = {
                 // Ask for the plain name and let the server dedupe, exactly as
                 // before — `placeholderName` is only what we drew in the
                 // meantime, never what we request.
-                const result = await puter.fs.mkdir({
+                const result = await mixt.fs.mkdir({
                     path: `${targetPath}/New Folder`,
                     rename: true,
                     overwrite: false,
@@ -2211,9 +2211,9 @@ const TabFiles = {
 
         // Persisting is best-effort and must not hold up the re-sort: awaited,
         // the two writes added two round-trips before anything moved.
-        puter.kv.set('sort_column', this.sortColumn)
+        mixt.kv.set('sort_column', this.sortColumn)
             .catch(err => console.warn('Could not save sort_column:', err));
-        puter.kv.set('sort_direction', this.sortDirection)
+        mixt.kv.set('sort_direction', this.sortDirection)
             .catch(err => console.warn('Could not save sort_direction:', err));
     },
 
@@ -2292,7 +2292,7 @@ const TabFiles = {
         try {
             directoryContents = isSharedView
                 ? await this.listSharedView()
-                : await window.puter.fs.readdir(readdirArg);
+                : await window.mixt.fs.readdir(readdirArg);
         } catch ( err ) {
             // readdir rejects on any backend error (permission, deleted dir,
             // network). Without this, renderingDirectory would stay true and
@@ -2335,7 +2335,7 @@ const TabFiles = {
         } else {
             let path = null;
             // Not every session carries `directories` (the Shared view's
-            // puter:// target lands here too); a throw would leave the
+            // mixt:// target lands here too); a throw would leave the
             // spinner up and renderingDirectory stuck.
             Object.entries(window.user.directories || {}).forEach(o => {
                 if ( o[1] === target ) {
@@ -2620,7 +2620,7 @@ const TabFiles = {
         const displayName = metadata.original_name || file.name;
         let website_url = window.determine_website_url(file.path);
         // Normalize is_shortcut to 0/1. Directory listings return it as a number,
-        // but the puter.fs.upload() result used to render newly-created items omits
+        // but the mixt.fs.upload() result used to render newly-created items omits
         // it, and an undefined value trips the `!== 0` badge check below (showing a
         // phantom shortcut badge on every new file). Coerce to a plain 0/1 here.
         const is_shortcut = file.is_shortcut ? 1 : 0;
@@ -3476,11 +3476,11 @@ const TabFiles = {
      * Restores a trashed item to its original location.
      *
      * This is a simplified restore function for the dashboard that calls
-     * puter.fs.move() directly, avoiding the complexity of window.move_items()
+     * mixt.fs.move() directly, avoiding the complexity of window.move_items()
      * which is designed for the desktop window system.
      *
      * @param {HTMLElement} el_item - The row element representing the trashed item
-     * @returns {Promise<Object>} The result from puter.fs.move()
+     * @returns {Promise<Object>} The result from mixt.fs.move()
      */
     async restoreItem (el_item) {
         const uid = $(el_item).attr('data-uid');
@@ -3498,7 +3498,7 @@ const TabFiles = {
         const destPath = path.dirname(metadata.original_path);
         const originalName = metadata.original_name;
 
-        const resp = await puter.fs.move({
+        const resp = await mixt.fs.move({
             source: uid,
             destination: destPath,
             newName: originalName,
@@ -3512,7 +3512,7 @@ const TabFiles = {
     /**
      * Moves clipboard items to the specified destination path.
      *
-     * This is a Dashboard-specific implementation that calls puter.fs.move()
+     * This is a Dashboard-specific implementation that calls mixt.fs.move()
      * directly, bypassing window.move_clipboard_items() which relies on
      * .item DOM elements that don't exist in the Dashboard.
      *
@@ -3542,7 +3542,7 @@ const TabFiles = {
             do {
                 retry = false;
                 try {
-                    const resp = await puter.fs.move({
+                    const resp = await mixt.fs.move({
                         source: source,
                         destination: destPath,
                         overwrite: overwrite,
@@ -3742,7 +3742,7 @@ const TabFiles = {
         this.currentView = mode;
         this.applyViewMode();
 
-        puter.kv.set('view_mode', mode)
+        mixt.kv.set('view_mode', mode)
             .catch(err => console.warn('Could not save view_mode:', err));
 
         // Refresh content to update icons for the new view mode
@@ -4305,7 +4305,7 @@ const TabFiles = {
                         const origCreateFile = window.create_file;
                         window.create_file = (options) => {
                             const content = options.content ? [options.content] : [];
-                            uploadPromise = puter.fs.upload(new File(content, options.name), options.dirname);
+                            uploadPromise = mixt.fs.upload(new File(content, options.name), options.dirname);
                             return uploadPromise;
                         };
 
@@ -4475,7 +4475,7 @@ const TabFiles = {
                         // screen — the dashboard tracks paths, so look it up.
                         let uid;
                         try {
-                            uid = (await puter.fs.stat({ path: targetPath, consistency: 'eventual' }))?.uid;
+                            uid = (await mixt.fs.stat({ path: targetPath, consistency: 'eventual' }))?.uid;
                         } catch ( err ) {
                             // Badge refresh is best-effort; publish still works.
                         }
@@ -4785,7 +4785,7 @@ const TabFiles = {
             return;
         }
 
-        puter.fs.upload(items, destPath, {
+        mixt.fs.upload(items, destPath, {
             generateThumbnails: true,
             thumbnailGenerator: createUploadThumbnailGenerator(),
             init: async (operation_id, xhr) => {
@@ -4911,7 +4911,7 @@ const TabFiles = {
             return uid && ! listed.has(uid);
         });
         const found = await Promise.all(
-            missing.map((shared_path) => resolve_shared_item(window.puter.fs, shared_path)),
+            missing.map((shared_path) => resolve_shared_item(window.mixt.fs, shared_path)),
         );
         for ( const stat of found ) {
             if ( ! stat || listed.has(String(stat.uid).toLowerCase()) ) continue;
@@ -5017,7 +5017,7 @@ const TabFiles = {
                 }
             }
         }
-        // The root crumb ("Puter") is noise on every path beneath it, so it
+        // The root crumb ("Mixt") is noise on every path beneath it, so it
         // only renders at the root itself, where it's all there is to show.
         // Every crumb keeps its leading caret, including the first.
         let str = abs_path === '/'

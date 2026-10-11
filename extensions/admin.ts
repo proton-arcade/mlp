@@ -11,13 +11,13 @@
 import bcrypt from 'bcrypt';
 import type { Request, Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
-import { extension } from '@heyputer/backend/src/extensions';
-import { isStorableEmail } from '@heyputer/backend/src/util/email';
-import { generateDefaultFsentries } from '@heyputer/backend/src/util/userProvisioning';
+import { extension } from '@mixt/backend/src/extensions';
+import { isStorableEmail } from '@mixt/backend/src/util/email';
+import { generateDefaultFsentries } from '@mixt/backend/src/util/userProvisioning';
 import {
     generateTemporaryPassword,
     temporaryPasswordExpiry,
-} from '@heyputer/backend/src/util/temporaryPassword';
+} from '@mixt/backend/src/util/temporaryPassword';
 import {
     type WhitelistEntry,
     isLockdownAdmin,
@@ -25,7 +25,7 @@ import {
     whitelistUsernameProblem,
     withWhitelistLock,
     writeWhitelist,
-} from '@heyputer/backend/src/util/serverWhitelist';
+} from '@mixt/backend/src/util/serverWhitelist';
 
 const clients = extension.import('client');
 const stores = extension.import('store');
@@ -261,7 +261,7 @@ extension.get(
                 uuid: u.uuid ?? null,
                 username,
                 email: u.email ?? null,
-                puter_email: `${username}@puter.email`,
+                mixt_email: `${username}@mixt.email`,
                 email_confirmed: Boolean(u.email_confirmed),
                 requires_email_confirmation: Boolean(
                     u.requires_email_confirmation,

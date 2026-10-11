@@ -39,7 +39,7 @@ const create_gui_token = async () => {
     const resp = await fetch(`${window.gui_origin}/get-gui-token`, {
         method: 'GET',
         headers: {
-            Authorization: `Bearer ${puter.authToken || window.auth_token}`,
+            Authorization: `Bearer ${mixt.authToken || window.auth_token}`,
         },
     });
 

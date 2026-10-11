@@ -1,16 +1,16 @@
 <html>
 <body>
-    <script src="/puter.js/v2"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // (1) Create a random directory
-            let dirname = puter.randName();
-            await puter.fs.mkdir(dirname);
-            puter.print('Directory created successfully<br>');
+            let dirname = mixt.randName();
+            await mixt.fs.mkdir(dirname);
+            mixt.print('Directory created successfully<br>');
 
             // (2) Delete the directory
-            await puter.fs.delete(dirname);
-            puter.print('Directory deleted successfully');
+            await mixt.fs.delete(dirname);
+            mixt.print('Directory deleted successfully');
         })();
     </script>
 </body>

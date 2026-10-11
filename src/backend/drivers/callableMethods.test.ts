@@ -18,7 +18,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { puterDrivers } from './index.js';
+import { mixtDrivers } from './index.js';
 import { RESERVED_DRIVER_METHODS, resolveCallableMethods } from './meta.js';
 
 // Guard on the exact set of methods each driver exposes over `/drivers/call`.
@@ -29,12 +29,12 @@ import { RESERVED_DRIVER_METHODS, resolveCallableMethods } from './meta.js';
 // expected list here is updated. It is the "fail loud" backstop for the
 // otherwise fail-open structural gate.
 //
-// PuterDriver's constructor signature is (config, clients, stores, services);
+// MixtDriver's constructor signature is (config, clients, stores, services);
 // field initializers don't read them, so empty mocks are fine (same trick as
 // driverPolicies.test.ts).
 const fake = () => [{}, {}, {}, {}] as [any, any, any, any];
 
-// Expected callable surface, keyed by the registry key in `puterDrivers`.
+// Expected callable surface, keyed by the registry key in `mixtDrivers`.
 // Keep alphabetical within each list for easy diffing.
 const EXPECTED: Record<string, string[]> = {
     kvStore: [
@@ -64,7 +64,7 @@ const EXPECTED: Record<string, string[]> = {
 };
 
 describe('driver callable-method surface', () => {
-    for (const [key, DriverClass] of Object.entries(puterDrivers)) {
+    for (const [key, DriverClass] of Object.entries(mixtDrivers)) {
         const instance = new (DriverClass as new (
             ...a: [any, any, any, any]
         ) => object)(...fake());

@@ -29,8 +29,8 @@ import {
     openCursor,
     sealCursor,
 } from '../../util/pagination.js';
-import type { puterStores } from '../index.js';
-import { PuterStore } from '../types.js';
+import type { mixtStores } from '../index.js';
+import { MixtStore } from '../types.js';
 import {
     FSEntry,
     FSEntryCreateInput,
@@ -109,8 +109,8 @@ const DEFAULT_DB_CHUNK_CONCURRENCY = 4;
  * Redis caching keyed by uuid/path/id, and pending-upload-session state in the
  * system KV store. Constructed by the store registry; depends on `kv`.
  */
-export class FSEntryStore extends PuterStore {
-    declare protected stores: LayerInstances<typeof puterStores>;
+export class FSEntryStore extends MixtStore {
+    declare protected stores: LayerInstances<typeof mixtStores>;
 
     #insertIgnoreIntoFsentriesSql(): string {
         return this.clients.db.insertIgnoreInto('fsentries');
@@ -194,8 +194,8 @@ export class FSEntryStore extends PuterStore {
     }
 
     // Static hosting for user sites lives at `*.{static_hosting_domain}`
-    // (typically `puter.site`). Workers deploy as subdomain rows prefixed
-    // `workers.puter.<name>` and are exposed at `<name>.puter.work` — that
+    // (typically `mixt.site`). Workers deploy as subdomain rows prefixed
+    // `workers.mixt.<name>` and are exposed at `<name>.mixt.work` — that
     // mapping is hardcoded in `WorkerDriver`, mirrored here so the URL we
     // return matches the deployment domain.
     #buildFsEntrySubdomains(rows: Array<{ uuid: string; subdomain: string }>): {
@@ -203,9 +203,9 @@ export class FSEntryStore extends PuterStore {
         workers: FSEntrySubdomain[];
     } {
         const protocol = this.config.protocol ?? 'https';
-        const siteDomain = this.config.static_hosting_domain ?? 'puter.site';
-        const workerPrefix = 'workers.puter.';
-        const workerDomain = 'puter.work';
+        const siteDomain = this.config.static_hosting_domain ?? 'mixt.site';
+        const workerPrefix = 'workers.mixt.';
+        const workerDomain = 'mixt.work';
 
         const subdomains: FSEntrySubdomain[] = [];
         const workers: FSEntrySubdomain[] = [];

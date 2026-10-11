@@ -7,7 +7,7 @@
  *
  * Defaults:
  *   --input  /volatile/config/config.json
- *   --output <repo>/packages/puter/servers.json
+ *   --output <repo>/packages/mixt/servers.json
  *
  * Input file must contain a `{ servers: [...] }` doc (either on its own or
  * concatenated with the base; the base is ignored — only per-server kernel

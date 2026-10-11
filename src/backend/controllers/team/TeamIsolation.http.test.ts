@@ -26,10 +26,10 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { makeActor } from '../../core/actor.js';
 import type { IConfig } from '../../types';
-import { setupPuterTestEnv, type PuterTestEnv, whitelistTestUser } from '../../testUtil.js';
+import { setupMixtTestEnv, type MixtTestEnv, whitelistTestUser } from '../../testUtil.js';
 
 describe('a team cannot read its members data', () => {
-    let env: PuterTestEnv;
+    let env: MixtTestEnv;
     let teamUid: string;
     let memberUsername: string;
     let memberFile: string;
@@ -80,7 +80,7 @@ describe('a team cannot read its members data', () => {
 
     beforeAll(async () => {
         // The cap has its own suite; these tests need many teams.
-        env = await setupPuterTestEnv({
+        env = await setupMixtTestEnv({
             teams_enabled: true,
             max_teams_per_user: 100,
         } as IConfig);

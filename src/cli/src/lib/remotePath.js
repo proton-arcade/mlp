@@ -1,7 +1,7 @@
-// Operand parsing for `puter fs`.
+// Operand parsing for `mixt fs`.
 //
 // Which side of the wire a path is on is decided by the operand itself:
-// `puter:/...` is remote, `-` is stdin/stdout, anything else is local. Remote
+// `mixt:/...` is remote, `-` is stdin/stdout, anything else is local. Remote
 // paths are absolute from the account's home directory — there is no remote
 // working directory for a relative path to be relative to — and they are
 // clamped to their root, so `..` is refused rather than quietly rebased. With
@@ -10,15 +10,15 @@
 
 import { CLIError } from './errors.js';
 
-const PREFIX = 'puter:';
+const PREFIX = 'mixt:';
 
-// The account's home directory. The SDK expands `~` server-side; `/` on Puter
+// The account's home directory. The SDK expands `~` server-side; `/` on Mixt
 // is the system root (a listing of usernames), which is not what someone
-// typing `puter:/` means.
+// typing `mixt:/` means.
 export const HOME_ROOT = '~';
 
 // An app's storage directory, keyed by uid — the same `~/AppData/<uid>` that
-// puter.js resolves an app's relative paths against.
+// mixt.js resolves an app's relative paths against.
 export function appRoot(uid) {
   return `${HOME_ROOT}/AppData/${uid}`;
 }
@@ -83,7 +83,7 @@ export function assertRemoteOperand(operand) {
 }
 
 /**
- * Resolve a `puter:`-prefixed operand to an absolute remote path under `root`.
+ * Resolve a `mixt:`-prefixed operand to an absolute remote path under `root`.
  *
  * @param {string} operand
  * @param {string} [root]
@@ -173,6 +173,6 @@ export function assertMovable(source, destination) {
     );
   }
   throw new CLIError('mv cannot cross between local and remote.', {
-    hint: 'Copy it with `puter fs cp`, check the result, then remove the original.',
+    hint: 'Copy it with `mixt fs cp`, check the result, then remove the original.',
   });
 }

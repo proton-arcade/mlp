@@ -19,14 +19,14 @@
 
 import { describe, expect, it } from 'vitest';
 import { Controller, Get, Propfind } from './decorators.ts';
-import { PuterRouter } from './PuterRouter.ts';
+import { MixtRouter } from './MixtRouter.ts';
 
 interface Registrable {
-    registerRoutes: (router: PuterRouter) => void;
+    registerRoutes: (router: MixtRouter) => void;
 }
 
 const collect = (controller: Registrable) => {
-    const router = new PuterRouter();
+    const router = new MixtRouter();
     controller.registerRoutes(router);
     return router.routes;
 };

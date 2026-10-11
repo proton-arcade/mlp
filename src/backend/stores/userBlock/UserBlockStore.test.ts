@@ -19,16 +19,16 @@
 
 /**
  * Against a real database, so the table and its unique index are exercised on
- * whichever engine the run is configured for — `PUTER_TEST_DB_ENGINE=postgres`
+ * whichever engine the run is configured for — `MIXT_TEST_DB_ENGINE=postgres`
  * covers the second dialect's migration.
  */
 
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { PuterServer } from '../../server.js';
+import { MixtServer } from '../../server.js';
 import { createTestUser, setupTestServer } from '../../testUtil.js';
 
 describe('UserBlockStore', () => {
-    let server: PuterServer;
+    let server: MixtServer;
 
     beforeAll(async () => {
         server = await setupTestServer();

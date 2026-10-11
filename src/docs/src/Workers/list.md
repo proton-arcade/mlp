@@ -1,5 +1,5 @@
 ---
-title: puter.workers.list()
+title: mixt.workers.list()
 description: List all workers in your account.
 platforms: [websites, apps, nodejs, workers]
 ---
@@ -9,8 +9,8 @@ Lists all workers in your account with their details.
 ## Syntax
 
 ```js
-puter.workers.list()
-puter.workers.list(options)
+mixt.workers.list()
+mixt.workers.list(options)
 ```
 
 ## Parameters
@@ -40,7 +40,7 @@ Requests without pagination params keep returning the full list as a plain array
 With `stream: true`, the method returns an async iterator of page objects instead:
 
 ```js
-for await (const page of puter.workers.list({ stream: true })) {
+for await (const page of mixt.workers.list({ stream: true })) {
     for (const worker of page.items) {
         console.log(worker.name);
     }
@@ -54,14 +54,14 @@ for await (const page of puter.workers.list({ stream: true })) {
 ```html
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
             // List all workers
-            const workers = await puter.workers.list();
-            puter.print(`You have ${workers.length} worker(s):<br>`);
+            const workers = await mixt.workers.list();
+            mixt.print(`You have ${workers.length} worker(s):<br>`);
             workers.forEach(worker => {
-                puter.print(`- ${worker.name} (${worker.url})<br>`);
+                mixt.print(`- ${worker.name} (${worker.url})<br>`);
             });
         })();
     </script>

@@ -114,7 +114,7 @@ export const parseWeblinkData = async (content) => {
 };
 
 export const readWeblinkData = async (path) => {
-    const content = await puter.fs.read({ path: path });
+    const content = await mixt.fs.read({ path: path });
     return parseWeblinkData(content);
 };
 
@@ -166,7 +166,7 @@ const rasterizeToPngDataUrl = async (dataUrl) => await new Promise((resolve, rej
 });
 
 const readIconFromFsEntry = async (fsentry) => {
-    const file = await puter.fs.read(fsentry.path);
+    const file = await mixt.fs.read(fsentry.path);
     const head = await readHead(file);
 
     // Keep SVGs as vectors — they stay crisp at any size/DPI and render
@@ -191,7 +191,7 @@ const readIconFromFsEntry = async (fsentry) => {
     return icon;
 };
 
-// Opens Puter's built-in file picker and resolves with a validated icon data
+// Opens Mixt's built-in file picker and resolves with a validated icon data
 // URL, or null if the user dismisses the dialog. The picker is parented to the
 // item's own window (or a lightweight receiver on the Desktop) and always tears
 // down via on_close, so no promise or DOM node is ever leaked on cancel.
@@ -278,7 +278,7 @@ export const updateWeblinkIcon = async ({ path, icon }) => {
     data.modified = Date.now();
     data.version = WEBLINK_VERSION;
 
-    await puter.fs.write(path, JSON.stringify(data), { overwrite: true });
+    await mixt.fs.write(path, JSON.stringify(data), { overwrite: true });
     return data;
 };
 
@@ -309,7 +309,7 @@ export const getWeblinkIcon = async (fsentry) => {
     const path = fsentry.path;
 
     if ( !path ) {
-        // Avoid a doomed puter.fs.read({ path: undefined }) for listing entries
+        // Avoid a doomed mixt.fs.read({ path: undefined }) for listing entries
         // that don't carry a path.
         return defaultWeblinkIcon();
     }

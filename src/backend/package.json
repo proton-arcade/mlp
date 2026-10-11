@@ -1,8 +1,8 @@
 {
-  "name": "@heyputer/backend",
+  "name": "@mixt/backend",
   "type": "commonjs",
   "version": "2.5.1",
-  "description": "Backend/Kernel for Puter",
+  "description": "Backend/Kernel for Mixt",
   "main": "exports.ts",
   "scripts": {
     "bench": "vitest bench --config=vitest.bench.config.ts --run"

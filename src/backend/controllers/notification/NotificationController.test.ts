@@ -21,19 +21,19 @@ import type { Request, Response } from 'express';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { v4 as uuidv4 } from 'uuid';
 import type { Actor } from '../../core/actor.js';
-import { PuterServer } from '../../server.js';
+import { MixtServer } from '../../server.js';
 import { setupTestServer } from '../../testUtil.js';
 import type { NotificationController } from './NotificationController.js';
 
 // ── Test harness ────────────────────────────────────────────────────
 //
-// Boots one PuterServer with the live wired NotificationController.
+// Boots one MixtServer with the live wired NotificationController.
 // Tests seed real notification rows via the store, then drive the
 // controller's `markAck` handler with stub req/res objects. The
 // controller's path through NotificationService updates the underlying
 // row, so we verify behaviour by reading the store state back.
 
-let server: PuterServer;
+let server: MixtServer;
 let controller: NotificationController;
 
 beforeAll(async () => {

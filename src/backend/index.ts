@@ -20,13 +20,13 @@
 import './util/nodeCompat';
 import { isSpanContextValid, trace } from '@opentelemetry/api';
 import { setDefaultAutoSelectFamilyAttemptTimeout } from 'node:net';
-import { puterClients } from './clients';
+import { mixtClients } from './clients';
 import { loadConfig } from './config';
-import { puterControllers } from './controllers';
-import { puterDrivers } from './drivers';
-import { PuterServer } from './server';
-import { puterServices } from './services';
-import { puterStores } from './stores';
+import { mixtControllers } from './controllers';
+import { mixtDrivers } from './drivers';
+import { MixtServer } from './server';
+import { mixtServices } from './services';
+import { mixtStores } from './stores';
 import { createGracefulShutdown } from './util/gracefulShutdown.js';
 import { installJsonConsole } from './util/jsonConsole.js';
 
@@ -61,13 +61,13 @@ if (require.main === module) {
         });
     }
 
-    const server = new PuterServer(
+    const server = new MixtServer(
         config,
-        puterClients,
-        puterStores,
-        puterServices,
-        puterControllers,
-        puterDrivers,
+        mixtClients,
+        mixtStores,
+        mixtServices,
+        mixtControllers,
+        mixtDrivers,
     );
     server.start();
     // Owns process exit on signals; the telemetry preload installs none and is
@@ -83,5 +83,5 @@ if (require.main === module) {
     process.on('SIGINT', () => void shutDownProcess('SIGINT'));
     process.on('SIGTERM', () => void shutDownProcess('SIGTERM'));
     // Uncaught exceptions and unhandled rejections are reported by the guards
-    // `PuterServer.start()` installs — see util/processGuards.ts.
+    // `MixtServer.start()` installs — see util/processGuards.ts.
 }

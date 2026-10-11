@@ -1,5 +1,5 @@
 ---
-title: puter.fs.unshare()
+title: mixt.fs.unshare()
 description: Withdraw a user's access to a shared file or directory.
 platforms: [websites, apps, nodejs, workers]
 ---
@@ -19,8 +19,8 @@ This method withdraws a user's access to a file or directory.
 ## Syntax
 
 ```js
-puter.fs.unshare(path, recipient)
-puter.fs.unshare(options)
+mixt.fs.unshare(path, recipient)
+mixt.fs.unshare(options)
 ```
 
 ## Parameters
@@ -67,14 +67,14 @@ Passing an email address that was **invited** but has not yet joined cancels the
 ```html;fs-unshare
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
-            await puter.fs.write('report.txt', 'Quarterly numbers');
-            await puter.fs.share('report.txt', 'friend@example.com');
+            await mixt.fs.write('report.txt', 'Quarterly numbers');
+            await mixt.fs.share('report.txt', 'friend@example.com');
 
-            const result = await puter.fs.unshare('report.txt', 'friend@example.com');
-            puter.print(`Removed ${result.revoked} share(s)<br>`);
+            const result = await mixt.fs.unshare('report.txt', 'friend@example.com');
+            mixt.print(`Removed ${result.revoked} share(s)<br>`);
         })()
     </script>
 </body>
@@ -84,11 +84,11 @@ Passing an email address that was **invited** but has not yet joined cancels the
 <strong class="example-title">Leave a share someone gave you</strong>
 
 ```js
-const me = await puter.auth.getUser();
-await puter.fs.unshare('/alice/report.txt', me.username);
+const me = await mixt.auth.getUser();
+await mixt.fs.unshare('/alice/report.txt', me.username);
 ```
 
 ## Related
 
-- [`puter.fs.share()`](/FS/share/) - Grant access
-- [`puter.fs.getShares()`](/FS/getShares/) - See who can reach an item
+- [`mixt.fs.share()`](/FS/share/) - Grant access
+- [`mixt.fs.getShares()`](/FS/getShares/) - See who can reach an item

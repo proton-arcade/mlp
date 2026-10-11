@@ -128,7 +128,7 @@ const postToken = (instanceId, token, origin) => {
         }
     }
     try {
-        iframe.contentWindow.postMessage({ msg: 'puter.token', token }, targetOrigin);
+        iframe.contentWindow.postMessage({ msg: 'mixt.token', token }, targetOrigin);
     } catch {
         return false;
     }

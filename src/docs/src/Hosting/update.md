@@ -1,5 +1,5 @@
 ---
-title: puter.hosting.update()
+title: mixt.hosting.update()
 description: Update a subdomain to point to a new directory.
 platforms: [websites, apps, nodejs, workers]
 ---
@@ -9,7 +9,7 @@ Updates a subdomain to point to a new directory.
 ## Syntax
 
 ```js
-puter.hosting.update(subdomain, dirPath)
+mixt.hosting.update(subdomain, dirPath)
 ```
 
 ## Parameters
@@ -33,25 +33,25 @@ A `Promise` that will resolve to a [`Subdomain`](/Objects/subdomain/) object whe
 ```html;hosting-update
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
             // (1) Create a random website
-            let subdomain = puter.randName();
-            const site = await puter.hosting.create(subdomain, '.')
-            puter.print(`Website hosted at: ${site.subdomain}.puter.site<br>`);
+            let subdomain = mixt.randName();
+            const site = await mixt.hosting.create(subdomain, '.')
+            mixt.print(`Website hosted at: ${site.subdomain}.mixt.site<br>`);
 
             // (2) Create a random directory
-            let dirName = puter.randName();
-            let dir = await puter.fs.mkdir(dirName)
-            puter.print(`Created directory "${dir.path}"<br>`);
+            let dirName = mixt.randName();
+            let dir = await mixt.fs.mkdir(dirName)
+            mixt.print(`Created directory "${dir.path}"<br>`);
 
             // (3) Update the site with the new random directory
-            await puter.hosting.update(subdomain, dirName)
-            puter.print(`Changed subdomain's root directory to "${dir.path}"<br>`);
+            await mixt.hosting.update(subdomain, dirName)
+            mixt.print(`Changed subdomain's root directory to "${dir.path}"<br>`);
 
             // (4) Delete the app (cleanup)
-            await puter.hosting.delete(subdomain)
+            await mixt.hosting.delete(subdomain)
         })();
     </script>
 </body>

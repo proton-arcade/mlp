@@ -1,5 +1,5 @@
 // Moving bytes in bulk: bounded concurrency, retry with backoff, and the
-// batching that `puter.fs.upload()` wants.
+// batching that `mixt.fs.upload()` wants.
 //
 // Everything here goes through the SDK rather than talking to the API
 // directly — `upload()` is the fast path (one signed batch write per call
@@ -20,7 +20,7 @@ const MAX_BATCH_BYTES = 8 * 1024 * 1024;
 const ATTEMPTS = 3;
 const BASE_BACKOFF_MS = 500;
 
-// puter.fs.read() resolves a whole Blob — the SDK has no streaming read — so
+// mixt.fs.read() resolves a whole Blob — the SDK has no streaming read — so
 // anything past this is pulled in ranged chunks to keep memory flat.
 const CHUNKED_READ_THRESHOLD = 32 * 1024 * 1024;
 const READ_CHUNK_BYTES = 8 * 1024 * 1024;
@@ -154,11 +154,11 @@ function attributeFailures(pending, err) {
   return failed.length > 0 ? failed : null;
 }
 
-async function sendBatch(puter, dir, files, destination, options) {
+async function sendBatch(mixt, dir, files, destination, options) {
   const items = files.map(
     (file) => new File([fs.readFileSync(file.full)], relNameOf(file.rel)),
   );
-  await puter.fs.upload(items, dir ? `${destination}/${dir}` : destination, {
+  await mixt.fs.upload(items, dir ? `${destination}/${dir}` : destination, {
     // `-n` filtered out what already exists, so a conflict here means the
     // destination changed under us: fail it rather than clobber.
     overwrite: !options.noClobber,
@@ -175,7 +175,7 @@ async function sendBatch(puter, dir, files, destination, options) {
  * @returns {Promise<{ uploaded: number, failures: {rel: string, message: string}[] }>}
  */
 export async function uploadFiles(
-  puter,
+  mixt,
   { files, destination, concurrency = DEFAULT_CONCURRENCY, noClobber = false, onProgress, onRetry },
 ) {
   const failures = [];
@@ -185,7 +185,7 @@ export async function uploadFiles(
     let pending = batch.files;
     for (let attempt = 1; attempt <= ATTEMPTS; attempt++) {
       try {
-        await sendBatch(puter, batch.dir, pending, destination, { noClobber });
+        await sendBatch(mixt, batch.dir, pending, destination, { noClobber });
         uploaded += pending.length;
         onProgress?.(uploaded + failures.length, files.length);
         return;
@@ -217,16 +217,16 @@ export async function uploadFiles(
  * request) so memory stays flat; if a chunk comes back longer than asked for
  * the range wasn't honored, and that response is the whole file.
  *
- * @param {*} puter
+ * @param {*} mixt
  * @param {string} remotePath
  * @param {number} [size]
  * @returns {AsyncGenerator<Buffer>}
  */
-export async function* readRemote(puter, remotePath, size) {
+export async function* readRemote(mixt, remotePath, size) {
   const toBuffer = async (blob) => Buffer.from(await blob.arrayBuffer());
 
   if (!Number.isFinite(size) || size <= CHUNKED_READ_THRESHOLD) {
-    yield await toBuffer(await withRetry(() => puter.fs.read(remotePath)));
+    yield await toBuffer(await withRetry(() => mixt.fs.read(remotePath)));
     return;
   }
 
@@ -235,7 +235,7 @@ export async function* readRemote(puter, remotePath, size) {
     const byteCount = Math.min(READ_CHUNK_BYTES, size - offset);
     const chunk = await toBuffer(
       await withRetry(() =>
-        puter.fs.read(remotePath, { offset, byte_count: byteCount }),
+        mixt.fs.read(remotePath, { offset, byte_count: byteCount }),
       ),
     );
     yield chunk;

@@ -26,9 +26,9 @@
 -- Idempotent: guarded against COLUMN_TYPE so re-running the directory is
 -- a no-op once 'worker' is in the ENUM.
 
-DROP PROCEDURE IF EXISTS _puter_sessions_kind_worker;
+DROP PROCEDURE IF EXISTS _mixt_sessions_kind_worker;
 DELIMITER //
-CREATE PROCEDURE _puter_sessions_kind_worker()
+CREATE PROCEDURE _mixt_sessions_kind_worker()
 BEGIN
   IF NOT EXISTS (
     SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS
@@ -45,6 +45,6 @@ BEGIN
 END//
 DELIMITER ;
 
-CALL _puter_sessions_kind_worker();
+CALL _mixt_sessions_kind_worker();
 
-DROP PROCEDURE IF EXISTS _puter_sessions_kind_worker;
+DROP PROCEDURE IF EXISTS _mixt_sessions_kind_worker;

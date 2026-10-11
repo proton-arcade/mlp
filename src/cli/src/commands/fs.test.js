@@ -124,7 +124,7 @@ describe('fs rm', () => {
     const { client, calls } = makeClient({ entries: { '~/a.txt': entry('~/a.txt') } });
     state.client = client;
 
-    await fsRm('puter:/a.txt', {});
+    await fsRm('mixt:/a.txt', {});
 
     expect(firstOf(calls, 'delete').args).toEqual(['~/a.txt', { recursive: false }]);
   });
@@ -133,7 +133,7 @@ describe('fs rm', () => {
     const { client, calls } = makeClient({ entries: { '~/dist': dir('~/dist') } });
     state.client = client;
 
-    await expect(fsRm('puter:/dist', {})).rejects.toThrow(/is a directory — pass -r/);
+    await expect(fsRm('mixt:/dist', {})).rejects.toThrow(/is a directory — pass -r/);
     expect(callsOf(calls, 'delete')).toHaveLength(0);
   });
 
@@ -144,9 +144,9 @@ describe('fs rm', () => {
     });
     state.client = client;
 
-    await fsRm('puter:/dist', { recursive: true, yes: true });
+    await fsRm('mixt:/dist', { recursive: true, yes: true });
 
-    expect(err.join('\n')).toContain('rm -r puter:/dist → ~/dist (3 entries)');
+    expect(err.join('\n')).toContain('rm -r mixt:/dist → ~/dist (3 entries)');
     expect(firstOf(calls, 'delete').args).toEqual(['~/dist', { recursive: true }]);
   });
 
@@ -154,11 +154,11 @@ describe('fs rm', () => {
     const { client, calls } = makeClient({ entries: { '~': dir('~') } });
     state.client = client;
 
-    await expect(fsRm('puter:/', { recursive: true, yes: true })).rejects.toThrow(
+    await expect(fsRm('mixt:/', { recursive: true, yes: true })).rejects.toThrow(
       /whole drive/,
     );
     await expect(
-      fsRm('puter:/', { recursive: true, yes: true, app: 'app-1f2e' }),
+      fsRm('mixt:/', { recursive: true, yes: true, app: 'app-1f2e' }),
     ).rejects.toThrow(/all of app-1f2e/);
     expect(callsOf(calls, 'delete')).toHaveLength(0);
   });
@@ -170,7 +170,7 @@ describe('fs rm', () => {
     });
     state.client = client;
 
-    await expect(fsRm('puter:/dist', { recursive: true })).rejects.toThrow(
+    await expect(fsRm('mixt:/dist', { recursive: true })).rejects.toThrow(
       /without confirmation/,
     );
     expect(callsOf(calls, 'delete')).toHaveLength(0);
@@ -183,7 +183,7 @@ describe('fs rm', () => {
     });
     state.client = client;
 
-    await fsRm('puter:/dist', { recursive: true, dryRun: true });
+    await fsRm('mixt:/dist', { recursive: true, dryRun: true });
 
     expect(out).toEqual(['/u/dist/a.js', '/u/dist']);
     expect(callsOf(calls, 'delete')).toHaveLength(0);
@@ -191,17 +191,17 @@ describe('fs rm', () => {
 });
 
 describe('fs --app', () => {
-  it('rebases puter:/ onto the app store and says so', async () => {
+  it('rebases mixt:/ onto the app store and says so', async () => {
     const { client, calls } = makeClient({ entries: {} });
     state.client = client;
 
-    await fsMkdir('puter:/dist', { app: 'app-1f2e', parents: true });
+    await fsMkdir('mixt:/dist', { app: 'app-1f2e', parents: true });
 
     expect(firstOf(calls, 'mkdir').args).toEqual([
       '~/AppData/app-1f2e/dist',
       { createMissingParents: true, dedupeName: false },
     ]);
-    expect(err.join('\n')).toContain('mkdir puter:/dist → ~/AppData/app-1f2e/dist');
+    expect(err.join('\n')).toContain('mkdir mixt:/dist → ~/AppData/app-1f2e/dist');
   });
 
   it('resolves an app name to its uid, the way kv connect does', async () => {
@@ -210,7 +210,7 @@ describe('fs --app', () => {
     });
     state.client = client;
 
-    await fsMkdir('puter:/dist', { app: 'notes' });
+    await fsMkdir('mixt:/dist', { app: 'notes' });
 
     expect(firstOf(calls, 'mkdir').args[0]).toBe('~/AppData/app-99/dist');
     expect(err.join('\n')).toContain('[notes (app-99)]');
@@ -224,7 +224,7 @@ describe('fs cp within the drive', () => {
     });
     state.client = client;
 
-    await fsCp('puter:/a.txt', 'puter:/backup', {});
+    await fsCp('mixt:/a.txt', 'mixt:/backup', {});
 
     expect(firstOf(calls, 'copy').args).toEqual([
       '~/a.txt',
@@ -237,7 +237,7 @@ describe('fs cp within the drive', () => {
     const { client, calls } = makeClient({ entries: { '~/a.txt': entry('~/a.txt') } });
     state.client = client;
 
-    await fsCp('puter:/a.txt', 'puter:/b.txt', {});
+    await fsCp('mixt:/a.txt', 'mixt:/b.txt', {});
 
     expect(firstOf(calls, 'copy').args).toEqual([
       '~/a.txt',
@@ -253,7 +253,7 @@ describe('fs cp within the drive', () => {
     state.client = client;
 
     // commander reports `--no-clobber` as clobber: false.
-    await fsCp('puter:/a.txt', 'puter:/b.txt', { clobber: false });
+    await fsCp('mixt:/a.txt', 'mixt:/b.txt', { clobber: false });
 
     expect(callsOf(calls, 'copy')).toHaveLength(0);
     expect(err.join('\n')).toContain('Skipped ~/b.txt (exists)');
@@ -263,7 +263,7 @@ describe('fs cp within the drive', () => {
     const { client, calls } = makeClient({ entries: { '~/dist': dir('~/dist') } });
     state.client = client;
 
-    await expect(fsCp('puter:/dist', 'puter:/copy', {})).rejects.toThrow(
+    await expect(fsCp('mixt:/dist', 'mixt:/copy', {})).rejects.toThrow(
       /is a directory — pass -r/,
     );
     expect(callsOf(calls, 'copy')).toHaveLength(0);
@@ -280,7 +280,7 @@ describe('fs cp across the boundary', () => {
   });
 
   function tempFile(name, contents) {
-    const base = fs.mkdtempSync(path.join(os.tmpdir(), 'puter-cli-fs-'));
+    const base = fs.mkdtempSync(path.join(os.tmpdir(), 'mixt-cli-fs-'));
     tempDirs.push(base);
     const full = path.join(base, name);
     fs.writeFileSync(full, contents);
@@ -292,7 +292,7 @@ describe('fs cp across the boundary', () => {
     state.client = client;
     const local = tempFile('notes.txt', 'hello');
 
-    await fsCp(local, 'puter:/notes.txt', {});
+    await fsCp(local, 'mixt:/notes.txt', {});
 
     expect(firstOf(calls, 'write').args).toEqual([
       '~/notes.txt',
@@ -306,7 +306,7 @@ describe('fs cp across the boundary', () => {
     state.client = client;
     const local = tempFile('notes.txt', 'hello');
 
-    await fsCp(local, 'puter:/Desktop', {});
+    await fsCp(local, 'mixt:/Desktop', {});
 
     expect(firstOf(calls, 'write').args[0]).toBe('~/Desktop/notes.txt');
   });
@@ -321,7 +321,7 @@ describe('fs cp across the boundary', () => {
       return true;
     });
 
-    await fsCp('puter:/a.txt', '-', {});
+    await fsCp('mixt:/a.txt', '-', {});
 
     expect(chunks.join('')).toBe('hello');
   });
@@ -337,7 +337,7 @@ describe('fs cp across the boundary', () => {
     });
 
     try {
-      await fsCp('-', 'puter:/from-stdin.txt', {});
+      await fsCp('-', 'mixt:/from-stdin.txt', {});
     } finally {
       Object.defineProperty(process, 'stdin', stdin);
     }
@@ -355,9 +355,9 @@ describe('fs ls', () => {
     });
     state.client = client;
 
-    await fsLs('puter:/logs', {});
+    await fsLs('mixt:/logs', {});
 
-    expect(out).toEqual(['puter:/logs/a.log', 'puter:/logs/old']);
+    expect(out).toEqual(['mixt:/logs/a.log', 'mixt:/logs/old']);
   });
 
   it('falls back to the full listing when the SDK cannot stream', async () => {
@@ -373,9 +373,9 @@ describe('fs ls', () => {
     };
     state.client = client;
 
-    await fsLs('puter:/logs', {});
+    await fsLs('mixt:/logs', {});
 
-    expect(out).toEqual(['puter:/logs/a.log']);
+    expect(out).toEqual(['mixt:/logs/a.log']);
   });
 
   it('lines up type, size and time with -l', async () => {
@@ -389,7 +389,7 @@ describe('fs ls', () => {
     });
     state.client = client;
 
-    await fsLs('puter:/logs', { long: true });
+    await fsLs('mixt:/logs', { long: true });
 
     // The size column is padded to the widest value, so both rows line up.
     expect(out).toHaveLength(2);
@@ -403,7 +403,7 @@ describe('fs ls', () => {
     });
     state.client = client;
 
-    await fsLs('puter:/logs', { json: true });
+    await fsLs('mixt:/logs', { json: true });
 
     expect(JSON.parse(out.join('\n'))).toEqual([entry('~/logs/a.log')]);
   });
@@ -414,13 +414,13 @@ describe('fs stat and cat', () => {
     const { client } = makeClient({ entries: { '~/a.txt': entry('~/a.txt') } });
     state.client = client;
 
-    await fsStat('puter:/a.txt', {});
+    await fsStat('mixt:/a.txt', {});
     expect(out[0]).toBe('path:     /u/a.txt');
     expect(out[1]).toBe('type:     file');
     expect(out[2]).toBe('size:     1024 (1.0 KB)');
 
     out.length = 0;
-    await fsStat('puter:/a.txt', { json: true });
+    await fsStat('mixt:/a.txt', { json: true });
     expect(JSON.parse(out.join('\n')).uid).toBe('uid-a.txt');
   });
 
@@ -428,7 +428,7 @@ describe('fs stat and cat', () => {
     const { client } = makeClient({ entries: { '~/dist': dir('~/dist') } });
     state.client = client;
 
-    await expect(fsCat('puter:/dist', {})).rejects.toThrow(/is a directory/);
+    await expect(fsCat('mixt:/dist', {})).rejects.toThrow(/is a directory/);
   });
 });
 
@@ -437,7 +437,7 @@ describe('fs mv', () => {
     const { client, calls } = makeClient({ entries: { '~/a.txt': entry('~/a.txt') } });
     state.client = client;
 
-    await fsMv('puter:/a.txt', 'puter:/Desktop/b.txt', {});
+    await fsMv('mixt:/a.txt', 'mixt:/Desktop/b.txt', {});
 
     expect(firstOf(calls, 'move').args).toEqual([
       '~/a.txt',
@@ -451,7 +451,7 @@ describe('fs mv', () => {
     const { client, calls } = makeClient({ entries: { '~': dir('~') } });
     state.client = client;
 
-    await expect(fsMv('puter:/', 'puter:/x', {})).rejects.toThrow(/the root itself/);
+    await expect(fsMv('mixt:/', 'mixt:/x', {})).rejects.toThrow(/the root itself/);
     expect(callsOf(calls, 'move')).toHaveLength(0);
   });
 });

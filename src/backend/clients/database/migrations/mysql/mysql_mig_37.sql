@@ -16,6 +16,6 @@
 -- along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 -- See sqlite/0082_temp-password-expiry.sql for the column rationale.
--- No per-file applied-state tracking, so the column goes through _puter_add_col.
+-- No per-file applied-state tracking, so the column goes through _mixt_add_col.
 
-CALL _puter_add_col('user', 'temp_password_expires_at', '`temp_password_expires_at` bigint DEFAULT NULL');
+CALL _mixt_add_col('user', 'temp_password_expires_at', '`temp_password_expires_at` bigint DEFAULT NULL');

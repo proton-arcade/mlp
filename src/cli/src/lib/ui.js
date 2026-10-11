@@ -1,7 +1,7 @@
 // Output helpers.
 //
 // Convention: status, progress, prompts and spinners go to STDERR; actual
-// data (URLs, JSON, list rows) goes to STDOUT. That way `puter site list`
+// data (URLs, JSON, list rows) goes to STDOUT. That way `mixt site list`
 // can be piped without status noise contaminating the data stream.
 
 import chalk from 'chalk';
@@ -30,9 +30,9 @@ export function info(msg) {
   console.error(chalk.dim(msg));
 }
 
-// Verbose diagnostics → stderr, only when PUTER_DEBUG is set.
+// Verbose diagnostics → stderr, only when MIXT_DEBUG is set.
 export function debug(...args) {
-  if (process.env.PUTER_DEBUG) {
+  if (process.env.MIXT_DEBUG) {
     console.error(chalk.magenta('[debug]'), ...args);
   }
 }

@@ -1,6 +1,6 @@
 ---
-title: puter.apps.delete()
-description: Delete apps from your Puter account.
+title: mixt.apps.delete()
+description: Delete apps from your Mixt OS account.
 platforms: [websites, apps, nodejs, workers]
 ---
 
@@ -9,7 +9,7 @@ Deletes an app with the given name.
 ## Syntax
 
 ```js
-puter.apps.delete(name)
+mixt.apps.delete(name)
 ```
 
 ## Parameters
@@ -29,26 +29,26 @@ A `Promise` that will resolve to an object `{ success: true, uid: <app uid> }` i
 ```html;app-delete
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
             // (1) Generate a random app name to make sure it doesn't already exist
-            let appName = puter.randName();
+            let appName = mixt.randName();
 
             // (2) Create the app
-            await puter.apps.create(appName, "https://example.com");
-            puter.print(`"${appName}" created<br>`);
+            await mixt.apps.create(appName, "https://example.com");
+            mixt.print(`"${appName}" created<br>`);
 
             // (3) Delete the app
-            await puter.apps.delete(appName);
-            puter.print(`"${appName}" deleted<br>`);
+            await mixt.apps.delete(appName);
+            mixt.print(`"${appName}" deleted<br>`);
 
             // (4) Try to retrieve the app (should fail)
-            puter.print(`Trying to retrieve "${appName}"...<br>`);
+            mixt.print(`Trying to retrieve "${appName}"...<br>`);
             try {
-                await puter.apps.get(appName);
+                await mixt.apps.get(appName);
             } catch (e) {
-                puter.print(`"${appName}" could not be retrieved<br>`);
+                mixt.print(`"${appName}" could not be retrieved<br>`);
             }
         })();
     </script>

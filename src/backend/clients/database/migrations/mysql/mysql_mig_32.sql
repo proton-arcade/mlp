@@ -17,18 +17,18 @@
 
 -- Teams. See sqlite/0077_teams.sql for the column rationale.
 -- No per-file applied-state tracking, so every statement must tolerate a re-run:
--- columns go through _puter_add_col, indexes through the guarded procedure below.
+-- columns go through _mixt_add_col, indexes through the guarded procedure below.
 
-CALL _puter_add_col('group', 'kind', '`kind` varchar(20) DEFAULT NULL');
-CALL _puter_add_col('group', 'name', '`name` varchar(255) DEFAULT NULL');
-CALL _puter_add_col('group', 'handle', '`handle` varchar(64) DEFAULT NULL');
-CALL _puter_add_col('group', 'deleted_at', '`deleted_at` timestamp NULL DEFAULT NULL');
-CALL _puter_add_col('jct_user_group', 'org_owned', '`org_owned` tinyint(1) DEFAULT NULL');
-CALL _puter_add_col('user', 'requires_password_change', '`requires_password_change` tinyint(1) NOT NULL DEFAULT ''0''');
+CALL _mixt_add_col('group', 'kind', '`kind` varchar(20) DEFAULT NULL');
+CALL _mixt_add_col('group', 'name', '`name` varchar(255) DEFAULT NULL');
+CALL _mixt_add_col('group', 'handle', '`handle` varchar(64) DEFAULT NULL');
+CALL _mixt_add_col('group', 'deleted_at', '`deleted_at` timestamp NULL DEFAULT NULL');
+CALL _mixt_add_col('jct_user_group', 'org_owned', '`org_owned` tinyint(1) DEFAULT NULL');
+CALL _mixt_add_col('user', 'requires_password_change', '`requires_password_change` tinyint(1) NOT NULL DEFAULT ''0''');
 
-DROP PROCEDURE IF EXISTS _puter_add_team_indexes;
+DROP PROCEDURE IF EXISTS _mixt_add_team_indexes;
 DELIMITER //
-CREATE PROCEDURE _puter_add_team_indexes()
+CREATE PROCEDURE _mixt_add_team_indexes()
 BEGIN
   -- Already case-insensitive: the table is utf8mb4_unicode_ci. NULLs stay distinct.
   IF NOT EXISTS (
@@ -53,6 +53,6 @@ BEGIN
 END//
 DELIMITER ;
 
-CALL _puter_add_team_indexes();
+CALL _mixt_add_team_indexes();
 
-DROP PROCEDURE IF EXISTS _puter_add_team_indexes;
+DROP PROCEDURE IF EXISTS _mixt_add_team_indexes;

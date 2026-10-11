@@ -18,7 +18,7 @@
  */
 
 import { v4 as uuidv4 } from 'uuid';
-import { PuterStore } from '../types';
+import { MixtStore } from '../types';
 
 /** One row of the `app_feedback` table. Timestamps are unix seconds. */
 export interface AppFeedbackRow {
@@ -43,7 +43,7 @@ export interface AppFeedbackRow {
  * party needs limits that fail closed. Both counts are served by the (user_id,
  * created_at) / (app_id, created_at) indexes.
  */
-export class AppFeedbackStore extends PuterStore {
+export class AppFeedbackStore extends MixtStore {
     // -- Reads --------------------------------------------------------
 
     /** Feedback rows this user submitted (any app) since `sinceUnixSeconds`. */

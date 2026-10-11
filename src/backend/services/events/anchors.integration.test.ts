@@ -24,7 +24,7 @@
  */
 
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { setupPuterTestEnv, type PuterTestEnv } from '../../testUtil.js';
+import { setupMixtTestEnv, type MixtTestEnv } from '../../testUtil.js';
 import { resolveNode } from '../fs/resolveNode.js';
 import { resolveFsAnchor, type FsAnchorDeps } from './anchors.js';
 import { parseSubject } from './subjects.js';
@@ -32,14 +32,14 @@ import { parseSubject } from './subjects.js';
 const BOOT_TIMEOUT_MS = 120_000;
 
 describe('resolveFsAnchor against a real tree', () => {
-    let env: PuterTestEnv;
+    let env: MixtTestEnv;
     let deps: FsAnchorDeps;
     let username: string;
     let homeUid: string;
     let reportsUid: string;
 
     beforeAll(async () => {
-        env = await setupPuterTestEnv();
+        env = await setupMixtTestEnv();
         username = env.users.user.username;
         deps = {
             resolveNode: (ref) => resolveNode(env.server.stores.fsEntry, ref),

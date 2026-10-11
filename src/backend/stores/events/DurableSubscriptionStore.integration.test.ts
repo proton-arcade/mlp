@@ -28,14 +28,14 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { v4 as uuidv4 } from 'uuid';
 import { EVENTS_DURABLE_SUBSCRIPTIONS_MAX } from '../../controllers/events/limits.js';
 import { isHttpError } from '../../core/http/HttpError.js';
-import { setupPuterTestEnv, type PuterTestEnv } from '../../testUtil.js';
+import { setupMixtTestEnv, type MixtTestEnv } from '../../testUtil.js';
 import type { IConfig } from '../../types.js';
 import { EVENT_SUBSCRIPTION_WIDTHS } from './columnWidths.js';
 import type { DurableSubscriptionInput } from './DurableSubscriptionStore.js';
 
 const BOOT_TIMEOUT_MS = 120_000;
 
-let env: PuterTestEnv;
+let env: MixtTestEnv;
 let userId: number;
 let otherUserId: number;
 let anchorUid: string;
@@ -83,7 +83,7 @@ const overWidth = (column: GuardedColumn): string =>
     'a'.repeat(EVENT_SUBSCRIPTION_WIDTHS[column].max + 1);
 
 beforeAll(async () => {
-    env = await setupPuterTestEnv({ events: { enabled: true } } as IConfig);
+    env = await setupMixtTestEnv({ events: { enabled: true } } as IConfig);
     const user = await env.server.stores.user.getByUsername(
         env.users.user.username,
     );

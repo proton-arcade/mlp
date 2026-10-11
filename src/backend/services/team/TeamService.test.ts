@@ -29,13 +29,13 @@ import {
     expect,
     it,
 } from 'vitest';
-import { PuterServer } from '../../server.ts';
+import { MixtServer } from '../../server.ts';
 import { setupTestServer } from '../../testUtil.ts';
 import { decodeCursor } from '../../util/pagination.ts';
 
 describe('TeamService', () => {
-    let server: PuterServer;
-    let service: PuterServer['services']['team'];
+    let server: MixtServer;
+    let service: MixtServer['services']['team'];
     let owner: { id: number };
     let ownerUsername: string;
     let ownerUuid: string;
@@ -1472,7 +1472,7 @@ describe('TeamService', () => {
         }
 
         expect(mail.sent).toHaveLength(1);
-        // The re-sendable path, so the one that made Puter a usable mailer.
+        // The re-sendable path, so the one that made Mixt a usable mailer.
         expect(mail.sent[0].html).not.toContain(again.temporaryPassword);
         expect(mail.sent[0].html).not.toContain(first.temporaryPassword);
         // Its own notice, not a second `created` mail saying nothing new.

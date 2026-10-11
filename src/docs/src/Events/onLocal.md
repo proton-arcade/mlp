@@ -1,5 +1,5 @@
 ---
-title: puter.events.onLocal()
+title: mixt.events.onLocal()
 description: Subscribe to changes on a file, directory, or key-value key for as long as this client is connected.
 platforms: [websites, apps, nodejs]
 ---
@@ -8,14 +8,14 @@ platforms: [websites, apps, nodejs]
 
 Subscribes to a subject and calls `handler` each time something matching it changes. The subscription belongs to this client's connection: nothing is stored, nothing runs while the page is closed, and it ends when the connection does. Changes from other devices and regions reach it too; one made in another region typically arrives a few hundred milliseconds later than a local one. See [Events](/Events/) for the subject grammar and the event shape.
 
-Not for Puter workers: a subscription there only lasts for one invocation. To react to changes from a worker, use [`onPersistent()`](/Events/onPersistent/) with a published handler.
+Not for Mixt OS workers: a subscription there only lasts for one invocation. To react to changes from a worker, use [`onPersistent()`](/Events/onPersistent/) with a published handler.
 
-On a website with nobody signed in, it asks the user to sign in first, as other Puter.js calls do. An app running on Puter is always signed in.
+On a website with nobody signed in, it asks the user to sign in first, as other Mixt.js calls do. An app running on Mixt OS is always signed in.
 
 ## Syntax
 ```js
-puter.events.onLocal(subject, handler)
-puter.events.onLocal(subject, handler, options)
+mixt.events.onLocal(subject, handler)
+mixt.events.onLocal(subject, handler, options)
 ```
 
 ## Parameters
@@ -80,16 +80,16 @@ The same subjects work with [`onPersistent()`](/Events/onPersistent/).
 
 ### Files
 
-- **Path**: absolute (`/alice/Documents`), home-relative (`~/Documents`), or relative (`inbox` or `./inbox`). A relative path resolves the same way [`puter.fs`](/FS/) paths do: under your app's `AppData` folder in an app, under home otherwise. A directory covers everything under it, at any depth.
+- **Path**: absolute (`/alice/Documents`), home-relative (`~/Documents`), or relative (`inbox` or `./inbox`). A relative path resolves the same way [`mixt.fs`](/FS/) paths do: under your app's `AppData` folder in an app, under home otherwise. A directory covers everything under it, at any depth.
 - **Uid**: the `uid` of a file or directory, to follow one node wherever it moves. A relative name shaped like a uid is read as one; write `./<name>` to mean the path.
 - **Op**: one of `add`, `write`, `move`, `remove`, `meta`. Leave it off to get all of them. Nothing emits `meta` yet.
 
 ```js
-await puter.events.onLocal('fs:~/Documents', handler);                  // everything under Documents
-await puter.events.onLocal('fs:inbox', handler);                        // inbox in your app's folder
-await puter.events.onLocal('fs:~/Documents/notes.txt:write', handler);  // one file, writes only
-await puter.events.onLocal('fs:~/Pictures/*.png', handler);             // wildcard within one segment
-await puter.events.onLocal('fs:~/Projects/**/build.log', handler);      // across directories
+await mixt.events.onLocal('fs:~/Documents', handler);                  // everything under Documents
+await mixt.events.onLocal('fs:inbox', handler);                        // inbox in your app's folder
+await mixt.events.onLocal('fs:~/Documents/notes.txt:write', handler);  // one file, writes only
+await mixt.events.onLocal('fs:~/Pictures/*.png', handler);             // wildcard within one segment
+await mixt.events.onLocal('fs:~/Projects/**/build.log', handler);      // across directories
 ```
 
 `*` matches within one path segment, `**` crosses directories, and `?` matches one character. A subject may use one `*` per segment and one `**` in total; more is rejected with `invalid_subject_pattern`.
@@ -100,7 +100,7 @@ A subject can name a path that isn't there. The subscription anchors on the near
 
 ```js
 // Nothing at this path yet. The handler runs when it's created.
-await puter.events.onLocal('fs:~/Documents/inbox/trigger.json:add', ({ event }) => {
+await mixt.events.onLocal('fs:~/Documents/inbox/trigger.json:add', ({ event }) => {
     process(event.path);
 });
 ```
@@ -122,19 +122,19 @@ The two-segment form is expanded to your app's id for you. Notifications are sto
 A `kv:` subject watches your app's key-value store:
 
 ```js
-await puter.events.onLocal('kv:cart', ({ event }) => refresh(event.key));   // exactly the key `cart`
-await puter.events.onLocal('kv:cart*', handler);                            // every key starting with `cart`
+await mixt.events.onLocal('kv:cart', ({ event }) => refresh(event.key));   // exactly the key `cart`
+await mixt.events.onLocal('kv:cart*', handler);                            // every key starting with `cart`
 ```
 
-> **Exact by default; add `*` to widen.** `kv:cart` matches only `cart`, and `kv:cart*` matches every key starting with `cart`. This is the opposite of [`puter.kv.list()`](/KV/list/), which always matches a prefix.
+> **Exact by default; add `*` to widen.** `kv:cart` matches only `cart`, and `kv:cart*` matches every key starting with `cart`. This is the opposite of [`mixt.kv.list()`](/KV/list/), which always matches a prefix.
 
 Only a trailing `*` is allowed. A `*` anywhere else, or a `?`, is rejected with `invalid_kv_pattern`.
 
 The segment after `kv:` is read as an app id when there are more segments after it, so a key that contains `:` needs the full three-part form:
 
 ```js
-await puter.events.onLocal('kv:orders:pending', handler);                  // app `orders`, key `pending`
-await puter.events.onLocal(`kv:${puter.appID}:orders:pending`, handler);   // your app, key `orders:pending`
+await mixt.events.onLocal('kv:orders:pending', handler);                  // app `orders`, key `pending`
+await mixt.events.onLocal(`kv:${mixt.appID}:orders:pending`, handler);   // your app, key `orders:pending`
 ```
 
 The returned `anchor` names the app whose store is watched; `subject` stays as you passed it.
@@ -144,7 +144,7 @@ The returned `anchor` names the app whose store is watched; `subject` stays as y
 A delivery names the key, not its value. Pass `includeValue: true` to receive the new value as `event.value` (`null` on a `del`, absent on an `expire`):
 
 ```js
-await puter.events.onLocal('kv:cart', ({ event }) => render(event.value), { includeValue: true });
+await mixt.events.onLocal('kv:cart', ({ event }) => render(event.value), { includeValue: true });
 ```
 
 The value is left out, and you read the key yourself, when:
@@ -164,11 +164,11 @@ Entries the other app wrote with `disableSharing` are never delivered. Marking a
 
 ```js
 // The owner shares one workspace with another account.
-const res = await fetch(`${puter.APIOrigin}/events/kv-handles`, {
+const res = await fetch(`${mixt.APIOrigin}/events/kv-handles`, {
     method: 'POST',
     headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${puter.authToken}`,
+        'Authorization': `Bearer ${mixt.authToken}`,
     },
     body: JSON.stringify({
         granteeUsername: 'bob',
@@ -182,7 +182,7 @@ const { handle } = await res.json();
 ```js
 // Bob watches every key written in that workspace.
 // `event.key` is relative to the handle: `messages:1`, not `workspace:<id>:messages:1`.
-await puter.events.onLocal(`kv:${handle}:*`, ({ event }) => render(event.key));
+await mixt.events.onLocal(`kv:${handle}:*`, ({ event }) => render(event.key));
 ```
 
 - **The holder learns only the handle**: not whose data it is, where it sits, or anything above the prefix. `subject` and `key` in their deliveries are relative to the handle. `kv:<handle>:messages:*` narrows to part of the shared region.
@@ -194,7 +194,7 @@ await puter.events.onLocal(`kv:${handle}:*`, ({ event }) => render(event.key));
 
 **Managing handles.** `GET /events/kv-handles` lists the handles the account has minted, revoked ones included. `DELETE /events/kv-handles/<handle>` revokes one, and every persistent subscription on it is suspended with `permission_revoked` and its backlog dropped. Revoking an already-revoked handle isn't an error. See [Rate Limits and Quotas](/rate-limits-and-quotas/#events) for how many handles an account can hold. Temporary accounts can't mint handles (`events_kv_handle_requires_account`). Where the feature is off, minting and handle subjects fail with `events_kv_handles_disabled`.
 
-**Apps.** An app can mint, list and revoke handles for its user, but only inside its own namespace and with the user's consent: `manage:kv-share:<userUuid>:<appId>:<prefix>`, requested with [`puter.perms.request()`](/Perms/request/). The prefix supplies its segments, so `workspace:abc:` ends the permission as `…:workspace:abc`. The consent must name a prefix; asking for the whole namespace is refused with `invalid_kv_share_prefix`. An app that lists handles sees only its own namespace.
+**Apps.** An app can mint, list and revoke handles for its user, but only inside its own namespace and with the user's consent: `manage:kv-share:<userUuid>:<appId>:<prefix>`, requested with [`mixt.perms.request()`](/Perms/request/). The prefix supplies its segments, so `workspace:abc:` ends the permission as `…:workspace:abc`. The consent must name a prefix; asking for the whole namespace is refused with `invalid_kv_share_prefix`. An app that lists handles sees only its own namespace.
 
 | Refused with | When |
 | --- | --- |
@@ -241,7 +241,7 @@ A notification carries the fields listed on [`fetch()`](/Events/fetch/#return-va
 
 Events never say *who* made a change: on a shared folder, that would tell every subscriber who else has access.
 
-[`puter.kv.flush()`](/KV/flush/) delivers nothing, since the keys a flush can list aren't reliably the keys it removed.
+[`mixt.kv.flush()`](/KV/flush/) delivers nothing, since the keys a flush can list aren't reliably the keys it removed.
 
 Writes to the same subject within 250 ms arrive as one event carrying the latest state, so a multipart upload or a save loop is one delivery rather than one per write.
 
@@ -260,7 +260,7 @@ Limits never make a subscription fail. Instead they send a **gap marker** in pla
 | `reconnect` | The connection dropped and came back. Changes made while it was down weren't delivered. Sent once, after the subscription is restored. |
 
 ```js
-await puter.events.onLocal('fs:~/Documents', async ({ event }) => {
+await mixt.events.onLocal('fs:~/Documents', async ({ event }) => {
     if (event.op === 'gap') return refreshEverything();
     apply(event);
 });
@@ -277,7 +277,7 @@ If the connection drops (a network blip, a sign-in, an API origin change, or the
 Changes made while it was down aren't sent afterwards. Once the subscription is back, the handler gets one [gap marker](#gaps) with `reason: 'reconnect'`, so a handler that re-reads on gaps catches up by itself. For `notif:` subjects, [`fetch()`](/Events/fetch/) reads exactly what was missed.
 
 ```js
-const sub = await puter.events.onLocal('fs:~/Documents', handler, {
+const sub = await mixt.events.onLocal('fs:~/Documents', handler, {
     onError: (error) => console.warn('subscription ended:', error.code),
 });
 ```
@@ -299,24 +299,24 @@ If the connection is down when this happens, or drops before `onError` is called
 ```html;events-watch-folder
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
             // (1) Create a directory to watch
-            const dir = puter.randName();
-            await puter.fs.mkdir(dir);
+            const dir = mixt.randName();
+            await mixt.fs.mkdir(dir);
 
             // (2) Subscribe to everything under it
-            const sub = await puter.events.onLocal(`fs:${dir}`, ({ event }) => {
+            const sub = await mixt.events.onLocal(`fs:${dir}`, ({ event }) => {
                 if (event.op === 'gap') {
-                    puter.print(`missed some changes (${event.reason})<br>`);
+                    mixt.print(`missed some changes (${event.reason})<br>`);
                     return;
                 }
-                puter.print(`${event.op}: ${event.path}<br>`);
+                mixt.print(`${event.op}: ${event.path}<br>`);
             });
 
             // (3) Change something — the handler runs
-            await puter.fs.write(`${dir}/hello.txt`, 'Hello!');
+            await mixt.fs.write(`${dir}/hello.txt`, 'Hello!');
 
             // (4) Stop listening (cleanup)
             setTimeout(() => sub.off(), 2000);
@@ -331,24 +331,24 @@ If the connection is down when this happens, or drops before `onError` is called
 ```html;events-watch-missing
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
             // (1) A directory to work in. `inbox/` below it does not exist yet.
-            const dir = puter.randName();
-            await puter.fs.mkdir(dir);
+            const dir = mixt.randName();
+            await mixt.fs.mkdir(dir);
 
             // (2) Subscribe anyway — the subscription anchors on `dir` and
             //     matches the rest of the path as it appears.
-            const sub = await puter.events.onLocal(
+            const sub = await mixt.events.onLocal(
                 `fs:${dir}/inbox/trigger.json:add`,
-                ({ event }) => puter.print(`appeared: ${event.path}<br>`),
-                { onError: (error) => puter.print(`subscription ended: ${error.code}<br>`) },
+                ({ event }) => mixt.print(`appeared: ${event.path}<br>`),
+                { onError: (error) => mixt.print(`subscription ended: ${error.code}<br>`) },
             );
-            puter.print(`anchored on ${sub.anchor.path}, matching ${sub.match}<br>`);
+            mixt.print(`anchored on ${sub.anchor.path}, matching ${sub.match}<br>`);
 
             // (3) Create it, several directories deep
-            await puter.fs.write(`${dir}/inbox/trigger.json`, '{}', {
+            await mixt.fs.write(`${dir}/inbox/trigger.json`, '{}', {
                 createMissingParents: true,
             });
 
@@ -364,26 +364,26 @@ If the connection is down when this happens, or drops before `onError` is called
 ```html;events-watch-kv
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
             // (1) Exactly one key, and separately every key under a prefix.
-            const one = await puter.events.onLocal('kv:cart', ({ event }) =>
-                puter.print(`${event.op}: ${event.key}<br>`));
-            const many = await puter.events.onLocal(
-                `kv:${puter.appID}:cart:*`,
-                ({ event }) => puter.print(`under cart: ${event.key}<br>`));
+            const one = await mixt.events.onLocal('kv:cart', ({ event }) =>
+                mixt.print(`${event.op}: ${event.key}<br>`));
+            const many = await mixt.events.onLocal(
+                `kv:${mixt.appID}:cart:*`,
+                ({ event }) => mixt.print(`under cart: ${event.key}<br>`));
 
             // (2) `cart` reaches the first, `cart:items` only the second.
-            await puter.kv.set('cart', { total: 0 });
-            await puter.kv.set('cart:items', ['apple']);
+            await mixt.kv.set('cart', { total: 0 });
+            await mixt.kv.set('cart:items', ['apple']);
 
             // (3) Cleanup
             setTimeout(async () => {
                 await one.off();
                 await many.off();
-                await puter.kv.del('cart');
-                await puter.kv.del('cart:items');
+                await mixt.kv.del('cart');
+                await mixt.kv.del('cart:items');
             }, 2000);
         })();
     </script>

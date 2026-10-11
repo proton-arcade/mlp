@@ -591,9 +591,9 @@ async function get_permission_description (permission, options = {}) {
             try {
                 let fsentry;
                 if ( resource_id.startsWith('/') ) {
-                    fsentry = await puter.fs.stat({ path: resource_id, consistency: 'eventual' });
+                    fsentry = await mixt.fs.stat({ path: resource_id, consistency: 'eventual' });
                 } else {
-                    fsentry = await puter.fs.stat({ uid: resource_id, consistency: 'eventual' });
+                    fsentry = await mixt.fs.stat({ uid: resource_id, consistency: 'eventual' });
                 }
                 return {
                     html: i18n('perm_fs_file_access', {
@@ -645,7 +645,7 @@ async function get_permission_description (permission, options = {}) {
     }
 
     if ( parts[0] === 'user' ) {
-        const whoami = await puter.auth.whoami();
+        const whoami = await mixt.auth.whoami();
         // An app can't ask to see other users' information
         if ( whoami.uuid !== parts[1] ) return null;
 
@@ -655,7 +655,7 @@ async function get_permission_description (permission, options = {}) {
     }
 
     if ( parts[0] === 'apps-of-user' ) {
-        const whoami = await puter.auth.whoami();
+        const whoami = await mixt.auth.whoami();
         // An app can't ask to see other users' apps
         if ( whoami.uuid !== parts[1] ) return null;
 
@@ -668,7 +668,7 @@ async function get_permission_description (permission, options = {}) {
     }
 
     if ( parts[0] === 'subdomains-of-user' ) {
-        const whoami = await puter.auth.whoami();
+        const whoami = await mixt.auth.whoami();
         // An app can't ask to see other users' subdomains
         if ( whoami.uuid !== parts[1] ) return null;
 
@@ -732,7 +732,7 @@ async function get_app_by_uid (uid) {
                 'Authorization': `Bearer ${window.auth_token}`,
             },
             body: JSON.stringify({
-                interface: 'puter-apps',
+                interface: 'mixt-apps',
                 driver: 'es:app',
                 method: 'read',
                 args: { uid },
@@ -856,7 +856,7 @@ export async function get_kv_share_description (parts, options) {
     const requester_app_uid = await resolve_requesting_app_uid(options);
     if ( ! requester_app_uid || namespace_app_uid !== requester_app_uid ) return null;
 
-    const whoami = await puter.auth.whoami();
+    const whoami = await mixt.auth.whoami();
     if ( whoami.uuid !== owner_uuid ) return null;
 
     const app = await get_app_by_uid(namespace_app_uid);
@@ -879,7 +879,7 @@ export async function get_kv_share_description (parts, options) {
  * @returns {Promise<string|null>} A friendly HTML description or null if not a standard folder belonging to current user
  */
 async function get_standard_folder_description (resource_id, action) {
-    const whoami = await puter.auth.whoami();
+    const whoami = await mixt.auth.whoami();
     const directories = whoami.directories || {};
 
     // Standard folder names we recognize - maps to i18n keys

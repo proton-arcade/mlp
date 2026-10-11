@@ -37,7 +37,7 @@ import type { IConfig } from '../../types.js';
  *   outside `outer.gui.*` so the notification does not also ride the fan the
  *   GUI mutation events do. One socket, one copy.
  *
- * The GUI reads notifications from `puter.events` wherever the fold-in is
+ * The GUI reads notifications from `mixt.events` wherever the fold-in is
  * advertised (`gui_params.eventsNotifications`) and falls back to this wire
  * when that lapses, so the adapter is what keeps older clients and the fallback
  * working. It goes when the flag is on everywhere.

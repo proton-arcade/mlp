@@ -1,24 +1,24 @@
 ---
-title: puter.ui.showFeedbackDialog()
+title: mixt.ui.showFeedbackDialog()
 description: Opens a dialog the user can use to send feedback to your app.
 platforms: [ websites, apps]
 ---
 
-Opens a dialog the user can use to send you — the app's developer — feedback about your app. The message is delivered by Puter: it is stored and emailed to the email address on your Puter account. The feedback never passes through your app's code, and the dialog tells the user what is shared with you: their username, plus their email address (as the email's reply-to, so you can respond) when their email is verified.
+Opens a dialog the user can use to send you — the app's developer — feedback about your app. The message is delivered by Mixt OS: it is stored and emailed to the email address on your Mixt OS account. The feedback never passes through your app's code, and the dialog tells the user what is shared with you: their username, plus their email address (as the email's reply-to, so you can respond) when their email is verified.
 
-Inside Puter, the dialog is rendered by the desktop environment. On a website, a puter.com popup hosts the dialog (signing the user in first if needed).
+Inside Mixt OS, the dialog is rendered by the desktop environment. On a website, a mixt.mpl popup hosts the dialog (signing the user in first if needed).
 
-**Feedback is opt-in.** Users can only send feedback if it's enabled for your app. Apps created in the Dev Center have feedback enabled at creation — you can turn it off with the "User Feedback" toggle in the app's settings. Apps created through `puter.apps.create` default to off; enable it by setting `feedbackEnabled`:
+**Feedback is opt-in.** Users can only send feedback if it's enabled for your app. Apps created in the Dev Center have feedback enabled at creation — you can turn it off with the "User Feedback" toggle in the app's settings. Apps created through `mixt.apps.create` default to off; enable it by setting `feedbackEnabled`:
 
 ```js
-await puter.apps.update('my-app', { feedbackEnabled: true });
+await mixt.apps.update('my-app', { feedbackEnabled: true });
 ```
 
-If feedback isn't enabled, the dialog tells the user the app isn't accepting feedback. To protect you and your users, Puter enforces limits on the size and frequency of feedback messages.
+If feedback isn't enabled, the dialog tells the user the app isn't accepting feedback. To protect you and your users, Mixt OS enforces limits on the size and frequency of feedback messages.
 
 ## Syntax
 ```js
-puter.ui.showFeedbackDialog()
+mixt.ui.showFeedbackDialog()
 ```
 
 ## Parameters
@@ -35,12 +35,12 @@ On a website that is cross-origin isolated (COOP severs the popup's connection t
 <html>
 <body>
     <button id="feedback">Send us feedback</button>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         document.getElementById('feedback').addEventListener('click', async () => {
-            const sent = await puter.ui.showFeedbackDialog();
+            const sent = await mixt.ui.showFeedbackDialog();
             if (sent) {
-                puter.print('Thanks for your feedback!');
+                mixt.print('Thanks for your feedback!');
             }
         });
     </script>

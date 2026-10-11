@@ -25,8 +25,8 @@ import { createSecret as otpCreateSecret } from '../../services/auth/OTPUtil.js'
 import { FULL_API_ACCESS } from '../../services/permission/consts.js';
 import {
     createTestUser,
-    setupPuterTestEnv,
-    type PuterTestEnv,
+    setupMixtTestEnv,
+    type MixtTestEnv,
     whitelistTestUser,
 } from '../../testUtil.js';
 import type { IConfig } from '../../types';
@@ -37,10 +37,10 @@ import type { IConfig } from '../../types';
  * account-only `/auth/revoke-access-token`.
  */
 describe('revoke-own-access-token over HTTP', () => {
-    let env: PuterTestEnv;
+    let env: MixtTestEnv;
 
     beforeAll(async () => {
-        env = await setupPuterTestEnv();
+        env = await setupMixtTestEnv();
     }, 120_000);
 
     afterAll(async () => {
@@ -432,10 +432,10 @@ describe('revoke-own-access-token over HTTP', () => {
  * enable needs a live code for the secret setup issued.
  */
 describe('2FA enrollment over HTTP', () => {
-    let env: PuterTestEnv;
+    let env: MixtTestEnv;
 
     beforeAll(async () => {
-        env = await setupPuterTestEnv({ teams_enabled: true } as IConfig);
+        env = await setupMixtTestEnv({ teams_enabled: true } as IConfig);
     }, 120_000);
 
     afterAll(async () => {
@@ -474,7 +474,7 @@ describe('2FA enrollment over HTTP', () => {
             headers: {
                 'content-type': 'application/json',
                 ...(credential === 'cookie'
-                    ? { cookie: `puter_auth_token=${token}` }
+                    ? { cookie: `mixt_auth_token=${token}` }
                     : { authorization: `Bearer ${token}` }),
             },
             body: JSON.stringify(body),
@@ -512,7 +512,7 @@ describe('2FA enrollment over HTTP', () => {
 
     const liveTotp = (username: string, secret: string) =>
         new TOTP({
-            issuer: 'puter.com',
+            issuer: 'mixt.mpl',
             label: username,
             algorithm: 'SHA1',
             digits: 6,
@@ -630,10 +630,10 @@ describe('2FA enrollment over HTTP', () => {
  * out, not from one that was revoked.
  */
 describe('temp-account reauth over HTTP', () => {
-    let env: PuterTestEnv;
+    let env: MixtTestEnv;
 
     beforeAll(async () => {
-        env = await setupPuterTestEnv();
+        env = await setupMixtTestEnv();
     }, 120_000);
 
     afterAll(async () => {

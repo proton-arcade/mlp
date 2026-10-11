@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 8.0.46, for macos15 (arm64)
 --
--- Host: puter-db.ctcdlrc15nt3.us-west-2.rds.amazonaws.com    Database: filecream
+-- Host: mixt-db.ctcdlrc15nt3.us-west-2.rds.amazonaws.com    Database: filecream
 -- ------------------------------------------------------
 -- Server version	8.0.44
 
@@ -19,7 +19,7 @@
 -- mysqldump prelude that required SUPER / BINLOG_ADMIN / GTID_PURGED
 -- privileges has been stripped (SQL_LOG_BIN toggle, GTID_PURGED set).
 -- These are only meaningful for replication-aware restores; self-host
--- single-instance MariaDB doesn't need them and the bundled `puter`
+-- single-instance MariaDB doesn't need them and the bundled `mixt`
 -- user doesn't have those privileges.
 --
 
@@ -29,9 +29,9 @@
 -- resident (not dropped at end of file) so it outlives this migration.
 --
 
-DROP PROCEDURE IF EXISTS _puter_add_col;
+DROP PROCEDURE IF EXISTS _mixt_add_col;
 DELIMITER //
-CREATE PROCEDURE _puter_add_col(IN tbl VARCHAR(64), IN col VARCHAR(64), IN def TEXT)
+CREATE PROCEDURE _mixt_add_col(IN tbl VARCHAR(64), IN col VARCHAR(64), IN def TEXT)
 BEGIN
   IF NOT EXISTS (
     SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS
@@ -65,13 +65,13 @@ CREATE TABLE IF NOT EXISTS `access_token_permissions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-CALL _puter_add_col('access_token_permissions', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
-CALL _puter_add_col('access_token_permissions', 'token_uid', '`token_uid` char(40) COLLATE utf8mb4_unicode_ci NOT NULL');
-CALL _puter_add_col('access_token_permissions', 'authorizer_user_id', '`authorizer_user_id` int unsigned DEFAULT NULL');
-CALL _puter_add_col('access_token_permissions', 'authorizer_app_id', '`authorizer_app_id` int unsigned DEFAULT NULL');
-CALL _puter_add_col('access_token_permissions', 'permission', '`permission` varchar(255) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL');
-CALL _puter_add_col('access_token_permissions', 'extra', '`extra` json DEFAULT NULL');
-CALL _puter_add_col('access_token_permissions', 'created_at', '`created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP');
+CALL _mixt_add_col('access_token_permissions', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
+CALL _mixt_add_col('access_token_permissions', 'token_uid', '`token_uid` char(40) COLLATE utf8mb4_unicode_ci NOT NULL');
+CALL _mixt_add_col('access_token_permissions', 'authorizer_user_id', '`authorizer_user_id` int unsigned DEFAULT NULL');
+CALL _mixt_add_col('access_token_permissions', 'authorizer_app_id', '`authorizer_app_id` int unsigned DEFAULT NULL');
+CALL _mixt_add_col('access_token_permissions', 'permission', '`permission` varchar(255) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL');
+CALL _mixt_add_col('access_token_permissions', 'extra', '`extra` json DEFAULT NULL');
+CALL _mixt_add_col('access_token_permissions', 'created_at', '`created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP');
 
 --
 -- Table structure for table `ai_usage`
@@ -105,19 +105,19 @@ CREATE TABLE IF NOT EXISTS `ai_usage` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-CALL _puter_add_col('ai_usage', 'id', '`id` int NOT NULL AUTO_INCREMENT');
-CALL _puter_add_col('ai_usage', 'user_id', '`user_id` int unsigned NOT NULL');
-CALL _puter_add_col('ai_usage', 'app_id', '`app_id` int unsigned DEFAULT NULL');
-CALL _puter_add_col('ai_usage', 'service_name', '`service_name` char(64) DEFAULT NULL');
-CALL _puter_add_col('ai_usage', 'model_name', '`model_name` char(128) DEFAULT NULL');
-CALL _puter_add_col('ai_usage', 'price_modifier', '`price_modifier` char(40) DEFAULT NULL');
-CALL _puter_add_col('ai_usage', 'cost', '`cost` int DEFAULT NULL');
-CALL _puter_add_col('ai_usage', 'value_uint_1', '`value_uint_1` int unsigned DEFAULT NULL');
-CALL _puter_add_col('ai_usage', 'value_uint_2', '`value_uint_2` int unsigned DEFAULT NULL');
-CALL _puter_add_col('ai_usage', 'value_uint_3', '`value_uint_3` int unsigned DEFAULT NULL');
-CALL _puter_add_col('ai_usage', 'value_uint_4', '`value_uint_4` int unsigned DEFAULT NULL');
-CALL _puter_add_col('ai_usage', 'value_uint_5', '`value_uint_5` int unsigned DEFAULT NULL');
-CALL _puter_add_col('ai_usage', 'created_at', '`created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP');
+CALL _mixt_add_col('ai_usage', 'id', '`id` int NOT NULL AUTO_INCREMENT');
+CALL _mixt_add_col('ai_usage', 'user_id', '`user_id` int unsigned NOT NULL');
+CALL _mixt_add_col('ai_usage', 'app_id', '`app_id` int unsigned DEFAULT NULL');
+CALL _mixt_add_col('ai_usage', 'service_name', '`service_name` char(64) DEFAULT NULL');
+CALL _mixt_add_col('ai_usage', 'model_name', '`model_name` char(128) DEFAULT NULL');
+CALL _mixt_add_col('ai_usage', 'price_modifier', '`price_modifier` char(40) DEFAULT NULL');
+CALL _mixt_add_col('ai_usage', 'cost', '`cost` int DEFAULT NULL');
+CALL _mixt_add_col('ai_usage', 'value_uint_1', '`value_uint_1` int unsigned DEFAULT NULL');
+CALL _mixt_add_col('ai_usage', 'value_uint_2', '`value_uint_2` int unsigned DEFAULT NULL');
+CALL _mixt_add_col('ai_usage', 'value_uint_3', '`value_uint_3` int unsigned DEFAULT NULL');
+CALL _mixt_add_col('ai_usage', 'value_uint_4', '`value_uint_4` int unsigned DEFAULT NULL');
+CALL _mixt_add_col('ai_usage', 'value_uint_5', '`value_uint_5` int unsigned DEFAULT NULL');
+CALL _mixt_add_col('ai_usage', 'created_at', '`created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP');
 
 --
 -- Table structure for table `app_filetype_association`
@@ -136,9 +136,9 @@ CREATE TABLE IF NOT EXISTS `app_filetype_association` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-CALL _puter_add_col('app_filetype_association', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
-CALL _puter_add_col('app_filetype_association', 'app_id', '`app_id` int unsigned NOT NULL');
-CALL _puter_add_col('app_filetype_association', 'type', '`type` varchar(60) NOT NULL');
+CALL _mixt_add_col('app_filetype_association', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
+CALL _mixt_add_col('app_filetype_association', 'app_id', '`app_id` int unsigned NOT NULL');
+CALL _mixt_add_col('app_filetype_association', 'type', '`type` varchar(60) NOT NULL');
 
 --
 -- Table structure for table `app_opens`
@@ -162,11 +162,11 @@ CREATE TABLE IF NOT EXISTS `app_opens` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-CALL _puter_add_col('app_opens', '_id', '`_id` bigint unsigned NOT NULL AUTO_INCREMENT');
-CALL _puter_add_col('app_opens', 'app_uid', '`app_uid` char(40) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL');
-CALL _puter_add_col('app_opens', 'user_id', '`user_id` int unsigned NOT NULL');
-CALL _puter_add_col('app_opens', 'ts', '`ts` int unsigned NOT NULL');
-CALL _puter_add_col('app_opens', 'human_ts', '`human_ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP');
+CALL _mixt_add_col('app_opens', '_id', '`_id` bigint unsigned NOT NULL AUTO_INCREMENT');
+CALL _mixt_add_col('app_opens', 'app_uid', '`app_uid` char(40) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL');
+CALL _mixt_add_col('app_opens', 'user_id', '`user_id` int unsigned NOT NULL');
+CALL _mixt_add_col('app_opens', 'ts', '`ts` int unsigned NOT NULL');
+CALL _mixt_add_col('app_opens', 'human_ts', '`human_ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP');
 
 --
 -- Table structure for table `app_update_audit`
@@ -188,13 +188,13 @@ CREATE TABLE IF NOT EXISTS `app_update_audit` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-CALL _puter_add_col('app_update_audit', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
-CALL _puter_add_col('app_update_audit', 'app_id', '`app_id` int unsigned DEFAULT NULL');
-CALL _puter_add_col('app_update_audit', 'app_id_keep', '`app_id_keep` int unsigned NOT NULL');
-CALL _puter_add_col('app_update_audit', 'created_at', '`created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP');
-CALL _puter_add_col('app_update_audit', 'old_name', '`old_name` varchar(50) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL');
-CALL _puter_add_col('app_update_audit', 'new_name', '`new_name` varchar(50) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL');
-CALL _puter_add_col('app_update_audit', 'reason', '`reason` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL');
+CALL _mixt_add_col('app_update_audit', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
+CALL _mixt_add_col('app_update_audit', 'app_id', '`app_id` int unsigned DEFAULT NULL');
+CALL _mixt_add_col('app_update_audit', 'app_id_keep', '`app_id_keep` int unsigned NOT NULL');
+CALL _mixt_add_col('app_update_audit', 'created_at', '`created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP');
+CALL _mixt_add_col('app_update_audit', 'old_name', '`old_name` varchar(50) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL');
+CALL _mixt_add_col('app_update_audit', 'new_name', '`new_name` varchar(50) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL');
+CALL _mixt_add_col('app_update_audit', 'reason', '`reason` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL');
 
 --
 -- Table structure for table `apps`
@@ -236,27 +236,27 @@ CREATE TABLE IF NOT EXISTS `apps` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-CALL _puter_add_col('apps', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
-CALL _puter_add_col('apps', 'uid', '`uid` char(40) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL');
-CALL _puter_add_col('apps', 'owner_user_id', '`owner_user_id` int unsigned DEFAULT NULL');
-CALL _puter_add_col('apps', 'icon', '`icon` longtext');
-CALL _puter_add_col('apps', 'name', '`name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL');
-CALL _puter_add_col('apps', 'title', '`title` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL');
-CALL _puter_add_col('apps', 'description', '`description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci');
-CALL _puter_add_col('apps', 'godmode', '`godmode` tinyint(1) DEFAULT ''0''');
-CALL _puter_add_col('apps', 'maximize_on_start', '`maximize_on_start` tinyint(1) DEFAULT ''0''');
-CALL _puter_add_col('apps', 'index_url', '`index_url` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL');
-CALL _puter_add_col('apps', 'approved_for_listing', '`approved_for_listing` tinyint(1) DEFAULT ''0''');
-CALL _puter_add_col('apps', 'approved_for_opening_items', '`approved_for_opening_items` tinyint(1) DEFAULT ''0''');
-CALL _puter_add_col('apps', 'approved_for_incentive_program', '`approved_for_incentive_program` tinyint(1) DEFAULT ''0''');
-CALL _puter_add_col('apps', 'timestamp', '`timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP');
-CALL _puter_add_col('apps', 'last_review', '`last_review` timestamp NULL DEFAULT NULL');
-CALL _puter_add_col('apps', 'tags', '`tags` varchar(255) DEFAULT NULL');
-CALL _puter_add_col('apps', 'app_owner', '`app_owner` int unsigned DEFAULT NULL');
-CALL _puter_add_col('apps', 'background', '`background` tinyint(1) DEFAULT ''0''');
-CALL _puter_add_col('apps', 'metadata', '`metadata` json DEFAULT NULL');
-CALL _puter_add_col('apps', 'protected', '`protected` tinyint(1) DEFAULT ''0''');
-CALL _puter_add_col('apps', 'is_private', '`is_private` tinyint(1) DEFAULT ''0''');
+CALL _mixt_add_col('apps', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
+CALL _mixt_add_col('apps', 'uid', '`uid` char(40) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL');
+CALL _mixt_add_col('apps', 'owner_user_id', '`owner_user_id` int unsigned DEFAULT NULL');
+CALL _mixt_add_col('apps', 'icon', '`icon` longtext');
+CALL _mixt_add_col('apps', 'name', '`name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL');
+CALL _mixt_add_col('apps', 'title', '`title` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL');
+CALL _mixt_add_col('apps', 'description', '`description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci');
+CALL _mixt_add_col('apps', 'godmode', '`godmode` tinyint(1) DEFAULT ''0''');
+CALL _mixt_add_col('apps', 'maximize_on_start', '`maximize_on_start` tinyint(1) DEFAULT ''0''');
+CALL _mixt_add_col('apps', 'index_url', '`index_url` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL');
+CALL _mixt_add_col('apps', 'approved_for_listing', '`approved_for_listing` tinyint(1) DEFAULT ''0''');
+CALL _mixt_add_col('apps', 'approved_for_opening_items', '`approved_for_opening_items` tinyint(1) DEFAULT ''0''');
+CALL _mixt_add_col('apps', 'approved_for_incentive_program', '`approved_for_incentive_program` tinyint(1) DEFAULT ''0''');
+CALL _mixt_add_col('apps', 'timestamp', '`timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP');
+CALL _mixt_add_col('apps', 'last_review', '`last_review` timestamp NULL DEFAULT NULL');
+CALL _mixt_add_col('apps', 'tags', '`tags` varchar(255) DEFAULT NULL');
+CALL _mixt_add_col('apps', 'app_owner', '`app_owner` int unsigned DEFAULT NULL');
+CALL _mixt_add_col('apps', 'background', '`background` tinyint(1) DEFAULT ''0''');
+CALL _mixt_add_col('apps', 'metadata', '`metadata` json DEFAULT NULL');
+CALL _mixt_add_col('apps', 'protected', '`protected` tinyint(1) DEFAULT ''0''');
+CALL _mixt_add_col('apps', 'is_private', '`is_private` tinyint(1) DEFAULT ''0''');
 
 --
 -- Table structure for table `audit_dev_to_app_permissions`
@@ -283,16 +283,16 @@ CREATE TABLE IF NOT EXISTS `audit_dev_to_app_permissions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-CALL _puter_add_col('audit_dev_to_app_permissions', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
-CALL _puter_add_col('audit_dev_to_app_permissions', 'user_id', '`user_id` int unsigned DEFAULT NULL');
-CALL _puter_add_col('audit_dev_to_app_permissions', 'user_id_keep', '`user_id_keep` int unsigned NOT NULL');
-CALL _puter_add_col('audit_dev_to_app_permissions', 'app_id', '`app_id` int unsigned DEFAULT NULL');
-CALL _puter_add_col('audit_dev_to_app_permissions', 'app_id_keep', '`app_id_keep` int unsigned NOT NULL');
-CALL _puter_add_col('audit_dev_to_app_permissions', 'permission', '`permission` varchar(255) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL');
-CALL _puter_add_col('audit_dev_to_app_permissions', 'extra', '`extra` json DEFAULT NULL');
-CALL _puter_add_col('audit_dev_to_app_permissions', 'action', '`action` varchar(16) COLLATE utf8mb4_unicode_ci DEFAULT NULL');
-CALL _puter_add_col('audit_dev_to_app_permissions', 'reason', '`reason` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL');
-CALL _puter_add_col('audit_dev_to_app_permissions', 'created_at', '`created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP');
+CALL _mixt_add_col('audit_dev_to_app_permissions', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
+CALL _mixt_add_col('audit_dev_to_app_permissions', 'user_id', '`user_id` int unsigned DEFAULT NULL');
+CALL _mixt_add_col('audit_dev_to_app_permissions', 'user_id_keep', '`user_id_keep` int unsigned NOT NULL');
+CALL _mixt_add_col('audit_dev_to_app_permissions', 'app_id', '`app_id` int unsigned DEFAULT NULL');
+CALL _mixt_add_col('audit_dev_to_app_permissions', 'app_id_keep', '`app_id_keep` int unsigned NOT NULL');
+CALL _mixt_add_col('audit_dev_to_app_permissions', 'permission', '`permission` varchar(255) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL');
+CALL _mixt_add_col('audit_dev_to_app_permissions', 'extra', '`extra` json DEFAULT NULL');
+CALL _mixt_add_col('audit_dev_to_app_permissions', 'action', '`action` varchar(16) COLLATE utf8mb4_unicode_ci DEFAULT NULL');
+CALL _mixt_add_col('audit_dev_to_app_permissions', 'reason', '`reason` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL');
+CALL _mixt_add_col('audit_dev_to_app_permissions', 'created_at', '`created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP');
 
 --
 -- Table structure for table `audit_user_to_app_permissions`
@@ -319,16 +319,16 @@ CREATE TABLE IF NOT EXISTS `audit_user_to_app_permissions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-CALL _puter_add_col('audit_user_to_app_permissions', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
-CALL _puter_add_col('audit_user_to_app_permissions', 'user_id', '`user_id` int unsigned DEFAULT NULL');
-CALL _puter_add_col('audit_user_to_app_permissions', 'user_id_keep', '`user_id_keep` int unsigned NOT NULL');
-CALL _puter_add_col('audit_user_to_app_permissions', 'app_id', '`app_id` int unsigned DEFAULT NULL');
-CALL _puter_add_col('audit_user_to_app_permissions', 'app_id_keep', '`app_id_keep` int unsigned NOT NULL');
-CALL _puter_add_col('audit_user_to_app_permissions', 'permission', '`permission` varchar(255) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL');
-CALL _puter_add_col('audit_user_to_app_permissions', 'extra', '`extra` json DEFAULT NULL');
-CALL _puter_add_col('audit_user_to_app_permissions', 'action', '`action` varchar(16) COLLATE utf8mb4_unicode_ci DEFAULT NULL');
-CALL _puter_add_col('audit_user_to_app_permissions', 'reason', '`reason` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL');
-CALL _puter_add_col('audit_user_to_app_permissions', 'created_at', '`created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP');
+CALL _mixt_add_col('audit_user_to_app_permissions', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
+CALL _mixt_add_col('audit_user_to_app_permissions', 'user_id', '`user_id` int unsigned DEFAULT NULL');
+CALL _mixt_add_col('audit_user_to_app_permissions', 'user_id_keep', '`user_id_keep` int unsigned NOT NULL');
+CALL _mixt_add_col('audit_user_to_app_permissions', 'app_id', '`app_id` int unsigned DEFAULT NULL');
+CALL _mixt_add_col('audit_user_to_app_permissions', 'app_id_keep', '`app_id_keep` int unsigned NOT NULL');
+CALL _mixt_add_col('audit_user_to_app_permissions', 'permission', '`permission` varchar(255) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL');
+CALL _mixt_add_col('audit_user_to_app_permissions', 'extra', '`extra` json DEFAULT NULL');
+CALL _mixt_add_col('audit_user_to_app_permissions', 'action', '`action` varchar(16) COLLATE utf8mb4_unicode_ci DEFAULT NULL');
+CALL _mixt_add_col('audit_user_to_app_permissions', 'reason', '`reason` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL');
+CALL _mixt_add_col('audit_user_to_app_permissions', 'created_at', '`created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP');
 
 --
 -- Table structure for table `audit_user_to_group_permissions`
@@ -355,16 +355,16 @@ CREATE TABLE IF NOT EXISTS `audit_user_to_group_permissions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-CALL _puter_add_col('audit_user_to_group_permissions', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
-CALL _puter_add_col('audit_user_to_group_permissions', 'user_id', '`user_id` int unsigned DEFAULT NULL');
-CALL _puter_add_col('audit_user_to_group_permissions', 'user_id_keep', '`user_id_keep` int unsigned NOT NULL');
-CALL _puter_add_col('audit_user_to_group_permissions', 'group_id', '`group_id` int unsigned DEFAULT NULL');
-CALL _puter_add_col('audit_user_to_group_permissions', 'group_id_keep', '`group_id_keep` int unsigned NOT NULL');
-CALL _puter_add_col('audit_user_to_group_permissions', 'permission', '`permission` varchar(255) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL');
-CALL _puter_add_col('audit_user_to_group_permissions', 'extra', '`extra` json DEFAULT NULL');
-CALL _puter_add_col('audit_user_to_group_permissions', 'action', '`action` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL');
-CALL _puter_add_col('audit_user_to_group_permissions', 'reason', '`reason` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL');
-CALL _puter_add_col('audit_user_to_group_permissions', 'created_at', '`created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP');
+CALL _mixt_add_col('audit_user_to_group_permissions', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
+CALL _mixt_add_col('audit_user_to_group_permissions', 'user_id', '`user_id` int unsigned DEFAULT NULL');
+CALL _mixt_add_col('audit_user_to_group_permissions', 'user_id_keep', '`user_id_keep` int unsigned NOT NULL');
+CALL _mixt_add_col('audit_user_to_group_permissions', 'group_id', '`group_id` int unsigned DEFAULT NULL');
+CALL _mixt_add_col('audit_user_to_group_permissions', 'group_id_keep', '`group_id_keep` int unsigned NOT NULL');
+CALL _mixt_add_col('audit_user_to_group_permissions', 'permission', '`permission` varchar(255) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL');
+CALL _mixt_add_col('audit_user_to_group_permissions', 'extra', '`extra` json DEFAULT NULL');
+CALL _mixt_add_col('audit_user_to_group_permissions', 'action', '`action` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL');
+CALL _mixt_add_col('audit_user_to_group_permissions', 'reason', '`reason` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL');
+CALL _mixt_add_col('audit_user_to_group_permissions', 'created_at', '`created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP');
 
 --
 -- Table structure for table `audit_user_to_user_permissions`
@@ -389,16 +389,16 @@ CREATE TABLE IF NOT EXISTS `audit_user_to_user_permissions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-CALL _puter_add_col('audit_user_to_user_permissions', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
-CALL _puter_add_col('audit_user_to_user_permissions', 'issuer_user_id', '`issuer_user_id` int unsigned DEFAULT NULL');
-CALL _puter_add_col('audit_user_to_user_permissions', 'issuer_user_id_keep', '`issuer_user_id_keep` int unsigned NOT NULL');
-CALL _puter_add_col('audit_user_to_user_permissions', 'holder_user_id', '`holder_user_id` int unsigned DEFAULT NULL');
-CALL _puter_add_col('audit_user_to_user_permissions', 'holder_user_id_keep', '`holder_user_id_keep` int unsigned NOT NULL');
-CALL _puter_add_col('audit_user_to_user_permissions', 'permission', '`permission` varchar(255) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL');
-CALL _puter_add_col('audit_user_to_user_permissions', 'extra', '`extra` json DEFAULT NULL');
-CALL _puter_add_col('audit_user_to_user_permissions', 'action', '`action` varchar(16) COLLATE utf8mb4_unicode_ci DEFAULT NULL');
-CALL _puter_add_col('audit_user_to_user_permissions', 'reason', '`reason` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL');
-CALL _puter_add_col('audit_user_to_user_permissions', 'created_at', '`created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP');
+CALL _mixt_add_col('audit_user_to_user_permissions', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
+CALL _mixt_add_col('audit_user_to_user_permissions', 'issuer_user_id', '`issuer_user_id` int unsigned DEFAULT NULL');
+CALL _mixt_add_col('audit_user_to_user_permissions', 'issuer_user_id_keep', '`issuer_user_id_keep` int unsigned NOT NULL');
+CALL _mixt_add_col('audit_user_to_user_permissions', 'holder_user_id', '`holder_user_id` int unsigned DEFAULT NULL');
+CALL _mixt_add_col('audit_user_to_user_permissions', 'holder_user_id_keep', '`holder_user_id_keep` int unsigned NOT NULL');
+CALL _mixt_add_col('audit_user_to_user_permissions', 'permission', '`permission` varchar(255) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL');
+CALL _mixt_add_col('audit_user_to_user_permissions', 'extra', '`extra` json DEFAULT NULL');
+CALL _mixt_add_col('audit_user_to_user_permissions', 'action', '`action` varchar(16) COLLATE utf8mb4_unicode_ci DEFAULT NULL');
+CALL _mixt_add_col('audit_user_to_user_permissions', 'reason', '`reason` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL');
+CALL _mixt_add_col('audit_user_to_user_permissions', 'created_at', '`created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP');
 
 
 --
@@ -420,10 +420,10 @@ CREATE TABLE IF NOT EXISTS `dev_to_app_permissions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-CALL _puter_add_col('dev_to_app_permissions', 'user_id', '`user_id` int unsigned NOT NULL');
-CALL _puter_add_col('dev_to_app_permissions', 'app_id', '`app_id` int unsigned NOT NULL');
-CALL _puter_add_col('dev_to_app_permissions', 'permission', '`permission` varchar(255) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL');
-CALL _puter_add_col('dev_to_app_permissions', 'extra', '`extra` json DEFAULT NULL');
+CALL _mixt_add_col('dev_to_app_permissions', 'user_id', '`user_id` int unsigned NOT NULL');
+CALL _mixt_add_col('dev_to_app_permissions', 'app_id', '`app_id` int unsigned NOT NULL');
+CALL _mixt_add_col('dev_to_app_permissions', 'permission', '`permission` varchar(255) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL');
+CALL _mixt_add_col('dev_to_app_permissions', 'extra', '`extra` json DEFAULT NULL');
 
 --
 -- Table structure for table `feedback`
@@ -442,10 +442,10 @@ CREATE TABLE IF NOT EXISTS `feedback` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-CALL _puter_add_col('feedback', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
-CALL _puter_add_col('feedback', 'user_id', '`user_id` int unsigned NOT NULL');
-CALL _puter_add_col('feedback', 'message', '`message` text');
-CALL _puter_add_col('feedback', 'ts', '`ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP');
+CALL _mixt_add_col('feedback', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
+CALL _mixt_add_col('feedback', 'user_id', '`user_id` int unsigned NOT NULL');
+CALL _mixt_add_col('feedback', 'message', '`message` text');
+CALL _mixt_add_col('feedback', 'ts', '`ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP');
 
 --
 -- Table structure for table `fsentries`
@@ -508,34 +508,34 @@ CREATE TABLE IF NOT EXISTS `fsentries` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-CALL _puter_add_col('fsentries', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
-CALL _puter_add_col('fsentries', 'uuid', '`uuid` char(36) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL');
-CALL _puter_add_col('fsentries', 'bucket', '`bucket` varchar(50) DEFAULT NULL');
-CALL _puter_add_col('fsentries', 'bucket_region', '`bucket_region` varchar(30) DEFAULT NULL');
-CALL _puter_add_col('fsentries', 'public_token', '`public_token` char(36) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL');
-CALL _puter_add_col('fsentries', 'file_request_token', '`file_request_token` char(36) DEFAULT NULL');
-CALL _puter_add_col('fsentries', 'is_shortcut', '`is_shortcut` tinyint(1) DEFAULT ''0''');
-CALL _puter_add_col('fsentries', 'shortcut_to', '`shortcut_to` int unsigned DEFAULT NULL');
-CALL _puter_add_col('fsentries', 'user_id', '`user_id` int unsigned NOT NULL');
-CALL _puter_add_col('fsentries', 'parent_id', '`parent_id` int unsigned DEFAULT NULL');
-CALL _puter_add_col('fsentries', 'associated_app_id', '`associated_app_id` int unsigned DEFAULT NULL');
-CALL _puter_add_col('fsentries', 'is_dir', '`is_dir` tinyint(1) DEFAULT ''0''');
-CALL _puter_add_col('fsentries', 'layout', '`layout` varchar(30) DEFAULT NULL');
-CALL _puter_add_col('fsentries', 'sort_by', '`sort_by` enum(''name'',''modified'',''type'',''size'') DEFAULT NULL');
-CALL _puter_add_col('fsentries', 'sort_order', '`sort_order` enum(''asc'',''desc'') DEFAULT NULL');
-CALL _puter_add_col('fsentries', 'is_public', '`is_public` tinyint(1) DEFAULT NULL');
-CALL _puter_add_col('fsentries', 'thumbnail', '`thumbnail` longtext');
-CALL _puter_add_col('fsentries', 'immutable', '`immutable` tinyint(1) NOT NULL DEFAULT ''0''');
-CALL _puter_add_col('fsentries', 'name', '`name` varchar(767) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL');
-CALL _puter_add_col('fsentries', 'metadata', '`metadata` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci');
-CALL _puter_add_col('fsentries', 'modified', '`modified` int unsigned NOT NULL');
-CALL _puter_add_col('fsentries', 'created', '`created` int unsigned DEFAULT NULL');
-CALL _puter_add_col('fsentries', 'accessed', '`accessed` int unsigned DEFAULT NULL');
-CALL _puter_add_col('fsentries', 'size', '`size` bigint DEFAULT NULL');
-CALL _puter_add_col('fsentries', 'symlink_path', '`symlink_path` varchar(260) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL');
-CALL _puter_add_col('fsentries', 'is_symlink', '`is_symlink` tinyint(1) DEFAULT ''0''');
-CALL _puter_add_col('fsentries', 'parent_uid', '`parent_uid` char(36) DEFAULT NULL');
-CALL _puter_add_col('fsentries', 'path', '`path` varchar(4096) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL');
+CALL _mixt_add_col('fsentries', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
+CALL _mixt_add_col('fsentries', 'uuid', '`uuid` char(36) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL');
+CALL _mixt_add_col('fsentries', 'bucket', '`bucket` varchar(50) DEFAULT NULL');
+CALL _mixt_add_col('fsentries', 'bucket_region', '`bucket_region` varchar(30) DEFAULT NULL');
+CALL _mixt_add_col('fsentries', 'public_token', '`public_token` char(36) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL');
+CALL _mixt_add_col('fsentries', 'file_request_token', '`file_request_token` char(36) DEFAULT NULL');
+CALL _mixt_add_col('fsentries', 'is_shortcut', '`is_shortcut` tinyint(1) DEFAULT ''0''');
+CALL _mixt_add_col('fsentries', 'shortcut_to', '`shortcut_to` int unsigned DEFAULT NULL');
+CALL _mixt_add_col('fsentries', 'user_id', '`user_id` int unsigned NOT NULL');
+CALL _mixt_add_col('fsentries', 'parent_id', '`parent_id` int unsigned DEFAULT NULL');
+CALL _mixt_add_col('fsentries', 'associated_app_id', '`associated_app_id` int unsigned DEFAULT NULL');
+CALL _mixt_add_col('fsentries', 'is_dir', '`is_dir` tinyint(1) DEFAULT ''0''');
+CALL _mixt_add_col('fsentries', 'layout', '`layout` varchar(30) DEFAULT NULL');
+CALL _mixt_add_col('fsentries', 'sort_by', '`sort_by` enum(''name'',''modified'',''type'',''size'') DEFAULT NULL');
+CALL _mixt_add_col('fsentries', 'sort_order', '`sort_order` enum(''asc'',''desc'') DEFAULT NULL');
+CALL _mixt_add_col('fsentries', 'is_public', '`is_public` tinyint(1) DEFAULT NULL');
+CALL _mixt_add_col('fsentries', 'thumbnail', '`thumbnail` longtext');
+CALL _mixt_add_col('fsentries', 'immutable', '`immutable` tinyint(1) NOT NULL DEFAULT ''0''');
+CALL _mixt_add_col('fsentries', 'name', '`name` varchar(767) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL');
+CALL _mixt_add_col('fsentries', 'metadata', '`metadata` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci');
+CALL _mixt_add_col('fsentries', 'modified', '`modified` int unsigned NOT NULL');
+CALL _mixt_add_col('fsentries', 'created', '`created` int unsigned DEFAULT NULL');
+CALL _mixt_add_col('fsentries', 'accessed', '`accessed` int unsigned DEFAULT NULL');
+CALL _mixt_add_col('fsentries', 'size', '`size` bigint DEFAULT NULL');
+CALL _mixt_add_col('fsentries', 'symlink_path', '`symlink_path` varchar(260) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL');
+CALL _mixt_add_col('fsentries', 'is_symlink', '`is_symlink` tinyint(1) DEFAULT ''0''');
+CALL _mixt_add_col('fsentries', 'parent_uid', '`parent_uid` char(36) DEFAULT NULL');
+CALL _mixt_add_col('fsentries', 'path', '`path` varchar(4096) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL');
 
 --
 -- Table structure for table `fsentry_versions`
@@ -560,13 +560,13 @@ CREATE TABLE IF NOT EXISTS `fsentry_versions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-CALL _puter_add_col('fsentry_versions', 'id', '`id` bigint NOT NULL AUTO_INCREMENT');
-CALL _puter_add_col('fsentry_versions', 'fsentry_id', '`fsentry_id` int unsigned NOT NULL');
-CALL _puter_add_col('fsentry_versions', 'fsentry_uuid', '`fsentry_uuid` char(36) NOT NULL');
-CALL _puter_add_col('fsentry_versions', 'version_id', '`version_id` varchar(60) NOT NULL');
-CALL _puter_add_col('fsentry_versions', 'user_id', '`user_id` int unsigned DEFAULT NULL');
-CALL _puter_add_col('fsentry_versions', 'message', '`message` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci');
-CALL _puter_add_col('fsentry_versions', 'ts_epoch', '`ts_epoch` int unsigned DEFAULT NULL');
+CALL _mixt_add_col('fsentry_versions', 'id', '`id` bigint NOT NULL AUTO_INCREMENT');
+CALL _mixt_add_col('fsentry_versions', 'fsentry_id', '`fsentry_id` int unsigned NOT NULL');
+CALL _mixt_add_col('fsentry_versions', 'fsentry_uuid', '`fsentry_uuid` char(36) NOT NULL');
+CALL _mixt_add_col('fsentry_versions', 'version_id', '`version_id` varchar(60) NOT NULL');
+CALL _mixt_add_col('fsentry_versions', 'user_id', '`user_id` int unsigned DEFAULT NULL');
+CALL _mixt_add_col('fsentry_versions', 'message', '`message` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci');
+CALL _mixt_add_col('fsentry_versions', 'ts_epoch', '`ts_epoch` int unsigned DEFAULT NULL');
 
 --
 -- Table structure for table `general_analytics`
@@ -595,18 +595,18 @@ CREATE TABLE IF NOT EXISTS `general_analytics` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-CALL _puter_add_col('general_analytics', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
-CALL _puter_add_col('general_analytics', 'created_at', '`created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP');
-CALL _puter_add_col('general_analytics', 'uid', '`uid` char(40) COLLATE utf8mb4_unicode_ci NOT NULL');
-CALL _puter_add_col('general_analytics', 'trace_id', '`trace_id` varchar(40) COLLATE utf8mb4_unicode_ci DEFAULT NULL');
-CALL _puter_add_col('general_analytics', 'user_id', '`user_id` int unsigned DEFAULT NULL');
-CALL _puter_add_col('general_analytics', 'user_id_keep', '`user_id_keep` int unsigned DEFAULT NULL');
-CALL _puter_add_col('general_analytics', 'app_id', '`app_id` int unsigned DEFAULT NULL');
-CALL _puter_add_col('general_analytics', 'app_id_keep', '`app_id_keep` int unsigned DEFAULT NULL');
-CALL _puter_add_col('general_analytics', 'server_id', '`server_id` varchar(40) COLLATE utf8mb4_unicode_ci DEFAULT NULL');
-CALL _puter_add_col('general_analytics', 'actor_type', '`actor_type` varchar(40) COLLATE utf8mb4_unicode_ci DEFAULT NULL');
-CALL _puter_add_col('general_analytics', 'tags', '`tags` json DEFAULT NULL');
-CALL _puter_add_col('general_analytics', 'fields', '`fields` json DEFAULT NULL');
+CALL _mixt_add_col('general_analytics', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
+CALL _mixt_add_col('general_analytics', 'created_at', '`created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP');
+CALL _mixt_add_col('general_analytics', 'uid', '`uid` char(40) COLLATE utf8mb4_unicode_ci NOT NULL');
+CALL _mixt_add_col('general_analytics', 'trace_id', '`trace_id` varchar(40) COLLATE utf8mb4_unicode_ci DEFAULT NULL');
+CALL _mixt_add_col('general_analytics', 'user_id', '`user_id` int unsigned DEFAULT NULL');
+CALL _mixt_add_col('general_analytics', 'user_id_keep', '`user_id_keep` int unsigned DEFAULT NULL');
+CALL _mixt_add_col('general_analytics', 'app_id', '`app_id` int unsigned DEFAULT NULL');
+CALL _mixt_add_col('general_analytics', 'app_id_keep', '`app_id_keep` int unsigned DEFAULT NULL');
+CALL _mixt_add_col('general_analytics', 'server_id', '`server_id` varchar(40) COLLATE utf8mb4_unicode_ci DEFAULT NULL');
+CALL _mixt_add_col('general_analytics', 'actor_type', '`actor_type` varchar(40) COLLATE utf8mb4_unicode_ci DEFAULT NULL');
+CALL _mixt_add_col('general_analytics', 'tags', '`tags` json DEFAULT NULL');
+CALL _mixt_add_col('general_analytics', 'fields', '`fields` json DEFAULT NULL');
 
 --
 -- Table structure for table `group`
@@ -628,12 +628,12 @@ CREATE TABLE IF NOT EXISTS `group` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-CALL _puter_add_col('group', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
-CALL _puter_add_col('group', 'uid', '`uid` char(40) COLLATE utf8mb4_unicode_ci DEFAULT NULL');
-CALL _puter_add_col('group', 'owner_user_id', '`owner_user_id` int unsigned DEFAULT NULL');
-CALL _puter_add_col('group', 'extra', '`extra` json DEFAULT NULL');
-CALL _puter_add_col('group', 'metadata', '`metadata` json DEFAULT NULL');
-CALL _puter_add_col('group', 'created_at', '`created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP');
+CALL _mixt_add_col('group', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
+CALL _mixt_add_col('group', 'uid', '`uid` char(40) COLLATE utf8mb4_unicode_ci DEFAULT NULL');
+CALL _mixt_add_col('group', 'owner_user_id', '`owner_user_id` int unsigned DEFAULT NULL');
+CALL _mixt_add_col('group', 'extra', '`extra` json DEFAULT NULL');
+CALL _mixt_add_col('group', 'metadata', '`metadata` json DEFAULT NULL');
+CALL _mixt_add_col('group', 'created_at', '`created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP');
 
 --
 -- Table structure for table `jct_user_group`
@@ -656,12 +656,12 @@ CREATE TABLE IF NOT EXISTS `jct_user_group` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-CALL _puter_add_col('jct_user_group', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
-CALL _puter_add_col('jct_user_group', 'user_id', '`user_id` int unsigned NOT NULL');
-CALL _puter_add_col('jct_user_group', 'group_id', '`group_id` int unsigned NOT NULL');
-CALL _puter_add_col('jct_user_group', 'extra', '`extra` json DEFAULT NULL');
-CALL _puter_add_col('jct_user_group', 'metadata', '`metadata` json DEFAULT NULL');
-CALL _puter_add_col('jct_user_group', 'created_at', '`created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP');
+CALL _mixt_add_col('jct_user_group', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
+CALL _mixt_add_col('jct_user_group', 'user_id', '`user_id` int unsigned NOT NULL');
+CALL _mixt_add_col('jct_user_group', 'group_id', '`group_id` int unsigned NOT NULL');
+CALL _mixt_add_col('jct_user_group', 'extra', '`extra` json DEFAULT NULL');
+CALL _mixt_add_col('jct_user_group', 'metadata', '`metadata` json DEFAULT NULL');
+CALL _mixt_add_col('jct_user_group', 'created_at', '`created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP');
 
 --
 -- Table structure for table `kv`
@@ -686,13 +686,13 @@ CREATE TABLE IF NOT EXISTS `kv` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-CALL _puter_add_col('kv', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
-CALL _puter_add_col('kv', 'app', '`app` char(40) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL');
-CALL _puter_add_col('kv', 'user_id', '`user_id` int unsigned NOT NULL');
-CALL _puter_add_col('kv', 'kkey_hash', '`kkey_hash` bigint unsigned NOT NULL');
-CALL _puter_add_col('kv', 'kkey', '`kkey` text NOT NULL');
-CALL _puter_add_col('kv', 'value', '`value` text');
-CALL _puter_add_col('kv', 'migrated', '`migrated` tinyint(1) DEFAULT ''0''');
+CALL _mixt_add_col('kv', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
+CALL _mixt_add_col('kv', 'app', '`app` char(40) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL');
+CALL _mixt_add_col('kv', 'user_id', '`user_id` int unsigned NOT NULL');
+CALL _mixt_add_col('kv', 'kkey_hash', '`kkey_hash` bigint unsigned NOT NULL');
+CALL _mixt_add_col('kv', 'kkey', '`kkey` text NOT NULL');
+CALL _mixt_add_col('kv', 'value', '`value` text');
+CALL _mixt_add_col('kv', 'migrated', '`migrated` tinyint(1) DEFAULT ''0''');
 
 --
 -- Table structure for table `monthly_usage_counts`
@@ -716,17 +716,17 @@ CREATE TABLE IF NOT EXISTS `monthly_usage_counts` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-CALL _puter_add_col('monthly_usage_counts', 'year', '`year` int unsigned NOT NULL');
-CALL _puter_add_col('monthly_usage_counts', 'month', '`month` int unsigned NOT NULL');
-CALL _puter_add_col('monthly_usage_counts', 'service_type', '`service_type` varchar(40) NOT NULL');
-CALL _puter_add_col('monthly_usage_counts', 'service_name', '`service_name` varchar(40) NOT NULL');
-CALL _puter_add_col('monthly_usage_counts', 'actor_key', '`actor_key` varchar(255) NOT NULL');
-CALL _puter_add_col('monthly_usage_counts', 'pricing_category', '`pricing_category` json NOT NULL');
-CALL _puter_add_col('monthly_usage_counts', 'pricing_category_hash', '`pricing_category_hash` binary(20) NOT NULL');
-CALL _puter_add_col('monthly_usage_counts', 'count', '`count` int unsigned DEFAULT ''0''');
-CALL _puter_add_col('monthly_usage_counts', 'value_uint_1', '`value_uint_1` int unsigned DEFAULT NULL');
-CALL _puter_add_col('monthly_usage_counts', 'value_uint_2', '`value_uint_2` int unsigned DEFAULT NULL');
-CALL _puter_add_col('monthly_usage_counts', 'value_uint_3', '`value_uint_3` int unsigned DEFAULT NULL');
+CALL _mixt_add_col('monthly_usage_counts', 'year', '`year` int unsigned NOT NULL');
+CALL _mixt_add_col('monthly_usage_counts', 'month', '`month` int unsigned NOT NULL');
+CALL _mixt_add_col('monthly_usage_counts', 'service_type', '`service_type` varchar(40) NOT NULL');
+CALL _mixt_add_col('monthly_usage_counts', 'service_name', '`service_name` varchar(40) NOT NULL');
+CALL _mixt_add_col('monthly_usage_counts', 'actor_key', '`actor_key` varchar(255) NOT NULL');
+CALL _mixt_add_col('monthly_usage_counts', 'pricing_category', '`pricing_category` json NOT NULL');
+CALL _mixt_add_col('monthly_usage_counts', 'pricing_category_hash', '`pricing_category_hash` binary(20) NOT NULL');
+CALL _mixt_add_col('monthly_usage_counts', 'count', '`count` int unsigned DEFAULT ''0''');
+CALL _mixt_add_col('monthly_usage_counts', 'value_uint_1', '`value_uint_1` int unsigned DEFAULT NULL');
+CALL _mixt_add_col('monthly_usage_counts', 'value_uint_2', '`value_uint_2` int unsigned DEFAULT NULL');
+CALL _mixt_add_col('monthly_usage_counts', 'value_uint_3', '`value_uint_3` int unsigned DEFAULT NULL');
 
 --
 -- Table structure for table `notification`
@@ -749,13 +749,13 @@ CREATE TABLE IF NOT EXISTS `notification` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-CALL _puter_add_col('notification', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
-CALL _puter_add_col('notification', 'user_id', '`user_id` int unsigned NOT NULL');
-CALL _puter_add_col('notification', 'uid', '`uid` char(40) COLLATE utf8mb4_unicode_ci DEFAULT NULL');
-CALL _puter_add_col('notification', 'value', '`value` json NOT NULL');
-CALL _puter_add_col('notification', 'acknowledged', '`acknowledged` tinyint(1) DEFAULT NULL');
-CALL _puter_add_col('notification', 'shown', '`shown` tinyint(1) DEFAULT NULL');
-CALL _puter_add_col('notification', 'created_at', '`created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP');
+CALL _mixt_add_col('notification', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
+CALL _mixt_add_col('notification', 'user_id', '`user_id` int unsigned NOT NULL');
+CALL _mixt_add_col('notification', 'uid', '`uid` char(40) COLLATE utf8mb4_unicode_ci DEFAULT NULL');
+CALL _mixt_add_col('notification', 'value', '`value` json NOT NULL');
+CALL _mixt_add_col('notification', 'acknowledged', '`acknowledged` tinyint(1) DEFAULT NULL');
+CALL _mixt_add_col('notification', 'shown', '`shown` tinyint(1) DEFAULT NULL');
+CALL _mixt_add_col('notification', 'created_at', '`created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP');
 
 --
 -- Table structure for table `old_app_names`
@@ -775,10 +775,10 @@ CREATE TABLE IF NOT EXISTS `old_app_names` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-CALL _puter_add_col('old_app_names', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
-CALL _puter_add_col('old_app_names', 'app_uid', '`app_uid` char(40) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL');
-CALL _puter_add_col('old_app_names', 'name', '`name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL');
-CALL _puter_add_col('old_app_names', 'timestamp', '`timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP');
+CALL _mixt_add_col('old_app_names', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
+CALL _mixt_add_col('old_app_names', 'app_uid', '`app_uid` char(40) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL');
+CALL _mixt_add_col('old_app_names', 'name', '`name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL');
+CALL _mixt_add_col('old_app_names', 'timestamp', '`timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP');
 
 --
 -- Table structure for table `per_user_credit`
@@ -797,10 +797,10 @@ CREATE TABLE IF NOT EXISTS `per_user_credit` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-CALL _puter_add_col('per_user_credit', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
-CALL _puter_add_col('per_user_credit', 'user_id', '`user_id` int unsigned NOT NULL');
-CALL _puter_add_col('per_user_credit', 'amount', '`amount` bigint NOT NULL');
-CALL _puter_add_col('per_user_credit', 'last_updated_at', '`last_updated_at` bigint unsigned NOT NULL');
+CALL _mixt_add_col('per_user_credit', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
+CALL _mixt_add_col('per_user_credit', 'user_id', '`user_id` int unsigned NOT NULL');
+CALL _mixt_add_col('per_user_credit', 'amount', '`amount` bigint NOT NULL');
+CALL _mixt_add_col('per_user_credit', 'last_updated_at', '`last_updated_at` bigint unsigned NOT NULL');
 
 --
 -- Table structure for table `service_usage_monthly`
@@ -824,13 +824,13 @@ CREATE TABLE IF NOT EXISTS `service_usage_monthly` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-CALL _puter_add_col('service_usage_monthly', 'key', '`key` varchar(255) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL');
-CALL _puter_add_col('service_usage_monthly', 'year', '`year` int unsigned NOT NULL');
-CALL _puter_add_col('service_usage_monthly', 'month', '`month` int unsigned NOT NULL');
-CALL _puter_add_col('service_usage_monthly', 'user_id', '`user_id` int unsigned DEFAULT NULL');
-CALL _puter_add_col('service_usage_monthly', 'app_id', '`app_id` int unsigned DEFAULT NULL');
-CALL _puter_add_col('service_usage_monthly', 'count', '`count` int unsigned NOT NULL');
-CALL _puter_add_col('service_usage_monthly', 'extra', '`extra` json DEFAULT NULL');
+CALL _mixt_add_col('service_usage_monthly', 'key', '`key` varchar(255) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL');
+CALL _mixt_add_col('service_usage_monthly', 'year', '`year` int unsigned NOT NULL');
+CALL _mixt_add_col('service_usage_monthly', 'month', '`month` int unsigned NOT NULL');
+CALL _mixt_add_col('service_usage_monthly', 'user_id', '`user_id` int unsigned DEFAULT NULL');
+CALL _mixt_add_col('service_usage_monthly', 'app_id', '`app_id` int unsigned DEFAULT NULL');
+CALL _mixt_add_col('service_usage_monthly', 'count', '`count` int unsigned NOT NULL');
+CALL _mixt_add_col('service_usage_monthly', 'extra', '`extra` json DEFAULT NULL');
 
 --
 -- Table structure for table `sessions`
@@ -852,12 +852,12 @@ CREATE TABLE IF NOT EXISTS `sessions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-CALL _puter_add_col('sessions', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
-CALL _puter_add_col('sessions', 'user_id', '`user_id` int unsigned NOT NULL');
-CALL _puter_add_col('sessions', 'uuid', '`uuid` char(40) COLLATE utf8mb4_unicode_ci NOT NULL');
-CALL _puter_add_col('sessions', 'meta', '`meta` json DEFAULT NULL');
-CALL _puter_add_col('sessions', 'created_at', '`created_at` bigint DEFAULT ''0''');
-CALL _puter_add_col('sessions', 'last_activity', '`last_activity` bigint DEFAULT ''0''');
+CALL _mixt_add_col('sessions', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
+CALL _mixt_add_col('sessions', 'user_id', '`user_id` int unsigned NOT NULL');
+CALL _mixt_add_col('sessions', 'uuid', '`uuid` char(40) COLLATE utf8mb4_unicode_ci NOT NULL');
+CALL _mixt_add_col('sessions', 'meta', '`meta` json DEFAULT NULL');
+CALL _mixt_add_col('sessions', 'created_at', '`created_at` bigint DEFAULT ''0''');
+CALL _mixt_add_col('sessions', 'last_activity', '`last_activity` bigint DEFAULT ''0''');
 
 --
 -- Table structure for table `share`
@@ -880,12 +880,12 @@ CREATE TABLE IF NOT EXISTS `share` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-CALL _puter_add_col('share', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
-CALL _puter_add_col('share', 'uid', '`uid` char(40) COLLATE utf8mb4_unicode_ci DEFAULT NULL');
-CALL _puter_add_col('share', 'issuer_user_id', '`issuer_user_id` int unsigned NOT NULL');
-CALL _puter_add_col('share', 'recipient_email', '`recipient_email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL');
-CALL _puter_add_col('share', 'data', '`data` json DEFAULT NULL');
-CALL _puter_add_col('share', 'created_at', '`created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP');
+CALL _mixt_add_col('share', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
+CALL _mixt_add_col('share', 'uid', '`uid` char(40) COLLATE utf8mb4_unicode_ci DEFAULT NULL');
+CALL _mixt_add_col('share', 'issuer_user_id', '`issuer_user_id` int unsigned NOT NULL');
+CALL _mixt_add_col('share', 'recipient_email', '`recipient_email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL');
+CALL _mixt_add_col('share', 'data', '`data` json DEFAULT NULL');
+CALL _mixt_add_col('share', 'created_at', '`created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP');
 
 --
 -- Table structure for table `storage_audit`
@@ -909,15 +909,15 @@ CREATE TABLE IF NOT EXISTS `storage_audit` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-CALL _puter_add_col('storage_audit', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
-CALL _puter_add_col('storage_audit', 'user_id', '`user_id` int unsigned DEFAULT NULL');
-CALL _puter_add_col('storage_audit', 'user_id_keep', '`user_id_keep` int unsigned NOT NULL');
-CALL _puter_add_col('storage_audit', 'is_subtract', '`is_subtract` tinyint(1) NOT NULL DEFAULT ''0''');
-CALL _puter_add_col('storage_audit', 'amount', '`amount` bigint unsigned NOT NULL');
-CALL _puter_add_col('storage_audit', 'field_a', '`field_a` varchar(16) COLLATE utf8mb4_unicode_ci DEFAULT NULL');
-CALL _puter_add_col('storage_audit', 'field_b', '`field_b` varchar(16) COLLATE utf8mb4_unicode_ci DEFAULT NULL');
-CALL _puter_add_col('storage_audit', 'reason', '`reason` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL');
-CALL _puter_add_col('storage_audit', 'created_at', '`created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP');
+CALL _mixt_add_col('storage_audit', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
+CALL _mixt_add_col('storage_audit', 'user_id', '`user_id` int unsigned DEFAULT NULL');
+CALL _mixt_add_col('storage_audit', 'user_id_keep', '`user_id_keep` int unsigned NOT NULL');
+CALL _mixt_add_col('storage_audit', 'is_subtract', '`is_subtract` tinyint(1) NOT NULL DEFAULT ''0''');
+CALL _mixt_add_col('storage_audit', 'amount', '`amount` bigint unsigned NOT NULL');
+CALL _mixt_add_col('storage_audit', 'field_a', '`field_a` varchar(16) COLLATE utf8mb4_unicode_ci DEFAULT NULL');
+CALL _mixt_add_col('storage_audit', 'field_b', '`field_b` varchar(16) COLLATE utf8mb4_unicode_ci DEFAULT NULL');
+CALL _mixt_add_col('storage_audit', 'reason', '`reason` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL');
+CALL _mixt_add_col('storage_audit', 'created_at', '`created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP');
 
 --
 -- Table structure for table `subdomains`
@@ -953,16 +953,16 @@ CREATE TABLE IF NOT EXISTS `subdomains` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-CALL _puter_add_col('subdomains', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
-CALL _puter_add_col('subdomains', 'uuid', '`uuid` varchar(40) DEFAULT NULL');
-CALL _puter_add_col('subdomains', 'subdomain', '`subdomain` varchar(64) NOT NULL');
-CALL _puter_add_col('subdomains', 'user_id', '`user_id` int unsigned NOT NULL');
-CALL _puter_add_col('subdomains', 'root_dir_id', '`root_dir_id` int unsigned DEFAULT NULL');
-CALL _puter_add_col('subdomains', 'associated_app_id', '`associated_app_id` int unsigned DEFAULT NULL');
-CALL _puter_add_col('subdomains', 'ts', '`ts` timestamp NULL DEFAULT CURRENT_TIMESTAMP');
-CALL _puter_add_col('subdomains', 'app_owner', '`app_owner` int unsigned DEFAULT NULL');
-CALL _puter_add_col('subdomains', 'protected', '`protected` tinyint(1) DEFAULT ''0''');
-CALL _puter_add_col('subdomains', 'domain', '`domain` varchar(265) DEFAULT NULL');
+CALL _mixt_add_col('subdomains', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
+CALL _mixt_add_col('subdomains', 'uuid', '`uuid` varchar(40) DEFAULT NULL');
+CALL _mixt_add_col('subdomains', 'subdomain', '`subdomain` varchar(64) NOT NULL');
+CALL _mixt_add_col('subdomains', 'user_id', '`user_id` int unsigned NOT NULL');
+CALL _mixt_add_col('subdomains', 'root_dir_id', '`root_dir_id` int unsigned DEFAULT NULL');
+CALL _mixt_add_col('subdomains', 'associated_app_id', '`associated_app_id` int unsigned DEFAULT NULL');
+CALL _mixt_add_col('subdomains', 'ts', '`ts` timestamp NULL DEFAULT CURRENT_TIMESTAMP');
+CALL _mixt_add_col('subdomains', 'app_owner', '`app_owner` int unsigned DEFAULT NULL');
+CALL _mixt_add_col('subdomains', 'protected', '`protected` tinyint(1) DEFAULT ''0''');
+CALL _mixt_add_col('subdomains', 'domain', '`domain` varchar(265) DEFAULT NULL');
 
 --
 -- Table structure for table `thread`
@@ -988,13 +988,13 @@ CREATE TABLE IF NOT EXISTS `thread` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-CALL _puter_add_col('thread', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
-CALL _puter_add_col('thread', 'uid', '`uid` char(40) NOT NULL');
-CALL _puter_add_col('thread', 'parent_uid', '`parent_uid` char(40) DEFAULT NULL');
-CALL _puter_add_col('thread', 'owner_user_id', '`owner_user_id` int unsigned NOT NULL');
-CALL _puter_add_col('thread', 'schema', '`schema` text');
-CALL _puter_add_col('thread', 'text', '`text` text NOT NULL');
-CALL _puter_add_col('thread', 'created_at', '`created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP');
+CALL _mixt_add_col('thread', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
+CALL _mixt_add_col('thread', 'uid', '`uid` char(40) NOT NULL');
+CALL _mixt_add_col('thread', 'parent_uid', '`parent_uid` char(40) DEFAULT NULL');
+CALL _mixt_add_col('thread', 'owner_user_id', '`owner_user_id` int unsigned NOT NULL');
+CALL _mixt_add_col('thread', 'schema', '`schema` text');
+CALL _mixt_add_col('thread', 'text', '`text` text NOT NULL');
+CALL _mixt_add_col('thread', 'created_at', '`created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP');
 
 --
 -- Table structure for table `user`
@@ -1096,64 +1096,64 @@ CREATE TABLE IF NOT EXISTS `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-CALL _puter_add_col('user', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
-CALL _puter_add_col('user', 'uuid', '`uuid` char(36) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL');
-CALL _puter_add_col('user', 'username', '`username` varchar(50) CHARACTER SET ascii COLLATE ascii_general_ci DEFAULT NULL');
-CALL _puter_add_col('user', 'email', '`email` varchar(256) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL');
-CALL _puter_add_col('user', 'password', '`password` varchar(225) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL');
-CALL _puter_add_col('user', 'free_storage', '`free_storage` bigint unsigned DEFAULT NULL');
-CALL _puter_add_col('user', 'max_subdomains', '`max_subdomains` int unsigned DEFAULT NULL');
-CALL _puter_add_col('user', 'taskbar_items', '`taskbar_items` text');
-CALL _puter_add_col('user', 'desktop_uuid', '`desktop_uuid` char(36) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL');
-CALL _puter_add_col('user', 'appdata_uuid', '`appdata_uuid` char(36) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL');
-CALL _puter_add_col('user', 'documents_uuid', '`documents_uuid` char(36) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL');
-CALL _puter_add_col('user', 'pictures_uuid', '`pictures_uuid` char(36) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL');
-CALL _puter_add_col('user', 'videos_uuid', '`videos_uuid` char(36) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL');
-CALL _puter_add_col('user', 'trash_uuid', '`trash_uuid` char(36) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL');
-CALL _puter_add_col('user', 'trash_id', '`trash_id` int unsigned DEFAULT NULL');
-CALL _puter_add_col('user', 'appdata_id', '`appdata_id` int unsigned DEFAULT NULL');
-CALL _puter_add_col('user', 'desktop_id', '`desktop_id` int unsigned DEFAULT NULL');
-CALL _puter_add_col('user', 'documents_id', '`documents_id` int unsigned DEFAULT NULL');
-CALL _puter_add_col('user', 'pictures_id', '`pictures_id` int unsigned DEFAULT NULL');
-CALL _puter_add_col('user', 'videos_id', '`videos_id` int unsigned DEFAULT NULL');
-CALL _puter_add_col('user', 'referrer', '`referrer` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL');
-CALL _puter_add_col('user', 'desktop_bg_url', '`desktop_bg_url` text');
-CALL _puter_add_col('user', 'desktop_bg_color', '`desktop_bg_color` varchar(20) DEFAULT NULL');
-CALL _puter_add_col('user', 'desktop_bg_fit', '`desktop_bg_fit` varchar(16) DEFAULT NULL');
-CALL _puter_add_col('user', 'pass_recovery_token', '`pass_recovery_token` char(36) DEFAULT NULL');
-CALL _puter_add_col('user', 'requires_email_confirmation', '`requires_email_confirmation` tinyint(1) NOT NULL DEFAULT ''0''');
-CALL _puter_add_col('user', 'email_confirm_code', '`email_confirm_code` varchar(8) DEFAULT NULL');
-CALL _puter_add_col('user', 'email_confirm_token', '`email_confirm_token` char(36) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL');
-CALL _puter_add_col('user', 'email_confirmed', '`email_confirmed` tinyint(1) NOT NULL DEFAULT ''0''');
-CALL _puter_add_col('user', 'dev_first_name', '`dev_first_name` varchar(100) DEFAULT NULL');
-CALL _puter_add_col('user', 'dev_last_name', '`dev_last_name` varchar(100) DEFAULT NULL');
-CALL _puter_add_col('user', 'dev_paypal', '`dev_paypal` varchar(100) DEFAULT NULL');
-CALL _puter_add_col('user', 'dev_approved_for_incentive_program', '`dev_approved_for_incentive_program` tinyint(1) DEFAULT ''0''');
-CALL _puter_add_col('user', 'dev_joined_incentive_program', '`dev_joined_incentive_program` tinyint(1) DEFAULT ''0''');
-CALL _puter_add_col('user', 'suspended', '`suspended` tinyint(1) DEFAULT NULL');
-CALL _puter_add_col('user', 'unsubscribed', '`unsubscribed` tinyint NOT NULL DEFAULT ''0''');
-CALL _puter_add_col('user', 'timestamp', '`timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP');
-CALL _puter_add_col('user', 'last_activity_ts', '`last_activity_ts` timestamp NULL DEFAULT NULL');
-CALL _puter_add_col('user', 'referral_code', '`referral_code` varchar(16) DEFAULT NULL');
-CALL _puter_add_col('user', 'referred_by', '`referred_by` int unsigned DEFAULT NULL');
-CALL _puter_add_col('user', 'unconfirmed_change_email', '`unconfirmed_change_email` varchar(256) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL');
-CALL _puter_add_col('user', 'change_email_confirm_token', '`change_email_confirm_token` varchar(256) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL');
-CALL _puter_add_col('user', 'otp_secret', '`otp_secret` text');
-CALL _puter_add_col('user', 'otp_enabled', '`otp_enabled` tinyint(1) DEFAULT ''0''');
-CALL _puter_add_col('user', 'otp_recovery_codes', '`otp_recovery_codes` text');
-CALL _puter_add_col('user', 'stripe_customer_id', '`stripe_customer_id` varchar(40) DEFAULT NULL');
-CALL _puter_add_col('user', 'public_uuid', '`public_uuid` char(36) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL');
-CALL _puter_add_col('user', 'public_id', '`public_id` int DEFAULT NULL');
-CALL _puter_add_col('user', 'clean_email', '`clean_email` varchar(256) DEFAULT NULL');
-CALL _puter_add_col('user', 'audit_metadata', '`audit_metadata` json DEFAULT NULL');
-CALL _puter_add_col('user', 'signup_ip', '`signup_ip` varchar(45) DEFAULT NULL COMMENT ''Supports IPv6 addresses''');
-CALL _puter_add_col('user', 'signup_ip_forwarded', '`signup_ip_forwarded` varchar(45) DEFAULT NULL COMMENT ''Supports IPv6 addresses''');
-CALL _puter_add_col('user', 'signup_user_agent', '`signup_user_agent` varchar(512) DEFAULT NULL');
-CALL _puter_add_col('user', 'signup_origin', '`signup_origin` varchar(255) DEFAULT NULL');
-CALL _puter_add_col('user', 'signup_server', '`signup_server` varchar(255) DEFAULT NULL');
-CALL _puter_add_col('user', 'metadata', '`metadata` json DEFAULT (json_object())');
-CALL _puter_add_col('user', 'home', '`home` varchar(64) DEFAULT NULL');
-CALL _puter_add_col('user', 'reputation', '`reputation` smallint DEFAULT ''100''');
+CALL _mixt_add_col('user', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
+CALL _mixt_add_col('user', 'uuid', '`uuid` char(36) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL');
+CALL _mixt_add_col('user', 'username', '`username` varchar(50) CHARACTER SET ascii COLLATE ascii_general_ci DEFAULT NULL');
+CALL _mixt_add_col('user', 'email', '`email` varchar(256) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL');
+CALL _mixt_add_col('user', 'password', '`password` varchar(225) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL');
+CALL _mixt_add_col('user', 'free_storage', '`free_storage` bigint unsigned DEFAULT NULL');
+CALL _mixt_add_col('user', 'max_subdomains', '`max_subdomains` int unsigned DEFAULT NULL');
+CALL _mixt_add_col('user', 'taskbar_items', '`taskbar_items` text');
+CALL _mixt_add_col('user', 'desktop_uuid', '`desktop_uuid` char(36) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL');
+CALL _mixt_add_col('user', 'appdata_uuid', '`appdata_uuid` char(36) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL');
+CALL _mixt_add_col('user', 'documents_uuid', '`documents_uuid` char(36) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL');
+CALL _mixt_add_col('user', 'pictures_uuid', '`pictures_uuid` char(36) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL');
+CALL _mixt_add_col('user', 'videos_uuid', '`videos_uuid` char(36) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL');
+CALL _mixt_add_col('user', 'trash_uuid', '`trash_uuid` char(36) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL');
+CALL _mixt_add_col('user', 'trash_id', '`trash_id` int unsigned DEFAULT NULL');
+CALL _mixt_add_col('user', 'appdata_id', '`appdata_id` int unsigned DEFAULT NULL');
+CALL _mixt_add_col('user', 'desktop_id', '`desktop_id` int unsigned DEFAULT NULL');
+CALL _mixt_add_col('user', 'documents_id', '`documents_id` int unsigned DEFAULT NULL');
+CALL _mixt_add_col('user', 'pictures_id', '`pictures_id` int unsigned DEFAULT NULL');
+CALL _mixt_add_col('user', 'videos_id', '`videos_id` int unsigned DEFAULT NULL');
+CALL _mixt_add_col('user', 'referrer', '`referrer` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL');
+CALL _mixt_add_col('user', 'desktop_bg_url', '`desktop_bg_url` text');
+CALL _mixt_add_col('user', 'desktop_bg_color', '`desktop_bg_color` varchar(20) DEFAULT NULL');
+CALL _mixt_add_col('user', 'desktop_bg_fit', '`desktop_bg_fit` varchar(16) DEFAULT NULL');
+CALL _mixt_add_col('user', 'pass_recovery_token', '`pass_recovery_token` char(36) DEFAULT NULL');
+CALL _mixt_add_col('user', 'requires_email_confirmation', '`requires_email_confirmation` tinyint(1) NOT NULL DEFAULT ''0''');
+CALL _mixt_add_col('user', 'email_confirm_code', '`email_confirm_code` varchar(8) DEFAULT NULL');
+CALL _mixt_add_col('user', 'email_confirm_token', '`email_confirm_token` char(36) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL');
+CALL _mixt_add_col('user', 'email_confirmed', '`email_confirmed` tinyint(1) NOT NULL DEFAULT ''0''');
+CALL _mixt_add_col('user', 'dev_first_name', '`dev_first_name` varchar(100) DEFAULT NULL');
+CALL _mixt_add_col('user', 'dev_last_name', '`dev_last_name` varchar(100) DEFAULT NULL');
+CALL _mixt_add_col('user', 'dev_paypal', '`dev_paypal` varchar(100) DEFAULT NULL');
+CALL _mixt_add_col('user', 'dev_approved_for_incentive_program', '`dev_approved_for_incentive_program` tinyint(1) DEFAULT ''0''');
+CALL _mixt_add_col('user', 'dev_joined_incentive_program', '`dev_joined_incentive_program` tinyint(1) DEFAULT ''0''');
+CALL _mixt_add_col('user', 'suspended', '`suspended` tinyint(1) DEFAULT NULL');
+CALL _mixt_add_col('user', 'unsubscribed', '`unsubscribed` tinyint NOT NULL DEFAULT ''0''');
+CALL _mixt_add_col('user', 'timestamp', '`timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP');
+CALL _mixt_add_col('user', 'last_activity_ts', '`last_activity_ts` timestamp NULL DEFAULT NULL');
+CALL _mixt_add_col('user', 'referral_code', '`referral_code` varchar(16) DEFAULT NULL');
+CALL _mixt_add_col('user', 'referred_by', '`referred_by` int unsigned DEFAULT NULL');
+CALL _mixt_add_col('user', 'unconfirmed_change_email', '`unconfirmed_change_email` varchar(256) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL');
+CALL _mixt_add_col('user', 'change_email_confirm_token', '`change_email_confirm_token` varchar(256) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL');
+CALL _mixt_add_col('user', 'otp_secret', '`otp_secret` text');
+CALL _mixt_add_col('user', 'otp_enabled', '`otp_enabled` tinyint(1) DEFAULT ''0''');
+CALL _mixt_add_col('user', 'otp_recovery_codes', '`otp_recovery_codes` text');
+CALL _mixt_add_col('user', 'stripe_customer_id', '`stripe_customer_id` varchar(40) DEFAULT NULL');
+CALL _mixt_add_col('user', 'public_uuid', '`public_uuid` char(36) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL');
+CALL _mixt_add_col('user', 'public_id', '`public_id` int DEFAULT NULL');
+CALL _mixt_add_col('user', 'clean_email', '`clean_email` varchar(256) DEFAULT NULL');
+CALL _mixt_add_col('user', 'audit_metadata', '`audit_metadata` json DEFAULT NULL');
+CALL _mixt_add_col('user', 'signup_ip', '`signup_ip` varchar(45) DEFAULT NULL COMMENT ''Supports IPv6 addresses''');
+CALL _mixt_add_col('user', 'signup_ip_forwarded', '`signup_ip_forwarded` varchar(45) DEFAULT NULL COMMENT ''Supports IPv6 addresses''');
+CALL _mixt_add_col('user', 'signup_user_agent', '`signup_user_agent` varchar(512) DEFAULT NULL');
+CALL _mixt_add_col('user', 'signup_origin', '`signup_origin` varchar(255) DEFAULT NULL');
+CALL _mixt_add_col('user', 'signup_server', '`signup_server` varchar(255) DEFAULT NULL');
+CALL _mixt_add_col('user', 'metadata', '`metadata` json DEFAULT (json_object())');
+CALL _mixt_add_col('user', 'home', '`home` varchar(64) DEFAULT NULL');
+CALL _mixt_add_col('user', 'reputation', '`reputation` smallint DEFAULT ''100''');
 
 --
 -- Table structure for table `user_comments`
@@ -1176,12 +1176,12 @@ CREATE TABLE IF NOT EXISTS `user_comments` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-CALL _puter_add_col('user_comments', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
-CALL _puter_add_col('user_comments', 'uid', '`uid` char(40) NOT NULL');
-CALL _puter_add_col('user_comments', 'user_id', '`user_id` int unsigned NOT NULL');
-CALL _puter_add_col('user_comments', 'metadata', '`metadata` json DEFAULT NULL');
-CALL _puter_add_col('user_comments', 'text', '`text` text NOT NULL');
-CALL _puter_add_col('user_comments', 'created_at', '`created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP');
+CALL _mixt_add_col('user_comments', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
+CALL _mixt_add_col('user_comments', 'uid', '`uid` char(40) NOT NULL');
+CALL _mixt_add_col('user_comments', 'user_id', '`user_id` int unsigned NOT NULL');
+CALL _mixt_add_col('user_comments', 'metadata', '`metadata` json DEFAULT NULL');
+CALL _mixt_add_col('user_comments', 'text', '`text` text NOT NULL');
+CALL _mixt_add_col('user_comments', 'created_at', '`created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP');
 
 --
 -- Table structure for table `user_fsentry_comments`
@@ -1201,9 +1201,9 @@ CREATE TABLE IF NOT EXISTS `user_fsentry_comments` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-CALL _puter_add_col('user_fsentry_comments', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
-CALL _puter_add_col('user_fsentry_comments', 'user_comment_id', '`user_comment_id` int unsigned NOT NULL');
-CALL _puter_add_col('user_fsentry_comments', 'fsentry_id', '`fsentry_id` int unsigned NOT NULL');
+CALL _mixt_add_col('user_fsentry_comments', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
+CALL _mixt_add_col('user_fsentry_comments', 'user_comment_id', '`user_comment_id` int unsigned NOT NULL');
+CALL _mixt_add_col('user_fsentry_comments', 'fsentry_id', '`fsentry_id` int unsigned NOT NULL');
 
 --
 -- Table structure for table `user_oidc_providers`
@@ -1225,12 +1225,12 @@ CREATE TABLE IF NOT EXISTS `user_oidc_providers` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-CALL _puter_add_col('user_oidc_providers', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
-CALL _puter_add_col('user_oidc_providers', 'user_id', '`user_id` int unsigned NOT NULL');
-CALL _puter_add_col('user_oidc_providers', 'provider', '`provider` varchar(64) NOT NULL');
-CALL _puter_add_col('user_oidc_providers', 'provider_sub', '`provider_sub` varchar(255) NOT NULL');
-CALL _puter_add_col('user_oidc_providers', 'refresh_token', '`refresh_token` text');
-CALL _puter_add_col('user_oidc_providers', 'created_at', '`created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP');
+CALL _mixt_add_col('user_oidc_providers', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
+CALL _mixt_add_col('user_oidc_providers', 'user_id', '`user_id` int unsigned NOT NULL');
+CALL _mixt_add_col('user_oidc_providers', 'provider', '`provider` varchar(64) NOT NULL');
+CALL _mixt_add_col('user_oidc_providers', 'provider_sub', '`provider_sub` varchar(255) NOT NULL');
+CALL _mixt_add_col('user_oidc_providers', 'refresh_token', '`refresh_token` text');
+CALL _mixt_add_col('user_oidc_providers', 'created_at', '`created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP');
 
 --
 -- Table structure for table `user_to_app_permissions`
@@ -1252,11 +1252,11 @@ CREATE TABLE IF NOT EXISTS `user_to_app_permissions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-CALL _puter_add_col('user_to_app_permissions', 'user_id', '`user_id` int unsigned NOT NULL');
-CALL _puter_add_col('user_to_app_permissions', 'app_id', '`app_id` int unsigned NOT NULL');
-CALL _puter_add_col('user_to_app_permissions', 'permission', '`permission` varchar(255) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL');
-CALL _puter_add_col('user_to_app_permissions', 'extra', '`extra` json DEFAULT NULL');
-CALL _puter_add_col('user_to_app_permissions', 'dt', '`dt` datetime DEFAULT CURRENT_TIMESTAMP');
+CALL _mixt_add_col('user_to_app_permissions', 'user_id', '`user_id` int unsigned NOT NULL');
+CALL _mixt_add_col('user_to_app_permissions', 'app_id', '`app_id` int unsigned NOT NULL');
+CALL _mixt_add_col('user_to_app_permissions', 'permission', '`permission` varchar(255) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL');
+CALL _mixt_add_col('user_to_app_permissions', 'extra', '`extra` json DEFAULT NULL');
+CALL _mixt_add_col('user_to_app_permissions', 'dt', '`dt` datetime DEFAULT CURRENT_TIMESTAMP');
 
 --
 -- Table structure for table `user_to_group_permissions`
@@ -1276,10 +1276,10 @@ CREATE TABLE IF NOT EXISTS `user_to_group_permissions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-CALL _puter_add_col('user_to_group_permissions', 'user_id', '`user_id` int unsigned NOT NULL');
-CALL _puter_add_col('user_to_group_permissions', 'group_id', '`group_id` int unsigned NOT NULL');
-CALL _puter_add_col('user_to_group_permissions', 'permission', '`permission` varchar(255) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL');
-CALL _puter_add_col('user_to_group_permissions', 'extra', '`extra` json DEFAULT NULL');
+CALL _mixt_add_col('user_to_group_permissions', 'user_id', '`user_id` int unsigned NOT NULL');
+CALL _mixt_add_col('user_to_group_permissions', 'group_id', '`group_id` int unsigned NOT NULL');
+CALL _mixt_add_col('user_to_group_permissions', 'permission', '`permission` varchar(255) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL');
+CALL _mixt_add_col('user_to_group_permissions', 'extra', '`extra` json DEFAULT NULL');
 
 --
 -- Table structure for table `user_to_user_permissions`
@@ -1299,10 +1299,10 @@ CREATE TABLE IF NOT EXISTS `user_to_user_permissions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-CALL _puter_add_col('user_to_user_permissions', 'issuer_user_id', '`issuer_user_id` int unsigned NOT NULL');
-CALL _puter_add_col('user_to_user_permissions', 'holder_user_id', '`holder_user_id` int unsigned NOT NULL');
-CALL _puter_add_col('user_to_user_permissions', 'permission', '`permission` varchar(255) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL');
-CALL _puter_add_col('user_to_user_permissions', 'extra', '`extra` json DEFAULT NULL');
+CALL _mixt_add_col('user_to_user_permissions', 'issuer_user_id', '`issuer_user_id` int unsigned NOT NULL');
+CALL _mixt_add_col('user_to_user_permissions', 'holder_user_id', '`holder_user_id` int unsigned NOT NULL');
+CALL _mixt_add_col('user_to_user_permissions', 'permission', '`permission` varchar(255) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL');
+CALL _mixt_add_col('user_to_user_permissions', 'extra', '`extra` json DEFAULT NULL');
 
 --
 -- Table structure for table `user_update_audit`
@@ -1326,18 +1326,18 @@ CREATE TABLE IF NOT EXISTS `user_update_audit` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-CALL _puter_add_col('user_update_audit', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
-CALL _puter_add_col('user_update_audit', 'user_id', '`user_id` int unsigned DEFAULT NULL');
-CALL _puter_add_col('user_update_audit', 'user_id_keep', '`user_id_keep` int unsigned NOT NULL');
-CALL _puter_add_col('user_update_audit', 'created_at', '`created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP');
-CALL _puter_add_col('user_update_audit', 'old_email', '`old_email` varchar(256) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL');
-CALL _puter_add_col('user_update_audit', 'new_email', '`new_email` varchar(256) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL');
-CALL _puter_add_col('user_update_audit', 'old_username', '`old_username` varchar(50) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL');
-CALL _puter_add_col('user_update_audit', 'new_username', '`new_username` varchar(50) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL');
-CALL _puter_add_col('user_update_audit', 'reason', '`reason` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL');
+CALL _mixt_add_col('user_update_audit', 'id', '`id` int unsigned NOT NULL AUTO_INCREMENT');
+CALL _mixt_add_col('user_update_audit', 'user_id', '`user_id` int unsigned DEFAULT NULL');
+CALL _mixt_add_col('user_update_audit', 'user_id_keep', '`user_id_keep` int unsigned NOT NULL');
+CALL _mixt_add_col('user_update_audit', 'created_at', '`created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP');
+CALL _mixt_add_col('user_update_audit', 'old_email', '`old_email` varchar(256) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL');
+CALL _mixt_add_col('user_update_audit', 'new_email', '`new_email` varchar(256) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL');
+CALL _mixt_add_col('user_update_audit', 'old_username', '`old_username` varchar(50) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL');
+CALL _mixt_add_col('user_update_audit', 'new_username', '`new_username` varchar(50) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL');
+CALL _mixt_add_col('user_update_audit', 'reason', '`reason` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL');
 
 
--- _puter_add_col is intentionally NOT dropped here: later migration files CALL
+-- _mixt_add_col is intentionally NOT dropped here: later migration files CALL
 -- it as a one-line idempotent column add, and migrations replay on every boot
 -- with no applied-state tracking, so the helper must outlive this file. The
 -- DROP-before-CREATE at the top keeps this migration itself replay-safe.

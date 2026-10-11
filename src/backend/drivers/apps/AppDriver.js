@@ -33,7 +33,7 @@ import { isUniqueViolation } from '../../util/dbError.js';
 import {
     buildHostedBackingDenial,
     buildHostedSubdomainIndexUrlCandidates,
-    extractPuterHostedSubdomain,
+    extractMixtHostedSubdomain,
     hostedIndexUrlBackingsAreUnavailable,
 } from '../../util/hostedAppBacking.js';
 import {
@@ -51,7 +51,7 @@ import {
     validateUrl,
     WEB_AND_EXTENSION_PROTOCOLS,
 } from '../../util/validation.js';
-import { PuterDriver } from '../types.js';
+import { MixtDriver } from '../types.js';
 
 /**
  * Shared by every method that writes an app row. Each one also allocates or
@@ -88,14 +88,14 @@ const APP_FILETYPE_MAX_LEN = 60;
 // with one of these strings skips the uniqueness check so multiple rows
 // can keep that placeholder URL without merging into each other.
 const INDEX_URL_UNIQUENESS_EXEMPTION_CANDIDATES = [
-    'https://dev-center.puter.com/coming-soon',
+    'https://dev-center.mixt.mpl/coming-soon',
 ];
 
 // Sentinel host for builtin apps. The GUI rewrites index_urls on this
 // host to `<gui origin>/builtin/<name>` (see launchApp.js), so rows
 // carrying it are reserved for migration-seeded builtins — a user app
 // claiming it would load its code same-origin with the desktop.
-const BUILTIN_APPS_HOST = 'builtins.namespaces.puter.com';
+const BUILTIN_APPS_HOST = 'builtins.namespaces.mixt.mpl';
 
 // Canonical-uid alias namespace. When a user-created app is merged into
 // an existing origin-bootstrap row, the source uid is mapped to the
@@ -133,7 +133,7 @@ function indexUrlOrigin(indexUrl) {
 }
 
 /**
- * Driver exposing the `puter-apps` interface.
+ * Driver exposing the `mixt-apps` interface.
  *
  * Wraps AppStore with input validation + permission checks. Methods follow the
  * `crud-q` shape client SDKs expect: create, read, select, update, upsert,
@@ -146,9 +146,9 @@ function indexUrlOrigin(indexUrl) {
  * - `system:es:write-all-owners` grants blanket write
  * - `app:uid#<app_uid>:access` grants protected-app access
  */
-export class AppDriver extends PuterDriver {
-    driverInterface = 'puter-apps';
-    // `es:app` is the wire name puter-js sends in `/drivers/call`'s `driver`
+export class AppDriver extends MixtDriver {
+    driverInterface = 'mixt-apps';
+    // `es:app` is the wire name mixt-js sends in `/drivers/call`'s `driver`
     // field. Origin/main registered the service under that exact key; keep
     // it so existing clients + hardcoded permission keys (`service:es\Capp:…`)
     // resolve without a translation layer.
@@ -222,13 +222,13 @@ export class AppDriver extends PuterDriver {
 
         const fields = await this.#validateInput(object, { isCreate: true });
 
-        // Puter-hosted index_url handling. Order matches v1 AppES:
+        // Mixt-hosted index_url handling. Order matches v1 AppES:
         //   1. Refuse if the index_url's subdomain isn't owned by this user.
         //   2. Try to merge into an existing row with the same index_url
         //      (origin-bootstrap takeover, or claiming an unowned row).
         //   3. Otherwise enforce index_url uniqueness so two rows can't
         //      share a hosted URL.
-        await this.#ensurePuterSiteSubdomainIsOwned(
+        await this.#ensureMixtSiteSubdomainIsOwned(
             fields.index_url,
             actor.user,
         );
@@ -310,7 +310,7 @@ export class AppDriver extends PuterDriver {
 
         await this.#checkReadAccess(app, actor);
 
-        // puter-js's `puter.apps.get(name, opts)` packages opts under `params`
+        // mixt-js's `mixt.apps.get(name, opts)` packages opts under `params`
         // (see `make_driver_method` / `Apps.get`), so stats options live at
         // `args.params.stats_period` rather than the top level. Accept both
         // shapes for forward-compat with anything that still flattens.
@@ -500,11 +500,11 @@ export class AppDriver extends PuterDriver {
             existing: app,
         });
 
-        // Puter-hosted index_url handling on update — same flow as create
+        // Mixt-hosted index_url handling on update — same flow as create
         // but only when the index_url is actually changing. Self-app is
         // excluded from the conflict search via `excludeAppId`.
         if (fields.index_url && fields.index_url !== app.index_url) {
-            await this.#ensurePuterSiteSubdomainIsOwned(
+            await this.#ensureMixtSiteSubdomainIsOwned(
                 fields.index_url,
                 actor.user,
             );
@@ -696,7 +696,7 @@ export class AppDriver extends PuterDriver {
             });
             let iconStr = object.icon;
             // Accepted shapes (mirrors v1's `image-base64` proptype so
-            // puter-js callers keep working):
+            // mixt-js callers keep working):
             //   1. Empty string — unset
             //   2. Raw base64 (no prefix) of a real image — normalized to a
             //      data URL carrying the sniffed MIME
@@ -706,7 +706,7 @@ export class AppDriver extends PuterDriver {
             //      on a host we control)
             // Anything else (including arbitrary http(s) URLs) is rejected:
             // the unauthenticated GET /app-icon/:uid would otherwise 302
-            // there and turn this endpoint into a Puter-branded open
+            // there and turn this endpoint into a Mixt-branded open
             // redirector (cached publicly for 15 min).
             if (iconStr && iconStr.length > 0) {
                 // Raw base64 → wrap as data URL (v1 parity)
@@ -820,7 +820,7 @@ export class AppDriver extends PuterDriver {
         if (reserved.has(hostname)) {
             throw new HttpError(
                 400,
-                '`index_url` cannot point at a Puter system host',
+                '`index_url` cannot point at a Mixt system host',
                 { legacyCode: 'bad_request' },
             );
         }
@@ -1005,7 +1005,7 @@ export class AppDriver extends PuterDriver {
     }
 
     /**
-     * Launch-safety check for puter-hosted `index_url`s, batched across `apps`.
+     * Launch-safety check for mixt-hosted `index_url`s, batched across `apps`.
      * See `util/hostedAppBacking.ts` — the check lives there because every
      * producer of launchable app metadata needs it, not just this driver.
      */
@@ -1137,7 +1137,7 @@ export class AppDriver extends PuterDriver {
         }
 
         // Hosted-subdomain launch guard (independent of the private-app
-        // gate): deny launch when the app's puter-hosted backing is gone or
+        // gate): deny launch when the app's mixt-hosted backing is gone or
         // has been reclaimed by another user, so the GUI never appends the
         // launch token to an origin the app owner no longer controls. Only
         // set when not already denied so a private app's existing decision
@@ -1154,12 +1154,12 @@ export class AppDriver extends PuterDriver {
         return result;
     }
 
-    #extractPuterHostedSubdomain(indexUrl) {
-        return extractPuterHostedSubdomain(indexUrl, this.config);
+    #extractMixtHostedSubdomain(indexUrl) {
+        return extractMixtHostedSubdomain(indexUrl, this.config);
     }
 
-    #isPuterHostedIndexUrl(indexUrl) {
-        return !!this.#extractPuterHostedSubdomain(indexUrl);
+    #isMixtHostedIndexUrl(indexUrl) {
+        return !!this.#extractMixtHostedSubdomain(indexUrl);
     }
 
     /**
@@ -1243,14 +1243,14 @@ export class AppDriver extends PuterDriver {
 
     async #findIndexUrlConflictRow({ indexUrl, excludeAppId } = {}) {
         const aliasGroup = this.#findOriginAliasGroupForIndexUrl(indexUrl);
-        if (!this.#isPuterHostedIndexUrl(indexUrl) && !aliasGroup) return null;
+        if (!this.#isMixtHostedIndexUrl(indexUrl) && !aliasGroup) return null;
 
         const candidates = new Set(
             this.#buildEquivalentIndexUrlCandidates(indexUrl),
         );
 
         // The same subdomain on any other hosting domain is the same site.
-        const hostedSubdomain = this.#extractPuterHostedSubdomain(indexUrl);
+        const hostedSubdomain = this.#extractMixtHostedSubdomain(indexUrl);
         if (hostedSubdomain) {
             for (const candidate of buildHostedSubdomainIndexUrlCandidates(
                 hostedSubdomain,
@@ -1299,9 +1299,9 @@ export class AppDriver extends PuterDriver {
         }
     }
 
-    async #ensurePuterSiteSubdomainIsOwned(indexUrl, user) {
+    async #ensureMixtSiteSubdomainIsOwned(indexUrl, user) {
         if (!user) return;
-        const subdomain = this.#extractPuterHostedSubdomain(indexUrl);
+        const subdomain = this.#extractMixtHostedSubdomain(indexUrl);
         if (!subdomain) return;
 
         let row = await this.stores.subdomain.getBySubdomain(subdomain);
@@ -1415,7 +1415,7 @@ export class AppDriver extends PuterDriver {
 
     /**
      * Merge an incoming create/update into an existing app row that already
-     * owns the same puter-hosted or alias-group index_url. Returns the joined
+     * owns the same mixt-hosted or alias-group index_url. Returns the joined
      * (client-shaped) app on success, or `null` when no merge applied. Throws
      * `app_index_url_already_in_use` when a conflict exists but cannot be
      * merged (different owner, or same-owner non-bootstrap).
@@ -1433,13 +1433,13 @@ export class AppDriver extends PuterDriver {
     } = {}) {
         const indexUrl = object?.index_url;
         // Alias-group hosts (`app_origin_aliases`) get the same merge
-        // treatment as puter-hosted subdomains. Without this, a bootstrap
+        // treatment as mixt-hosted subdomains. Without this, a bootstrap
         // stub on a custom domain could never be absorbed — and since
         // `#findIndexUrlConflictRow` *does* honor alias groups, the
         // uniqueness check below would hard-reject the owner's own
         // create/update instead of merging into the stub.
         if (
-            !this.#isPuterHostedIndexUrl(indexUrl) &&
+            !this.#isMixtHostedIndexUrl(indexUrl) &&
             !this.#findOriginAliasGroupForIndexUrl(indexUrl)
         ) {
             return null;

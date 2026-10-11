@@ -20,12 +20,12 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { v4 as uuidv4 } from 'uuid';
 import { setupTestServer } from '../../testUtil.ts';
-import { PuterServer } from '../../server.ts';
+import { MixtServer } from '../../server.ts';
 import { cleanEmail } from '../../util/email.ts';
 import { isOwnedEmailConflict } from './UserStore.ts';
 
 describe('UserStore', () => {
-    let server: PuterServer;
+    let server: MixtServer;
 
     beforeAll(async () => {
         server = await setupTestServer();
@@ -392,7 +392,7 @@ describe('UserStore', () => {
 });
 
 describe('UserStore batched and uncached lookups', () => {
-    let server: PuterServer;
+    let server: MixtServer;
 
     beforeAll(async () => {
         server = await setupTestServer();
@@ -641,7 +641,7 @@ describe('UserStore batched and uncached lookups', () => {
 });
 
 describe('UserStore deleted-row tombstones', () => {
-    let server: PuterServer;
+    let server: MixtServer;
 
     beforeAll(async () => {
         server = await setupTestServer();

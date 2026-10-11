@@ -109,7 +109,7 @@ async function UIWindowSearch (options) {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${puter.authToken}`,
+                    'Authorization': `Bearer ${mixt.authToken}`,
                 },
                 body: JSON.stringify({ text: searchInput.val() }),
             });

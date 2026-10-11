@@ -24,7 +24,7 @@ import {
     attachmentSummary,
     readContactSubmission,
 } from '../../util/contactAttachments.js';
-import { PuterController } from '../types.js';
+import { MixtController } from '../types.js';
 
 /**
  * System-level endpoints — health, version, contact.
@@ -132,14 +132,14 @@ const CONTACT_US_LIMITS = [
     },
 ];
 
-export class SystemController extends PuterController {
+export class SystemController extends MixtController {
     constructor(config, clients, stores, services, drivers) {
         super(config, clients, stores, services, drivers);
         this.bootTime = Date.now();
     }
 
     registerRoutes(
-        /** @type {import('../../core/http/PuterRouter.js').PuterRouter} */
+        /** @type {import('../../core/http/MixtRouter.js').MixtRouter} */
         router,
     ) {
         // -- Healthcheck ---------------------------------------------
@@ -297,7 +297,7 @@ export class SystemController extends PuterController {
 
                 // Send to support email
                 const supportEmail =
-                    this.config.support_email ?? 'support@puter.com';
+                    this.config.support_email ?? 'support@mixt.mpl';
                 if (this.clients.email && req.actor.user?.email) {
                     try {
                         await this.clients.email.sendRaw({
@@ -328,7 +328,7 @@ export class SystemController extends PuterController {
 
         router.get('/whoarewe', { rateLimit: WHOAREWE_LIMIT }, (_req, res) => {
             res.json({
-                name: 'Puter',
+                name: 'Mixt',
                 version: this.config.version ?? null,
                 environment: this.config.env ?? 'prod',
                 disable_user_signup: Boolean(this.config.disable_user_signup),
@@ -337,7 +337,7 @@ export class SystemController extends PuterController {
 
         // -- GET|POST /lsmod -----------------------------------------
         // Enumerates driver interfaces and their implementors. POST is
-        // also routed because puter.js `drivers.list()` sends POST.
+        // also routed because mixt.js `drivers.list()` sends POST.
 
         const lsmod = (_req, res) => {
             const interfaces = {};
@@ -368,7 +368,7 @@ export class SystemController extends PuterController {
 
     onServerStart() {}
     onServerPrepareShutdown() {
-        globalThis.__puter_draining = true;
+        globalThis.__mixt_draining = true;
     }
     onServerShutdown() {}
 }

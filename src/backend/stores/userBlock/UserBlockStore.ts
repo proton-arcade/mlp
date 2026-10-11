@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { PuterStore } from '../types';
+import { MixtStore } from '../types';
 
 /** One row of `user_block`. `created_at` is unix seconds. */
 export interface UserBlockRow {
@@ -34,7 +34,7 @@ export interface UserBlockRow {
  * path. Uncached: a block has to bite immediately, and one indexed lookup per
  * share isn't worth trading that for.
  */
-export class UserBlockStore extends PuterStore {
+export class UserBlockStore extends MixtStore {
     // -- Reads --------------------------------------------------------
 
     /** Whether `blockerUserId` refuses shares from `blockedUserId`. */

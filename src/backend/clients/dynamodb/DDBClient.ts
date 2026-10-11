@@ -44,7 +44,7 @@ import { Agent as httpsAgent } from 'node:https';
 import { HttpError } from '../../core/http';
 import type { IConfig, IDynamoConfig } from '../../types';
 import { Span } from '../../util/span.js';
-import { PuterClient } from '../types';
+import { MixtClient } from '../types';
 import {
     clampStoredNumber,
     isRepairableMarshallError,
@@ -68,7 +68,7 @@ const getDynalitePathKey = (path?: string, inMemory?: boolean) => {
     if (inMemory) return `${LOCAL_DYNAMO_MEMORY_PREFIX}#${randomUUID()}`;
     if (path === ':memory:')
         return `${LOCAL_DYNAMO_MEMORY_PREFIX}#${randomUUID()}`;
-    return path || './volatile/runtime/puter-ddb';
+    return path || './volatile/runtime/mixt-ddb';
 };
 
 const isMemoryPathKey = (pathKey: string) =>
@@ -165,7 +165,7 @@ const sendRepairingValues = async <TPayload, TResult>(
     }
 };
 
-export class DDBClient extends PuterClient {
+export class DDBClient extends MixtClient {
     #documentClient: DynamoDBDocumentClient | null = null;
     #localInitPromise: Promise<void> | null = null;
     #ddbConfig: IDynamoConfig;

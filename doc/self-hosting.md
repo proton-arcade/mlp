@@ -21,7 +21,7 @@ On the first run the script:
 2. Installs npm dependencies.
 3. Writes `config.json` from `config.default.json`, if it is missing.
 4. Creates the local certificate, if it is missing.
-5. Builds the GUI and the Puter.js SDK.
+5. Builds the GUI and the Mixt.js SDK.
 6. Starts the backend on an internal port, and the HTTPS front on port 443 in front of it.
 
 Open `https://localhost/`.
@@ -39,7 +39,7 @@ Use the **Admin** tab in the dashboard:
 - **Add**: enter a username. An existing account is whitelisted and keeps its password. A new account is created with a one-time temporary password, which is shown once and expires after 24 hours. Share it with the user out of band; they should change it at first sign-in.
 - **Remove**: revokes access at once. The user's current sessions stop working, and they cannot sign in again until they are re-added.
 
-The Admin tab also shows the server's state: the live user count, every account (creation time, username, email, the built-in `<username>@puter.email` address and its mailbox, and whether a password is set), app counts, and other server data. Password hashes and plaintext passwords are never displayed.
+The Admin tab also shows the server's state: the live user count, every account (creation time, username, email, the built-in `<username>@mixt.email` address and its mailbox, and whether a password is set), app counts, and other server data. Password hashes and plaintext passwords are never displayed.
 
 ## Configuration
 
@@ -58,13 +58,13 @@ The defaults set:
 
 Runtime data lives under `volatile/`, which is git-ignored:
 
-- `volatile/runtime/`: the default SQLite database (`puter-database.sqlite`).
+- `volatile/runtime/`: the default SQLite database (`mixt-database.sqlite`).
 - `volatile/tls/`: the local HTTPS certificate.
 
 Back up `volatile/runtime/` to keep your data.
 
 ## Notes
 
-- Mixt keeps Puter's server internals, so the wire protocol and the `puter` SDK are unchanged.
+- Mixt keeps Mixt OS's server internals, so the wire protocol and the `mixt` SDK are unchanged.
 - The AI features are removed. There are no AI providers to configure.
-- The Docker and install scripts in the repository (`Dockerfile`, `docker-compose.yml`, `install.sh`, `install.ps1`) were inherited from Puter and have not been rebuilt for Mixt. Use `node server.cjs` unless you have tested the container setup yourself.
+- The Docker and install scripts in the repository (`Dockerfile`, `docker-compose.yml`, `install.sh`, `install.ps1`) were inherited from Mixt OS and have not been rebuilt for Mixt. Use `node server.cjs` unless you have tested the container setup yourself.

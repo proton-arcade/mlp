@@ -19,7 +19,7 @@
 -- account's data belongs in — a node id, not a storage region. NULL for
 -- accounts that predate the column, which fall back to `signup_server`.
 --
--- Idempotent: the column add uses _puter_add_col (defined in mig_1, which
+-- Idempotent: the column add uses _mixt_add_col (defined in mig_1, which
 -- leaves it resident for later migrations).
 
-CALL _puter_add_col('user', 'home', '`home` VARCHAR(64) DEFAULT NULL');
+CALL _mixt_add_col('user', 'home', '`home` VARCHAR(64) DEFAULT NULL');

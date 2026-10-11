@@ -22,8 +22,8 @@ import { appTileLink } from './appLink.js';
 
 describe('appTileLink', () => {
     it('builds the /app/<name> landing against the given origin', () => {
-        expect(appTileLink({ appName: 'editor' }, 'https://puter.com'))
-            .toBe('https://puter.com/app/editor');
+        expect(appTileLink({ appName: 'editor' }, 'https://mixt.mpl'))
+            .toBe('https://mixt.mpl/app/editor');
     });
 
     it('falls back to a root-relative link with no origin', () => {
@@ -31,17 +31,17 @@ describe('appTileLink', () => {
     });
 
     it('encodes names that are not URL-safe', () => {
-        expect(appTileLink({ appName: 'my app/v2' }, 'https://puter.com'))
-            .toBe('https://puter.com/app/my%20app%2Fv2');
+        expect(appTileLink({ appName: 'my app/v2' }, 'https://mixt.mpl'))
+            .toBe('https://mixt.mpl/app/my%20app%2Fv2');
     });
 
     it('prefers an external tile\'s own site address', () => {
-        expect(appTileLink({ appName: 'app-123', targetLink: 'https://example.com/' }, 'https://puter.com'))
+        expect(appTileLink({ appName: 'app-123', targetLink: 'https://example.com/' }, 'https://mixt.mpl'))
             .toBe('https://example.com/');
     });
 
     it('has no link for a tile that names no app — a folder', () => {
-        expect(appTileLink({}, 'https://puter.com')).toBe('');
-        expect(appTileLink(undefined, 'https://puter.com')).toBe('');
+        expect(appTileLink({}, 'https://mixt.mpl')).toBe('');
+        expect(appTileLink(undefined, 'https://mixt.mpl')).toBe('');
     });
 });

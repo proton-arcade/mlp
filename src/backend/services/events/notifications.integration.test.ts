@@ -40,7 +40,7 @@ import {
     vi,
 } from 'vitest';
 import { runWithContext } from '../../core/context.js';
-import type { PuterServer } from '../../server.js';
+import type { MixtServer } from '../../server.js';
 import { setupTestServer } from '../../testUtil.js';
 import type { IConfig } from '../../types.js';
 import { NOTIF_DELIVERY_EVENT } from '../notification/notificationSocket.js';
@@ -85,7 +85,7 @@ interface Sent {
 
 const withServer = (config: IConfig) => {
     const state: {
-        server: PuterServer;
+        server: MixtServer;
         sent: Sent[];
         delivered: DeliveryEnvelope[];
     } = { server: null as never, sent: [], delivered: [] };
@@ -133,7 +133,7 @@ const withServer = (config: IConfig) => {
 };
 
 const makeUser = async (
-    server: PuterServer,
+    server: MixtServer,
 ): Promise<{ id: number; uuid: string; username: string }> => {
     const username = `fold-${Math.random().toString(36).slice(2, 10)}`;
     const uuid = uuidv4();
@@ -149,7 +149,7 @@ const makeUser = async (
 
 /** An app row the user owns, so `developer` rows have somewhere to point. */
 const makeApp = async (
-    server: PuterServer,
+    server: MixtServer,
     ownerUserId: number,
 ): Promise<string> => {
     const uid = `app-${uuidv4()}`;
@@ -201,7 +201,7 @@ const forwardedFor = (
 
 /** Replay one forwarded event into a server, exactly as a peer region does. */
 const applyAsPeer = async (
-    server: PuterServer,
+    server: MixtServer,
     event: { key: string; data: unknown },
 ): Promise<void> => {
     const body = { events: [{ ...event, meta: {} }] };

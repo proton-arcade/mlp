@@ -50,7 +50,7 @@ import { applyInlineContentSecurity } from '../../util/inlineContentSecurity.js'
 import { listClientShares } from '../share/clientShare.js';
 import { SHARE_LIST_LIMIT } from '../share/limits.js';
 import { consumeRouteRateLimit } from '../../core/http/middleware/rateLimit.js';
-import { PuterController } from '../types.js';
+import { MixtController } from '../types.js';
 import { STORAGE_OP_COSTS } from '../../services/metering/costs.js';
 import {
     FS_BATCH_WRITE_MAX_ITEMS,
@@ -131,7 +131,7 @@ const DEFAULT_BATCH_ACL_CHECK_CONCURRENCY = 32;
 const DEFAULT_BATCH_WRITE_SIDE_EFFECT_CONCURRENCY = 8;
 
 @Controller('/fs')
-export class FSController extends PuterController {
+export class FSController extends MixtController {
     // Object-store requests are reported here because the filesystem is what
     // makes them. Bytes leaving the server are not: they are metered for every
     // response, so `MeteringService` prices them.

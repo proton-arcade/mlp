@@ -1,13 +1,13 @@
-import { extension } from '@heyputer/backend/src/extensions';
+import { extension } from '@mixt/backend/src/extensions';
 import { createHmac, randomBytes, timingSafeEqual } from 'node:crypto';
 import type { Request } from 'express';
 import {
     MAX_MESSAGE_BYTES,
-    isPuterEmailAddress,
+    isMixtEmailAddress,
     isTempUser,
-    puterEmailUsername,
+    mixtEmailUsername,
     storeInboxMessage,
-} from '@heyputer/backend/src/services/email/mailbox.js';
+} from '@mixt/backend/src/services/email/mailbox.js';
 
 // copied form peer secrets checker
 const COMPARE_KEY = randomBytes(32);
@@ -41,8 +41,8 @@ const FEEDBACK_ADDRESSES = new Set(
 const MAX_FEEDBACK_BYTES = 5 * 1024 * 1024;
 
 const isFeedbackAddress = (to: string): boolean =>
-    isPuterEmailAddress(to) &&
-    FEEDBACK_ADDRESSES.has(puterEmailUsername(to).toLowerCase());
+    isMixtEmailAddress(to) &&
+    FEEDBACK_ADDRESSES.has(mixtEmailUsername(to).toLowerCase());
 
 const readBody = async (req: Request): Promise<Buffer> => {
     const chunks: Buffer[] = [];
@@ -134,7 +134,7 @@ if (!INGRESS_SECRET) {
             }
 
             const user = await stores.user.getByUsername(
-                puterEmailUsername(to),
+                mixtEmailUsername(to),
             );
             if (!user) {
                 refuse(404, 'drain');
@@ -154,7 +154,7 @@ if (!INGRESS_SECRET) {
             });
 
             const { SECRET: _secret, ..._loggableQuery } = req.query;
-            // console.log('got email: ', puterUser, loggableQuery, size);
+            // console.log('got email: ', mixtUser, loggableQuery, size);
             res.end();
         },
     );

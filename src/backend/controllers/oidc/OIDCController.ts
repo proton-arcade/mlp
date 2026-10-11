@@ -21,8 +21,8 @@ import crypto from 'node:crypto';
 import { validate as validateUuid } from 'uuid';
 import type { Request, Response } from 'express';
 import { HttpError } from '../../core/http/HttpError.js';
-import type { PuterRouter } from '../../core/http/PuterRouter.js';
-import { PuterController } from '../types.js';
+import type { MixtRouter } from '../../core/http/MixtRouter.js';
+import { MixtController } from '../types.js';
 import { sessionCookieFlags } from '../../util/cookieFlags.js';
 import { normalizeBonusCode } from '../../util/signupBonus.js';
 import { parseMaskedSharePath } from '../../services/fs/sharePathMask.js';
@@ -32,18 +32,18 @@ import {
     SHARE_RECIPIENT_PARAM,
 } from '../../services/share/shareDeepLink.js';
 
-const REVALIDATION_COOKIE_NAME = 'puter_revalidation';
+const REVALIDATION_COOKIE_NAME = 'mixt_revalidation';
 const REVALIDATION_EXPIRY_SEC = 300;
 
 // Companion cookie that binds an OIDC flow to the browser that started it.
 // Expiry mirrors STATE_EXPIRY_SEC in OIDCService — the state and its
 // browser-binding cookie must expire together.
-const OIDC_NONCE_COOKIE_NAME = 'puter_oidc_nonce';
+const OIDC_NONCE_COOKIE_NAME = 'mixt_oidc_nonce';
 const OIDC_NONCE_EXPIRY_SEC = 600;
 
 // Single-use, and binds a popup-return proof to the browser that earned it.
 // Expiry mirrors POPUP_RETURN_EXPIRY_SEC in OIDCService.
-const OIDC_POPUP_RETURN_COOKIE_NAME = 'puter_oidc_popup_return';
+const OIDC_POPUP_RETURN_COOKIE_NAME = 'mixt_oidc_popup_return';
 const OIDC_POPUP_RETURN_EXPIRY_SEC = 300;
 
 // The popup branch below hard-codes this return target.
@@ -298,7 +298,7 @@ function constantTimeEqual(a: string, b: string): boolean {
 /**
  * True iff `target` parses as a URL whose origin equals `origin`. Used to clamp
  * OIDC redirect targets — `startsWith` would accept
- * `https://puter.com.evil.com` against `https://puter.com`.
+ * `https://mixt.mpl.evil.com` against `https://mixt.mpl`.
  */
 function isSameOrigin(target: string, origin: string): boolean {
     if (!origin) return true;
@@ -313,8 +313,8 @@ function isSameOrigin(target: string, origin: string): boolean {
  * OIDC controller — provider listing, auth start, callbacks for
  * login/signup/revalidate, and revalidate-done landing page.
  */
-export class OIDCController extends PuterController {
-    registerRoutes(router: PuterRouter): void {
+export class OIDCController extends MixtController {
+    registerRoutes(router: MixtRouter): void {
         // -- POST /auth/oidc/verify-popup-return ---------------------
         // Public — hand back the facts a popup-return proof attests to.
         //
@@ -786,7 +786,7 @@ export class OIDCController extends PuterController {
 (function(){
 var origin = ${JSON.stringify(origin)};
 if (window.opener) {
-  try { window.opener.postMessage({ type: 'puter-revalidate-done' }, origin); } catch (e) {}
+  try { window.opener.postMessage({ type: 'mixt-revalidate-done' }, origin); } catch (e) {}
   window.close();
 } else {
   document.body.innerHTML = '<p>Re-validated. You can close this tab.</p>';
@@ -817,7 +817,7 @@ if (window.opener) {
     }
 
     /**
-     * Resolve an OIDC callback to a Puter user. In order:
+     * Resolve an OIDC callback to a Mixt user. In order:
      *
      * 1. Existing link on (provider, sub) → that user.
      * 2. Email matches an existing account whose email is CONFIRMED → link
@@ -1020,7 +1020,7 @@ if (window.opener) {
                 user as import('../../stores/user/UserStore.js').UserRow,
             );
 
-        const cookieName = this.config.cookie_name ?? 'puter_token';
+        const cookieName = this.config.cookie_name ?? 'mixt_token';
         res.cookie(cookieName, sessionToken, {
             ...sessionCookieFlags(this.config),
             httpOnly: true,

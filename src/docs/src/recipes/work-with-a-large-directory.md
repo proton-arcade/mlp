@@ -1,11 +1,11 @@
 ---
 title: Work With a Large Directory
-description: "Learn how to list a directory with thousands of files in Puter.js, so your app can load and show it one page at a time."
+description: "Learn how to list a directory with thousands of files in Mixt.js, so your app can load and show it one page at a time."
 tags: [fs, performance]
 order: 46
 ---
 
-Reading a directory with [`puter.fs.readdir()`](/FS/readdir/) returns every item
+Reading a directory with [`mixt.fs.readdir()`](/FS/readdir/) returns every item
 in one call, as shown in [Store Files](/recipes/store-files/). That works for a
 folder of a few dozen files. A folder of user uploads or generated exports can
 grow to thousands of items, and loading all of them before showing anything
@@ -20,14 +20,14 @@ Passing a `cursor` switches the result to a page object with `items` and
 `cursor`. For the first page, pass `null`:
 
 ```js
-let page = await puter.fs.readdir({ path: 'uploads', cursor: null, limit: 100 });
+let page = await mixt.fs.readdir({ path: 'uploads', cursor: null, limit: 100 });
 
 for (;;) {
     for (const item of page.items) {
         console.log(item.name);
     }
     if (!page.cursor) break;
-    page = await puter.fs.readdir({ path: 'uploads', cursor: page.cursor, limit: 100 });
+    page = await mixt.fs.readdir({ path: 'uploads', cursor: page.cursor, limit: 100 });
 }
 ```
 
@@ -44,7 +44,7 @@ To read the whole directory, pass `stream: true`. The
 with `for await`:
 
 ```js
-for await (const page of puter.fs.readdir({ path: 'uploads', stream: true })) {
+for await (const page of mixt.fs.readdir({ path: 'uploads', stream: true })) {
     for (const item of page.items) {
         console.log(item.name);
     }
@@ -59,7 +59,7 @@ Each loop gives you one page, and the cursor is handled for you. Set
 To change the order, pass `sortBy` and `sortOrder`:
 
 ```js
-const items = await puter.fs.readdir({
+const items = await mixt.fs.readdir({
     path: 'uploads',
     sortBy: 'modified',
     sortOrder: 'desc',
@@ -76,7 +76,7 @@ To list the contents of subdirectories as well, pass `recursive: true`. Set
 `depth` to limit how many levels down it goes:
 
 ```js
-const items = await puter.fs.readdir({
+const items = await mixt.fs.readdir({
     path: 'uploads',
     recursive: true,
     depth: 2,
@@ -94,7 +94,7 @@ switches the result to a page object, so you get the count along with the first
 page:
 
 ```js
-const { items, total, cursor } = await puter.fs.readdir({
+const { items, total, cursor } = await mixt.fs.readdir({
     path: 'uploads',
     cursor: null,
     limit: 50,

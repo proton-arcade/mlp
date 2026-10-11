@@ -28,13 +28,13 @@ import {
     it,
     vi,
 } from 'vitest';
-import { PuterServer } from '../../server.ts';
+import { MixtServer } from '../../server.ts';
 import { setupTestServer } from '../../testUtil.ts';
 import { isFreeSubscription } from '../metering/consts.ts';
 
 describe('team and seat caps', () => {
-    let server: PuterServer;
-    let service: PuterServer['services']['team'];
+    let server: MixtServer;
+    let service: MixtServer['services']['team'];
 
     /** Small enough to reach; the shipped default is 50. */
     const SEAT_CAP = 3;

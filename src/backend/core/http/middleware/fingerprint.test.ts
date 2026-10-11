@@ -60,9 +60,9 @@ describe('createFingerprintMiddleware', () => {
         expect(req.deviceFingerprint).toBe(VALID_FP);
     });
 
-    it('falls back to the x-puter-device-fingerprint header', () => {
+    it('falls back to the x-mixt-device-fingerprint header', () => {
         const { req } = run({
-            headers: { 'x-puter-device-fingerprint': VALID_FP },
+            headers: { 'x-mixt-device-fingerprint': VALID_FP },
         });
         expect(req.deviceFingerprint).toBe(VALID_FP);
     });
@@ -70,7 +70,7 @@ describe('createFingerprintMiddleware', () => {
     it('prefers the body fingerprint over the header', () => {
         const { req } = run({
             body: { fingerprint: VALID_FP },
-            headers: { 'x-puter-device-fingerprint': 'other-fingerprint-xyz' },
+            headers: { 'x-mixt-device-fingerprint': 'other-fingerprint-xyz' },
         });
         expect(req.deviceFingerprint).toBe(VALID_FP);
     });

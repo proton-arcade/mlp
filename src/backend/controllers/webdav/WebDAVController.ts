@@ -57,7 +57,7 @@ import {
 import { Context } from '../../core/context.js';
 import type { FSEntry } from '../../stores/fs/FSEntry.js';
 import { toLegacyEntry } from '../fs/legacyFsHelpers.js';
-import { PuterController } from '../types.js';
+import { MixtController } from '../types.js';
 import {
     createLock,
     deleteLock,
@@ -140,7 +140,7 @@ interface DavContext {
  * `req.actor` if a session cookie is present.
  */
 @Controller()
-export class WebDAVController extends PuterController {
+export class WebDAVController extends MixtController {
     // -- Routes ------------------------------------------------------
     //
     // One route per verb, every one of them the same catch-all. Declaration

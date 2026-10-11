@@ -1,12 +1,12 @@
 ---
 title: Keep an Index in Sync
-description: "Learn how to look up records by more than one field in the Puter.js key-value database, and keep those extra keys up to date."
+description: "Learn how to look up records by more than one field in the Mixt.js key-value database, and keep those extra keys up to date."
 tags: [kv, data-modeling, performance]
 order: 37
 ---
 
 In a SQL database you can add an index to a column, and the database keeps it
-up to date for you. [`puter.kv`](/KV/) only looks things up by key or key
+up to date for you. [`mixt.kv`](/KV/) only looks things up by key or key
 prefix, so to find records by another field you write an extra key yourself, as
 shown in [Query a Collection](/recipes/query-collection/#query-by-another-field).
 That extra key is an index, and it's up to your code to keep it correct.
@@ -42,16 +42,16 @@ const summary = (order) => ({
 ```
 
 To create an order, pass an array of `{ key, value }` items to
-[`puter.kv.set()`](/KV/set/). This writes the record and its index keys in one
+[`mixt.kv.set()`](/KV/set/). This writes the record and its index keys in one
 request:
 
 ```js
 async function createOrder (order) {
-    await puter.kv.set([
+    await mixt.kv.set([
         { key: `order:${ order.id }`, value: order },
         ...indexKeys(order).map((key) => ({ key, value: summary(order) })),
     ]);
-    await puter.kv.incr('order-counts', { [order.status]: 1 });
+    await mixt.kv.incr('order-counts', { [order.status]: 1 });
 }
 ```
 
@@ -63,7 +63,7 @@ Counters](/recipes/add-counters/#count-several-things-in-one-key)).
 To list orders by status, list the keys that start with that status:
 
 ```js
-const { items, cursor } = await puter.kv.list({
+const { items, cursor } = await mixt.kv.list({
     pattern: 'order-by-status:open:',
     returnValues: true,
     limit: 50,
@@ -71,10 +71,10 @@ const { items, cursor } = await puter.kv.list({
 // [{ key: 'order-by-status:open:o1', value: { id: 'o1', status: 'open', ... } }, ...]
 ```
 
-To show the full order, read the record with [`puter.kv.get()`](/KV/get/):
+To show the full order, read the record with [`mixt.kv.get()`](/KV/get/):
 
 ```js
-const order = await puter.kv.get(`order:${ id }`);
+const order = await mixt.kv.get(`order:${ id }`);
 ```
 
 ## Change a Record
@@ -85,10 +85,10 @@ used anymore:
 
 ```js
 async function updateOrder (id, changes) {
-    const before = await puter.kv.get(`order:${ id }`);
+    const before = await mixt.kv.get(`order:${ id }`);
     const after = { ...before, ...changes };
 
-    await puter.kv.set([
+    await mixt.kv.set([
         { key: `order:${ id }`, value: after },
         ...indexKeys(after).map((key) => ({ key, value: summary(after) })),
     ]);
@@ -96,12 +96,12 @@ async function updateOrder (id, changes) {
     const newKeys = indexKeys(after);
     for ( const key of indexKeys(before) ) {
         if ( ! newKeys.includes(key) ) {
-            await puter.kv.del(key);
+            await mixt.kv.del(key);
         }
     }
 
     if ( before.status !== after.status ) {
-        await puter.kv.incr('order-counts', { [before.status]: -1, [after.status]: 1 });
+        await mixt.kv.incr('order-counts', { [before.status]: -1, [after.status]: 1 });
     }
 }
 ```
@@ -121,14 +121,14 @@ Delete the index keys first and the record last:
 
 ```js
 async function deleteOrder (id) {
-    const order = await puter.kv.get(`order:${ id }`);
+    const order = await mixt.kv.get(`order:${ id }`);
     if ( order === null ) return;
 
     for ( const key of indexKeys(order) ) {
-        await puter.kv.del(key);
+        await mixt.kv.del(key);
     }
-    await puter.kv.del(`order:${ id }`);
-    await puter.kv.incr('order-counts', { [order.status]: -1 });
+    await mixt.kv.del(`order:${ id }`);
+    await mixt.kv.incr('order-counts', { [order.status]: -1 });
 }
 ```
 
@@ -142,10 +142,10 @@ end up out of date. When that matters, like an order still showing as open
 after it shipped, check the record before trusting the index:
 
 ```js
-const order = await puter.kv.get(`order:${ entry.value.id }`);
+const order = await mixt.kv.get(`order:${ entry.value.id }`);
 
 if ( order === null || order.status !== 'open' ) {
-    await puter.kv.del(entry.key);   // out of date, remove it
+    await mixt.kv.del(entry.key);   // out of date, remove it
 }
 ```
 
@@ -154,14 +154,14 @@ if ( order === null || order.status !== 'open' ) {
 The `order-counts` key gives you counts with one small read:
 
 ```js
-const counts = await puter.kv.get('order-counts') ?? {};
+const counts = await mixt.kv.get('order-counts') ?? {};
 // { open: 12, shipped: 40 }
 ```
 
-You can also count with `includeTotal` on [`puter.kv.list()`](/KV/list/):
+You can also count with `includeTotal` on [`mixt.kv.list()`](/KV/list/):
 
 ```js
-const { total } = await puter.kv.list({
+const { total } = await mixt.kv.list({
     pattern: 'order-by-status:open:',
     limit: 1,
     includeTotal: true,
@@ -175,7 +175,7 @@ counter for numbers you show often, and `includeTotal` once in a while to fix
 it:
 
 ```js
-await puter.kv.update('order-counts', { open: total });
+await mixt.kv.update('order-counts', { open: total });
 ```
 
 ## Search as the User Types
@@ -184,7 +184,7 @@ An index can also power a search box that suggests matches as the user types.
 Put the lowercased name at the start of the key:
 
 ```js
-await puter.kv.set(`contact-by-name:${ contact.name.toLowerCase() }:${ contact.id }`, {
+await mixt.kv.set(`contact-by-name:${ contact.name.toLowerCase() }:${ contact.id }`, {
     id: contact.id,
     name: contact.name,
 });
@@ -193,7 +193,7 @@ await puter.kv.set(`contact-by-name:${ contact.name.toLowerCase() }:${ contact.i
 Then list the keys that start with what's been typed so far:
 
 ```js
-const { items } = await puter.kv.list({
+const { items } = await mixt.kv.list({
     pattern: `contact-by-name:${ typed.toLowerCase() }`,
     returnValues: true,
     limit: 10,
@@ -204,7 +204,7 @@ const { items } = await puter.kv.list({
 Results come back in alphabetical order. This only matches names that start
 with the typed text. To match any word in a name, write one index key per word.
 
-[`puter.kv.list()`](/KV/list/) has a lower [rate
+[`mixt.kv.list()`](/KV/list/) has a lower [rate
 limit](/rate-limits-and-quotas/#key-value-store) than other calls, so don't
 call it on every keystroke. Wait until the user stops typing for a moment.
 
@@ -217,17 +217,17 @@ writes its index keys back, one batch per page:
 ```js
 const counts = {};
 
-for await ( const page of puter.kv.list({ pattern: 'order:', returnValues: true, stream: true }) ) {
+for await ( const page of mixt.kv.list({ pattern: 'order:', returnValues: true, stream: true }) ) {
     const items = [];
     for ( const { value: order } of page.items ) {
         counts[order.status] = (counts[order.status] ?? 0) + 1;
         items.push(...indexKeys(order).map((key) => ({ key, value: summary(order) })));
     }
     if ( items.length > 0 ) {
-        await puter.kv.set(items);
+        await mixt.kv.set(items);
     }
 }
-await puter.kv.set('order-counts', counts);
+await mixt.kv.set('order-counts', counts);
 ```
 
 The `order:` pattern only matches records. `order-counts` and the index keys
@@ -238,11 +238,11 @@ too, go through the index and delete any key whose record is gone or doesn't
 match anymore:
 
 ```js
-for await ( const page of puter.kv.list({ pattern: 'order-by-', returnValues: true, stream: true }) ) {
+for await ( const page of mixt.kv.list({ pattern: 'order-by-', returnValues: true, stream: true }) ) {
     for ( const { key, value } of page.items ) {
-        const order = await puter.kv.get(`order:${ value.id }`);
+        const order = await mixt.kv.get(`order:${ value.id }`);
         if ( order === null || ! indexKeys(order).includes(key) ) {
-            await puter.kv.del(key);
+            await mixt.kv.del(key);
         }
     }
 }

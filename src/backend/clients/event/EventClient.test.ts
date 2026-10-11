@@ -9,12 +9,12 @@ import {
     vi,
 } from 'vitest';
 import { extensionStore } from '../../extensions.ts';
-import { PuterServer } from '../../server.ts';
+import { MixtServer } from '../../server.ts';
 import { setupTestServer } from '../../testUtil.ts';
 import type { EventClient } from './EventClient.js';
 
 describe('EventClient', () => {
-    let server: PuterServer;
+    let server: MixtServer;
     let target: EventClient;
 
     beforeAll(async () => {

@@ -21,24 +21,24 @@ import type { Request, RequestHandler, Response } from 'express';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { v4 as uuidv4 } from 'uuid';
 import type { Actor } from '../../core/actor.js';
-import { PuterRouter } from '../../core/http/PuterRouter.js';
-import { PuterServer } from '../../server.js';
+import { MixtRouter } from '../../core/http/MixtRouter.js';
+import { MixtServer } from '../../server.js';
 import { setupTestServer } from '../../testUtil.js';
 
 // ── Test harness ────────────────────────────────────────────────────
 //
-// Boots one real PuterServer (in-memory sqlite + dynamo + s3 + mock
+// Boots one real MixtServer (in-memory sqlite + dynamo + s3 + mock
 // redis) and re-registers HomepageController's inline lambda routes
-// onto a fresh PuterRouter so each handler is reachable. Tests
-// exercise the live PuterHomepageService (it renders the shell HTML
+// onto a fresh MixtRouter so each handler is reachable. Tests
+// exercise the live MixtHomepageService (it renders the shell HTML
 // to res.send) and the real AppStore for /app/:name.
 
-let server: PuterServer;
-let router: PuterRouter;
+let server: MixtServer;
+let router: MixtRouter;
 
 beforeAll(async () => {
     server = await setupTestServer();
-    router = new PuterRouter();
+    router = new MixtRouter();
     server.controllers.homepage.registerRoutes(router);
 });
 
@@ -157,12 +157,12 @@ describe('HomepageController shell routes', () => {
     it('renders the live shell HTML on the root path', async () => {
         const { res, captured } = makeRes();
         await callRoute('get', '/', makeReq({ path: '/' }), res);
-        // PuterHomepageService.send writes the rendered HTML via res.send.
+        // MixtHomepageService.send writes the rendered HTML via res.send.
         expect(typeof captured.body).toBe('string');
         const html = String(captured.body);
         expect(html).toMatch(/<!DOCTYPE html>/i);
         // The configured page title flows through the meta block.
-        expect(html).toContain('Puter');
+        expect(html).toContain('Mixt');
     });
 
     it('exposes disable_temp_users to the GUI when signups are disabled', async () => {

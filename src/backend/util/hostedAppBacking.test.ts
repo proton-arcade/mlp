@@ -19,13 +19,13 @@
 
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { v4 as uuidv4 } from 'uuid';
-import { PuterServer } from '../server.js';
+import { MixtServer } from '../server.js';
 import { setupTestServer } from '../testUtil.js';
 import {
     buildHostedBackingDenial,
     buildHostedSubdomainIndexUrlCandidates,
-    extractPuterHostedSubdomain,
-    getPuterHostedDomains,
+    extractMixtHostedSubdomain,
+    getMixtHostedDomains,
     hostedIndexUrlBackingIsUnavailable,
     hostedIndexUrlBackingsAreUnavailable,
 } from './hostedAppBacking.js';
@@ -38,7 +38,7 @@ import {
 
 const CONFIG = {
     static_hosting_domain: 'site.localhost',
-    static_hosting_domain_alt: 'puter.site',
+    static_hosting_domain_alt: 'mixt.site',
     private_app_hosting_domain: 'private.localhost',
 };
 
@@ -49,22 +49,22 @@ const fakeStore = (
     ) => Promise<Record<string, unknown> | null>,
 ) => ({ getBySubdomain: vi.fn(impl) }) as never;
 
-describe('getPuterHostedDomains', () => {
+describe('getMixtHostedDomains', () => {
     it('collects, normalizes, and dedupes the configured domains', () => {
         expect(
-            getPuterHostedDomains({
-                static_hosting_domain: '  .Puter.Site  ',
-                static_hosting_domain_alt: 'puter.site',
+            getMixtHostedDomains({
+                static_hosting_domain: '  .Mixt.Site  ',
+                static_hosting_domain_alt: 'mixt.site',
                 private_app_hosting_domain: 'private.localhost:4100',
             }).sort(),
-        ).toEqual(['private.localhost', 'puter.site']);
+        ).toEqual(['private.localhost', 'mixt.site']);
     });
 
     it('ignores absent and non-string config values', () => {
-        expect(getPuterHostedDomains(undefined)).toEqual([]);
-        expect(getPuterHostedDomains(null)).toEqual([]);
+        expect(getMixtHostedDomains(undefined)).toEqual([]);
+        expect(getMixtHostedDomains(null)).toEqual([]);
         expect(
-            getPuterHostedDomains({
+            getMixtHostedDomains({
                 static_hosting_domain: '',
                 static_hosting_domain_alt: 42 as unknown as string,
             }),
@@ -75,17 +75,17 @@ describe('getPuterHostedDomains', () => {
 describe('buildHostedSubdomainIndexUrlCandidates', () => {
     it('covers every hosting domain, protocol and path variant', () => {
         const candidates = buildHostedSubdomainIndexUrlCandidates('myapp', {
-            static_hosting_domain: 'puter.site',
+            static_hosting_domain: 'mixt.site',
             protocol: 'https:',
         });
         expect(candidates).toEqual(
             expect.arrayContaining([
-                'https://myapp.puter.site',
-                'https://myapp.puter.site/',
-                'https://myapp.puter.site/index.html',
-                'http://myapp.puter.site',
-                'http://myapp.puter.site/',
-                'http://myapp.puter.site/index.html',
+                'https://myapp.mixt.site',
+                'https://myapp.mixt.site/',
+                'https://myapp.mixt.site/index.html',
+                'http://myapp.mixt.site',
+                'http://myapp.mixt.site/',
+                'http://myapp.mixt.site/index.html',
             ]),
         );
         // Nothing beyond the three path shapes the app write path accepts.
@@ -103,7 +103,7 @@ describe('buildHostedSubdomainIndexUrlCandidates', () => {
 
     it('spans the alt and private hosting domains', () => {
         const candidates = buildHostedSubdomainIndexUrlCandidates('x', CONFIG);
-        expect(candidates).toContain('https://x.puter.site/');
+        expect(candidates).toContain('https://x.mixt.site/');
         expect(candidates).toContain('https://x.site.localhost/');
         expect(candidates).toContain('https://x.private.localhost/');
     });
@@ -111,9 +111,9 @@ describe('buildHostedSubdomainIndexUrlCandidates', () => {
     it('normalizes the name and refuses unusable input', () => {
         expect(
             buildHostedSubdomainIndexUrlCandidates('  MyApp  ', {
-                static_hosting_domain: 'puter.site',
+                static_hosting_domain: 'mixt.site',
             }),
-        ).toContain('https://myapp.puter.site/');
+        ).toContain('https://myapp.mixt.site/');
         expect(buildHostedSubdomainIndexUrlCandidates('', CONFIG)).toEqual([]);
         expect(buildHostedSubdomainIndexUrlCandidates(null, CONFIG)).toEqual(
             [],
@@ -125,22 +125,22 @@ describe('buildHostedSubdomainIndexUrlCandidates', () => {
     });
 });
 
-describe('extractPuterHostedSubdomain', () => {
+describe('extractMixtHostedSubdomain', () => {
     it('extracts the label from a hosted url', () => {
         expect(
-            extractPuterHostedSubdomain('https://myapp.puter.site/', CONFIG),
+            extractMixtHostedSubdomain('https://myapp.mixt.site/', CONFIG),
         ).toBe('myapp');
     });
 
     it('matches the alt and private hosting domains too', () => {
         expect(
-            extractPuterHostedSubdomain(
+            extractMixtHostedSubdomain(
                 'https://a.site.localhost/index.html',
                 CONFIG,
             ),
         ).toBe('a');
         expect(
-            extractPuterHostedSubdomain(
+            extractMixtHostedSubdomain(
                 'https://b.private.localhost/',
                 CONFIG,
             ),
@@ -149,8 +149,8 @@ describe('extractPuterHostedSubdomain', () => {
 
     it('lowercases the hostname and ignores port and path', () => {
         expect(
-            extractPuterHostedSubdomain(
-                'https://MyApp.Puter.Site:8080/a/b?c=d#e',
+            extractMixtHostedSubdomain(
+                'https://MyApp.Mixt.Site:8080/a/b?c=d#e',
                 CONFIG,
             ),
         ).toBe('myapp');
@@ -161,7 +161,7 @@ describe('extractPuterHostedSubdomain', () => {
         // and (hypothetically) a shorter configured suffix. Longest wins,
         // so the label is `x` — not `x.site`.
         expect(
-            extractPuterHostedSubdomain('https://x.site.localhost/', {
+            extractMixtHostedSubdomain('https://x.site.localhost/', {
                 ...CONFIG,
                 private_app_hosting_domain_alt: 'localhost',
             }),
@@ -170,22 +170,22 @@ describe('extractPuterHostedSubdomain', () => {
 
     it('returns null for non-hosted, bare, and malformed urls', () => {
         expect(
-            extractPuterHostedSubdomain('https://example.com/', CONFIG),
+            extractMixtHostedSubdomain('https://example.com/', CONFIG),
         ).toBeNull();
         // The apex domain itself has no subdomain label.
         expect(
-            extractPuterHostedSubdomain('https://puter.site/', CONFIG),
+            extractMixtHostedSubdomain('https://mixt.site/', CONFIG),
         ).toBeNull();
-        expect(extractPuterHostedSubdomain('not a url', CONFIG)).toBeNull();
-        expect(extractPuterHostedSubdomain('', CONFIG)).toBeNull();
-        expect(extractPuterHostedSubdomain(null, CONFIG)).toBeNull();
-        expect(extractPuterHostedSubdomain(undefined, CONFIG)).toBeNull();
-        expect(extractPuterHostedSubdomain(123, CONFIG)).toBeNull();
+        expect(extractMixtHostedSubdomain('not a url', CONFIG)).toBeNull();
+        expect(extractMixtHostedSubdomain('', CONFIG)).toBeNull();
+        expect(extractMixtHostedSubdomain(null, CONFIG)).toBeNull();
+        expect(extractMixtHostedSubdomain(undefined, CONFIG)).toBeNull();
+        expect(extractMixtHostedSubdomain(123, CONFIG)).toBeNull();
     });
 
     it('returns null when no hosting domains are configured', () => {
         expect(
-            extractPuterHostedSubdomain('https://myapp.puter.site/', {}),
+            extractMixtHostedSubdomain('https://myapp.mixt.site/', {}),
         ).toBeNull();
     });
 });
@@ -213,7 +213,7 @@ describe('hostedIndexUrlBackingIsUnavailable', () => {
         expect(
             await hostedIndexUrlBackingIsUnavailable({
                 app: {
-                    index_url: 'https://mine.puter.site/',
+                    index_url: 'https://mine.mixt.site/',
                     owner_user_id: 7,
                 },
                 subdomainStore: fakeStore(async () => ({ user_id: 7 })),
@@ -226,7 +226,7 @@ describe('hostedIndexUrlBackingIsUnavailable', () => {
         expect(
             await hostedIndexUrlBackingIsUnavailable({
                 app: {
-                    index_url: 'https://gone.puter.site/',
+                    index_url: 'https://gone.mixt.site/',
                     owner_user_id: 7,
                 },
                 subdomainStore: fakeStore(async () => null),
@@ -239,7 +239,7 @@ describe('hostedIndexUrlBackingIsUnavailable', () => {
         expect(
             await hostedIndexUrlBackingIsUnavailable({
                 app: {
-                    index_url: 'https://taken.puter.site/',
+                    index_url: 'https://taken.mixt.site/',
                     owner_user_id: 7,
                 },
                 subdomainStore: fakeStore(async () => ({ user_id: 99 })),
@@ -259,7 +259,7 @@ describe('hostedIndexUrlBackingIsUnavailable', () => {
         expect(
             await hostedIndexUrlBackingIsUnavailable({
                 app: {
-                    index_url: 'https://fresh.puter.site/',
+                    index_url: 'https://fresh.mixt.site/',
                     owner_user_id: 7,
                 },
                 subdomainStore: { getBySubdomain } as never,
@@ -277,7 +277,7 @@ describe('hostedIndexUrlBackingIsUnavailable', () => {
         // side can be compared — withhold rather than guess.
         expect(
             await hostedIndexUrlBackingIsUnavailable({
-                app: { index_url: 'https://orphan.puter.site/' },
+                app: { index_url: 'https://orphan.mixt.site/' },
                 subdomainStore: fakeStore(async () => ({ user_id: 7 })),
                 config: CONFIG,
             }),
@@ -286,7 +286,7 @@ describe('hostedIndexUrlBackingIsUnavailable', () => {
         expect(
             await hostedIndexUrlBackingIsUnavailable({
                 app: {
-                    index_url: 'https://orphan.puter.site/',
+                    index_url: 'https://orphan.mixt.site/',
                     owner_user_id: 7,
                 },
                 subdomainStore: fakeStore(async () => ({ user_id: 'abc' })),
@@ -305,7 +305,7 @@ describe('hostedIndexUrlBackingIsUnavailable', () => {
         expect(
             await hostedIndexUrlBackingIsUnavailable({
                 app: {
-                    index_url: 'https://orphan.puter.site/',
+                    index_url: 'https://orphan.mixt.site/',
                     owner_user_id: null,
                 },
                 subdomainStore: fakeStore(async () => ({ user_id: 7 })),
@@ -320,7 +320,7 @@ describe('hostedIndexUrlBackingIsUnavailable', () => {
         expect(
             await hostedIndexUrlBackingIsUnavailable({
                 app: {
-                    index_url: 'https://mine.puter.site/',
+                    index_url: 'https://mine.mixt.site/',
                     owner_user_id: '7',
                 },
                 subdomainStore: fakeStore(async () => ({ user_id: 7 })),
@@ -333,7 +333,7 @@ describe('hostedIndexUrlBackingIsUnavailable', () => {
         await expect(
             hostedIndexUrlBackingIsUnavailable({
                 app: {
-                    index_url: 'https://boom.puter.site/',
+                    index_url: 'https://boom.mixt.site/',
                     owner_user_id: 7,
                 },
                 subdomainStore: fakeStore(async () => {
@@ -371,7 +371,7 @@ const HOSTING_CONFIG = {
 const hostedUrl = (sub: string) => `https://${sub}.site.localhost/`;
 
 describe('hostedIndexUrlBackingsAreUnavailable (batched, against a real store)', () => {
-    let server: PuterServer;
+    let server: MixtServer;
 
     beforeAll(async () => {
         server = await setupTestServer();

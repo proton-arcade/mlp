@@ -19,7 +19,7 @@
 
 /**
  * Signup bonus codes through the real controller: the check route, the signup
- * hand-off to `puter.signup-bonus.validate`, and the awaited
+ * hand-off to `mixt.signup-bonus.validate`, and the awaited
  * `user.card-verified` a grant on card verification depends on. Tests stand in
  * for the extension with shared listeners (EventClient has no `off()`).
  */
@@ -34,16 +34,16 @@ vi.mock('../../util/serverWhitelist.js', async (importOriginal) => ({
 }));
 import type { Actor } from '../../core/actor.js';
 import type { EventMap } from '../../clients/event/types.js';
-import type { PuterServer } from '../../server.js';
+import type { MixtServer } from '../../server.js';
 import { setupTestServer } from '../../testUtil.js';
 
-let server: PuterServer;
+let server: MixtServer;
 let controller: any;
 
 type Handler<K extends keyof EventMap> = ((data: EventMap[K]) => void) | null;
 
-let onBonusCheck: Handler<'puter.signup-bonus.check'> = null;
-let onBonusValidate: Handler<'puter.signup-bonus.validate'> = null;
+let onBonusCheck: Handler<'mixt.signup-bonus.check'> = null;
+let onBonusValidate: Handler<'mixt.signup-bonus.validate'> = null;
 let onSignupValidate: ((data: Record<string, unknown>) => void) | null = null;
 let onCardConfirm: ((data: Record<string, unknown>) => void) | null = null;
 let onCardVerified: (() => Promise<void>) | null = null;
@@ -53,17 +53,17 @@ beforeAll(async () => {
     server = await setupTestServer();
     controller = server.controllers.auth;
     const events = server.clients.event;
-    events.on('puter.signup-bonus.check', (_k, data) => onBonusCheck?.(data));
-    events.on('puter.signup-bonus.validate', (_k, data) =>
+    events.on('mixt.signup-bonus.check', (_k, data) => onBonusCheck?.(data));
+    events.on('mixt.signup-bonus.validate', (_k, data) =>
         onBonusValidate?.(data),
     );
-    events.on('puter.signup.validate', (_k, data) =>
+    events.on('mixt.signup.validate', (_k, data) =>
         onSignupValidate?.(data as Record<string, unknown>),
     );
-    events.on('puter.signup.success', (_k, data) => {
+    events.on('mixt.signup.success', (_k, data) => {
         heardSignupSuccess.push(data as Record<string, unknown>);
     });
-    events.on('puter.card-verification.confirm', (_k, data) =>
+    events.on('mixt.card-verification.confirm', (_k, data) =>
         onCardConfirm?.(data as Record<string, unknown>),
     );
     events.on('user.card-verified' as never, async () => {
@@ -86,7 +86,7 @@ afterEach(() => {
 const uniq = () => Math.random().toString(36).slice(2, 10);
 
 /** A check listener that finds the code open, as an extension would. */
-const openCheck: Handler<'puter.signup-bonus.check'> = (data) => {
+const openCheck: Handler<'mixt.signup-bonus.check'> = (data) => {
     data.valid = true;
     data.display = { title: 'T', description: 'D' };
 };
@@ -151,7 +151,7 @@ const signup = async (body: Record<string, unknown>) => {
 const findUser = (username: unknown) =>
     server.stores.user.getByUsername(username as string, { force: true });
 
-/** `puter.signup.success` is fire-and-forget; wait for it to land. */
+/** `mixt.signup.success` is fire-and-forget; wait for it to land. */
 const waitForSuccess = async (userUuid: string) => {
     const deadline = Date.now() + 2000;
     while (Date.now() < deadline) {
@@ -159,7 +159,7 @@ const waitForSuccess = async (userUuid: string) => {
         if (hit) return hit;
         await new Promise((r) => setTimeout(r, 10));
     }
-    throw new Error('puter.signup.success never arrived');
+    throw new Error('mixt.signup.success never arrived');
 };
 
 // -- POST /signup/bonus-code/check -----------------------------------
@@ -178,7 +178,7 @@ describe('AuthController.handleSignupBonusCheck', () => {
     });
 
     it('returns the display and requirements a listener fills in', async () => {
-        let seen: EventMap['puter.signup-bonus.check'] | null = null;
+        let seen: EventMap['mixt.signup-bonus.check'] | null = null;
         onBonusCheck = (data) => {
             seen = { ...data };
             data.valid = true;
@@ -292,7 +292,7 @@ describe('AuthController.handleSignup with a bonus code', () => {
 
     it('applies the requirements an accepted code raises and reports the code', async () => {
         onBonusCheck = openCheck;
-        let seen: EventMap['puter.signup-bonus.validate'] | null = null;
+        let seen: EventMap['mixt.signup-bonus.validate'] | null = null;
         onBonusValidate = (data) => {
             seen = { ...data };
             data.accepted = true;

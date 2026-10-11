@@ -8,7 +8,7 @@ import { isRetryable, pool, readRemote, uploadFiles, withRetry } from './transfe
 const tempDirs = [];
 
 function makeLocalFiles(count, bytes = 8) {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'puter-cli-transfer-'));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'mixt-cli-transfer-'));
   tempDirs.push(dir);
   const files = [];
   for (let i = 0; i < count; i++) {
@@ -92,11 +92,11 @@ describe('uploadFiles', () => {
   it('batches by file count rather than sending one request per file', async () => {
     const files = makeLocalFiles(101);
     const batches = [];
-    const puter = client(async (items) => {
+    const mixt = client(async (items) => {
       batches.push(items.length);
     });
 
-    const result = await uploadFiles(puter, {
+    const result = await uploadFiles(mixt, {
       files,
       destination: '~/dst',
       concurrency: 1,
@@ -116,11 +116,11 @@ describe('uploadFiles', () => {
       { full: files[0].full, rel: 'other/c.txt' },
     );
     const sent = [];
-    const puter = client(async (items, destination) => {
+    const mixt = client(async (items, destination) => {
       sent.push({ destination, names: items.map((item) => item.name) });
     });
 
-    await uploadFiles(puter, { files, destination: '~/dst', concurrency: 1 });
+    await uploadFiles(mixt, { files, destination: '~/dst', concurrency: 1 });
 
     expect(sent).toEqual([
       { destination: '~/dst', names: ['f0.txt'] },
@@ -133,11 +133,11 @@ describe('uploadFiles', () => {
   it('retries a batch that failed for a reason that might not repeat', async () => {
     const files = makeLocalFiles(3);
     let calls = 0;
-    const puter = client(async () => {
+    const mixt = client(async () => {
       if (++calls === 1) throw { status: 503, message: 'unavailable' };
     });
 
-    const result = await uploadFiles(puter, { files, destination: '~/dst' });
+    const result = await uploadFiles(mixt, { files, destination: '~/dst' });
 
     expect(calls).toBe(2);
     expect(result.uploaded).toBe(3);
@@ -148,7 +148,7 @@ describe('uploadFiles', () => {
     const files = makeLocalFiles(3);
     const sent = [];
     let calls = 0;
-    const puter = client(async (items) => {
+    const mixt = client(async (items) => {
       sent.push(items.map((item) => item.name));
       if (++calls === 1) {
         throw {
@@ -160,7 +160,7 @@ describe('uploadFiles', () => {
       }
     });
 
-    const result = await uploadFiles(puter, { files, destination: '~/dst' });
+    const result = await uploadFiles(mixt, { files, destination: '~/dst' });
 
     expect(sent[1]).toEqual(['f1.txt']);
     expect(result).toEqual({ uploaded: 3, failures: [] });
@@ -169,7 +169,7 @@ describe('uploadFiles', () => {
   it('collects what it cannot upload instead of aborting the run', async () => {
     const files = makeLocalFiles(3);
     let calls = 0;
-    const puter = client(async () => {
+    const mixt = client(async () => {
       calls++;
       throw {
         code: 'batch_upload_partially_failed',
@@ -179,7 +179,7 @@ describe('uploadFiles', () => {
       };
     });
 
-    const result = await uploadFiles(puter, { files, destination: '~/dst' });
+    const result = await uploadFiles(mixt, { files, destination: '~/dst' });
 
     // A 400 is a verdict, so the batch is not re-sent...
     expect(calls).toBe(1);
@@ -192,11 +192,11 @@ describe('uploadFiles', () => {
 
   it('blames the whole batch when the failure names nothing', async () => {
     const files = makeLocalFiles(2);
-    const puter = client(async () => {
+    const mixt = client(async () => {
       throw { code: 'batch_upload_failed', status: 413, message: 'too large' };
     });
 
-    const result = await uploadFiles(puter, { files, destination: '~/dst' });
+    const result = await uploadFiles(mixt, { files, destination: '~/dst' });
 
     expect(result.uploaded).toBe(0);
     expect(result.failures.map((f) => f.rel).sort()).toEqual(['f0.txt', 'f1.txt']);
@@ -208,7 +208,7 @@ describe('readRemote', () => {
 
   it('reads a small file in one request', async () => {
     const reads = [];
-    const puter = {
+    const mixt = {
       fs: {
         read: async (p, options) => {
           reads.push(options);
@@ -218,7 +218,7 @@ describe('readRemote', () => {
     };
 
     const chunks = [];
-    for await (const chunk of readRemote(puter, '~/a.bin', 64)) chunks.push(chunk);
+    for await (const chunk of readRemote(mixt, '~/a.bin', 64)) chunks.push(chunk);
 
     expect(reads).toEqual([undefined]);
     expect(chunks).toHaveLength(1);
@@ -228,7 +228,7 @@ describe('readRemote', () => {
   it('pulls a large file in ranged chunks so memory stays flat', async () => {
     const size = 40 * 1024 * 1024;
     const reads = [];
-    const puter = {
+    const mixt = {
       fs: {
         read: async (p, options) => {
           reads.push(options);
@@ -238,7 +238,7 @@ describe('readRemote', () => {
     };
 
     let total = 0;
-    for await (const chunk of readRemote(puter, '~/big.bin', size)) total += chunk.length;
+    for await (const chunk of readRemote(mixt, '~/big.bin', size)) total += chunk.length;
 
     expect(total).toBe(size);
     expect(reads).toHaveLength(5);
@@ -254,7 +254,7 @@ describe('readRemote', () => {
   it('treats an over-long chunk as the whole file, not the first of many', async () => {
     const size = 40 * 1024 * 1024;
     let calls = 0;
-    const puter = {
+    const mixt = {
       fs: {
         read: async () => {
           calls++;
@@ -264,7 +264,7 @@ describe('readRemote', () => {
     };
 
     const chunks = [];
-    for await (const chunk of readRemote(puter, '~/big.bin', size)) chunks.push(chunk);
+    for await (const chunk of readRemote(mixt, '~/big.bin', size)) chunks.push(chunk);
 
     expect(calls).toBe(1);
     expect(chunks).toHaveLength(1);

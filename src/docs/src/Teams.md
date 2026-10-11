@@ -1,16 +1,16 @@
 ---
 title: Teams
-description: Get the user's team and list its members with the Puter.js Teams API
+description: Get the user's team and list its members with the Mixt.js Teams API
 platforms: [websites, apps, nodejs, workers]
 ---
 
 <div class="info">The Teams API is in beta. Method shapes, limits, and behavior may change between releases.</div>
 
-The Teams API lets your app interact with the Puter Teams feature.
+The Teams API lets your app interact with the Mixt OS Teams feature.
 
-Puter Teams lets an organization bring its members together. Any user can create a team and invite members. Each member keeps their own Puter account, but belongs to the team, so the owner can manage them and cover their paid plan in one place.
+Mixt OS Teams lets an organization bring its members together. Any user can create a team and invite members. Each member keeps their own Mixt OS account, but belongs to the team, so the owner can manage them and cover their paid plan in one place.
 
-With this API, your app can get the team the user currently belongs to and list the members of that team. To use the Teams API, the team owner must enable the directory setting in the [Teams dashboard](https://puter.com/#teams).
+With this API, your app can get the team the user currently belongs to and list the members of that team. To use the Teams API, the team owner must enable the directory setting in the [Teams dashboard](https://mixt.mpl/#teams).
 
 ## Features
 
@@ -26,21 +26,21 @@ With this API, your app can get the team the user currently belongs to and list 
 ```html;teams-list
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
-            const teams = await puter.teams.list();
+            const teams = await mixt.teams.list();
 
             if (teams.length === 0) {
-                puter.print('You are not on a team.');
+                mixt.print('You are not on a team.');
                 return;
             }
 
             for (const team of teams) {
-                puter.print(`${team.name ?? team.handle ?? 'Unnamed team'}<br>`);
-                puter.print(`uid: ${team.uid}<br>`);
-                puter.print(`owner: ${team.isOwner}<br>`);
-                puter.print(`directory open to apps: ${team.directoryEnabled}<br><br>`);
+                mixt.print(`${team.name ?? team.handle ?? 'Unnamed team'}<br>`);
+                mixt.print(`uid: ${team.uid}<br>`);
+                mixt.print(`owner: ${team.isOwner}<br>`);
+                mixt.print(`directory open to apps: ${team.directoryEnabled}<br><br>`);
             }
         })();
     </script>
@@ -57,14 +57,14 @@ With this API, your app can get the team the user currently belongs to and list 
 ```html;teams-directory
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <select id="colleagues"><option>Loading…</option></select>
     <button id="pick">Pick</button>
     <script>
         const select = document.getElementById('colleagues');
 
         (async () => {
-            const [team] = await puter.teams.list();
+            const [team] = await mixt.teams.list();
             if (!team) {
                 select.innerHTML = '<option>You are not on a team</option>';
                 return;
@@ -76,7 +76,7 @@ With this API, your app can get the team the user currently belongs to and list 
                 return;
             }
 
-            const entries = await puter.teams.listDirectory(team.uid);
+            const entries = await mixt.teams.listDirectory(team.uid);
             select.innerHTML = '';
             for (const { username, uuid } of entries) {
                 const option = document.createElement('option');
@@ -89,7 +89,7 @@ With this API, your app can get the team the user currently belongs to and list 
 
         document.getElementById('pick').addEventListener('click', () => {
             const option = select.selectedOptions[0];
-            if (option) puter.print(`${option.textContent} → ${option.value}<br>`);
+            if (option) mixt.print(`${option.textContent} → ${option.value}<br>`);
         });
     </script>
 </body>
@@ -100,12 +100,12 @@ With this API, your app can get the team the user currently belongs to and list 
 
 ## Functions
 
-- **[`puter.teams.list()`](/Teams/list/)** - Get the current user's team information
-- **[`puter.teams.listDirectory()`](/Teams/listDirectory/)** - List the members of a team
+- **[`mixt.teams.list()`](/Teams/list/)** - Get the current user's team information
+- **[`mixt.teams.listDirectory()`](/Teams/listDirectory/)** - List the members of a team
 
 ## Examples
 
-You can see various Puter.js Teams features in action from the following examples:
+You can see various Mixt.js Teams features in action from the following examples:
 
 - [Find the user's team](/playground/teams-list/)
 - [Offer colleagues in a picker](/playground/teams-directory/)

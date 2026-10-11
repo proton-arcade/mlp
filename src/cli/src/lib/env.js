@@ -23,8 +23,8 @@ export function canAnimate() {
 
 // Default API + hosting endpoints, overridable for self-hosted instances.
 export const API_ORIGIN =
-  process.env.PUTER_API_ORIGIN || 'https://api.puter.com';
+  process.env.MIXT_API_ORIGIN || 'https://api.mixt.mpl';
 export const SITE_DOMAIN =
-  process.env.PUTER_SITE_DOMAIN || 'puter.site';
+  process.env.MIXT_SITE_DOMAIN || 'mixt.site';
 export const WORKER_DOMAIN =
-  process.env.PUTER_WORKER_DOMAIN || 'puter.work';
+  process.env.MIXT_WORKER_DOMAIN || 'mixt.work';

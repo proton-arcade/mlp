@@ -116,7 +116,7 @@ export function cardFallbackDepsFrom(
         probeCardVerification: async () => {
             const status: { enabled: boolean | null } = { enabled: null };
             await clients.event?.emitAndWait(
-                'puter.card-verification.status',
+                'mixt.card-verification.status',
                 status,
                 {},
             );

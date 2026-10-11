@@ -19,11 +19,11 @@
 
 import { v4 as uuidv4 } from 'uuid';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { PuterServer } from '../server.js';
+import { MixtServer } from '../server.js';
 import { setupTestServer } from '../testUtil.js';
 import { generateDefaultFsentries } from './userProvisioning.js';
 
-let server: PuterServer;
+let server: MixtServer;
 
 beforeAll(async () => {
     server = await setupTestServer();

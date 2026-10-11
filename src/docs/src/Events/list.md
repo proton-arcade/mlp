@@ -1,21 +1,21 @@
 ---
-title: puter.events.list()
+title: mixt.events.list()
 description: List the persistent subscriptions this caller holds.
 platforms: [websites, apps, nodejs, workers]
 ---
 
 <div class="info">The Events API is in beta. Event shapes, limits, and behavior may change between releases.</div>
 
-Lists the persistent subscriptions created with [`puter.events.onPersistent()`](/Events/onPersistent/). Session subscriptions from `onLocal()` aren't stored, so they aren't listed.
+Lists the persistent subscriptions created with [`mixt.events.onPersistent()`](/Events/onPersistent/). Session subscriptions from `onLocal()` aren't stored, so they aren't listed.
 
 An app sees only the subscriptions it created. An account session sees all of them, **including ones left by apps that have been deleted**, so that's where to clean up stray subscriptions. A scoped access token, such as the one in a [`getReadURL()`](/FS/getReadURL/) URL, sees none, whether the account or an app created it.
 
-On a website with nobody signed in, it asks the user to sign in first, as other Puter.js calls do. An app running on Puter is always signed in.
+On a website with nobody signed in, it asks the user to sign in first, as other Mixt.js calls do. An app running on Mixt OS is always signed in.
 
 ## Syntax
 ```js
-puter.events.list()
-puter.events.list(options)
+mixt.events.list()
+mixt.events.list(options)
 ```
 
 ## Parameters
@@ -50,22 +50,22 @@ The promise rejects with `{ message, code }`: `auth_canceled` if nobody was sign
 ```html;events-list
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
-            const dir = puter.randName();
-            await puter.fs.mkdir(dir);
-            const sub = await puter.events.onPersistent({
+            const dir = mixt.randName();
+            await mixt.fs.mkdir(dir);
+            const sub = await mixt.events.onPersistent({
                 subject: `fs:${dir}`,
                 context: { label: 'inbox' },
             });
 
-            for (const row of await puter.events.list()) {
-                puter.print(`${row.subject} — ${row.delivery}`);
-                puter.print(` (context: ${row.contextKeys?.join(', ') ?? 'none'})<br>`);
+            for (const row of await mixt.events.list()) {
+                mixt.print(`${row.subject} — ${row.delivery}`);
+                mixt.print(` (context: ${row.contextKeys?.join(', ') ?? 'none'})<br>`);
             }
 
-            await puter.events.unsubscribe(sub.subId);
+            await mixt.events.unsubscribe(sub.subId);
         })();
     </script>
 </body>
@@ -77,16 +77,16 @@ The promise rejects with `{ message, code }`: `auth_canceled` if nobody was sign
 ```html;events-list-suspended
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
-            for await (const page of puter.events.list({ stream: true })) {
+            for await (const page of mixt.events.list({ stream: true })) {
                 for (const row of page.items) {
                     if (!row.suspendedAt) continue;
-                    puter.print(`${row.subject} stopped: ${row.suspendedReason}<br>`);
+                    mixt.print(`${row.subject} stopped: ${row.suspendedReason}<br>`);
                 }
             }
-            puter.print('done<br>');
+            mixt.print('done<br>');
         })();
     </script>
 </body>

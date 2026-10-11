@@ -20,7 +20,7 @@
 import UIAlert from '../UI/UIAlert.js';
 import { Service } from '../definitions.js';
 
-const PUTER_THEME_DATA_FILENAME = '~/.__puter_gui.json';
+const MIXT_THEME_DATA_FILENAME = '~/.__mixt_gui.json';
 
 const SAVE_COOLDOWN_TIME = 1000;
 
@@ -52,7 +52,7 @@ export class ThemeService extends Service {
         this.save_cooldown_ = undefined;
 
         // Load theme data using .then() for non-blocking operation
-        puter.fs.read(PUTER_THEME_DATA_FILENAME).then(async (data) => {
+        mixt.fs.read(MIXT_THEME_DATA_FILENAME).then(async (data) => {
             try {
                 if ( typeof data === 'object' ) {
                     data = await data.text();
@@ -72,7 +72,7 @@ export class ThemeService extends Service {
                         console.error(e);
                         UIAlert({
                             title: 'Error loading theme data',
-                            message: `Could not parse "${PUTER_THEME_DATA_FILENAME}": ${
+                            message: `Could not parse "${MIXT_THEME_DATA_FILENAME}": ${
                                 e.message}`,
                         });
                     }
@@ -95,7 +95,7 @@ export class ThemeService extends Service {
     reset () {
         this.state = default_values;
         this.reload_();
-        puter.fs.delete(PUTER_THEME_DATA_FILENAME);
+        mixt.fs.delete(MIXT_THEME_DATA_FILENAME);
     }
 
     apply (values) {
@@ -119,7 +119,7 @@ export class ThemeService extends Service {
         //         background-color: hsla(${s.hue}, ${s.sat}%, ${s.lig}%, ${s.alpha});
         //     }
         // `)
-        // this.root.style.setProperty('--puter-window-background', `hsla(${s.hue}, ${s.sat}%, ${s.lig}%, ${s.alpha})`);
+        // this.root.style.setProperty('--mixt-window-background', `hsla(${s.hue}, ${s.sat}%, ${s.lig}%, ${s.alpha})`);
         this.root.style.setProperty('--primary-hue', s.hue);
         this.root.style.setProperty('--primary-saturation', `${s.sat }%`);
         this.root.style.setProperty('--primary-lightness', `${s.lig }%`);
@@ -149,7 +149,7 @@ export class ThemeService extends Service {
         }, SAVE_COOLDOWN_TIME);
     }
     commit_save_ () {
-        puter.fs.write(PUTER_THEME_DATA_FILENAME, JSON.stringify({ colors: this.state },
+        mixt.fs.write(MIXT_THEME_DATA_FILENAME, JSON.stringify({ colors: this.state },
                         undefined,
                         5));
     }

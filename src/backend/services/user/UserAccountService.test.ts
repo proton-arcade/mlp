@@ -20,11 +20,11 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { v4 as uuidv4 } from 'uuid';
 import { setupTestServer } from '../../testUtil.ts';
-import { PuterServer } from '../../server.ts';
+import { MixtServer } from '../../server.ts';
 import { generateDefaultFsentries } from '../../util/userProvisioning.ts';
 
 describe('UserAccountService', () => {
-    let server: PuterServer;
+    let server: MixtServer;
 
     beforeAll(async () => {
         server = await setupTestServer();
@@ -234,7 +234,7 @@ describe('UserAccountService', () => {
             });
             const worker = await server.stores.subdomain.create({
                 userId: user.id,
-                subdomain: `workers.puter.ua-worker-${slug}`,
+                subdomain: `workers.mixt.ua-worker-${slug}`,
             });
             // Warm the lookup cache so a row surviving there would show up.
             expect(

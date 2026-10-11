@@ -1,5 +1,5 @@
 ---
-title: puter.ui.onLaunchedWithItems()
+title: mixt.ui.onLaunchedWithItems()
 description: Executes a callback function if the app is launched with items.
 platforms: [apps]
 ---
@@ -8,7 +8,7 @@ Specify a callback function to execute if the app is launched with items. `onLau
 
 ## Syntax
 ```js
-puter.ui.onLaunchedWithItems(handler)
+mixt.ui.onLaunchedWithItems(handler)
 ```
 
 ## Parameters
@@ -20,9 +20,9 @@ A function to execute after items are opened by user action. The function will b
 ```html
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
-        puter.ui.onLaunchedWithItems(function(items){
+        mixt.ui.onLaunchedWithItems(function(items){
             document.body.innerHTML = JSON.stringify(items);
         })
     </script>
@@ -36,12 +36,12 @@ An app can also be launched with a file straight from a link, by naming the
 file in the `file` query parameter:
 
 ```
-https://puter.com/app/<app-name>?file=<path>
+https://mixt.mpl/app/<app-name>?file=<path>
 ```
 
 The path may be absolute (`/username/Documents/report.docx`) or written
 relative to the user's home directory (`~/Documents/report.docx`). Because the
-link, not the user, picked the file, Puter first asks the user to allow the app
+link, not the user, picked the file, Mixt OS first asks the user to allow the app
 access to it. Once allowed, the file is handed to the app exactly as
 double-clicking it would, so `onLaunchedWithItems` receives it and
 `wasLaunchedWithItems()` returns `true`.

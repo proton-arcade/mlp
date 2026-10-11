@@ -23,9 +23,9 @@
 -- Idempotent: the guarded procedure, as mig_26. There is no per-file
 -- applied-state tracking, so a replay has to be a no-op.
 
-DROP PROCEDURE IF EXISTS _puter_add_notification_created_at_index;
+DROP PROCEDURE IF EXISTS _mixt_add_notification_created_at_index;
 DELIMITER //
-CREATE PROCEDURE _puter_add_notification_created_at_index()
+CREATE PROCEDURE _mixt_add_notification_created_at_index()
 BEGIN
   IF NOT EXISTS (
     SELECT 1 FROM INFORMATION_SCHEMA.STATISTICS
@@ -38,5 +38,5 @@ BEGIN
   END IF;
 END //
 DELIMITER ;
-CALL _puter_add_notification_created_at_index();
-DROP PROCEDURE IF EXISTS _puter_add_notification_created_at_index;
+CALL _mixt_add_notification_created_at_index();
+DROP PROCEDURE IF EXISTS _mixt_add_notification_created_at_index;

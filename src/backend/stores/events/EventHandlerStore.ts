@@ -29,7 +29,7 @@ import {
     type PageResult,
 } from '../../util/pagination.js';
 import { isUniqueViolation } from '../../util/dbError.js';
-import { PuterStore } from '../types.js';
+import { MixtStore } from '../types.js';
 
 /**
  * Named handlers an app has deployed.
@@ -199,7 +199,7 @@ export const isValidHandlerName = (name: string): boolean =>
     name.length <= HANDLER_NAME_MAX_LENGTH &&
     NAME_PATTERN.test(name);
 
-export class EventHandlerStore extends PuterStore {
+export class EventHandlerStore extends MixtStore {
     // -- Writes ------------------------------------------------------
 
     /**

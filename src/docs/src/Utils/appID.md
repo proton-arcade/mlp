@@ -1,15 +1,15 @@
 ---
-title: puter.appID
+title: mixt.appID
 description: Returns the App ID of the running application.
 platforms: [websites, apps]
 ---
 
-A property of the `puter` object that returns the App ID of the running application.
+A property of the `mixt` object that returns the App ID of the running application.
 
 ## Syntax
 
 ```js
-puter.appID
+mixt.appID
 ```
 
 ## Examples
@@ -21,9 +21,9 @@ puter.appID
 ```html
 <html>
   <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
-      puter.print("App ID: " + puter.appID);
+      mixt.print("App ID: " + mixt.appID);
     </script>
   </body>
 </html>

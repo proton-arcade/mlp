@@ -66,7 +66,7 @@ export const hasNoBackingS3Object = (entry: FSEntry): boolean =>
 
 export interface FSEntrySubdomain {
     uuid: string;
-    address: string; // `${config.protocol}://${subdomain}.${'puter.site'|'puter.work'}` depending on wether dir or file
+    address: string; // `${config.protocol}://${subdomain}.${'mixt.site'|'mixt.work'}` depending on wether dir or file
     subdomain: string;
 }
 

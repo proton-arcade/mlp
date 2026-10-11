@@ -22,7 +22,7 @@ import type { Actor } from '../../actor';
 import { PERIOD_ESCAPE } from '../../../services/metering/consts.js';
 import type { MeteringService } from '../../../services/metering/MeteringService.js';
 import type { UsageByType } from '../../../services/metering/types';
-import { setupPuterTestEnv, type PuterTestEnv } from '../../../testUtil.js';
+import { setupMixtTestEnv, type MixtTestEnv } from '../../../testUtil.js';
 
 /**
  * Egress metering over real HTTP. The unit tests drive the middleware with a
@@ -31,11 +31,11 @@ import { setupPuterTestEnv, type PuterTestEnv } from '../../../testUtil.js';
  * actor is resolvable by the time the response closes.
  */
 describe('egress metering over HTTP', () => {
-    let env: PuterTestEnv;
+    let env: MixtTestEnv;
     let originalCacheMs: number;
 
     beforeAll(async () => {
-        env = await setupPuterTestEnv();
+        env = await setupMixtTestEnv();
         // A sharded month caches getActorCurrentMonthUsageDetails's detail
         // read for USAGE_DETAIL_CACHE_MS — these tests read before and after
         // one request a moment apart, well inside that window, so the cache
@@ -229,7 +229,7 @@ describe('egress metering over HTTP', () => {
             (before[escape('egress:bytes')] as { units?: number } | undefined)
                 ?.units ?? 0;
 
-        const sdk = await fetch(new URL('/puter.js/v2', env.origin), {
+        const sdk = await fetch(new URL('/mixt.js/v2', env.origin), {
             headers: { Authorization: `Bearer ${token}` },
         });
         expect(sdk.status).toBe(200);

@@ -1,26 +1,26 @@
 ---
-title: puter.events.unsubscribe()
+title: mixt.events.unsubscribe()
 description: End a persistent subscription.
 platforms: [websites, apps, nodejs, workers]
 ---
 
 <div class="info">The Events API is in beta. Event shapes, limits, and behavior may change between releases.</div>
 
-Ends a subscription created with [`puter.events.onPersistent()`](/Events/onPersistent/). It stops immediately, and any undelivered backlog is dropped.
+Ends a subscription created with [`mixt.events.onPersistent()`](/Events/onPersistent/). It stops immediately, and any undelivered backlog is dropped.
 
-For a session subscription from [`puter.events.onLocal()`](/Events/onLocal/), use [`subscription.off()`](/Events/off/).
+For a session subscription from [`mixt.events.onLocal()`](/Events/onLocal/), use [`subscription.off()`](/Events/off/).
 
-On a website with nobody signed in, it asks the user to sign in first, as other Puter.js calls do. An app running on Puter is always signed in.
+On a website with nobody signed in, it asks the user to sign in first, as other Mixt.js calls do. An app running on Mixt OS is always signed in.
 
 ## Syntax
 ```js
-puter.events.unsubscribe(subId)
+mixt.events.unsubscribe(subId)
 ```
 
 ## Parameters
 
 #### `subId` (String) (required)
-The `subId` of the subscription, from `onPersistent()` or [`puter.events.list()`](/Events/list/).
+The `subId` of the subscription, from `onPersistent()` or [`mixt.events.list()`](/Events/list/).
 
 ## Return value
 
@@ -45,23 +45,23 @@ An app can only end subscriptions it created. An account session can end any of 
 ```html;events-unsubscribe
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
-            const dir = puter.randName();
-            await puter.fs.mkdir(dir);
+            const dir = mixt.randName();
+            await mixt.fs.mkdir(dir);
 
-            const sub = await puter.events.onPersistent({ subject: `fs:${dir}` });
-            puter.print(`watching as ${sub.subId}<br>`);
+            const sub = await mixt.events.onPersistent({ subject: `fs:${dir}` });
+            mixt.print(`watching as ${sub.subId}<br>`);
 
-            await puter.events.unsubscribe(sub.subId);
-            puter.print('stopped<br>');
+            await mixt.events.unsubscribe(sub.subId);
+            mixt.print('stopped<br>');
 
             // Ending it twice is refused the same way an unknown id is.
             try {
-                await puter.events.unsubscribe(sub.subId);
+                await mixt.events.unsubscribe(sub.subId);
             } catch (error) {
-                puter.print(`second attempt: ${error.code}<br>`);
+                mixt.print(`second attempt: ${error.code}<br>`);
             }
         })();
     </script>

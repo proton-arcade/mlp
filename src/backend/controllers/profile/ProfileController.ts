@@ -21,7 +21,7 @@ import type { Request, Response } from 'express';
 import { Controller, Get, Post } from '../../core/http/decorators.js';
 import { HttpError } from '../../core/http/HttpError.js';
 import type { ProfileService } from '../../services/profile/ProfileService.js';
-import { PuterController } from '../types.js';
+import { MixtController } from '../types.js';
 
 // Shape only; the store decides whether the account exists.
 const USERNAME_PATTERN = /^[a-z0-9_-]{1,64}$/i;
@@ -36,7 +36,7 @@ const notFound = () =>
  * missing account, so the response says nothing about the plan.
  */
 @Controller('/profile')
-export class ProfileController extends PuterController {
+export class ProfileController extends MixtController {
     /**
      * GET /profile?username=<name> — a user's profile. Without `username`, the
      * signed-in user's own.

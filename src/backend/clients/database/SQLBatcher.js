@@ -34,7 +34,7 @@ const ITEM_RETRY_ATTEMPTS = 2;
 const RETRY_BASE_BACKOFF_MS = 100;
 const FALLBACK_RETRY_CONCURRENCY = 8;
 
-const meter = metrics.getMeter('puter-backend');
+const meter = metrics.getMeter('mixt-backend');
 const enqueueDroppedCounter = meter.createCounter(
     'sql_batcher.enqueue.dropped',
     {

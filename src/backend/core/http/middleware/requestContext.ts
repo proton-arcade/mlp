@@ -26,7 +26,7 @@ import '../expressAugmentation';
  * Wraps the remaining middleware + handler chain in a per-request
  * `AsyncLocalStorage` scope.
  *
- * Install order in `PuterServer#installGlobalMiddleware`:
+ * Install order in `MixtServer#installGlobalMiddleware`:
  *
  *     body parsers  →  authProbe  →  **requestContext**  →  routes
  *

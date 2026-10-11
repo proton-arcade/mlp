@@ -16,6 +16,6 @@
 -- along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 -- Mirrors SQLite migration 0089: a team may require 2FA of the accounts it
--- provisioned. Added through `_puter_add_col` as mysql_mig_32 does, so a
+-- provisioned. Added through `_mixt_add_col` as mysql_mig_32 does, so a
 -- replay finds the column and does nothing.
-CALL _puter_add_col('group', 'require_2fa', '`require_2fa` tinyint(1) NOT NULL DEFAULT 0');
+CALL _mixt_add_col('group', 'require_2fa', '`require_2fa` tinyint(1) NOT NULL DEFAULT 0');

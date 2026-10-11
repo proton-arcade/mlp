@@ -9,13 +9,13 @@ import {
 } from 'vitest';
 import { Actor, makeActor } from '../../core/actor.ts';
 import { runWithContext } from '../../core/context.ts';
-import { PuterServer } from '../../server.ts';
+import { MixtServer } from '../../server.ts';
 import { setupTestServer } from '../../testUtil.ts';
 import { KV_CACHED_READ_RATE_SHARE, KV_COSTS } from './costs.ts';
 import type { KVStoreDriver } from './KVStoreDriver.ts';
 
 describe('KVStoreDriver read-cache metering', () => {
-    let server: PuterServer;
+    let server: MixtServer;
     let target: KVStoreDriver;
 
     beforeAll(async () => {

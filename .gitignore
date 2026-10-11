@@ -29,7 +29,7 @@ config.json
 
 # this is for jetbrain IDEs
 .idea/
-/puter
+/mixt
 
 # Local Netlify folder
 .netlify

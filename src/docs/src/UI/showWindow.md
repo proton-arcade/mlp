@@ -1,5 +1,5 @@
 ---
-title: puter.ui.showWindow()
+title: mixt.ui.showWindow()
 description: Shows the window of your application.
 platforms: [apps]
 ---
@@ -9,7 +9,7 @@ The `showWindow` method allows you to show the window of your application.
 ## Syntax
 
 ```javascript
-puter.ui.showWindow()
+mixt.ui.showWindow()
 ```
 
 ## Parameters
@@ -25,9 +25,9 @@ None.
 ```html
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
-        puter.ui.showWindow();
+        mixt.ui.showWindow();
     </script>
 </body>
 </html>

@@ -19,12 +19,12 @@
 
 import { v4 as uuidv4 } from 'uuid';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { PuterServer } from '../../server.ts';
+import { MixtServer } from '../../server.ts';
 import { setupTestServer } from '../../testUtil.ts';
 
 describe('GroupStore', () => {
-    let server: PuterServer;
-    let store: PuterServer['stores']['group'];
+    let server: MixtServer;
+    let store: MixtServer['stores']['group'];
     let owner: { id: number; username: string };
     let member: { id: number; username: string; uuid: string };
 

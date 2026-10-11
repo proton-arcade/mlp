@@ -28,16 +28,16 @@ import { v4 as uuidv4 } from 'uuid';
 import { makeActor } from '../../core/actor.js';
 import {
     createTestUser,
-    setupPuterTestEnv,
-    type PuterTestEnv,
+    setupMixtTestEnv,
+    type MixtTestEnv,
 } from '../../testUtil.js';
 
 const BOOT_TIMEOUT_MS = 120_000;
 
-let env: PuterTestEnv;
+let env: MixtTestEnv;
 
 beforeAll(async () => {
-    env = await setupPuterTestEnv();
+    env = await setupMixtTestEnv();
 }, BOOT_TIMEOUT_MS);
 
 afterAll(async () => {
@@ -175,7 +175,7 @@ describe('an app uid that returns after its app was deleted', () => {
         const sub = `shop-${uuidv4().slice(0, 8)}`;
         const origin = `http://${sub}.site.localhost`;
 
-        const aCreate = await call(devA.token, 'puter-subdomains', 'create', {
+        const aCreate = await call(devA.token, 'mixt-subdomains', 'create', {
             object: {
                 subdomain: sub,
                 root_dir: await mkSiteDir(devA.username),
@@ -187,22 +187,22 @@ describe('an app uid that returns after its app was deleted', () => {
             visitor.token,
             origin,
         );
-        const set = await call(tokenA, 'puter-kvstore', 'set', {
+        const set = await call(tokenA, 'mixt-kvstore', 'set', {
             key: 'notes',
             value: 'a-era',
         });
         expect(set.status, set.text).toBe(200);
 
-        const delApp = await call(devA.token, 'puter-apps', 'delete', { uid });
+        const delApp = await call(devA.token, 'mixt-apps', 'delete', { uid });
         expect(delApp.status, delApp.text).toBe(200);
-        const delSite = await call(devA.token, 'puter-subdomains', 'delete', {
+        const delSite = await call(devA.token, 'mixt-subdomains', 'delete', {
             id: { subdomain: sub },
         });
         expect(delSite.status, delSite.text).toBe(200);
         // The earlier app's session was made well before the next app exists.
         await backdateSession(sessionUid(tokenA), 3600);
 
-        const bCreate = await call(devB.token, 'puter-subdomains', 'create', {
+        const bCreate = await call(devB.token, 'mixt-subdomains', 'create', {
             object: {
                 subdomain: sub,
                 root_dir: await mkSiteDir(devB.username),
@@ -221,12 +221,12 @@ describe('an app uid that returns after its app was deleted', () => {
 
         expect((await api('/whoami', tokenA)).status).toBe(401);
         expect((await api('/whoami', tokenB)).status).toBe(200);
-        const setB = await call(tokenB, 'puter-kvstore', 'set', {
+        const setB = await call(tokenB, 'mixt-kvstore', 'set', {
             key: 'card',
             value: 'b-era',
         });
         expect(setB.status, setB.text).toBe(200);
-        const getA = await call(tokenA, 'puter-kvstore', 'get', {
+        const getA = await call(tokenA, 'mixt-kvstore', 'get', {
             key: 'card',
         });
         expect(getA.status).toBe(401);
@@ -243,7 +243,7 @@ describe('an app uid that returns after its app was deleted', () => {
         const sub = `shop-${uuidv4().slice(0, 8)}`;
         const origin = `http://${sub}.site.localhost`;
 
-        const aCreate = await call(devA.token, 'puter-subdomains', 'create', {
+        const aCreate = await call(devA.token, 'mixt-subdomains', 'create', {
             object: {
                 subdomain: sub,
                 root_dir: await mkSiteDir(devA.username),
@@ -260,9 +260,9 @@ describe('an app uid that returns after its app was deleted', () => {
             uid,
         );
 
-        const delApp = await call(devA.token, 'puter-apps', 'delete', { uid });
+        const delApp = await call(devA.token, 'mixt-apps', 'delete', { uid });
         expect(delApp.status, delApp.text).toBe(200);
-        const delSite = await call(devA.token, 'puter-subdomains', 'delete', {
+        const delSite = await call(devA.token, 'mixt-subdomains', 'delete', {
             id: { subdomain: sub },
         });
         expect(delSite.status, delSite.text).toBe(200);
@@ -270,7 +270,7 @@ describe('an app uid that returns after its app was deleted', () => {
         await backdateSession(sessionUid(scopedA), 3600);
 
         // The next developer's sign-in brings the uid back.
-        const bCreate = await call(devB.token, 'puter-subdomains', 'create', {
+        const bCreate = await call(devB.token, 'mixt-subdomains', 'create', {
             object: {
                 subdomain: sub,
                 root_dir: await mkSiteDir(devB.username),

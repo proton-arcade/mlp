@@ -59,10 +59,10 @@ const renderOverview = (data) => {
     ].join('');
 
     const users = section('Accounts', data.users.length, table(
-        ['Username', 'Puter email', 'Email', 'Created', 'Last activity', 'Live', 'Whitelisted', 'Password', 'Email confirmed', '2FA', 'Suspended', 'Storage', 'Files', 'Apps', 'Subdomains', 'Mail (in/sent/out)', 'Groups', 'Signup IP', 'Signup user agent', 'Signup origin', 'Phone', 'Referral'],
+        ['Username', 'Mixt email', 'Email', 'Created', 'Last activity', 'Live', 'Whitelisted', 'Password', 'Email confirmed', '2FA', 'Suspended', 'Storage', 'Files', 'Apps', 'Subdomains', 'Mail (in/sent/out)', 'Groups', 'Signup IP', 'Signup user agent', 'Signup origin', 'Phone', 'Referral'],
         data.users.map((u) => [
             `<strong>${esc(u.username)}</strong>`,
-            esc(u.puter_email),
+            esc(u.mixt_email),
             esc(u.email ?? '—'),
             esc(fmtDate(u.created_at)),
             esc(fmtDate(u.last_activity)),
@@ -147,7 +147,7 @@ const renderOverview = (data) => {
     const mail = section('Mail (most recent)', data.mail.total, table(
         ['Address', 'Folder', 'Subject', 'Sent / received', 'Size'],
         data.mail.recent.map((m) => [
-            esc(`${m.username}@puter.email`),
+            esc(`${m.username}@mixt.email`),
             esc(m.folder),
             esc(m.subject || '(no subject)'),
             esc(fmtDate(m.sent_at)),
@@ -195,8 +195,8 @@ let elevationToken = null;
 let pendingNotice = null;
 
 const authHeaders = () => ({
-    Authorization: `Bearer ${puter.authToken}`,
-    ...(elevationToken ? { 'x-puter-elevation': elevationToken } : {}),
+    Authorization: `Bearer ${mixt.authToken}`,
+    ...(elevationToken ? { 'x-mixt-elevation': elevationToken } : {}),
 });
 
 const adminRequest = async (method, path, body) => {
@@ -259,7 +259,7 @@ const submitElevation = async (form, $window) => {
         const resp = await fetch(`${window.api_origin}/auth/elevate`, {
             method: 'POST',
             headers: {
-                Authorization: `Bearer ${puter.authToken}`,
+                Authorization: `Bearer ${mixt.authToken}`,
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({ password }),

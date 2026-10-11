@@ -1,11 +1,11 @@
 <html>
 <body>
-    <script src="/puter.js/v2"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // Create a directory named 'hello' in a directory that does not exist
-            let dir = await puter.fs.mkdir('my-directory/another-directory/hello', { createMissingParents: true });
-            puter.print(`Directory created at: ${dir.path}<br>`);
+            let dir = await mixt.fs.mkdir('my-directory/another-directory/hello', { createMissingParents: true });
+            mixt.print(`Directory created at: ${dir.path}<br>`);
         })();
     </script>
 </body>

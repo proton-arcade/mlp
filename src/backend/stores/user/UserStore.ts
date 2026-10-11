@@ -19,7 +19,7 @@
 
 import { cleanEmail } from '../../util/email.js';
 import { normalizeReferralCode } from '../../util/referralCode.js';
-import { PuterStore } from '../types';
+import { MixtStore } from '../types';
 
 // -- Types ------------------------------------------------------------
 
@@ -199,7 +199,7 @@ const assertLatin1Writable = (fields: Record<string, unknown>): void => {
  *   declared inline in `USER_ID_PROPERTIES`; callers that need more add the
  *   property to that tuple.
  */
-export class UserStore extends PuterStore {
+export class UserStore extends MixtStore {
     // -- Reads --------------------------------------------------------
 
     async getById(

@@ -22,12 +22,12 @@ import type { AddressInfo } from 'node:net';
 import { Readable } from 'node:stream';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import type { SubdomainRow } from '../../stores/subdomain/SubdomainStore.js';
-import type { PuterServer } from '../../server.js';
+import type { MixtServer } from '../../server.js';
 import { createTestUser, setupTestServer } from '../../testUtil.js';
 import { getWorkerPreamble } from '../../drivers/workers/WorkerDriver.js';
 import type { LocalWorkerService } from './LocalWorkerService.js';
 
-let server: PuterServer;
+let server: MixtServer;
 let localWorkers: LocalWorkerService;
 let ownerUserId: number;
 let ownerUsername: string;
@@ -205,7 +205,7 @@ describe('LocalWorkerService.cfDeployLocal', () => {
             name,
             'test-authorization',
             `addEventListener('fetch', (e) => {
-                e.respondWith(new Response('hello ' + puter_auth));
+                e.respondWith(new Response('hello ' + mixt_auth));
             });`,
         );
 

@@ -23,9 +23,9 @@ import { append_signed_item_params } from './appendSignedItemParams.js';
 const readOnlySignature = {
     uid: 'uid-1',
     fsentry_name: 'shared.txt',
-    read_url: 'https://api.puter.test/file?uid=uid-1&signature=read',
+    read_url: 'https://api.mixt.test/file?uid=uid-1&signature=read',
     // write_url intentionally absent — the backend strips it for a read-only share.
-    metadata_url: 'https://api.puter.test/itemMetadata?uid=uid-1&signature=read',
+    metadata_url: 'https://api.mixt.test/itemMetadata?uid=uid-1&signature=read',
     fsentry_size: 12,
     fsentry_accessed: 1,
     fsentry_modified: 2,
@@ -39,27 +39,27 @@ describe('append_signed_item_params', () => {
         const params = new URLSearchParams();
         append_signed_item_params(params, readOnlySignature, '/owner/shared.txt');
 
-        expect(params.has('puter.item.write_url')).toBe(false);
-        expect(params.get('puter.item.write_url')).toBeNull();
-        expect(params.get('puter.item.read_url')).toBe(readOnlySignature.read_url);
+        expect(params.has('mixt.item.write_url')).toBe(false);
+        expect(params.get('mixt.item.write_url')).toBeNull();
+        expect(params.get('mixt.item.read_url')).toBe(readOnlySignature.read_url);
     });
 
     it('forwards write_url when the share grants write', () => {
         const params = new URLSearchParams();
         append_signed_item_params(
             params,
-            { ...readOnlySignature, write_url: 'https://api.puter.test/writeFile?uid=uid-1&signature=write' },
+            { ...readOnlySignature, write_url: 'https://api.mixt.test/writeFile?uid=uid-1&signature=write' },
             '/owner/shared.txt',
         );
 
-        expect(params.get('puter.item.write_url')).toBe(
-            'https://api.puter.test/writeFile?uid=uid-1&signature=write',
+        expect(params.get('mixt.item.write_url')).toBe(
+            'https://api.mixt.test/writeFile?uid=uid-1&signature=write',
         );
     });
 
     it('advertises the passed path rather than the signature path', () => {
         const params = new URLSearchParams();
         append_signed_item_params(params, readOnlySignature, '~/shared.txt');
-        expect(params.get('puter.item.path')).toBe('~/shared.txt');
+        expect(params.get('mixt.item.path')).toBe('~/shared.txt');
     });
 });

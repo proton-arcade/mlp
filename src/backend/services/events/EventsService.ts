@@ -121,7 +121,7 @@ import {
     appSocketRoom,
     type SocketSpecifier,
 } from '../socket/SocketService.js';
-import { PuterService } from '../types.js';
+import { MixtService } from '../types.js';
 import { DEFAULT_FREE_SUBSCRIPTION } from '../metering/consts.js';
 import type { IConfig } from '../../types.js';
 import {
@@ -1392,7 +1392,7 @@ const parseExpiresAt = (value: unknown): number | null => {
     return seconds;
 };
 
-export class EventsService extends PuterService {
+export class EventsService extends MixtService {
     readonly #cache = new SubscriptionCache();
     readonly #deliveryAuth = new DeliveryAuthCache();
     readonly #compiled = new MatcherCache();
@@ -5557,7 +5557,7 @@ export class EventsService extends PuterService {
      * delivery.
      *
      * The session behind the token is one row per (user, app), reused across
-     * every delivery — the same idempotent worker session `puter.workers.*`
+     * every delivery — the same idempotent worker session `mixt.workers.*`
      * uses — so it appears once in the user's sessions list and is revocable
      * there like any other. The token itself is short-lived and carries the
      * handler depth its writes are stamped with.

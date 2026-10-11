@@ -7,9 +7,9 @@
 -- INFORMATION_SCHEMA check, so re-running the migration directory
 -- is safe (required — the runner has no per-file tracking).
 
-DROP PROCEDURE IF EXISTS _puter_extend_sessions_v2;
+DROP PROCEDURE IF EXISTS _mixt_extend_sessions_v2;
 DELIMITER //
-CREATE PROCEDURE _puter_extend_sessions_v2()
+CREATE PROCEDURE _mixt_extend_sessions_v2()
 BEGIN
   IF NOT EXISTS (
     SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS
@@ -93,6 +93,6 @@ BEGIN
 END//
 DELIMITER ;
 
-CALL _puter_extend_sessions_v2();
+CALL _mixt_extend_sessions_v2();
 
-DROP PROCEDURE IF EXISTS _puter_extend_sessions_v2;
+DROP PROCEDURE IF EXISTS _mixt_extend_sessions_v2;

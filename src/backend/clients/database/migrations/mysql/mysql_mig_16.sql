@@ -20,15 +20,15 @@
 -- timestamp sibling of the boolean `suspended` flag, indexed so the
 -- signup-abuse harness can count an IP's recently-suspended accounts.
 --
--- Idempotent: the column add uses _puter_add_col (defined in mig_1, which
+-- Idempotent: the column add uses _mixt_add_col (defined in mig_1, which
 -- leaves it resident for later migrations); the index add is guarded against
 -- INFORMATION_SCHEMA.STATISTICS so the directory replays safely.
 
-CALL _puter_add_col('user', 'suspended_at', '`suspended_at` bigint DEFAULT NULL');
+CALL _mixt_add_col('user', 'suspended_at', '`suspended_at` bigint DEFAULT NULL');
 
-DROP PROCEDURE IF EXISTS _puter_add_user_suspended_at_index;
+DROP PROCEDURE IF EXISTS _mixt_add_user_suspended_at_index;
 DELIMITER //
-CREATE PROCEDURE _puter_add_user_suspended_at_index()
+CREATE PROCEDURE _mixt_add_user_suspended_at_index()
 BEGIN
   IF NOT EXISTS (
     SELECT 1 FROM INFORMATION_SCHEMA.STATISTICS
@@ -41,6 +41,6 @@ BEGIN
 END//
 DELIMITER ;
 
-CALL _puter_add_user_suspended_at_index();
+CALL _mixt_add_user_suspended_at_index();
 
-DROP PROCEDURE IF EXISTS _puter_add_user_suspended_at_index;
+DROP PROCEDURE IF EXISTS _mixt_add_user_suspended_at_index;

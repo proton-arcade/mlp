@@ -37,12 +37,12 @@ import { Agent as HttpsAgent } from 'node:https';
 import path from 'node:path';
 import type { IConfig } from '../../types';
 import { nativeImport } from '../../util/nativeImport.js';
-import { PuterClient } from '../types';
+import { MixtClient } from '../types';
 import { HttpError } from '../../core/http';
 
 const DEFAULT_MULTIPART_PART_SIZE_BYTES = 5 * 1024 * 1024;
 const FAUXQS_SAFE_PUT_OBJECT_LIMIT_BYTES = 10 * 1024 * 1024;
-const LEGACY_STORAGE_BUCKET = 'puter-local';
+const LEGACY_STORAGE_BUCKET = 'mixt-local';
 
 type S3CommandSender = Pick<AwsS3Client, 'send'>;
 
@@ -74,7 +74,7 @@ const startLoopbackFauxqs = async <T>(
     }
 };
 
-export class S3Client extends PuterClient {
+export class S3Client extends MixtClient {
     private clientMap = new Map<string, AwsS3Client>();
     private presignClientMap = new Map<string, AwsS3Client>();
     private awsConfig: Partial<S3ClientConfig> = {};

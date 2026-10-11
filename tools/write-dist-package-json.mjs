@@ -4,14 +4,14 @@ mkdirSync('dist', { recursive: true });
 writeFileSync(
     'dist/package.json',
     `${JSON.stringify({
-        name: '@heyputer/backend',
+        name: '@mixt/backend',
         type: 'commonjs',
         exports: {
             // Post-flatten: `src/backend/` is the backend root. The `src/`
             // in the compiled path (`dist/src/backend/...`) is an artifact
             // of tsc's rootDir being the package root, not a meaningful
             // subfolder. Canonical imports drop the `/src/` prefix — e.g.
-            // `@heyputer/backend/controllers/types`. Named shortcuts for
+            // `@mixt/backend/controllers/types`. Named shortcuts for
             // the common entry points come first (Node picks the most
             // specific pattern match).
             './core': './src/backend/core/index.js',
@@ -22,7 +22,7 @@ writeFileSync(
             // subpaths resolve.
             './*.js': './src/backend/*.js',
             './*': './src/backend/*.js',
-            // Back-compat for the older `@heyputer/backend/src/*` style.
+            // Back-compat for the older `@mixt/backend/src/*` style.
             // Safe to keep indefinitely; remove once every extension has
             // been rewritten.
             './src/core': './src/backend/core/index.js',

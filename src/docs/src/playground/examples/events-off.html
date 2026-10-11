@@ -1,24 +1,24 @@
 <html>
 <body>
-    <script src="/puter.js/v2"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
-            const dir = puter.randName();
-            await puter.fs.mkdir(dir);
+            const dir = mixt.randName();
+            await mixt.fs.mkdir(dir);
 
-            const sub = await puter.events.onLocal(`fs:${dir}`, ({ event }) => {
-                puter.print(`${event.op}: ${event.path}<br>`);
+            const sub = await mixt.events.onLocal(`fs:${dir}`, ({ event }) => {
+                mixt.print(`${event.op}: ${event.path}<br>`);
             });
 
-            await puter.fs.write(`${dir}/first.txt`, 'delivered');
+            await mixt.fs.write(`${dir}/first.txt`, 'delivered');
 
             // Give the first change time to arrive, then stop listening
             setTimeout(async () => {
                 await sub.off();
-                puter.print('stopped listening<br>');
+                mixt.print('stopped listening<br>');
 
                 // Nothing below is delivered
-                await puter.fs.write(`${dir}/second.txt`, 'not delivered');
+                await mixt.fs.write(`${dir}/second.txt`, 'not delivered');
             }, 2000);
         })();
     </script>

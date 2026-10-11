@@ -17,18 +17,18 @@
 
 -- User-to-developer feedback for apps that opt in. Mirrors SQLite migration
 -- 0065. Opt-in is the new `apps.feedback_enabled` column (developer-writable
--- through the regular `puter.apps.update` path). Each row of `app_feedback`
+-- through the regular `mixt.apps.update` path). Each row of `app_feedback`
 -- is one message a signed-in user submitted through the GUI feedback dialog;
 -- a copy is emailed to the app owner unless the per-app daily email cap
 -- suppressed it (`email_sent` records which). `app_uid` is denormalized
 -- alongside `app_id` so rows stay attributable after an app is deleted.
 -- `created_at` is unix seconds.
 --
--- Idempotent: the column add uses _puter_add_col (defined in mig_1, which
+-- Idempotent: the column add uses _mixt_add_col (defined in mig_1, which
 -- always runs first) and the table uses `CREATE TABLE IF NOT EXISTS`, so the
 -- directory can replay safely.
 
-CALL _puter_add_col('apps', 'feedback_enabled', '`feedback_enabled` tinyint(1) DEFAULT ''0''');
+CALL _mixt_add_col('apps', 'feedback_enabled', '`feedback_enabled` tinyint(1) DEFAULT ''0''');
 
 CREATE TABLE IF NOT EXISTS `app_feedback` (
     `id` INT NOT NULL AUTO_INCREMENT,

@@ -44,7 +44,7 @@ import {
     subscriptionOverride,
 } from '../metering/consts.js';
 import type { AuthResult, AuthService } from '../auth/AuthService.js';
-import { PuterService } from '../types.js';
+import { MixtService } from '../types.js';
 import { isServerUserAllowed } from '../../util/serverWhitelist';
 
 export type SocketReauthError = Error & { data: Record<string, unknown> };
@@ -195,10 +195,10 @@ export const socketRoomsFor = (actor: Actor): string[] => {
 
 // -- Redis key format for cross-node FS-cache invalidation ----------
 //
-// puter-js (browser) polls `GET /cache/last-change-timestamp` and purges
+// mixt-js (browser) polls `GET /cache/last-change-timestamp` and purges
 // its in-memory FS cache when the server's timestamp is ≥ ~2s ahead of
 // the tab's local clock. We bump this key on every `outer.gui.item.*`
-// mutation, so a write on node A invalidates puter-js caches in tabs
+// mutation, so a write on node A invalidates mixt-js caches in tabs
 // connected to node B.
 //
 // 30-day TTL so dormant users' keys GC themselves. Active users keep
@@ -250,20 +250,20 @@ interface AuthenticatedSocket extends Socket {
  *    mutation events and pushes each to the affected users' rooms. Strips the
  *    `outer.gui.` prefix before emitting.
  * 3. FS cache-invalidation timestamp — bumps a per-user Redis key on every
- *    mutation so puter-js running on a different node (or a different tab) can
+ *    mutation so mixt-js running on a different node (or a different tab) can
  *    detect staleness on its next poll of `/cache/last-change-timestamp`.
  *
  * Cross-node fan-out comes free via `@socket.io/redis-streams-adapter`:
  * `send()` on any node reaches every socket for that room cluster-wide.
  */
-export class SocketService extends PuterService {
+export class SocketService extends MixtService {
     #io: SocketIOServer | null = null;
     #reauthTimer: ReturnType<typeof setInterval> | null = null;
 
     // -- Lifecycle ---------------------------------------------------
 
     /**
-     * Called by `PuterServer` after the http server is created but before it
+     * Called by `MixtServer` after the http server is created but before it
      * starts listening. Attaches socket.io, wires auth, subscribes to the event
      * bus. Sync — no await on the caller side is required, but we accept a
      * Promise return for symmetry.
@@ -272,9 +272,9 @@ export class SocketService extends PuterService {
         // ioredis Cluster is compatible with the redis-streams adapter.
         const adapter = createAdapter(this.clients.redis as unknown as never);
 
-        // Restrict the upgrade-host to puter.com + api.puter.com (or
+        // Restrict the upgrade-host to mixt.mpl + api.mixt.mpl (or
         // whatever `config.domain` resolves to). Wildcard-DNS-served
-        // user sites at `*.puter.site` go to the same backend, but
+        // user sites at `*.mixt.site` go to the same backend, but
         // socket.io has no business answering there. CORS reflector
         // stays wide — any *origin* may connect from those gated hosts.
         const allowedHosts = this.#allowedSocketHosts();
@@ -306,8 +306,8 @@ export class SocketService extends PuterService {
 
     /**
      * Hostnames permitted to upgrade to a socket connection. Built from
-     * `config.domain` (e.g. `puter.com` → allows `puter.com` +
-     * `api.puter.com`). Subdomain user-sites and other wildcard-served
+     * `config.domain` (e.g. `mixt.mpl` → allows `mixt.mpl` +
+     * `api.mixt.mpl`). Subdomain user-sites and other wildcard-served
      * hostnames are not in this set.
      */
     #allowedSocketHosts(): Set<string> {
@@ -437,7 +437,7 @@ export class SocketService extends PuterService {
 
         this.#io.use(async (socket: AuthenticatedSocket, next) => {
             // socket.io's conventional location for handshake auth is
-            // `{ auth: { ... } }`, not the query string. puter-js uses
+            // `{ auth: { ... } }`, not the query string. mixt-js uses
             // `io(url, { auth: { auth_token } })`.
             const handshakeAuth = socket.handshake.auth as
                 Record<string, unknown> | undefined;
@@ -800,10 +800,10 @@ export class SocketService extends PuterService {
             // Legacy probe some frontends use to signal "the UI is
             // really up, not just a health-check connection". Extensions
             // sometimes listen for the follow-up event.
-            socket.on('puter_is_actually_open', () => {
+            socket.on('mixt_is_actually_open', () => {
                 void this.#allowSocketEvent(
                     userId,
-                    'puter_is_actually_open',
+                    'mixt_is_actually_open',
                 ).then((ok) => {
                     if (!ok) return;
                     this.clients.event.emit(
@@ -990,7 +990,7 @@ export class SocketService extends PuterService {
             );
         } catch (err) {
             // Redis write failures shouldn't break the socket send —
-            // worst case is a stale puter-js cache on another tab.
+            // worst case is a stale mixt-js cache on another tab.
             console.warn('[socket] failed to bump last-change timestamp', err);
         }
     }

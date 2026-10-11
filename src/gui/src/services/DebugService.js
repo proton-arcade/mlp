@@ -37,12 +37,12 @@ export class DebugService extends Service {
     }
     logs (category) {
         const msg = {
-            $: 'puterjs-debug',
+            $: 'mixtjs-debug',
             cmd: 'log.on',
             category,
         };
         this.enabled_logs.push(category);
-        puter.logger.on(category);
+        mixt.logger.on(category);
         $('iframe').each(function () {
             this.contentWindow.postMessage(msg);
         });

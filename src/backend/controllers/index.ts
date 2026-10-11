@@ -37,11 +37,11 @@ import { StaticPagesController } from './static/StaticPagesController.js';
 import { SystemController } from './system/SystemController.js';
 import { WebDAVController } from './webdav/WebDAVController.js';
 import { WispController } from './wisp/WispController.js';
-import type { IPuterControllerRegistry } from './types.js';
+import type { IMixtControllerRegistry } from './types.js';
 import { PeerController } from './peer/PeerController.js';
 import { ProfileController } from './profile/ProfileController.js';
 
-export const puterControllers = {
+export const mixtControllers = {
     staticAssets: StaticAssetsController,
     staticPages: StaticPagesController,
     auth: AuthController,
@@ -65,4 +65,4 @@ export const puterControllers = {
     peer: PeerController,
     // Last so its catch-all static fallback doesn't shadow earlier routes.
     homepage: HomepageController,
-} satisfies IPuterControllerRegistry;
+} satisfies IMixtControllerRegistry;

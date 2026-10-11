@@ -24,7 +24,7 @@ import type { UserRow } from '../../stores/user/UserStore.js';
 import { ensureSystemSite, PROFILES_SUBDOMAIN } from '../../util/systemSite.js';
 import { UNLIMITED_STORAGE_ALLOWANCE } from '../fs/FSService.js';
 import { actorHasSubscription } from '../metering/enforcement.js';
-import { PuterService } from '../types.js';
+import { MixtService } from '../types.js';
 
 export const PROFILES_PATH_PREFIX = '/system/profiles';
 const PROFILE_FILE_SUFFIX = '.profile';
@@ -123,7 +123,7 @@ const validateField = (field: ProfileField, value: unknown): string | null => {
  * their own. The hosted half is enforced on `site.access.check`, which the
  * hosting middleware asks before streaming any file of that site.
  */
-export class ProfileService extends PuterService {
+export class ProfileService extends MixtService {
     #ownerUserId: number | null = null;
     #dirReady: Promise<void> | null = null;
 

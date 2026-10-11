@@ -1,6 +1,6 @@
 ---
 title: Manage Websites
-description: "Learn how to list, look up, repoint and delete the websites your app has published with Puter.js."
+description: "Learn how to list, look up, repoint and delete the websites your app has published with Mixt.js."
 tags: [hosting]
 order: 56
 ---
@@ -15,29 +15,29 @@ buttons to release a new version or delete it.
 
 ## List Sites
 
-To show the user's sites, call [`puter.hosting.list()`](/Hosting/list/):
+To show the user's sites, call [`mixt.hosting.list()`](/Hosting/list/):
 
 ```js
-const sites = await puter.hosting.list();
+const sites = await mixt.hosting.list();
 
 for (const site of sites) {
-    console.log(`https://${site.subdomain}.puter.site`, site.root_dir?.path);
+    console.log(`https://${site.subdomain}.mixt.site`, site.root_dir?.path);
 }
 ```
 
 Each entry is a [`Subdomain`](/Objects/subdomain/) object. `root_dir` is the
 folder it serves, and is `null` when that folder no longer exists.
 
-When your code runs as a Puter app, the list only has the sites that app
+When your code runs as a Mixt OS app, the list only has the sites that app
 created. Sites the user published from somewhere else are left out, and the
 other hosting calls cannot change them either.
 
 ## Get One Site
 
-To look up a single site by name, call [`puter.hosting.get()`](/Hosting/get/):
+To look up a single site by name, call [`mixt.hosting.get()`](/Hosting/get/):
 
 ```js
-const site = await puter.hosting.get('grace-portfolio');
+const site = await mixt.hosting.get('grace-portfolio');
 
 site.subdomain;       // 'grace-portfolio'
 site.root_dir.path;   // '/grace/my-site'
@@ -47,20 +47,20 @@ It rejects when there is no site with that name, or when it belongs to someone
 else. Catch the error to use it as an existence check:
 
 ```js
-const exists = await puter.hosting.get('grace-portfolio').then(() => true, () => false);
+const exists = await mixt.hosting.get('grace-portfolio').then(() => true, () => false);
 ```
 
 ## Serve a Different Folder
 
 To point a site at another folder, call
-[`puter.hosting.update()`](/Hosting/update/) with the name and the new folder.
+[`mixt.hosting.update()`](/Hosting/update/) with the name and the new folder.
 The name and URL stay the same:
 
 ```js
-await puter.fs.mkdir('my-site-v2');
-await puter.fs.write('my-site-v2/index.html', '<h1>Version 2</h1>');
+await mixt.fs.mkdir('my-site-v2');
+await mixt.fs.write('my-site-v2/index.html', '<h1>Version 2</h1>');
 
-await puter.hosting.update('grace-portfolio', 'my-site-v2');
+await mixt.hosting.update('grace-portfolio', 'my-site-v2');
 ```
 
 This is a clean way to release a new version. Build it in a fresh folder while
@@ -69,11 +69,11 @@ site at the old folder again.
 
 ## Delete a Site
 
-To take a site offline, call [`puter.hosting.delete()`](/Hosting/delete/) with
+To take a site offline, call [`mixt.hosting.delete()`](/Hosting/delete/) with
 its name:
 
 ```js
-await puter.hosting.delete('grace-portfolio');
+await mixt.hosting.delete('grace-portfolio');
 ```
 
 The address stops answering. The folder and its files stay in the user's

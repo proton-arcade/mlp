@@ -1,15 +1,15 @@
 ---
-title: puter.ui.showOpenFilePicker()
-description: Presents a file picker dialog for selecting files from Puter cloud storage.
+title: mixt.ui.showOpenFilePicker()
+description: Presents a file picker dialog for selecting files from Mixt OS cloud storage.
 platforms: [websites, apps]
 ---
 
-Presents the user with a file picker dialog allowing them to pick a file from their Puter cloud storage.
+Presents the user with a file picker dialog allowing them to pick a file from their Mixt OS cloud storage.
 
 ## Syntax
 ```js
-puter.ui.showOpenFilePicker()
-puter.ui.showOpenFilePicker(options)
+mixt.ui.showOpenFilePicker()
+mixt.ui.showOpenFilePicker(options)
 ```
 
 ## Parameters
@@ -30,7 +30,7 @@ A `Promise` that resolves to either one [`FSItem`](/Objects/fsitem) or an array 
 ```html
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
 
     <h1 id="file-name"></h1>
 
@@ -39,7 +39,7 @@ A `Promise` that resolves to either one [`FSItem`](/Objects/fsitem) or an array 
 
     <script>
         document.getElementById('open-file-picker').addEventListener('click', ()=>{
-            puter.ui.showOpenFilePicker().then(async (file)=>{
+            mixt.ui.showOpenFilePicker().then(async (file)=>{
                 // print file name
                 document.getElementById('file-name').innerHTML = file.name;
                 // print file content

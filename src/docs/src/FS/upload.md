@@ -1,24 +1,24 @@
 ---
-title: puter.fs.upload()
-description: Upload local files to the user's own Puter file system.
+title: mixt.fs.upload()
+description: Upload local files to the user's own Mixt OS file system.
 platforms: [websites, apps, nodejs, workers]
 ---
 
-Given a number of local items, upload them to the Puter filesystem.
+Given a number of local items, upload them to the Mixt OS filesystem.
 
 ## Syntax
 
 ```js
-puter.fs.upload(items)
-puter.fs.upload(items, dirPath)
-puter.fs.upload(items, dirPath, options)
+mixt.fs.upload(items)
+mixt.fs.upload(items, dirPath)
+mixt.fs.upload(items, dirPath, options)
 ```
 
 ## Parameters
 
 #### `items` (Object) (required)
 
-The items to upload to the Puter filesystem. `items` can be an `InputFileList`, `FileList`, `Array` of `File` objects, or an `Array` of `Blob` objects.
+The items to upload to the Mixt OS filesystem. `items` can be an `InputFileList`, `FileList`, `Array` of `File` objects, or an `Array` of `Blob` objects.
 
 #### `dirPath` (String) (optional)
 
@@ -45,7 +45,7 @@ The following callbacks report on the upload as it runs. `operationId` identifie
 Cancelling through the `init` request handle during thumbnail preparation rejects with `{ code: 'upload_aborted', message: 'Upload aborted.' }` and prevents the upload from starting. Custom generators should stop their work when `context.signal` aborts and impose their own time and resource budgets; the SDK awaits thumbnail preparation before sending files.
 
 ```js
-puter.fs.upload(items, './uploads', {
+mixt.fs.upload(items, './uploads', {
     progress: (operationId, progress) => {
         console.log(`${Math.round(progress)}%`);
     },
@@ -71,15 +71,15 @@ When the signed batch-write endpoint is unavailable and the SDK falls back to th
 
 ## Uploading directories
 
-Directory uploads (dropped directory entries, or `createFileParent`) work on every platform: nested paths are recreated under the destination, and files sharing a name stay apart in the directories they came from. They rely on the signed batch-write endpoint, so against a backend that doesn't have one the SDK falls back to the older batch endpoint, which cannot create directories — the upload rejects with `batch_upload_failed`, and the directories have to be created with [`puter.fs.mkdir()`](/FS/mkdir/) and the files uploaded into them.
+Directory uploads (dropped directory entries, or `createFileParent`) work on every platform: nested paths are recreated under the destination, and files sharing a name stay apart in the directories they came from. They rely on the signed batch-write endpoint, so against a backend that doesn't have one the SDK falls back to the older batch endpoint, which cannot create directories — the upload rejects with `batch_upload_failed`, and the directories have to be created with [`mixt.fs.mkdir()`](/FS/mkdir/) and the files uploaded into them.
 
 ## Thumbnails
 
-The built-in generator handles browser-decodable images. PDF rendering is provided separately by the Puter desktop; PDF.js is not included in the SDK. Apps can supply their own renderer through `thumbnailGenerator` and delegate other files to `context.defaultGenerator`:
+The built-in generator handles browser-decodable images. PDF rendering is provided separately by the Mixt OS desktop; PDF.js is not included in the SDK. Apps can supply their own renderer through `thumbnailGenerator` and delegate other files to `context.defaultGenerator`:
 
 ```js
 const file = new File(['Hello!'], 'hello.txt', { type: 'text/plain' });
-await puter.fs.upload(file, './', {
+await mixt.fs.upload(file, './', {
     thumbnailGenerator: async (file, { defaultGenerator, signal }) => {
         if (signal.aborted) return undefined;
         return defaultGenerator(file);
@@ -96,7 +96,7 @@ When using signed uploads, a separate thumbnail transfer that fails or exceeds f
 ```html;fs-upload
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <input type="file" id="file-input" />
     <script>
         // File input
@@ -104,8 +104,8 @@ When using signed uploads, a separate thumbnail transfer that fails or exceeds f
 
         // Upload the file when the user selects it
         fileInput.onchange = () => {
-            puter.fs.upload(fileInput.files).then((file) => {
-                puter.print(`File uploaded successfully to: ${file.path}`);                
+            mixt.fs.upload(fileInput.files).then((file) => {
+                mixt.print(`File uploaded successfully to: ${file.path}`);                
             })
         };
     </script>

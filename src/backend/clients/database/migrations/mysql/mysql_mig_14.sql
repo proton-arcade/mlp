@@ -20,7 +20,7 @@
 -- the card itself never touches our DB, so this is the only column (not
 -- indexed, mirroring `requires_phone_verification`).
 --
--- Idempotent: the column add uses _puter_add_col (from mig_1) so the
+-- Idempotent: the column add uses _mixt_add_col (from mig_1) so the
 -- directory replays safely.
 
-CALL _puter_add_col('user', 'requires_card_verification', '`requires_card_verification` tinyint(1) NOT NULL DEFAULT ''0''');
+CALL _mixt_add_col('user', 'requires_card_verification', '`requires_card_verification` tinyint(1) NOT NULL DEFAULT ''0''');

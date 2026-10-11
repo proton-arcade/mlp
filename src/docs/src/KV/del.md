@@ -1,5 +1,5 @@
 ---
-title: puter.kv.del()
+title: mixt.kv.del()
 description: Remove keys from the user's own key-value store.
 platforms: [websites, apps, nodejs, workers]
 ---
@@ -8,7 +8,7 @@ When passed a key, will remove that key from the key-value storage. If there is 
 
 ## Syntax
 ```js
-puter.kv.del(key)
+mixt.kv.del(key)
 ```
 
 ## Parameters
@@ -25,20 +25,20 @@ A `Promise` that will resolve to `true` when the key has been removed.
 ```html;kv-del
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
             // create a new key-value pair
-            await puter.kv.set('name', 'Puter Smith');
-            puter.print("Key-value pair 'name' created/updated<br>");
+            await mixt.kv.set('name', 'Mixt OS Smith');
+            mixt.print("Key-value pair 'name' created/updated<br>");
 
             // delete the key 'name'
-            await puter.kv.del('name');
-            puter.print("Key-value pair 'name' deleted<br>");
+            await mixt.kv.del('name');
+            mixt.print("Key-value pair 'name' deleted<br>");
 
             // try to retrieve the value of key 'name'
-            const name = await puter.kv.get('name');
-            puter.print(`Name is now: ${name}`);
+            const name = await mixt.kv.get('name');
+            mixt.print(`Name is now: ${name}`);
         })();
     </script>
 </body>

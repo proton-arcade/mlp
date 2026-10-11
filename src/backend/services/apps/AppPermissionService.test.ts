@@ -21,13 +21,13 @@ import { v4 as uuidv4 } from 'uuid';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { makeActor, type Actor } from '../../core/actor.js';
 import { runWithContext } from '../../core/context.js';
-import type { PuterServer } from '../../server.js';
+import type { MixtServer } from '../../server.js';
 import { createTestUser, setupTestServer } from '../../testUtil.js';
 import { appDataPermission } from '../permission/appDataScopes.js';
 import { PERMISSION_FOR_NOTHING_IN_PARTICULAR } from '../permission/consts.js';
 import type { PermissionService } from '../permission/PermissionService.js';
 
-let server: PuterServer;
+let server: MixtServer;
 let permissions: PermissionService;
 
 const HOSTING_DOMAIN = 'site.localhost';

@@ -22,8 +22,8 @@ import { makeActor } from '../../core/actor.js';
 import { runWithContext } from '../../core/context.js';
 import {
     createTestUser,
-    setupPuterTestEnv,
-    type PuterTestEnv,
+    setupMixtTestEnv,
+    type MixtTestEnv,
 } from '../../testUtil.js';
 import { ShareController } from './ShareController.js';
 import { FULL_API_ACCESS } from '../../services/permission/consts.js';
@@ -35,10 +35,10 @@ import { FULL_API_ACCESS } from '../../services/permission/consts.js';
  * leaks.
  */
 describe('share endpoints over HTTP', () => {
-    let env: PuterTestEnv;
+    let env: MixtTestEnv;
 
     beforeAll(async () => {
-        env = await setupPuterTestEnv();
+        env = await setupMixtTestEnv();
     }, 120_000);
 
     afterAll(async () => {
@@ -72,7 +72,7 @@ describe('share endpoints over HTTP', () => {
         const username = `sbm${Math.random().toString(36).slice(2, 9)}`;
         return createTestUser(env.server, {
             username,
-            password: 'puter-test-user-password',
+            password: 'mixt-test-user-password',
         });
     };
 
@@ -365,13 +365,13 @@ describe('share endpoints over HTTP', () => {
         // hole in whichever was forgotten.
         it('is gated like the inbound listing', () => {
             const proto = ShareController.prototype as {
-                __puterRoutes?: Array<{
+                __mixtRoutes?: Array<{
                     method: string;
                     path: string;
                     options?: Record<string, unknown>;
                 }>;
             };
-            const routes = proto.__puterRoutes ?? [];
+            const routes = proto.__mixtRoutes ?? [];
             const inbound = routes.find((r) => r.path === '/shared-with-me');
             const outbound = routes.find((r) => r.path === '/shared-by-me');
             expect(outbound?.method.toLowerCase()).toBe('get');
@@ -801,7 +801,7 @@ describe('share endpoints over HTTP', () => {
     it('runs a duplicated pair once, and answers for both positions', async () => {
         const owner = env.users.user;
         const file = await makeFile(owner);
-        const invitee = `dup-${crypto.randomUUID().slice(0, 8)}@puter.local`;
+        const invitee = `dup-${crypto.randomUUID().slice(0, 8)}@mixt.local`;
 
         // The same pair twice raced itself into two pending rows; it must
         // execute once, with the one outcome reported in both positions.
@@ -1047,13 +1047,13 @@ describe('share endpoints over HTTP', () => {
     // So a fourth block route cannot quietly ship without the gate.
     it('gates every block route on a user session', () => {
         const proto = ShareController.prototype as {
-            __puterRoutes?: Array<{
+            __mixtRoutes?: Array<{
                 method: string;
                 path: string;
                 options?: Record<string, unknown>;
             }>;
         };
-        const blocks = (proto.__puterRoutes ?? []).filter(
+        const blocks = (proto.__mixtRoutes ?? []).filter(
             (r) => r.path === '/blocks',
         );
         expect(blocks.map((r) => r.method.toLowerCase()).sort()).toEqual([

@@ -288,7 +288,7 @@ async function UIWindowLogin (options) {
         h += `<h1 class="login-form-title">${i18n('log_in')}</h1>`;
         // In a sign-in popup, say which site brought the user here.
         if (window.embedded_in_popup && isAttestedOrigin(window.openerOrigin)) {
-            h += `<p class="auth-opener-notice">${i18n('popup_opener_uses_puter', [new URL(window.openerOrigin).hostname])}</p>`;
+            h += `<p class="auth-opener-notice">${i18n('popup_opener_uses_mixt', [new URL(window.openerOrigin).hostname])}</p>`;
         }
         h += '</div>';
         // form
@@ -829,14 +829,14 @@ async function UIWindowLogin (options) {
                     } else {
                         // No message was returned. *Probably* this means we couldn't reach the server.
                         // If this is a self-hosted instance, it's probably a configuration issue.
-                        if ( window.app_domain !== 'puter.com' ) {
+                        if ( window.app_domain !== 'mixt.mpl' ) {
                             $errorMessage.html(`<div style="text-align: left;">
                                 <p>Error reaching "${window.gui_origin}/login". This is likely to be a configuration issue.</p>
                                 <p>Make sure of the following:</p>
                                 <ul style="padding-left: 2em;">
-                                    <li><code>domain</code> in config.json is set to the domain you're using to access puter</li>
+                                    <li><code>domain</code> in config.json is set to the domain you're using to access mixt</li>
                                     <li>DNS resolves for the domain, and the <code>api.</code> subdomain on that domain</li>
-                                    <li><code>http_port</code> is set to the port Puter is listening on (<code>auto</code> will use <code>4100</code> unless that port is in use)</li>
+                                    <li><code>http_port</code> is set to the port Mixt is listening on (<code>auto</code> will use <code>4100</code> unless that port is in use)</li>
                                     <li><code>pub_port</code> is set to the external port (ex: <code>443</code> if you're using a reverse proxy that serves over https)</li>
                                 </ul>
                             </div>`);

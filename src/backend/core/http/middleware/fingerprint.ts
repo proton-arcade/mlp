@@ -31,7 +31,7 @@ import '../expressAugmentation';
 const DEVICE_FINGERPRINT_SHAPE = /^[A-Za-z0-9._-]{8,128}$/;
 
 /** Header the GUI may send the device fingerprint on for non-signup requests. */
-const DEVICE_FINGERPRINT_HEADER = 'x-puter-device-fingerprint';
+const DEVICE_FINGERPRINT_HEADER = 'x-mixt-device-fingerprint';
 
 function readDeviceFingerprint(req: {
     body?: unknown;
@@ -61,7 +61,7 @@ function readDeviceFingerprint(req: {
  *   away, but it's coarse (shared behind NAT/VPN, rotates with UA).
  * - `req.deviceFingerprint` — set only when the client supplied a well-shaped
  *   device fingerprint (ThumbmarkJS hash) in the body or the
- *   `x-puter-device-fingerprint` header; `undefined` otherwise. Client-supplied
+ *   `x-mixt-device-fingerprint` header; `undefined` otherwise. Client-supplied
  *   and spoofable, but stable per real device across IP rotation. The rate
  *   limiter's 'fingerprint' strategy appends it to the network hash so each
  *   device behind a shared network gets its own bucket.

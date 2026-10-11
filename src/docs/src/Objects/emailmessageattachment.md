@@ -1,6 +1,6 @@
 ---
 title: EmailMessageAttachment
-description: One attachment of a message returned by puter.email.get(), bytes included.
+description: One attachment of a message returned by mixt.email.get(), bytes included.
 ---
 
 An `EmailMessageAttachment` object is one attachment of an [`EmailMessage`](/Objects/emailmessage/). The whole message is downloaded when it is read, so every attachment comes with its decoded bytes.

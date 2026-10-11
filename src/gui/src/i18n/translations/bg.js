@@ -154,7 +154,7 @@ const bg = {
         forgot_pass_c2a: 'Забравена парола?',
         from: 'От',
         general: 'Общи',
-        get_a_copy_of_on_puter: 'Вземете копие на %% в Mixt.com!',
+        get_a_copy_of_on_mixt: 'Вземете копие на %% в Mixt.com!',
         get_copy_link: 'Вземи връзка за копие',
         hide_all_windows: 'Скрий всички прозорци',
         home: 'Начало',
@@ -231,7 +231,7 @@ const bg = {
         picture: 'Снимка',
         pictures: 'Снимки',
         plural_suffix: 'и',
-        powered_by_puter_js: 'Работи с {{link=docs}}Puter.js{{/link}}',
+        powered_by_mixt_js: 'Работи с {{link=docs}}Mixt.js{{/link}}',
         preparing: 'Подготовка…',
         preparing_for_upload: 'Подготовка за качване…',
         print: 'Принтирай',
@@ -248,7 +248,7 @@ const bg = {
         publish: 'Публикувай',
         publish_as_website: 'Публикувай като уебсайт',
         publish_as_serverless_worker: 'Публикувай като Worker',
-        puter_description:
+        mixt_description:
       'Mixt е личен облак с приоритет на поверителността, който съхранява всичките ви файлове, приложения и игри на едно сигурно място, достъпно отвсякъде и по всяко време.',
         reading: 'Четене на %strong%',
         writing: 'Записване на %strong%',
@@ -269,7 +269,7 @@ const bg = {
         replace_all: 'Замени всички',
         resend_confirmation_code: 'Изпрати отново кода за потвърждение',
         reset_colors: 'Нулирай цветовете',
-        restart_puter_confirm: 'Сигурни ли сте, че искате да рестартирате Mixt?',
+        restart_mixt_confirm: 'Сигурни ли сте, че искате да рестартирате Mixt?',
         restore: 'Възстанови',
         save: 'Запази',
         saturation: 'Наситеност',
@@ -303,7 +303,7 @@ const bg = {
         shortcut_to: 'Пряк път до',
         show_all_windows: 'Покажи всички прозорци',
         show_hidden: 'Покажи скритите',
-        sign_in_with_puter: 'Влез с Mixt',
+        sign_in_with_mixt: 'Влез с Mixt',
         sign_up: 'Регистрирай се',
         signing_in: 'Влизане…',
         size: 'Размер',
@@ -313,7 +313,7 @@ const bg = {
         start: 'Старт',
         status: 'Статус',
         storage_usage: 'Използване на място за съхранение',
-        storage_puter_used: 'използвано от Путер',
+        storage_mixt_used: 'използвано от Путер',
         taking_longer_than_usual:
       'Отнема малко повече време от обикновено. Моля, изчакайте...',
         task_manager: 'Диспечер на задачи',
@@ -359,7 +359,7 @@ const bg = {
         visibility: 'Видимост',
         yes: 'Да',
         yes_release_it: 'Да, освободи',
-        you_have_been_referred_to_puter_by_a_friend:
+        you_have_been_referred_to_mixt_by_a_friend:
       'Били сте препоръчани в Mixt от приятел!',
         zip: 'ZIP архивиране',
         tar: 'TAR архивиране',
@@ -540,7 +540,7 @@ const bg = {
         window_title_public: 'Публична',
         window_title_videos: 'Видеоклипове',
         window_title_pictures: 'Снимки',
-        window_title_puter: 'Mixt',
+        window_title_mixt: 'Mixt',
         window_folder_empty: 'Тази папка е празна',
 
         // Website Management

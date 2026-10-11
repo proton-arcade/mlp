@@ -1,12 +1,12 @@
 <html>
 <body>
-    <script src="/puter.js/v2"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
-            await puter.kv.set('profile', { name: 'Puter', stats: { score: 10, level: 2 } });
+            await mixt.kv.set('profile', { name: 'Mixt OS', stats: { score: 10, level: 2 } });
 
-            const updated = await puter.kv.remove('profile', 'stats.score');
-            puter.print(`Updated profile: ${JSON.stringify(updated)}`);
+            const updated = await mixt.kv.remove('profile', 'stats.score');
+            mixt.print(`Updated profile: ${JSON.stringify(updated)}`);
         })();
     </script>
 </body>

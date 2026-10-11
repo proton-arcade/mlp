@@ -185,7 +185,7 @@ const launch_app = async (options) => {
     }
     else
     {
-        app_info = await puter.apps.get(options.name, { icon_size: 64 });
+        app_info = await mixt.apps.get(options.name, { icon_size: 64 });
     }
 
     // For backward compatibility reasons we need to make sure that both `uuid` and `uid` are set
@@ -305,7 +305,7 @@ const launch_app = async (options) => {
     // Dashboard mode: apps are full-tab experiences (headless chrome,
     // control drawer, tile/Back switching), so every app launch defaults
     // to maximized — matching tile launches. Without this, an app launched
-    // by another app (puter.ui.launchApp) opened as a floating titlebar
+    // by another app (mixt.ui.launchApp) opened as a floating titlebar
     // window over the full-tab parent, with no tile to switch back to.
     // Explorer keeps its windowed form; an explicit option still wins.
     if ( window.is_dashboard_mode && options.maximized === undefined
@@ -320,7 +320,7 @@ const launch_app = async (options) => {
         file_signature = options.file_signature;
     }
     else if ( options.file_uid && ! options.confirm_file_access ) {
-        file_signature = await puter.fs.sign(app_info.uuid, { uid: options.file_uid, action: 'write' });
+        file_signature = await mixt.fs.sign(app_info.uuid, { uid: options.file_uid, action: 'write' });
         // add token to options
         options.token = file_signature.token;
         // add file_signature to options
@@ -349,7 +349,7 @@ const launch_app = async (options) => {
         }
         if ( target ) {
             try {
-                const signed = await puter.fs.sign(app_info.uuid, { ...target, action: 'write' });
+                const signed = await mixt.fs.sign(app_info.uuid, { ...target, action: 'write' });
                 // A path the user can't reach comes back as an empty signature
                 // rather than an error, so there is nothing to check but the uid.
                 if ( signed?.items?.uid ) {
@@ -371,7 +371,7 @@ const launch_app = async (options) => {
 
     // -----------------------------------
     // Create entry to track the "portal"
-    // (portals are processese in Puter's GUI)
+    // (portals are processese in Mixt's GUI)
     // -----------------------------------
 
     let el_win;
@@ -412,7 +412,7 @@ const launch_app = async (options) => {
         // if options.args.path is provided, use it as the path
         if ( options.args?.path ) {
             // if args.path is provided, enforce the directory
-            let fsentry = await puter.fs.stat({ path: options.args.path, consistency: 'eventual' });
+            let fsentry = await mixt.fs.stat({ path: options.args.path, consistency: 'eventual' });
             if ( ! fsentry.is_dir ) {
                 let parent = path.dirname(options.args.path);
                 if ( parent === options.args.path )
@@ -462,7 +462,7 @@ const launch_app = async (options) => {
         let iframe_url;
 
         // This can be any trusted URL that won't be used for other apps
-        const BUILTIN_PREFIX = 'https://builtins.namespaces.puter.com/';
+        const BUILTIN_PREFIX = 'https://builtins.namespaces.mixt.mpl/';
 
         if ( ! app_info.index_url ) {
             iframe_url = new URL(`https://${options.name}.${ window.app_domain }/index.html`);
@@ -474,29 +474,29 @@ const launch_app = async (options) => {
         }
 
         // add app_instance_id to URL
-        iframe_url.searchParams.append('puter.app_instance_id', uuid);
+        iframe_url.searchParams.append('mixt.app_instance_id', uuid);
 
         // add app_id to URL
-        iframe_url.searchParams.append('puter.app.id', app_info.uuid);
-        iframe_url.searchParams.append('puter.app.name', app_info.name);
+        iframe_url.searchParams.append('mixt.app.id', app_info.uuid);
+        iframe_url.searchParams.append('mixt.app.name', app_info.name);
 
         // add parent_app_instance_id to URL
         if ( options.parent_instance_id ) {
-            iframe_url.searchParams.append('puter.parent_instance_id', options.parent_pseudo_id);
+            iframe_url.searchParams.append('mixt.parent_instance_id', options.parent_pseudo_id);
         }
 
         // add source app metadata to URL
         if ( options.source_app_title ) {
-            iframe_url.searchParams.append('puter.source_app.title', options.source_app_title);
+            iframe_url.searchParams.append('mixt.source_app.title', options.source_app_title);
         }
         if ( options.source_app_id ) {
-            iframe_url.searchParams.append('puter.source_app.id', options.source_app_id);
+            iframe_url.searchParams.append('mixt.source_app.id', options.source_app_id);
         }
         if ( options.source_app_icon ) {
-            iframe_url.searchParams.append('puter.source_app.icon', options.source_app_icon);
+            iframe_url.searchParams.append('mixt.source_app.icon', options.source_app_icon);
         }
         if ( options.source_app_name ) {
-            iframe_url.searchParams.append('puter.source_app.name', options.source_app_name);
+            iframe_url.searchParams.append('mixt.source_app.name', options.source_app_name);
         }
 
         if ( file_signature ) {
@@ -507,9 +507,9 @@ const launch_app = async (options) => {
             );
         }
         else if ( options.readURL ) {
-            iframe_url.searchParams.append('puter.item.name', options.filename);
-            iframe_url.searchParams.append('puter.item.path', privacy_aware_path(options.file_path));
-            iframe_url.searchParams.append('puter.item.read_url', options.readURL);
+            iframe_url.searchParams.append('mixt.item.name', options.filename);
+            iframe_url.searchParams.append('mixt.item.path', privacy_aware_path(options.file_path));
+            iframe_url.searchParams.append('mixt.item.read_url', options.readURL);
         }
 
         const is_godmode = app_info.godmode === true || app_info.godmode === 1;
@@ -535,9 +535,9 @@ const launch_app = async (options) => {
         }
 
         if ( launch_token ) {
-            iframe_url.searchParams.append('puter.auth.token', launch_token);
+            iframe_url.searchParams.append('mixt.auth.token', launch_token);
             if ( is_godmode ) {
-                iframe_url.searchParams.append('puter.auth.username', window.user.username);
+                iframe_url.searchParams.append('mixt.auth.username', window.user.username);
             }
         } else {
             console.error('App launch blocked because app token could not be acquired', {
@@ -575,19 +575,19 @@ const launch_app = async (options) => {
             return { launchResult: tokenFailureLaunchResult };
         }
 
-        iframe_url.searchParams.append('puter.domain', window.app_domain);
+        iframe_url.searchParams.append('mixt.domain', window.app_domain);
 
         // get URL parts
         const url = new URL(window.location.href);
 
-        iframe_url.searchParams.append('puter.origin', url.origin);
-        iframe_url.searchParams.append('puter.hostname', url.hostname);
-        iframe_url.searchParams.append('puter.port', url.port);
-        iframe_url.searchParams.append('puter.protocol', url.protocol.slice(0, -1));
+        iframe_url.searchParams.append('mixt.origin', url.origin);
+        iframe_url.searchParams.append('mixt.hostname', url.hostname);
+        iframe_url.searchParams.append('mixt.port', url.port);
+        iframe_url.searchParams.append('mixt.protocol', url.protocol.slice(0, -1));
 
         if ( window.api_origin )
         {
-            iframe_url.searchParams.append('puter.api_origin', window.api_origin);
+            iframe_url.searchParams.append('mixt.api_origin', window.api_origin);
         }
 
         // Add options.params to URL
@@ -598,20 +598,20 @@ const launch_app = async (options) => {
         }
 
         // Add locale to URL
-        iframe_url.searchParams.append('puter.locale', window.locale);
+        iframe_url.searchParams.append('mixt.locale', window.locale);
 
         // Newer IPC dialogs this GUI can answer, comma-separated. The SDK
         // consults this before posting a message an older GUI has no handler
         // for: such a message is never replied to, and a reply timeout can't
         // stand in for the check because legitimate replies only arrive when
         // the user closes the dialog.
-        iframe_url.searchParams.append('puter.gui_features', 'feedback-dialog');
+        iframe_url.searchParams.append('mixt.gui_features', 'feedback-dialog');
 
         // Add options.args to URL
-        iframe_url.searchParams.append('puter.args', JSON.stringify(options.args ?? {}));
+        iframe_url.searchParams.append('mixt.args', JSON.stringify(options.args ?? {}));
 
-        // ...and finally append utm_source=puter.com to the URL
-        iframe_url.searchParams.append('utm_source', 'puter.com');
+        // ...and finally append utm_source=mixt.mpl to the URL
+        iframe_url.searchParams.append('utm_source', 'mixt.mpl');
 
         // register app_instance_uid
         window.app_instance_ids.add(uuid);

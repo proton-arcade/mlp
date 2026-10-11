@@ -1,6 +1,6 @@
 ---
-title: puter.ui.notify()
-description: Displays a desktop notification in Puter.
+title: mixt.ui.notify()
+description: Displays a desktop notification in Mixt OS.
 platforms: [ websites, apps]
 ---
 
@@ -8,7 +8,7 @@ Displays a notification. Use this to surface events without interrupting the use
 
 ## Syntax
 ```js
-puter.ui.notify(options)
+mixt.ui.notify(options)
 ```
 
 ## Parameters
@@ -18,7 +18,7 @@ An object that configures the notification.
 
 - `title` (string): Title shown in the notification.
 - `text` (string): Body text shown under the title.
-- `icon` (string): Icon URL or Puter icon name (for example `bell.svg`).
+- `icon` (string): Icon URL or Mixt OS icon name (for example `bell.svg`).
 - `type` (string): Visual style used to pick a default icon and accent color when no `icon` is provided. One of `info`, `success`, `warning`, `error`, or `default`.
 - `duration` (number): Time in milliseconds before the notification auto-dismisses. Defaults to `5000`; set to `0` to keep it until dismissed.
 - `round_icon` (boolean): If `true`, renders the icon as a circle. `roundIcon` is accepted as an alias.
@@ -30,9 +30,9 @@ A `Promise` that resolves to the notification UID.
 
 ## Examples
 ```html;ui-notify
-<script src="https://js.puter.com/v2/"></script>
+<script src="https://js.mixt.mpl/v2/"></script>
 <script>
-  puter.ui.notify({
+  mixt.ui.notify({
     title: 'Build finished',
     text: 'Your export is ready.',
     icon: 'bell.svg',

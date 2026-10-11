@@ -1,14 +1,14 @@
 <html>
 <body>
-    <script src="/puter.js/v2"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // create a directory named 'hello'
-            let dir_1 = await puter.fs.mkdir('hello');
-            puter.print(`Directory 1: ${dir_1.name}<br>`);
+            let dir_1 = await mixt.fs.mkdir('hello');
+            mixt.print(`Directory 1: ${dir_1.name}<br>`);
             // create a directory named 'hello' again, it should be automatically renamed to 'hello (n)' where n is the next available number
-            let dir_2 = await puter.fs.mkdir('hello', { dedupeName: true });
-            puter.print(`Directory 2: ${dir_2.name}<br>`);
+            let dir_2 = await mixt.fs.mkdir('hello', { dedupeName: true });
+            mixt.print(`Directory 2: ${dir_2.name}<br>`);
         })();
     </script>
 </body>

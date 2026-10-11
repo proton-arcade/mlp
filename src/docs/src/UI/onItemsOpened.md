@@ -1,5 +1,5 @@
 ---
-title: puter.ui.onItemsOpened()
+title: mixt.ui.onItemsOpened()
 description: Executes a function when one or more items have been opened.
 platforms: [apps]
 ---
@@ -12,7 +12,7 @@ Specify a function to execute when the one or more items have been opened. Items
 
 ## Syntax
 ```js
-puter.ui.onItemsOpened(handler)
+mixt.ui.onItemsOpened(handler)
 ```
 
 ## Parameters
@@ -24,9 +24,9 @@ A function to execute after items are opened by user action.
 ```html
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
-        puter.ui.onItemsOpened(function(items){
+        mixt.ui.onItemsOpened(function(items){
             document.body.innerHTML = JSON.stringify(items);
         })
     </script>

@@ -25,8 +25,8 @@ import {
     ensureSystemSite,
 } from '../../util/systemSite.js';
 import { UNLIMITED_STORAGE_ALLOWANCE } from '../fs/FSService.js';
-import type { puterServices } from '../index';
-import { PuterService } from '../types.js';
+import type { mixtServices } from '../index';
+import { MixtService } from '../types.js';
 
 const APP_ICONS_PATH_PREFIX = '/system/app_icons';
 
@@ -43,20 +43,20 @@ const SIZED_ICON_FILENAME = (uid: string, size: number) => `${uid}-${size}.png`;
  * App icon generation service.
  *
  * 1. On boot: ensures `/system/app_icons/` exists, owned by the system user, and
- *    that the `puter-app-icons` subdomain points at it. Icons are then served
- *    through Puter's regular hosting path
- *    (`https://puter-app-icons.<hosting-domain>/<uid>-<size>.png`) — no custom
+ *    that the `mixt-app-icons` subdomain points at it. Icons are then served
+ *    through Mixt's regular hosting path
+ *    (`https://mixt-app-icons.<hosting-domain>/<uid>-<size>.png`) — no custom
  *    route, no custom S3 plumbing.
  * 2. On `app.new-icon` event: decodes the data URL, resizes via sharp to the 6
  *    standard sizes, and writes the PNGs into that directory via FSService. The
  *    write populates the CDN-backed subdomain automatically because
- *    `puter-app-icons` is a regular hosted site.
+ *    `mixt-app-icons` is a regular hosted site.
  * 3. Once the original is persisted, the app's `icon` column is rewritten from the
  *    data URL to the canonical endpoint URL so later reads don't re-ship the
  *    base64 payload.
  */
-export class AppIconService extends PuterService {
-    declare protected services: LayerInstances<typeof puterServices>;
+export class AppIconService extends MixtService {
+    declare protected services: LayerInstances<typeof mixtServices>;
 
     #sharp: typeof import('sharp') | null = null;
     #dirReady: Promise<void> | null = null;

@@ -23,7 +23,7 @@ import {
     DEFAULT_FREE_SUBSCRIPTION,
     DEFAULT_TEMP_SUBSCRIPTION,
 } from '../../services/metering/consts.js';
-import { PuterDriver } from '../types.js';
+import { MixtDriver } from '../types.js';
 import type { Actor } from '../../core/actor.js';
 import type { DriverConcurrentConfig, DriverRateLimitConfig } from '../meta.js';
 import {
@@ -65,16 +65,16 @@ type KvCallArgs = {
 const CREDIT_UNGATED_KV_METHODS = new Set(['del', 'remove', 'flush', 'list']);
 
 /**
- * KV store driver implementing the `puter-kvstore` interface.
+ * KV store driver implementing the `mixt-kvstore` interface.
  *
  * Thin wrapper around `stores.kv` (SystemKVStore): it validates/coerces request
  * inputs into HTTP-friendly errors, passes the request actor through so the
  * store scopes data to the correct namespace, and meters the DynamoDB capacity
  * the store reports back.
  */
-export class KVStoreDriver extends PuterDriver {
-    readonly driverInterface = 'puter-kvstore';
-    readonly driverName = 'puter-kvstore';
+export class KVStoreDriver extends MixtDriver {
+    readonly driverInterface = 'mixt-kvstore';
+    readonly driverName = 'mixt-kvstore';
     readonly isDefault = true;
 
     // Pre-v2 these limits lived on the kv permission policy in

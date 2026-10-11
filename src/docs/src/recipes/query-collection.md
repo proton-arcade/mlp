@@ -1,6 +1,6 @@
 ---
 title: Query a Collection
-description: "Learn how to perform queries on a collection of records in the Puter.js key-value database."
+description: "Learn how to perform queries on a collection of records in the Mixt.js key-value database."
 tags: [kv, data-modeling, performance]
 order: 35
 ---
@@ -13,41 +13,41 @@ under its own key.
 ## Put the Filter Criteria in the Key
 
 To query by a field, embed it in the key when you write the record with the
-[`puter.kv.set()`](/KV/set/) method. Notice that the status comes before the
+[`mixt.kv.set()`](/KV/set/) method. Notice that the status comes before the
 unique id:
 
 ```js
 // order:<status>:<id>
-await puter.kv.set(`order:${ status }:${ id }`, order);
+await mixt.kv.set(`order:${ status }:${ id }`, order);
 ```
 
-To read one slice, use the [`puter.kv.list()`](/KV/list/) method with that
+To read one slice, use the [`mixt.kv.list()`](/KV/list/) method with that
 prefix. The `true` brings the values back with the keys, so one round trip both
 selects and loads:
 
 ```js
-const pending = await puter.kv.list('order:pending:*', true);
+const pending = await mixt.kv.list('order:pending:*', true);
 // [ { key: 'order:pending:0001', value: { customer: 'alice', total: 48 } }, ... ]
 ```
 
 ## How a Pattern Matches
 
-The [`puter.kv.list()`](/KV/list/) method matches a prefix of the key, byte for
+The [`mixt.kv.list()`](/KV/list/) method matches a prefix of the key, byte for
 byte:
 
 ```js
-await puter.kv.list('order:pending:');    // every pending order
-await puter.kv.list('order:pending:*');   // the same set, the trailing * is optional
-await puter.kv.list('order:pend');        // also matches, a prefix can stop mid-segment
-await puter.kv.list('order:*:alice:');    // empty, the * is a literal asterisk here
-await puter.kv.list('ORDER:pending:');    // empty, matching is case-sensitive
+await mixt.kv.list('order:pending:');    // every pending order
+await mixt.kv.list('order:pending:*');   // the same set, the trailing * is optional
+await mixt.kv.list('order:pend');        // also matches, a prefix can stop mid-segment
+await mixt.kv.list('order:*:alice:');    // empty, the * is a literal asterisk here
+await mixt.kv.list('ORDER:pending:');    // empty, matching is case-sensitive
 ```
 
 Lowercase the segments you build keys from, and the case a value arrives in
 stops mattering:
 
 ```js
-await puter.kv.set(`order:${ status.toLowerCase() }:${ id }`, order);
+await mixt.kv.set(`order:${ status.toLowerCase() }:${ id }`, order);
 ```
 
 ## Filter on a Second Field
@@ -57,10 +57,10 @@ filter:
 
 ```js
 // order:<status>:<customer>:<id>
-await puter.kv.set(`order:${ status }:${ customer }:${ id }`, order);
+await mixt.kv.set(`order:${ status }:${ customer }:${ id }`, order);
 
-await puter.kv.list('order:pending:', true);          // by status
-await puter.kv.list('order:pending:alice:', true);    // by status and customer
+await mixt.kv.list('order:pending:', true);          // by status
+await mixt.kv.list('order:pending:alice:', true);    // by status and customer
 ```
 
 The segments read left to right, so this layout answers "pending" and "pending
@@ -75,14 +75,14 @@ field. Write it beside the record and copy in the fields the view shows:
 ```js
 const order = { id, status, customer, total };
 
-await puter.kv.set(`order:id:${ id }`, order);
-await puter.kv.set(`order:by-customer:${ customer }:${ id }`, { id, status, total });
+await mixt.kv.set(`order:id:${ id }`, order);
+await mixt.kv.set(`order:by-customer:${ customer }:${ id }`, { id, status, total });
 ```
 
 Reading by customer is then one query, the same as any other prefix:
 
 ```js
-const rows = await puter.kv.list('order:by-customer:alice:*', true);
+const rows = await mixt.kv.list('order:by-customer:alice:*', true);
 ```
 
 Since both keys hold the data, you need to make sure every write happens to
@@ -96,7 +96,7 @@ A field you rarely filter on can stay out of the key. Narrow the read with a
 prefix first, then filter what came back:
 
 ```js
-const rows = await puter.kv.list('order:pending:', true);
+const rows = await mixt.kv.list('order:pending:', true);
 const large = rows.filter(row => row.value.total > 50);
 ```
 
@@ -109,19 +109,19 @@ ISO 8601 timestamps sort chronologically as text, so a prefix of one is a
 calendar range:
 
 ```js
-await puter.kv.set(`log:${ new Date().toISOString() }`, entry);
+await mixt.kv.set(`log:${ new Date().toISOString() }`, entry);
 // log:2026-09-09T14:03:11.204Z
 
-await puter.kv.list('log:2026-09-', true);      // September
-await puter.kv.list('log:2026-09-09', true);    // one day
-await puter.kv.list('log:2026-09-09T14', true); // one hour
+await mixt.kv.list('log:2026-09-', true);      // September
+await mixt.kv.list('log:2026-09-09', true);    // one day
+await mixt.kv.list('log:2026-09-09T14', true); // one hour
 ```
 
 A listing comes back in ascending key order. For newest first, pass
 `reverse: true` in the options form:
 
 ```js
-await puter.kv.list({ pattern: 'log:2026-09-', returnValues: true, reverse: true });
+await mixt.kv.list({ pattern: 'log:2026-09-', returnValues: true, reverse: true });
 ```
 
 ## Filter by Number
@@ -130,11 +130,11 @@ A number in a key sorts as text, so `10` lands before `9`. Pad it to a fixed
 width and the order comes out numeric, which also makes a digit prefix a range:
 
 ```js
-await puter.kv.set(`invoice:${ String(number).padStart(6, '0') }`, invoice);
+await mixt.kv.set(`invoice:${ String(number).padStart(6, '0') }`, invoice);
 // invoice:000042
 
-await puter.kv.list('invoice:*', true);      // every invoice, in numeric order
-await puter.kv.list('invoice:000*', true);   // 000000 to 000999
+await mixt.kv.list('invoice:*', true);      // every invoice, in numeric order
+await mixt.kv.list('invoice:000*', true);   // 000000 to 000999
 ```
 
 Pick a width the numbers will not outgrow. Once the count passes six digits,

@@ -26,7 +26,7 @@ import { DURABLE_LIST_LIMIT_CAP } from '../../stores/events/DurableSubscriptionS
 import { EVENTS_WORKERS_LIST_LIMIT_CAP } from '../../stores/events/EventHandlerStore.js';
 import { KV_HANDLE_LIST_LIMIT_CAP } from '../../stores/events/KvShareHandleStore.js';
 import { normalizeLimit } from '../../util/pagination.js';
-import { PuterController } from '../types.js';
+import { MixtController } from '../types.js';
 import { EVENTS_WORKER_PREFIX } from '../../services/events/workerRuntime.js';
 import {
     EVENTS_FETCH_LIMIT,
@@ -61,7 +61,7 @@ const EVENTS_SCRIPT_REGEX = new RegExp(`^${EVENTS_WORKER_PREFIX}[a-f0-9]{32}$`);
 const APP_UID_REGEX = /^app-[A-Za-z0-9_-]{1,64}$/;
 
 @Controller('/events')
-export class EventsController extends PuterController {
+export class EventsController extends MixtController {
     /**
      * POST /events/subscribe — register a subscription that outlives the
      * caller.
@@ -437,7 +437,7 @@ export class EventsController extends PuterController {
     #requireInternalAuth(req: Request): void {
         const expected = Buffer.from(this.config.events?.internalSecret ?? '');
         const offered = Buffer.from(
-            String(req.headers['x-puter-internal-auth'] ?? ''),
+            String(req.headers['x-mixt-internal-auth'] ?? ''),
         );
         const ok =
             expected.length > 0 &&

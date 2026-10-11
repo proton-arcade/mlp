@@ -8,7 +8,7 @@
  * served an AI prompt. The compiler had the error the whole time; nothing ran
  * it.
  *
- * The consuming repo (heyputer) runs an equivalent gate over this project plus
+ * The consuming repo (mixt) runs an equivalent gate over this project plus
  * its extensions. That one only fires once someone bumps the submodule pointer,
  * which is too late to keep a broken export out of this repo's default branch —
  * so the same check runs here, on this repo's own pull requests. Keep the two

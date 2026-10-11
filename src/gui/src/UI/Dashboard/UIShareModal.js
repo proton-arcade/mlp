@@ -418,7 +418,7 @@ export default function UIShareModal ({ items, path: item_path, name, owner, fse
 
         // One listing per item: a slow or failed item must not hide the rest.
         const settled = await Promise.allSettled(
-            target_paths.map((target) => puter.fs.getShares(target)),
+            target_paths.map((target) => mixt.fs.getShares(target)),
         );
         if ( closed ) return;
 
@@ -558,7 +558,7 @@ export default function UIShareModal ({ items, path: item_path, name, owner, fse
         const created = [];
         for ( const run of chunk(paths, MAX_ITEMS_PER_REQUEST) ) {
             created.push(...(await with_verification_gate(
-                () => puter.fs.share({ paths: run, recipient, mode }),
+                () => mixt.fs.share({ paths: run, recipient, mode }),
             ) ?? []));
         }
         return created;
@@ -566,7 +566,7 @@ export default function UIShareModal ({ items, path: item_path, name, owner, fse
 
     const revoke_access = async (recipient, paths) => {
         for ( const run of chunk(paths, MAX_ITEMS_PER_REQUEST) ) {
-            await puter.fs.unshare({ paths: run, recipient });
+            await mixt.fs.unshare({ paths: run, recipient });
         }
     };
 
@@ -625,7 +625,7 @@ export default function UIShareModal ({ items, path: item_path, name, owner, fse
 
     // The uid the link is built on, when the row did not carry it.
     if ( allow_manage && ! is_multi && ! single_uid ) {
-        puter.fs.stat(targets[0].path).then((stat) => {
+        mixt.fs.stat(targets[0].path).then((stat) => {
             if ( closed ) return;
             single_uid = stat?.uid ?? null;
             render_link_access();

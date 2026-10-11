@@ -22,7 +22,7 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import type { Actor } from '../../core/actor.js';
 import { SYSTEM_ACTOR_UUID, makeActor } from '../../core/actor.js';
 import { runWithContext } from '../../core/context.js';
-import type { PuterServer } from '../../server.js';
+import type { MixtServer } from '../../server.js';
 import { createTestUser, setupTestServer } from '../../testUtil.js';
 import { MANAGE_PERM_PREFIX } from '../permission/consts.js';
 import { ACLService, type ResourceDescriptor } from './ACLService.js';
@@ -685,7 +685,7 @@ describe('ACLService.getSafeAclError', () => {
 // -- statUserUser / setUserUser against a real PermissionService --------
 
 describe('ACLService.statUserUser / setUserUser (integration)', () => {
-    let server: PuterServer;
+    let server: MixtServer;
     let acl: ACLService;
 
     beforeAll(async () => {

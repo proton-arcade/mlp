@@ -1,13 +1,13 @@
 import { v4 as uuidv4 } from 'uuid';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { runWithContext } from '../src/backend/core/context.ts';
-import { PuterServer } from '../src/backend/server.ts';
+import { MixtServer } from '../src/backend/server.ts';
 import { setupTestServer } from '../src/backend/testUtil.ts';
 // Importing the module registers the `appTelemetry` driver into the shared
 // extensionStore, so `setupTestServer` instantiates it on `server.drivers`.
 import { AppTelemetryDriver } from './appTelemetry.ts';
 
-let server: PuterServer;
+let server: MixtServer;
 let driver: AppTelemetryDriver;
 
 // `get_users` reads `Context.get('actor')` for the ownership gate. Wrap

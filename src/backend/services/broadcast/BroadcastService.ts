@@ -21,7 +21,7 @@ import axios from 'axios';
 import { createHmac, randomUUID, timingSafeEqual } from 'node:crypto';
 import { Agent as HttpsAgent } from 'node:https';
 import { IBroadcastPeerConfig } from '../../types.js';
-import { PuterService } from '../types.js';
+import { MixtService } from '../types.js';
 
 // -- Wire types ------------------------------------------------------
 
@@ -98,7 +98,7 @@ const DEFAULT_REGION_ID = 'local';
  * - Inbound handler ignores POSTs whose `X-Broadcast-Peer-Id` matches this
  *   server's own peerId (catches misconfigured loopbacks).
  */
-export class BroadcastService extends PuterService {
+export class BroadcastService extends MixtService {
     /** PeerId → resolved peer config, used for incoming-verify lookup. */
     #peersByKey: Record<string, IBroadcastPeerConfig> = {};
     /** Subset of peers with `webhook: true`, used for outbound fan-out. */
@@ -118,7 +118,7 @@ export class BroadcastService extends PuterService {
     #outboundMaxQueued = 10_000;
     #webhookProtocol: 'http' | 'https' = 'https';
     #webhookHostHeader: string | null = null;
-    /** Self-signed certs are common between Puter nodes — accept them. */
+    /** Self-signed certs are common between Mixt nodes — accept them. */
     #webhookHttpsAgent = new HttpsAgent({ rejectUnauthorized: false });
     /**
      * The agent addressed sends use. Separate because they run at event rates,

@@ -356,7 +356,7 @@ export class PostgresDatabaseClient extends AbstractDatabaseClient {
             port: dbConf.port ?? 5432,
             user: dbConf.user ?? 'postgres',
             password: dbConf.password ?? '',
-            database: dbConf.database ?? 'puter',
+            database: dbConf.database ?? 'mixt',
             max: 30,
         });
     }

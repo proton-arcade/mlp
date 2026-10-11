@@ -1,6 +1,6 @@
 ---
-title: puter.apps.list()
-description: List all apps in your Puter account.
+title: mixt.apps.list()
+description: List all apps in your Mixt OS account.
 platforms: [websites, apps, nodejs, workers]
 ---
 
@@ -9,8 +9,8 @@ Returns an array of all apps belonging to the user and that this app has access 
 ## Syntax
 
 ```js
-puter.apps.list()
-puter.apps.list(options)
+mixt.apps.list()
+mixt.apps.list(options)
 ```
 
 ## Parameters
@@ -48,7 +48,7 @@ Requests without pagination params keep returning the full list as a plain array
 With `stream: true`, the method returns an async iterator of page objects instead:
 
 ```js
-for await (const page of puter.apps.list({ stream: true })) {
+for await (const page of mixt.apps.list({ stream: true })) {
     for (const app of page.items) {
         console.log(app.name);
     }
@@ -62,29 +62,29 @@ for await (const page of puter.apps.list({ stream: true })) {
 ```html;app-list
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
             // (1) Generate 3 random app names
-            let appName_1 = puter.randName();
-            let appName_2 = puter.randName();
-            let appName_3 = puter.randName();
+            let appName_1 = mixt.randName();
+            let appName_2 = mixt.randName();
+            let appName_3 = mixt.randName();
 
             // (2) Create 3 apps
-            await puter.apps.create(appName_1, 'https://example.com');
-            await puter.apps.create(appName_2, 'https://example.com');
-            await puter.apps.create(appName_3, 'https://example.com');
+            await mixt.apps.create(appName_1, 'https://example.com');
+            await mixt.apps.create(appName_2, 'https://example.com');
+            await mixt.apps.create(appName_3, 'https://example.com');
 
             // (3) Get all apps (list)
-            let apps = await puter.apps.list();
+            let apps = await mixt.apps.list();
 
             // (4) Display the names of the apps
-            puter.print(JSON.stringify(apps.map(app => app.name)));
+            mixt.print(JSON.stringify(apps.map(app => app.name)));
 
             // (5) Delete the 3 apps we created earlier (cleanup)
-            await puter.apps.delete(appName_1);
-            await puter.apps.delete(appName_2);
-            await puter.apps.delete(appName_3);
+            await mixt.apps.delete(appName_1);
+            await mixt.apps.delete(appName_2);
+            await mixt.apps.delete(appName_3);
         })();
     </script>
 </body>

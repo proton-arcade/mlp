@@ -1,15 +1,15 @@
 <html>
 <body>
-    <script src="/puter.js/v2"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
-            for await (const page of puter.events.list({ stream: true })) {
+            for await (const page of mixt.events.list({ stream: true })) {
                 for (const row of page.items) {
                     if (!row.suspendedAt) continue;
-                    puter.print(`${row.subject} stopped: ${row.suspendedReason}<br>`);
+                    mixt.print(`${row.subject} stopped: ${row.suspendedReason}<br>`);
                 }
             }
-            puter.print('done<br>');
+            mixt.print('done<br>');
         })();
     </script>
 </body>

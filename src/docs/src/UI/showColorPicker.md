@@ -1,5 +1,5 @@
 ---
-title: puter.ui.showColorPicker()
+title: mixt.ui.showColorPicker()
 description: Presents a color picker dialog for selecting a color.
 platforms: [ websites, apps]
 ---
@@ -8,9 +8,9 @@ Presents the user with a color picker dialog allowing them to select a color.
 
 ## Syntax
 ```js
-puter.ui.showColorPicker()
-puter.ui.showColorPicker(defaultColor)
-puter.ui.showColorPicker(options)
+mixt.ui.showColorPicker()
+mixt.ui.showColorPicker(defaultColor)
+mixt.ui.showColorPicker(options)
 ```
 
 ## Examples
@@ -18,9 +18,9 @@ puter.ui.showColorPicker(options)
 ```html;ui-show-color-picker
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
-        puter.ui.showColorPicker().then((color)=>{
+        mixt.ui.showColorPicker().then((color)=>{
             document.body.style.backgroundColor = color;
         })
     </script>

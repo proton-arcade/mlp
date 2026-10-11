@@ -54,7 +54,7 @@ const APP_NAMES_NO_UNINSTALL = new Set([
  */
 
 // -- Add-an-app tile --
-/** Puter's app marketplace — the add-an-app tile's route to installing one. */
+/** Mixt's app marketplace — the add-an-app tile's route to installing one. */
 const APP_CENTER_APP_NAME = 'app-center';
 
 // -- Drag-to-reorder tuning --
@@ -181,7 +181,7 @@ function parseIntroSeenCount (raw) {
 // the mode is on.
 const REORDER_BTN_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>';
 
-// External apps (not owned by a Puter user) can report an opaque app-… id
+// External apps (not owned by a Mixt user) can report an opaque app-… id
 // as their title (uid === name === title); in that case show the hostname
 // of index_url instead, and open the app's website (index_url) on click —
 // matching the Home tab.
@@ -250,7 +250,7 @@ function buildAddTileHtml () {
 // whether an existing window took the request.
 //
 // "Un-hide" covers a window hidden outright as well as a minimized one — an
-// app can hide itself with puter.ui.hideWindow(), and with no taskbar in
+// app can hide itself with mixt.ui.hideWindow(), and with no taskbar in
 // dashboard mode its tile is the only way back to it. Focusing it instead
 // would leave the tile dead (and hand the keyboard to a window nobody can
 // see); showWindow() tells the two cases apart.
@@ -519,7 +519,7 @@ function showUninstallModal ({ appName, appTitle, appUid, self, $el_window }) {
             finishRemoval();
         }
 
-        puter.perms.revokeApp(appUid, '*').then(async () => {
+        mixt.perms.revokeApp(appUid, '*').then(async () => {
             // Clearing the grants is only half of it. An app the user already
             // opened holds a token that authenticates against a session row,
             // and that row outlives the permission rows — so without this an
@@ -684,7 +684,7 @@ function showAddAppModal ({ $el_window }) {
         // a second app-info round-trip — the same contract as the landing's
         // prefetch in initgui. A failed prefetch hands nothing over;
         // launch_app refetches and fails the way it always did.
-        const app_info_promise = puter.apps.get(appName, { icon_size: 128 })
+        const app_info_promise = mixt.apps.get(appName, { icon_size: 128 })
             .catch(() => null);
         (async () => {
             let tile = null;
@@ -735,7 +735,7 @@ function showAddAppModal ({ $el_window }) {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${puter.authToken}`,
+                    'Authorization': `Bearer ${mixt.authToken}`,
                 },
                 body: JSON.stringify({ message }),
             });
@@ -2125,7 +2125,7 @@ const TabApps = {
         // _resolveGroups).
         this._groupsSavedAtSeq = this._loadSeq || 0;
         try {
-            const p = puter.kv.set(APP_GROUPS_KV_KEY, JSON.stringify(groups));
+            const p = mixt.kv.set(APP_GROUPS_KV_KEY, JSON.stringify(groups));
             if ( p && typeof p.catch === 'function' ) {
                 p.catch(err => console.error('Failed to save app folders:', err));
             }
@@ -2995,12 +2995,12 @@ const TabApps = {
         // one — the in-memory record still covers this session, and the
         // next write retries the lot.
         this._removedWriteChain = (this._removedWriteChain || Promise.resolve()).then(async () => {
-            const names = parseRemovedApps(await puter.kv.get(REMOVED_APPS_KV_KEY));
+            const names = parseRemovedApps(await mixt.kv.get(REMOVED_APPS_KV_KEY));
             for ( const [name, isRemoved] of this._removedLocal ) {
                 if ( isRemoved ) names.add(name);
                 else names.delete(name);
             }
-            await puter.kv.set(REMOVED_APPS_KV_KEY, JSON.stringify(serializeRemovedApps(names)));
+            await mixt.kv.set(REMOVED_APPS_KV_KEY, JSON.stringify(serializeRemovedApps(names)));
         }).catch(err => {
             console.error('Failed to persist the uninstalled-apps list:', err);
         });
@@ -3020,7 +3020,7 @@ const TabApps = {
         // _resolveOrderNames).
         this._orderSavedAtSeq = this._loadSeq || 0;
         try {
-            const p = puter.kv.set(APPS_ORDER_KV_KEY, JSON.stringify(names));
+            const p = mixt.kv.set(APPS_ORDER_KV_KEY, JSON.stringify(names));
             if ( p && typeof p.catch === 'function' ) {
                 p.catch(err => console.error('Failed to save app order:', err));
             }
@@ -3072,7 +3072,7 @@ const TabApps = {
                         const res = await fetch(
                             `${window.api_origin}/installedApps?orderBy=name&limit=${PAGE_SIZE}&page=${page}`,
                             {
-                                headers: { 'Authorization': `Bearer ${puter.authToken}` },
+                                headers: { 'Authorization': `Bearer ${mixt.authToken}` },
                                 method: 'GET',
                             },
                         );
@@ -3110,9 +3110,9 @@ const TabApps = {
                         method: 'GET',
                     },
                 ),
-                puter.kv.get(APPS_ORDER_KV_KEY).catch(() => null),
-                puter.kv.get(REMOVED_APPS_KV_KEY).catch(() => null),
-                puter.kv.get(APP_GROUPS_KV_KEY).catch(() => null),
+                mixt.kv.get(APPS_ORDER_KV_KEY).catch(() => null),
+                mixt.kv.get(REMOVED_APPS_KV_KEY).catch(() => null),
+                mixt.kv.get(APP_GROUPS_KV_KEY).catch(() => null),
             ]);
 
             const installedApps = installedResult.apps;
@@ -3426,7 +3426,7 @@ const TabApps = {
         // How many intros this account has already been shown — fetched in
         // parallel with the grid load, so it is long resolved by the time
         // the beats need the answer.
-        const seen_promise = puter.kv.get(DEEP_LINK_INTRO_SEEN_KV_KEY).catch(() => null);
+        const seen_promise = mixt.kv.get(DEEP_LINK_INTRO_SEEN_KV_KEY).catch(() => null);
 
         // Interruption plumbing. The flag is checked at every step, and
         // waking the in-flight sleep makes a skip take effect NOW rather
@@ -3610,7 +3610,7 @@ const TabApps = {
     _recordDeepLinkIntroSeen (seen_promise) {
         Promise.resolve(seen_promise).then(raw => {
             if ( parseIntroSeenCount(raw) >= DEEP_LINK_INTRO_TEACH_COUNT ) return;
-            return puter.kv.incr(DEEP_LINK_INTRO_SEEN_KV_KEY);
+            return mixt.kv.incr(DEEP_LINK_INTRO_SEEN_KV_KEY);
         }).catch(err => {
             console.error('Failed to record the deep-link intro exposure:', err);
         });

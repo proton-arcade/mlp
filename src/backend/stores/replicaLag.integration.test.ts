@@ -25,7 +25,7 @@
  * unit tests inject them, since sqlite has neither a replica nor FK
  * enforcement.
  *
- * Needs both containers, so it is opt-in behind `PUTER_TEST_REPLICA_LAG` and
+ * Needs both containers, so it is opt-in behind `MIXT_TEST_REPLICA_LAG` and
  * skipped everywhere it is unset, CI included.
  */
 
@@ -33,14 +33,14 @@ import { execFileSync } from 'node:child_process';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { runWithContext } from '../core/context.ts';
 import { optionalEnv, skipUnlessEnv } from '../drivers/integrationTestUtil.js';
-import { PuterServer } from '../server.ts';
+import { MixtServer } from '../server.ts';
 import { setupTestServer } from '../testUtil.ts';
 
-const ENV_VAR = 'PUTER_TEST_REPLICA_LAG';
-const PRIMARY = optionalEnv('PUTER_TEST_REPLICA_PRIMARY') ?? 'puter-mysql';
+const ENV_VAR = 'MIXT_TEST_REPLICA_LAG';
+const PRIMARY = optionalEnv('MIXT_TEST_REPLICA_PRIMARY') ?? 'mixt-mysql';
 const REPLICA =
-    optionalEnv('PUTER_TEST_REPLICA_FOLLOWER') ?? 'puter-mysql-replica';
-const DB = 'puter_replica_lag_verify';
+    optionalEnv('MIXT_TEST_REPLICA_FOLLOWER') ?? 'mixt-mysql-replica';
+const DB = 'mixt_replica_lag_verify';
 
 const mysql = (container: string, statement: string): string =>
     execFileSync(
@@ -72,7 +72,7 @@ const thaw = async () => {
 const randomName = (prefix: string) =>
     `${prefix}_${Math.random().toString(36).slice(2, 10)}`;
 
-const makeUser = (server: PuterServer) =>
+const makeUser = (server: MixtServer) =>
     server.stores.user.create({
         username: randomName('rl'),
         uuid: crypto.randomUUID(),
@@ -80,7 +80,7 @@ const makeUser = (server: PuterServer) =>
         email: null,
     });
 
-const makeApp = (server: PuterServer, ownerUserId: number) =>
+const makeApp = (server: MixtServer, ownerUserId: number) =>
     (
         server.stores.app.create as unknown as (
             fields: Record<string, unknown>,
@@ -98,7 +98,7 @@ const makeApp = (server: PuterServer, ownerUserId: number) =>
 describe.skipIf(skipUnlessEnv(ENV_VAR))(
     'a row deleted while a replica lags (integration)',
     () => {
-        let server: PuterServer;
+        let server: MixtServer;
 
         beforeAll(async () => {
             onReplica('START REPLICA;');
@@ -113,7 +113,7 @@ describe.skipIf(skipUnlessEnv(ENV_VAR))(
                     host: '127.0.0.1',
                     port: 3306,
                     user: 'root',
-                    password: 'puter',
+                    password: 'mixt',
                     database: DB,
                     migrationPaths: [
                         './src/backend/clients/database/migrations/mysql',
@@ -122,7 +122,7 @@ describe.skipIf(skipUnlessEnv(ENV_VAR))(
                         host: '127.0.0.1',
                         port: 3307,
                         user: 'root',
-                        password: 'puter',
+                        password: 'mixt',
                         database: DB,
                     },
                 },

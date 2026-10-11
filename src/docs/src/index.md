@@ -1,6 +1,6 @@
-Puter.js gives you access to auth, cloud storage, databases, and more with no API keys and no infrastructure setup. The entire library is a single `<script>` tag or the `@heyputer/puter.js` npm module.
+Mixt.js gives you access to auth, cloud storage, databases, and more with no API keys and no infrastructure setup. The entire library is a single `<script>` tag or the `@mixt/mixt.js` npm module.
 
-This is also what makes Puter.js work so well as the backend for apps. There is nothing to configure: no keys to obtain, no servers to provision, no SDK to initialize.  The API is small and consistent enough for language models to use correctly, and the full reference is published as [llms.txt](https://docs.puter.com/llms.txt).
+This is also what makes Mixt.js work so well as the backend for apps. There is nothing to configure: no keys to obtain, no servers to provision, no SDK to initialize.  The API is small and consistent enough for language models to use correctly, and the full reference is published as [llms.txt](https://docs.mixt.mpl/llms.txt).
 
 <div class="browser-window">
     <div class="titlebar">
@@ -38,7 +38,7 @@ This is also what makes Puter.js work so well as the backend for apps. There is 
                 <div  class="feature-line-top"></div><div></div>
             </div>
         </div>
-        <p class="script-tag">&lt;script src=&quot;<span class="url">https://js.puter.com/v2/</span>&quot;&gt;&lt;/script&gt;</p>
+        <p class="script-tag">&lt;script src=&quot;<span class="url">https://js.mixt.mpl/v2/</span>&quot;&gt;&lt;/script&gt;</p>
         <div style="width: 620px; height: 120px; position: relative; font-weight: 500;">
             <div style="width: 150px; height: 100px; position: absolute; left:10px;">
                 <div>
@@ -79,9 +79,9 @@ This is also what makes Puter.js work so well as the backend for apps. There is 
     </div>
 </div>
 
-Additionally, with Puter.js, you as the developer pay nothing since each user of your app [covers their own Cloud usage](/user-pays-model/). Whether your app has 1 user or 1 million users, it costs you zero to run. Puter.js gives you infinitely scalable infrastructure, completely free.
+Additionally, with Mixt.js, you as the developer pay nothing since each user of your app [covers their own Cloud usage](/user-pays-model/). Whether your app has 1 user or 1 million users, it costs you zero to run. Mixt.js gives you infinitely scalable infrastructure, completely free.
 
-Puter.js is powered by [Puter](https://github.com/HeyPuter/puter), the open-source cloud operating system with a heavy focus on privacy. Puter does not use tracking technologies and does not monetize or even collect personal information.
+Mixt.js is powered by [Mixt OS](https://github.com/proton-arcade/mlp), the open-source cloud operating system with a heavy focus on privacy. Mixt OS does not use tracking technologies and does not monetize or even collect personal information.
 
 ## Examples
 
@@ -100,11 +100,11 @@ Puter.js is powered by [Puter](https://github.com/HeyPuter/puter), the open-sour
 ```html;intro-fs-write
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         // Create a new file called "hello.txt" containing "Hello, world!"
-        puter.fs.write('hello.txt', 'Hello, world!').then((file) => {
-            puter.print(`File written successfully at: ${file.path}`);
+        mixt.fs.write('hello.txt', 'Hello, world!').then((file) => {
+            mixt.print(`File written successfully at: ${file.path}`);
         })
     </script>
 </body>
@@ -116,18 +116,18 @@ Puter.js is powered by [Puter](https://github.com/HeyPuter/puter), the open-sour
 ```html;fs-read
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
             // (1) Create a random text file
-            let filename = puter.randName() + ".txt";
-            await puter.fs.write(filename, "Hello world! I'm a file!");
-            puter.print(`"${filename}" created<br>`);
+            let filename = mixt.randName() + ".txt";
+            await mixt.fs.write(filename, "Hello world! I'm a file!");
+            mixt.print(`"${filename}" created<br>`);
 
             // (2) Read the file and print its contents
-            let blob = await puter.fs.read(filename);
+            let blob = await mixt.fs.read(filename);
             let content = await blob.text();
-            puter.print(`"${filename}" read (content: "${content}")<br>`);
+            mixt.print(`"${filename}" read (content: "${content}")<br>`);
         })();
     </script>
 </body>
@@ -143,13 +143,13 @@ Puter.js is powered by [Puter](https://github.com/HeyPuter/puter), the open-sour
 ```html;intro-kv-set
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         // (1) Save user preference
-        puter.kv.set('userPreference', 'darkMode').then(() => {
+        mixt.kv.set('userPreference', 'darkMode').then(() => {
             // (2) Get user preference
-            puter.kv.get('userPreference').then(value => {
-                puter.print(`User preference: ${value}`);
+            mixt.kv.get('userPreference').then(value => {
+                mixt.print(`User preference: ${value}`);
             });
         })
     </script>
@@ -166,21 +166,21 @@ Puter.js is powered by [Puter](https://github.com/HeyPuter/puter), the open-sour
 ```html;intro-hosting
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
             // (1) Create a random directory
-            let dirName = puter.randName();
-            await puter.fs.mkdir(dirName)
+            let dirName = mixt.randName();
+            await mixt.fs.mkdir(dirName)
 
             // (2) Create 'index.html' in the directory with the contents "Hello, world!"
-            await puter.fs.write(`${dirName}/index.html`, '<h1>Hello, world!</h1>');
+            await mixt.fs.write(`${dirName}/index.html`, '<h1>Hello, world!</h1>');
 
             // (3) Host the directory under a random subdomain
-            let subdomain = puter.randName();
-            const site = await puter.hosting.create(subdomain, dirName)
+            let subdomain = mixt.randName();
+            const site = await mixt.hosting.create(subdomain, dirName)
 
-            puter.print(`Website hosted at: <a href="https://${site.subdomain}.puter.site" target="_blank">https://${site.subdomain}.puter.site</a>`);
+            mixt.print(`Website hosted at: <a href="https://${site.subdomain}.mixt.site" target="_blank">https://${site.subdomain}.mixt.site</a>`);
         })();
     </script>
 </body>
@@ -196,14 +196,14 @@ Puter.js is powered by [Puter](https://github.com/HeyPuter/puter), the open-sour
 ```html;intro-auth
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <button id="sign-in">Sign in</button>
     <script>
         // Because signIn() opens a popup window, it must be called from a user action.
         document.getElementById('sign-in').addEventListener('click', async () => {
             // signIn() will resolve when the user has signed in.
-            await puter.auth.signIn().then((res) => {
-                puter.print('Signed in<br>' + JSON.stringify(res));
+            await mixt.auth.signIn().then((res) => {
+                mixt.print('Signed in<br>' + JSON.stringify(res));
             });
         });
     </script>
@@ -220,17 +220,17 @@ Puter.js is powered by [Puter](https://github.com/HeyPuter/puter), the open-sour
 ```html;net-fetch
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
     (async () => {
         // Send a GET request to example.com
-        const request = await puter.net.fetch("https://example.com");
+        const request = await mixt.net.fetch("https://example.com");
 
         // Get the response body as text
         const body = await request.text();
 
         // Print the body as a code block
-        puter.print(body, { code: true });
+        mixt.print(body, { code: true });
     })()
     </script>
 </body>

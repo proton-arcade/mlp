@@ -1,4 +1,4 @@
-// `puter kv connect <identifier>` — an interactive shell against one app's
+// `mixt kv connect <identifier>` — an interactive shell against one app's
 // key-value store, named by app, by worker — name or URL, both resolving to
 // the app behind the worker — or by uid.
 //
@@ -42,7 +42,7 @@ async function probeKeys(kv, label) {
 }
 
 const HELP = `
-kv methods — also available as kv.* and puter.kv.*
+kv methods — also available as kv.* and mixt.kv.*
 
   get(key)                    set(key, value, [expireAt])
   list([pattern], [values])   del(key)
@@ -96,9 +96,9 @@ function startRepl({ kv, prompt }) {
     const install = (context) => {
       for (const name of KV_METHODS) context[name] = kv[name];
       context.kv = kv;
-      // A shim, not the real client: an unscoped puter.fs/puter.apps has no
+      // A shim, not the real client: an unscoped mixt.fs/mixt.apps has no
       // business in an app-scoped shell.
-      context.puter = { kv };
+      context.mixt = { kv };
     };
     install(server.context);
     server.on('reset', install);
@@ -122,14 +122,14 @@ function startRepl({ kv, prompt }) {
 
 export async function kvConnect(identifier) {
   if (!isInteractive()) {
-    throw new CLIError('`puter kv connect` needs a terminal.', {
+    throw new CLIError('`mixt kv connect` needs a terminal.', {
       hint: 'Run it from an interactive shell.',
     });
   }
 
-  const puter = await ensureClient();
-  const { name, uid, byUid, kind } = await resolveTarget(puter, identifier);
-  const kv = bindApp(puter.kv, uid);
+  const mixt = await ensureClient();
+  const { name, uid, byUid, kind } = await resolveTarget(mixt, identifier);
+  const kv = bindApp(mixt.kv, uid);
   const keys = await probeKeys(kv, name);
 
   // A uid is its own name here, so don't print it twice — and keep it out of

@@ -21,16 +21,16 @@ import { AppDriver } from './apps/AppDriver.js';
 import { KVStoreDriver } from './kv/KVStoreDriver';
 import { NotificationDriver } from './notification/NotificationDriver';
 import { SubdomainDriver } from './subdomain/SubdomainDriver';
-import type { IPuterDriverRegistry } from './types';
+import type { IMixtDriverRegistry } from './types';
 import { WorkerDriver } from './workers/WorkerDriver';
 
 export { Driver } from './decorators';
 export { resolveDriverMeta } from './meta';
 
-export const puterDrivers = {
+export const mixtDrivers = {
     kvStore: KVStoreDriver,
     apps: AppDriver,
     subdomains: SubdomainDriver,
     notifications: NotificationDriver,
     workers: WorkerDriver,
-} satisfies IPuterDriverRegistry;
+} satisfies IMixtDriverRegistry;

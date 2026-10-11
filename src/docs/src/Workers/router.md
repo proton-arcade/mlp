@@ -4,7 +4,7 @@ description: Handle HTTP requests in a worker with the router object, reading an
 platforms: [workers]
 ---
 
-Puter workers use a router-based system to handle HTTP requests. The `router` object is automatically available in your worker code and provides methods to define API endpoints.
+Mixt OS workers use a router-based system to handle HTTP requests. The `router` object is automatically available in your worker code and provides methods to define API endpoints.
 
 ## Syntax
 
@@ -31,7 +31,7 @@ The router object supports standard HTTP methods and provides a clean way to org
 Route handlers receive a single object as their parameter, which can be destructured into the following properties:
 
 - `request` - The incoming [HTTP request](https://developer.mozilla.org/en-US/docs/Web/API/Request).
-- `user` - An object representing the user who made the request to this worker. It has a `puter` property (`user.puter`) that gives you access to that user's own Puter resources — KV, FS, etc. Only available when the worker is called via [`puter.workers.exec()`](/Workers/exec/).
+- `user` - An object representing the user who made the request to this worker. It has a `mixt` property (`user.mixt`) that gives you access to that user's own Mixt OS resources — KV, FS, etc. Only available when the worker is called via [`mixt.workers.exec()`](/Workers/exec/).
 - `params` - Route parameters captured from the path (see [Route Parameters](#route-parameters))
 
 ## Global Objects
@@ -39,18 +39,18 @@ Route handlers receive a single object as their parameter, which can be destruct
 When writing worker code, you have access to these global objects:
 
 - `router` - The router object for defining API endpoints
-- `me` - An object representing you, the worker's owner. It has a `puter` property (`me.puter`) that gives you access to your own Puter resources — KV, FS, etc. `me` is set up when the first request arrives, so use it inside route handlers (or functions they call), not at the top level of your script.
+- `me` - An object representing you, the worker's owner. It has a `mixt` property (`me.mixt`) that gives you access to your own Mixt OS resources — KV, FS, etc. `me` is set up when the first request arrives, so use it inside route handlers (or functions they call), not at the top level of your script.
 
-## Integration with Puter.js
+## Integration with Mixt.js
 
-Just like in apps or websites, you can use Puter.js in workers to access cloud storage, key-value stores, and databases.
+Just like in apps or websites, you can use Mixt.js in workers to access cloud storage, key-value stores, and databases.
 
-The difference is *whose* resources you use. A worker gives you two `.puter` objects to work with, and operations are billed to whichever one you call:
+The difference is *whose* resources you use. A worker gives you two `.mixt` objects to work with, and operations are billed to whichever one you call:
 
-- **`me.puter`** is the **worker context** — your own resources, as the owner. Use this for shared application data, server-side logic, and centralized resources you control. Operations run against your account and are billed to you.
-- **`user.puter`** is the **user context** — the resources of the user who called the worker (available when it's executed via [`puter.workers.exec()`](/Workers/exec/), which runs it with their token). This keeps the default [User-Pays model](/user-pays-model/): each user's data stays in their own storage, billed to them, while your logic still runs server-side.
+- **`me.mixt`** is the **worker context** — your own resources, as the owner. Use this for shared application data, server-side logic, and centralized resources you control. Operations run against your account and are billed to you.
+- **`user.mixt`** is the **user context** — the resources of the user who called the worker (available when it's executed via [`mixt.workers.exec()`](/Workers/exec/), which runs it with their token). This keeps the default [User-Pays model](/user-pays-model/): each user's data stays in their own storage, billed to them, while your logic still runs server-side.
 
-So you can mix and match within the same codebase — some endpoints reading and writing your own data (`me.puter`), others acting on the calling user's data (`user.puter`).
+So you can mix and match within the same codebase — some endpoints reading and writing your own data (`me.mixt`), others acting on the calling user's data (`user.mixt`).
 
 ## Route Parameters
 
@@ -88,7 +88,7 @@ A common use is a catch-all route for unmatched paths — define it last so it o
 
 ## CORS
 
-CORS is automatically handled for you. Every response includes `Access-Control-Allow-Origin: *`, and preflight `OPTIONS` requests are answered automatically. Cross-origin requests work out of the box, including [`puter.workers.exec()`](/Workers/exec/), which sends the user's Puter token in a custom `puter-auth` header (this is what populates `user.puter`) without you writing any CORS code.
+CORS is automatically handled for you. Every response includes `Access-Control-Allow-Origin: *`, and preflight `OPTIONS` requests are answered automatically. Cross-origin requests work out of the box, including [`mixt.workers.exec()`](/Workers/exec/), which sends the user's Mixt OS token in a custom `mixt-auth` header (this is what populates `user.mixt`) without you writing any CORS code.
 
 You only need to think about CORS if you define your own `OPTIONS` handler. Doing so takes over preflight handling, so you become responsible for the headers the browser expects:
 
@@ -99,13 +99,13 @@ router.options("/*path", async () => {
     headers: {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type, Authorization, puter-auth",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization, mixt-auth",
     },
   });
 });
 ```
 
-<div class="info">If you override preflight and use <code>puter.workers.exec()</code>, list <code>puter-auth</code> in <code>Access-Control-Allow-Headers</code> — otherwise the preflight fails and the request never reaches your worker.</div>
+<div class="info">If you override preflight and use <code>mixt.workers.exec()</code>, list <code>mixt-auth</code> in <code>Access-Control-Allow-Headers</code> — otherwise the preflight fails and the request never reaches your worker.</div>
 
 ## Examples
 
@@ -260,14 +260,14 @@ router.post("/api/risky-operation", async ({ request }) => {
 
 <strong class="example-title">Worker Context vs User Context</strong>
 
-The same operation can run against either Puter account. Here, one endpoint reads from the calling user's KV store (`user.puter`), the other from your own (`me.puter`).
+The same operation can run against either Mixt OS account. Here, one endpoint reads from the calling user's KV store (`user.mixt`), the other from your own (`me.mixt`).
 
 ```js
 // Read from the calling user's KV store (user context)
 router.get("/api/kv/user/get", async ({ request, user }) => {
   const url = new URL(request.url);
   const key = url.searchParams.get("key");
-  const value = await user.puter.kv.get(key);
+  const value = await user.mixt.kv.get(key);
   return { value };
 });
 
@@ -275,7 +275,7 @@ router.get("/api/kv/user/get", async ({ request, user }) => {
 router.get("/api/kv/worker/get", async ({ request }) => {
   const url = new URL(request.url);
   const key = url.searchParams.get("key");
-  const value = await me.puter.kv.get(key);
+  const value = await me.mixt.kv.get(key);
   return { value };
 });
 ```
@@ -295,7 +295,7 @@ router.post("/api/upload", async ({ request }) => {
   }
 
   const fileName = `upload-${Date.now()}-${file.name}`;
-  await me.puter.fs.write(fileName, file);
+  await me.mixt.fs.write(fileName, file);
 
   return {
     uploaded: true,
@@ -319,13 +319,13 @@ router.post("/api/kv/set", async ({ request }) => {
     });
   }
 
-  await me.puter.kv.set("myscope_" + key, value); // add a mandatory prefix so this wont blindly read the KV of the user's other data
+  await me.mixt.kv.set("myscope_" + key, value); // add a mandatory prefix so this wont blindly read the KV of the user's other data
   return { saved: true, key };
 });
 
 router.get("/api/kv/get/:key", async ({ request, params }) => {
   const key = params.key;
-  const value = await me.puter.kv.get("myscope_" + key); // use the same prefix
+  const value = await me.mixt.kv.get("myscope_" + key); // use the same prefix
 
   if (!value) {
     return new Response(JSON.stringify({ error: "Key not found" }), {
@@ -377,11 +377,11 @@ router.get("/health", async () => {
 
 // User management API
 router.post("/api/users", async ({ request, user }) => {
-  const userInfo = await user.puter.getUser();
+  const userInfo = await user.mixt.getUser();
 
   // Store user data
   const userId = `user_${Date.now()}`;
-  await me.puter.kv.set(userId, {
+  await me.mixt.kv.set(userId, {
     email: userInfo.email,
     name: userInfo.username,
   });
@@ -401,7 +401,7 @@ router.get("/api/users/:id", async ({ params }) => {
   if (!userId.startsWith("user_"))
     // security check
     return new Response("Invalid userID!");
-  const userData = await me.puter.kv.get(userId);
+  const userData = await me.mixt.kv.get(userId);
 
   if (!userData) {
     return new Response(
@@ -436,7 +436,7 @@ router.post("/api/files/upload", async ({ request }) => {
   }
 
   const fileName = `upload-${Date.now()}-${file.name}`;
-  await me.puter.fs.write(fileName, file);
+  await me.mixt.fs.write(fileName, file);
 
   return {
     uploaded: true,
@@ -468,15 +468,15 @@ After deploying your worker, test your endpoints:
 
 ```js
 // Test your worker endpoints
-const workerUrl = "https://your-worker.puter.work";
+const workerUrl = "https://your-worker.mixt.work";
 
 // Test GET endpoint
-const response = await puter.workers.exec(`${workerUrl}/api/hello`);
+const response = await mixt.workers.exec(`${workerUrl}/api/hello`);
 const data = await response.json();
 console.log(data);
 
 // Test POST endpoint
-const postResponse = await puter.workers.exec(`${workerUrl}/api/data`, {
+const postResponse = await mixt.workers.exec(`${workerUrl}/api/data`, {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({ key: "test", value: "hello" }),

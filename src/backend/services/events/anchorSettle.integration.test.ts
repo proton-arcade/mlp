@@ -30,14 +30,14 @@ import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } 
 import { EVENTS_COALESCE_WINDOW_MS } from '../../controllers/events/limits.js';
 import { makeActor, type Actor } from '../../core/actor.js';
 import * as rateLimit from '../../core/http/middleware/rateLimit.js';
-import { setupPuterTestEnv, type PuterTestEnv } from '../../testUtil.js';
+import { setupMixtTestEnv, type MixtTestEnv } from '../../testUtil.js';
 import type { IConfig } from '../../types.js';
 import type { DeliveryEnvelope } from './EventsService.js';
 import { fsAnchorToken } from './subjects.js';
 
 const BOOT_TIMEOUT_MS = 120_000;
 
-let env: PuterTestEnv;
+let env: MixtTestEnv;
 let user: { actor: Actor; username: string; id: number };
 let home: string;
 let delivered: DeliveryEnvelope[];
@@ -104,7 +104,7 @@ const gone = (subId: string) =>
     );
 
 beforeAll(async () => {
-    env = await setupPuterTestEnv({
+    env = await setupMixtTestEnv({
         events: { enabled: true },
         // Seeded accounts carry no email, which the plan machinery reads as a
         // temporary account — and a temporary account holds no durable rows.

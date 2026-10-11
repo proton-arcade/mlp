@@ -7,8 +7,8 @@ import { CLIError } from '../lib/errors.js';
 import * as ui from '../lib/ui.js';
 
 export async function appList() {
-  const puter = await ensureClient();
-  const apps = (await appsApi(puter).list()) ?? [];
+  const mixt = await ensureClient();
+  const apps = (await appsApi(mixt).list()) ?? [];
 
   if (apps.length === 0) {
     ui.info('No apps.');
@@ -21,10 +21,10 @@ export async function appList() {
 }
 
 export async function appGet(nameArg) {
-  const puter = await ensureClient();
+  const mixt = await ensureClient();
   let app;
   try {
-    app = await appsApi(puter).get(nameArg);
+    app = await appsApi(mixt).get(nameArg);
   } catch (err) {
     throw new CLIError(`Could not fetch '${nameArg}': ${err.message}`);
   }

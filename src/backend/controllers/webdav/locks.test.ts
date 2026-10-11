@@ -19,7 +19,7 @@
 
 import type { Cluster } from 'ioredis';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { PuterServer } from '../../server.js';
+import { MixtServer } from '../../server.js';
 import { setupTestServer } from '../../testUtil.js';
 import {
     createLock,
@@ -34,7 +34,7 @@ import {
 // The WebDAV lock store runs against the real (in-memory) redis client the
 // server wires up — the same object `WebDAVController` hands these helpers.
 
-let server: PuterServer;
+let server: MixtServer;
 let redis: Cluster;
 
 beforeAll(async () => {

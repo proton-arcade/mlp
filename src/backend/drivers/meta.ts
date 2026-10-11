@@ -414,7 +414,7 @@ export function resolveDriverMethodRequireReputation(
  * because every driver shares the `/drivers/call` dispatch route.
  */
 export interface DriverMeta {
-    /** E.g. 'puter-chat-completion'. */
+    /** E.g. 'mixt-chat-completion'. */
     interfaceName: string;
     /** Unique within the interface. */
     driverName: string;
@@ -537,13 +537,13 @@ export function resolveDriverMeta(
 
 /**
  * Framework/lifecycle method names that must never be reachable via
- * `/drivers/call`. These live on `PuterDriver` (see `drivers/types.ts`) and are
+ * `/drivers/call`. These live on `MixtDriver` (see `drivers/types.ts`) and are
  * the machinery the dispatch surface must exclude. For class-based drivers a
  * concrete `override` of one still carries the same name and is caught here;
  * for plain-object drivers (registered by extensions — see `server.ts`, `typeof
  * DriverClass === 'object'`) there is no base prototype to distinguish them, so
  * this denylist is the _only_ thing keeping a hook off the RPC surface. Any
- * lifecycle hook added to `PuterDriver` must be added here too — the per-driver
+ * lifecycle hook added to `MixtDriver` must be added here too — the per-driver
  * guard test (`callableMethods.test.ts`) fails loudly if a base method starts
  * leaking into every driver's surface.
  */

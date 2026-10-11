@@ -35,7 +35,7 @@ import {
     DEFAULT_TEMP_SUBSCRIPTION,
 } from '../../services/metering/consts.js';
 import type { DriverConcurrentConfig, DriverRateLimitConfig } from '../meta.js';
-import { PuterDriver } from '../types.js';
+import { MixtDriver } from '../types.js';
 import { isUniqueViolation } from '../../util/dbError.js';
 import { loadFileInput } from '../util/fileInput.js';
 import {
@@ -105,7 +105,7 @@ export interface InternalDeployTarget {
      */
     source?: string;
     /**
-     * Deploy without a worker token. The script gets no `puter_auth` binding
+     * Deploy without a worker token. The script gets no `mixt_auth` binding
      * and so nothing to act as on its own behalf.
      */
     omitOwnerToken?: true;
@@ -128,7 +128,7 @@ let USE_LOCAL_WORKERD = false;
 
 // -- Preamble --------------------------------------------------------
 //
-// A preamble is a built JS bundle providing puter.js and the runtime user code
+// A preamble is a built JS bundle providing mixt.js and the runtime user code
 // runs inside. It's baked into the source sent to Cloudflare Workers. One per
 // runtime, built by `src/worker`; without the file, that runtime cannot deploy.
 
@@ -168,7 +168,7 @@ const loadPreamble = (
         // ordinary worker carries, and reported via `currentPreambleVersion()`.
         if (captureVersion) {
             const versionMatch =
-                /^var __PUTER_PREAMBLE_VERSION__\s*=\s*"([^"]+)"/.exec(source);
+                /^var __MIXT_PREAMBLE_VERSION__\s*=\s*"([^"]+)"/.exec(source);
             if (versionMatch) preambleVersion = versionMatch[1];
         }
 
@@ -186,13 +186,13 @@ for (const [runtime, file] of Object.entries(PREAMBLE_FILES)) {
     const loaded = loadPreamble(file, runtime === 'router');
     if (loaded) preambles[runtime as WorkerRuntime] = loaded;
     // Only the ordinary runtime is a boot requirement: an install with a stale
-    // build should refuse to start rather than serve workers without puter.js,
+    // build should refuse to start rather than serve workers without mixt.js,
     // but it should not refuse to start over a runtime nothing has deployed.
     else if (runtime === 'router') preambleError = true;
 }
 
 /**
- * The puter.js/router preamble prepended to every worker's source before
+ * The mixt.js/router preamble prepended to every worker's source before
  * deploy. Exposed so the local-workerd path (`LocalWorkerService`) can build
  * the same `preamble + sourceCode` script when it lazily re-deploys a worker
  * into Miniflare after a server restart.
@@ -205,16 +205,16 @@ export function getWorkerPreamble(runtime: WorkerRuntime = 'router'): string {
  * Driver exposing the `workers` interface — Cloudflare Workers deployment,
  * lifecycle, and file-path queries.
  *
- * Each "worker" is a JS file in the user's Puter FS, deployed to Cloudflare
+ * Each "worker" is a JS file in the user's Mixt FS, deployed to Cloudflare
  * Workers. A corresponding `subdomains` row with subdomain
- * `workers.puter.<name>` ties the worker to its source file.
+ * `workers.mixt.<name>` ties the worker to its source file.
  *
  * Config: `config.workers.{XAUTHKEY, ACCOUNTID, namespace?,
  * internetExposedUrl?, loggingUrl?}`.
  */
-export class WorkerDriver extends PuterDriver {
+export class WorkerDriver extends MixtDriver {
     readonly driverInterface = 'workers';
-    // puter-js calls this as `workers:worker-service` (see Workers.js). Keep the name aligned.
+    // mixt-js calls this as `workers:worker-service` (see Workers.js). Keep the name aligned.
     readonly driverName = 'worker-service';
     readonly isDefault = true;
 
@@ -381,7 +381,7 @@ export class WorkerDriver extends PuterDriver {
 
         this.#requireCfConfig();
 
-        // Quota check — count existing workers.puter.* subdomains owned by user
+        // Quota check — count existing workers.mixt.* subdomains owned by user
         //
         // A deploy target creates no such row, so this count can neither see
         // its scripts nor be grown by them; running it would only make an
@@ -680,7 +680,7 @@ export class WorkerDriver extends PuterDriver {
             }
             return {
                 name,
-                url: `https://${name}.puter.work`,
+                url: `https://${name}.mixt.work`,
                 file_path,
                 file_uid,
                 app_uid,
@@ -754,7 +754,7 @@ export class WorkerDriver extends PuterDriver {
                     : [
                           {
                               type: 'secret_text',
-                              name: 'puter_auth',
+                              name: 'mixt_auth',
                               text: authorization,
                           },
                       ]),
@@ -765,8 +765,8 @@ export class WorkerDriver extends PuterDriver {
                 })),
                 {
                     type: 'plain_text',
-                    name: 'puter_endpoint',
-                    text: cfg.internetExposedUrl ?? 'https://api.puter.com',
+                    name: 'mixt_endpoint',
+                    text: cfg.internetExposedUrl ?? 'https://api.mixt.mpl',
                 },
             ],
         });
@@ -800,7 +800,7 @@ export class WorkerDriver extends PuterDriver {
                 errors: [],
                 // A caller that named the script also owns how it is reached;
                 // the per-worker subdomain below is not where it answers.
-                url: target ? null : `https://${workerName}.puter.work`,
+                url: target ? null : `https://${workerName}.mixt.work`,
             };
         }
 
@@ -1353,7 +1353,7 @@ export class WorkerDriver extends PuterDriver {
     ): Promise<void> {
         try {
             const title = result.success
-                ? `Successfully deployed https://${workerName}.puter.work`
+                ? `Successfully deployed https://${workerName}.mixt.work`
                 : `Failed to deploy ${workerName}! ${(result.errors ?? []).join(', ')}`;
 
             await this.services.notification.notify(

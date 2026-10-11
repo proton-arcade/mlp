@@ -25,7 +25,7 @@ import {
     DEFAULT_FREE_SUBSCRIPTION,
     DEFAULT_TEMP_SUBSCRIPTION,
 } from '../../services/metering/consts.js';
-import { PuterDriver } from '../types.js';
+import { MixtDriver } from '../types.js';
 import type { Actor } from '../../core/actor.js';
 import type { DriverConcurrentConfig, DriverRateLimitConfig } from '../meta.js';
 import type { FSEntry } from '../../stores/fs/FSEntry.js';
@@ -72,7 +72,7 @@ const RESERVED_SUBDOMAINS = new Set([
 ]);
 
 /**
- * Driver exposing the `puter-subdomains` interface.
+ * Driver exposing the `mixt-subdomains` interface.
  *
  * Wraps SubdomainStore with validation + permission checks. Methods follow the
  * `crud-q` shape: create, read, select, update, upsert, delete.
@@ -86,9 +86,9 @@ const RESERVED_SUBDOMAINS = new Set([
  * - `read-all-subdomains` grants cross-user reads, and is the only thing that
  *   does
  */
-export class SubdomainDriver extends PuterDriver {
-    readonly driverInterface = 'puter-subdomains';
-    // Matches origin/main's `iface_to_driver['puter-subdomains']` and the
+export class SubdomainDriver extends MixtDriver {
+    readonly driverInterface = 'mixt-subdomains';
+    // Matches origin/main's `iface_to_driver['mixt-subdomains']` and the
     // hardcoded `service:es\Csubdomain:…` permission keys.
     readonly driverName = 'es:subdomain';
     readonly isDefault = true;
@@ -187,7 +187,7 @@ export class SubdomainDriver extends PuterDriver {
 
         // A name an app still points at is not free either. Deleting a hosted
         // subdomain leaves the app row's `index_url` intact, and the GUI
-        // launcher appends `puter.auth.token` to whatever URL it is given — so
+        // launcher appends `mixt.auth.token` to whatever URL it is given — so
         // registering the freed name would hand that app's launch token to
         // whoever claimed it. Only the app's owner may re-create it, acting as
         // themselves, as that app, or as the app that built it. Any other app
@@ -656,7 +656,7 @@ export class SubdomainDriver extends PuterDriver {
 
     // -- Serialization -----------------------------------------------
     //
-    // v1's `puter-subdomains` shape (canonical, see SubdomainES + the
+    // v1's `mixt-subdomains` shape (canonical, see SubdomainES + the
     // mapping at om/mappings/subdomain.js):
     //   {
     //     uid, subdomain, domain,

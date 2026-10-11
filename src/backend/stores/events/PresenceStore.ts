@@ -18,7 +18,7 @@
  */
 
 import { CONCURRENT_SLOT_TTL_MS } from '../../core/http/middleware/rateLimit.js';
-import { PuterStore } from '../types.js';
+import { MixtStore } from '../types.js';
 import { KV_GLOBAL_APP_KEY } from '../systemKv/SystemKVStore.js';
 
 /**
@@ -211,7 +211,7 @@ export interface PresenceRow {
     regions: Record<string, number>;
 }
 
-export class PresenceStore extends PuterStore {
+export class PresenceStore extends MixtStore {
     #definedScripts = false;
 
     #scripts(): PresenceScripts {

@@ -1,11 +1,11 @@
-import { Context } from '@heyputer/backend/src/core';
-import { extension } from '@heyputer/backend/src/extensions';
+import { Context } from '@mixt/backend/src/core';
+import { extension } from '@mixt/backend/src/extensions';
 import {
     cardFallbackDepsFrom,
     isCardFallbackEligible,
-} from '@heyputer/backend/src/util/cardFallback.js';
-import { APP_ICON_SIZES } from '@heyputer/backend/src/util/appIcon.js';
-import { getTaskbarItems } from '@heyputer/backend/src/util/taskbarItems.js';
+} from '@mixt/backend/src/util/cardFallback.js';
+import { APP_ICON_SIZES } from '@mixt/backend/src/util/appIcon.js';
+import { getTaskbarItems } from '@mixt/backend/src/util/taskbarItems.js';
 import type { Request, Response } from 'express';
 import TimeAgo from 'javascript-time-ago';
 import localeEn from 'javascript-time-ago/locale/en';
@@ -35,7 +35,7 @@ const toUnixSeconds = (value: unknown): number | undefined => {
 const CLIENT_VISIBLE_FEATURE_FLAGS: ReadonlySet<string> = new Set([
     'create_shortcut',
     'download_directory',
-    'prompt_user_when_navigation_away_from_puter',
+    'prompt_user_when_navigation_away_from_mixt',
 ]);
 
 // Keys that must never leave the server, whoever put them on the response.

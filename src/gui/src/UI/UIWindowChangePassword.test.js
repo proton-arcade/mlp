@@ -70,7 +70,7 @@ describe('the change-password window', () => {
         globalThis.fetch = vi.fn();
         globalThis.window = {
             uuidv4: () => 'test-id',
-            gui_origin: 'https://puter.test',
+            gui_origin: 'https://mixt.test',
             auth_token: 'tok-1',
             handleReauthRequired: vi.fn(),
         };
@@ -88,7 +88,7 @@ describe('the change-password window', () => {
             .mockResolvedValueOnce({ ok: true, json: async () => ({}) })
             .mockResolvedValueOnce({ ok: true, json: async () => ({}) });
 
-        await open({ oidc_only: true, oidc_revalidate_url: 'https://puter.test/revalidate' });
+        await open({ oidc_only: true, oidc_revalidate_url: 'https://mixt.test/revalidate' });
         await clickHandler();
 
         const urls = globalThis.fetch.mock.calls.map(([u]) => String(u));
@@ -102,7 +102,7 @@ describe('the change-password window', () => {
             .mockResolvedValueOnce(rejected401('token_missing'))
             .mockResolvedValueOnce({ ok: false, json: async () => ({}) });
 
-        await open({ oidc_only: true, oidc_revalidate_url: 'https://puter.test/revalidate' });
+        await open({ oidc_only: true, oidc_revalidate_url: 'https://mixt.test/revalidate' });
         await clickHandler();
 
         expect(globalThis.window.handleReauthRequired).toHaveBeenCalled();
@@ -118,7 +118,7 @@ describe('the change-password window', () => {
                 status: 403,
                 json: async () => ({
                     code: 'oidc_revalidation_required',
-                    revalidate_url: 'https://puter.test/revalidate',
+                    revalidate_url: 'https://mixt.test/revalidate',
                 }),
             })
             .mockResolvedValueOnce({ ok: true, json: async () => ({}) });

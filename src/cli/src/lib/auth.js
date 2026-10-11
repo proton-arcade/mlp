@@ -28,7 +28,7 @@ export async function interactiveLogin() {
     return await getAuthTokenViaBrowser();
   } catch (err) {
     throw new CLIError(`Web login failed: ${err.message}`, {
-      hint: 'You can instead run: echo $TOKEN | puter login --with-token',
+      hint: 'You can instead run: echo $TOKEN | mixt login --with-token',
     });
   }
 }
@@ -49,7 +49,7 @@ export async function ensureClient() {
     } else {
       throw new CLIError(
         'Not authenticated.',
-        { hint: "Set PUTER_AUTH_TOKEN or run 'puter login'." },
+        { hint: "Set MIXT_AUTH_TOKEN or run 'mixt login'." },
       );
     }
   }

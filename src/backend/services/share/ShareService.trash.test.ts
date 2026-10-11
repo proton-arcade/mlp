@@ -22,12 +22,12 @@ import { v4 as uuidv4 } from 'uuid';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import type { Actor } from '../../core/actor.js';
 import { runWithContext } from '../../core/context.js';
-import { PuterServer } from '../../server.js';
+import { MixtServer } from '../../server.js';
 import type { FSEntry } from '../../stores/fs/FSEntry.js';
 import { createTestUser, setupTestServer } from '../../testUtil.js';
 
 describe('ShareService: deleting a shared item', () => {
-    let server: PuterServer;
+    let server: MixtServer;
 
     beforeAll(async () => {
         server = await setupTestServer();

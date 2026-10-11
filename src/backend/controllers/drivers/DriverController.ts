@@ -30,7 +30,7 @@ import {
     acquireDriverConcurrent,
     checkDriverRateLimit,
 } from '../../core/http/middleware/rateLimit.js';
-import type { PuterRouter } from '../../core/http/PuterRouter.js';
+import type { MixtRouter } from '../../core/http/MixtRouter.js';
 import type { DriverMeta } from '../../drivers/meta.js';
 import {
     isDriverStreamResult,
@@ -46,7 +46,7 @@ import type { PermissionService } from '../../services/permission/PermissionServ
 import { PermissionUtil } from '../../services/permission/permissionUtil.js';
 import type { WithLifecycle } from '../../types';
 import { withSpan } from '../../util/span.js';
-import { PuterController } from '../types.js';
+import { MixtController } from '../types.js';
 
 type DriverInstance = WithLifecycle & Record<string, unknown>;
 
@@ -76,14 +76,14 @@ export const DRIVERS_CALL_LIMIT = {
 // distribution available downstream; which interfaces are worth keeping is a
 // collector-side decision, not one made here, so this deliberately records
 // everything and lets the export pipeline drop what it doesn't want.
-const meter = metrics.getMeter('puter-backend');
+const meter = metrics.getMeter('mixt-backend');
 const driverCallDuration = meter.createHistogram('driver.call.duration', {
     description: 'Wall time of a driver method call',
     unit: 'ms',
 });
 
 @Controller('/drivers')
-export class DriverController extends PuterController {
+export class DriverController extends MixtController {
     /** Iface → Map<driverName, driverInstance> */
     #drivers = new Map<string, Map<string, DriverInstance>>();
     /** Iface → default driver name */
@@ -102,7 +102,7 @@ export class DriverController extends PuterController {
      */
     #callableMethods = new WeakMap<DriverInstance, Set<string>>();
 
-    constructor(...args: ConstructorParameters<typeof PuterController>) {
+    constructor(...args: ConstructorParameters<typeof MixtController>) {
         super(...args);
         this.#buildIfaceMap();
     }
@@ -133,7 +133,7 @@ export class DriverController extends PuterController {
 
     // -- Route registration ------------------------------------------
 
-    registerRoutes(router: PuterRouter): void {
+    registerRoutes(router: MixtRouter): void {
         router.post(
             '/call',
             {

@@ -74,7 +74,7 @@ export const revokeAppSessions = async (
     } = {},
 ) => {
     if (!appUid) return 0;
-    const token = authToken ?? (puter.authToken || window.auth_token);
+    const token = authToken ?? (mixt.authToken || window.auth_token);
     const authHeaders = {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',

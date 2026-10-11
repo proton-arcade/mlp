@@ -19,11 +19,11 @@
 
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import { PuterServer } from '../../server.js';
+import { MixtServer } from '../../server.js';
 import { setupTestServer } from '../../testUtil.js';
 import type { CreditHoldStore } from './CreditHoldStore.js';
 
-let server: PuterServer;
+let server: MixtServer;
 let store: CreditHoldStore;
 
 const user = () => `hold-user-${Math.random().toString(36).slice(2)}`;

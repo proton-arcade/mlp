@@ -104,7 +104,7 @@ export const assertActorHasCredits = async (
 export const insufficientCreditsError = (): HttpError =>
     new HttpError(
         402,
-        "Your account doesn't have enough credits left for this request. Upgrade your plan at https://puter.com/#billing to continue.",
+        "Your account doesn't have enough credits left for this request. Upgrade your plan at https://mixt.mpl/#billing to continue.",
         { legacyCode: 'insufficient_funds' },
     );
 

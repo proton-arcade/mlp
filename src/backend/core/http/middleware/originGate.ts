@@ -35,7 +35,7 @@ const normalizeOrigin = (raw: string | undefined): string =>
  * The routes this guards hand a usable credential straight back to the caller:
  * `/login` and `/signup` return a full session token in the response body, and
  * `/session/sync-cookie` installs the session cookie. CORS on this deployment
- * reflects whatever `Origin` the caller sends — puter.js is meant to be
+ * reflects whatever `Origin` the caller sends — mixt.js is meant to be
  * consumed from arbitrary third-party sites — so _without_ this gate any page
  * on any origin can POST a username and password and read the resulting session
  * token out of the response.
@@ -46,7 +46,7 @@ const normalizeOrigin = (raw: string | undefined): string =>
  *    CORS-blessed API path, rather than forcing an attacker onto traffic we can
  *    see and rate-limit differently.
  * 2. It sidesteps the containment third-party sign-in is supposed to have.
- *    `puter.auth.signIn()` runs its popup on _this_ origin — the user types
+ *    `mixt.auth.signIn()` runs its popup on _this_ origin — the user types
  *    their password with our URL bar visible — and the app receives an
  *    app-scoped `app-under-user` token, never a session token.
  *

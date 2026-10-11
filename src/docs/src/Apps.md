@@ -1,9 +1,9 @@
 ---
 title: Apps
-description: Create, manage, and interact with applications in Puter desktop OS.
+description: Create, manage, and interact with applications in Mixt OS desktop OS.
 ---
 
-The Apps API allows you to create, manage, and interact with applications in the Puter ecosystem. You can build and deploy applications that integrate seamlessly with Puter's platform.
+The Apps API allows you to create, manage, and interact with applications in the Mixt OS ecosystem. You can build and deploy applications that integrate seamlessly with Mixt OS's platform.
 
 ## Features
 
@@ -23,18 +23,18 @@ The Apps API allows you to create, manage, and interact with applications in the
 ```html;app-create
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
             // (1) Generate a random app name
-            let appName = puter.randName();
+            let appName = mixt.randName();
 
             // (2) Create the app and prints its UID to the page
-            let app = await puter.apps.create(appName, "https://example.com");
-            puter.print(`Created app "${app.name}". UID: ${app.uid}`);
+            let app = await mixt.apps.create(appName, "https://example.com");
+            mixt.print(`Created app "${app.name}". UID: ${app.uid}`);
 
             // (3) Delete the app (cleanup)
-            await puter.apps.delete(appName);
+            await mixt.apps.delete(appName);
         })();
     </script>
 </body>
@@ -50,29 +50,29 @@ The Apps API allows you to create, manage, and interact with applications in the
 ```html;app-list
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
             // (1) Generate 3 random app names
-            let appName_1 = puter.randName();
-            let appName_2 = puter.randName();
-            let appName_3 = puter.randName();
+            let appName_1 = mixt.randName();
+            let appName_2 = mixt.randName();
+            let appName_3 = mixt.randName();
 
             // (2) Create 3 apps
-            await puter.apps.create(appName_1, 'https://example.com');
-            await puter.apps.create(appName_2, 'https://example.com');
-            await puter.apps.create(appName_3, 'https://example.com');
+            await mixt.apps.create(appName_1, 'https://example.com');
+            await mixt.apps.create(appName_2, 'https://example.com');
+            await mixt.apps.create(appName_3, 'https://example.com');
 
             // (3) Get all apps (list)
-            let apps = await puter.apps.list();
+            let apps = await mixt.apps.list();
 
             // (4) Display the names of the apps
-            puter.print(JSON.stringify(apps.map(app => app.name)));
+            mixt.print(JSON.stringify(apps.map(app => app.name)));
 
             // (5) Delete the 3 apps we created earlier (cleanup)
-            await puter.apps.delete(appName_1);
-            await puter.apps.delete(appName_2);
-            await puter.apps.delete(appName_3);
+            await mixt.apps.delete(appName_1);
+            await mixt.apps.delete(appName_2);
+            await mixt.apps.delete(appName_3);
         })();
     </script>
 </body>
@@ -88,26 +88,26 @@ The Apps API allows you to create, manage, and interact with applications in the
 ```html;app-delete
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
             // (1) Generate a random app name to make sure it doesn't already exist
-            let appName = puter.randName();
+            let appName = mixt.randName();
 
             // (2) Create the app
-            await puter.apps.create(appName, "https://example.com");
-            puter.print(`"${appName}" created<br>`);
+            await mixt.apps.create(appName, "https://example.com");
+            mixt.print(`"${appName}" created<br>`);
 
             // (3) Delete the app
-            await puter.apps.delete(appName);
-            puter.print(`"${appName}" deleted<br>`);
+            await mixt.apps.delete(appName);
+            mixt.print(`"${appName}" deleted<br>`);
 
             // (4) Try to retrieve the app (should fail)
-            puter.print(`Trying to retrieve "${appName}"...<br>`);
+            mixt.print(`Trying to retrieve "${appName}"...<br>`);
             try {
-                await puter.apps.get(appName);
+                await mixt.apps.get(appName);
             } catch (e) {
-                puter.print(`"${appName}" could not be retrieved<br>`);
+                mixt.print(`"${appName}" could not be retrieved<br>`);
             }
         })();
     </script>
@@ -124,20 +124,20 @@ The Apps API allows you to create, manage, and interact with applications in the
 ```html;app-update
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
             // (1) Create a random app
-            let appName = puter.randName();
-            await puter.apps.create(appName, "https://example.com")
-            puter.print(`"${appName}" created<br>`);
+            let appName = mixt.randName();
+            await mixt.apps.create(appName, "https://example.com")
+            mixt.print(`"${appName}" created<br>`);
 
             // (2) Update the app
-            let updated_app = await puter.apps.update(appName, {title: "My Updated Test App!"})
-            puter.print(`Changed title to "${updated_app.title}"<br>`);
+            let updated_app = await mixt.apps.update(appName, {title: "My Updated Test App!"})
+            mixt.print(`Changed title to "${updated_app.title}"<br>`);
 
             // (3) Delete the app (cleanup)
-            await puter.apps.delete(appName)
+            await mixt.apps.delete(appName)
         })();
     </script>
 </body>
@@ -153,22 +153,22 @@ The Apps API allows you to create, manage, and interact with applications in the
 ```html;app-get
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
             // (1) Generate a random app name to make sure it doesn't already exist
-            let appName = puter.randName();
+            let appName = mixt.randName();
 
             // (2) Create the app
-            await puter.apps.create(appName, "https://example.com");
-            puter.print(`"${appName}" created<br>`);
+            await mixt.apps.create(appName, "https://example.com");
+            mixt.print(`"${appName}" created<br>`);
 
             // (3) Retrieve the app using get()
-            let app = await puter.apps.get(appName);
-            puter.print(`"${appName}" retrieved using get(): id: ${app.uid}<br>`);
+            let app = await mixt.apps.get(appName);
+            mixt.print(`"${appName}" retrieved using get(): id: ${app.uid}<br>`);
 
             // (4) Delete the app (cleanup)
-            await puter.apps.delete(appName);
+            await mixt.apps.delete(appName);
         })();
     </script>
 </body>
@@ -179,18 +179,18 @@ The Apps API allows you to create, manage, and interact with applications in the
 
 ## Functions
 
-These Apps API are supported out of the box when using Puter.js:
+These Apps API are supported out of the box when using Mixt.js:
 
-- **[`puter.apps.create()`](/Apps/create/)** - Create a new application
-- **[`puter.apps.list()`](/Apps/list/)** - List all applications
-- **[`puter.apps.delete()`](/Apps/delete/)** - Delete an application
-- **[`puter.apps.update()`](/Apps/update/)** - Update application settings
-- **[`puter.apps.get()`](/Apps/get/)** - Get information about a specific application
-- **[`puter.apps.checkName()`](/Apps/checkName/)** - Check whether an app name is available
+- **[`mixt.apps.create()`](/Apps/create/)** - Create a new application
+- **[`mixt.apps.list()`](/Apps/list/)** - List all applications
+- **[`mixt.apps.delete()`](/Apps/delete/)** - Delete an application
+- **[`mixt.apps.update()`](/Apps/update/)** - Update application settings
+- **[`mixt.apps.get()`](/Apps/get/)** - Get information about a specific application
+- **[`mixt.apps.checkName()`](/Apps/checkName/)** - Check whether an app name is available
 
 ## Examples
 
-You can see various Puter.js Apps API in action from the following examples:
+You can see various Mixt.js Apps API in action from the following examples:
 
 - Create
   - [Create an app pointing to https://example.com](/playground/app-create/)

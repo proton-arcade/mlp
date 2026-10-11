@@ -47,11 +47,11 @@ const expectForbidden = (got: NextArg) => {
     expect(err.legacyCode).toBe('forbidden');
 };
 
-const CONFIG: Partial<IConfig> = { origin: 'https://puter.com' };
+const CONFIG: Partial<IConfig> = { origin: 'https://mixt.mpl' };
 
 describe('guiOriginGate', () => {
     it('passes a request from the deployment origin', () => {
-        expect(run(CONFIG, 'https://puter.com')).toBeUndefined();
+        expect(run(CONFIG, 'https://mixt.mpl')).toBeUndefined();
     });
 
     it('rejects a request from any other origin', () => {
@@ -86,38 +86,38 @@ describe('guiOriginGate', () => {
     describe('normalization', () => {
         it('ignores a trailing slash on the configured origin', () => {
             expect(
-                run({ origin: 'https://puter.com/' }, 'https://puter.com'),
+                run({ origin: 'https://mixt.mpl/' }, 'https://mixt.mpl'),
             ).toBeUndefined();
         });
 
         it('ignores case and surrounding whitespace in config', () => {
             expect(
-                run({ origin: '  HTTPS://Puter.com  ' }, 'https://puter.com'),
+                run({ origin: '  HTTPS://Mixt.mpl  ' }, 'https://mixt.mpl'),
             ).toBeUndefined();
         });
 
         it('still distinguishes different hosts, ports, and schemes', () => {
-            expectForbidden(run(CONFIG, 'https://puter.com.evil.com'));
-            expectForbidden(run(CONFIG, 'https://puter.com:8443'));
-            expectForbidden(run(CONFIG, 'http://puter.com'));
+            expectForbidden(run(CONFIG, 'https://mixt.mpl.evil.com'));
+            expectForbidden(run(CONFIG, 'https://mixt.mpl:8443'));
+            expectForbidden(run(CONFIG, 'http://mixt.mpl'));
         });
     });
 
     describe('allow_gui_origins', () => {
         it('passes an explicitly allowlisted origin', () => {
             const config = {
-                origin: 'https://puter.com',
+                origin: 'https://mixt.mpl',
                 allow_gui_origins: ['https://gui.example.com'],
             };
             expect(run(config, 'https://gui.example.com')).toBeUndefined();
             // the main origin keeps working alongside it
-            expect(run(config, 'https://puter.com')).toBeUndefined();
+            expect(run(config, 'https://mixt.mpl')).toBeUndefined();
             expectForbidden(run(config, 'https://other.example.com'));
         });
 
         it('does not blow up on a missing or empty config origin', () => {
-            expectForbidden(run({}, 'https://puter.com'));
-            expectForbidden(run({ origin: '' }, 'https://puter.com'));
+            expectForbidden(run({}, 'https://mixt.mpl'));
+            expectForbidden(run({ origin: '' }, 'https://mixt.mpl'));
             // …and an absent Origin is still ungated
             expect(run({})).toBeUndefined();
         });

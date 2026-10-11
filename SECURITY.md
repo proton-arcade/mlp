@@ -1,6 +1,6 @@
-# Puter Security Policy
+# Mixt OS Security Policy
 
-Thank you for helping make Puter safe. Keeping user information safe and secure is a top priority, and we welcome the contribution of external security researchers.
+Thank you for helping make Mixt OS safe. Keeping user information safe and secure is a top priority, and we welcome the contribution of external security researchers.
 
 <br>
 
@@ -12,7 +12,7 @@ If you believe you've found a security issue in software that is maintained in t
 
 # How to Submit a Report
 
-To submit a vulnerability report, please contact us at security@puter.com. Your submission will be reviewed and validated by a member of our team.
+To submit a vulnerability report, please contact us at security@mixt.mpl. Your submission will be reviewed and validated by a member of our team.
 
 > [!WARNING]  
 > Please do not report security vulnerabilities through public GitHub issues, discussions, or pull requests.

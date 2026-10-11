@@ -4,12 +4,12 @@ description: Create a TLS protected TCP socket connection directly in the browse
 platforms: [websites, apps]
 ---
 
-The TLS Socket API lets you create a TLS protected TCP socket connection which can be used directly in the browser. The interface is exactly the same as the normal <a href="/Networking/Socket/">`puter.net.Socket`</a> but connections are encrypted instead of being in plain text.
+The TLS Socket API lets you create a TLS protected TCP socket connection which can be used directly in the browser. The interface is exactly the same as the normal <a href="/Networking/Socket/">`mixt.net.Socket`</a> but connections are encrypted instead of being in plain text.
 
 ## Syntax
 
 ```js
-const socket = new puter.net.tls.TLSSocket(hostname, port);
+const socket = new mixt.net.tls.TLSSocket(hostname, port);
 ```
 
 ## Parameters
@@ -95,21 +95,21 @@ The encryption is done by [rustls-wasm](https://github.com/MercuryWorkshop/rustl
 ```html;net-tls
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
-    const socket = new puter.net.tls.TLSSocket("example.com", 443);
+    const socket = new mixt.net.tls.TLSSocket("example.com", 443);
     socket.on("tlsopen", () => {
         socket.write("GET / HTTP/1.1\r\nHost: example.com\r\n\r\n");
     })
     const decoder = new TextDecoder();
     socket.on("tlsdata", (data) => {
-        puter.print(decoder.decode(data), { code: true });
+        mixt.print(decoder.decode(data), { code: true });
     })
     socket.on("error", (error) => {
-        puter.print("Socket errored with the following reason: ", error.message);
+        mixt.print("Socket errored with the following reason: ", error.message);
     })
     socket.on("tlsclose", (hadError)=> {
-        puter.print("Socket closed. Was there an error? ", hadError);
+        mixt.print("Socket closed. Was there an error? ", hadError);
     })
     </script>
 </body>

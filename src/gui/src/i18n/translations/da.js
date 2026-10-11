@@ -134,7 +134,7 @@ const da = {
         forgot_pass_c2a: 'Glemt adgangskode?',
         from: 'Fra',
         general: 'Generelt',
-        get_a_copy_of_on_puter: 'Få en kopi af \'%%\' på Mixt.com!',
+        get_a_copy_of_on_mixt: 'Få en kopi af \'%%\' på Mixt.com!',
         get_copy_link: 'Få kopi-link',
         hide_all_windows: 'Skjul alle vinduer',
         home: 'Hjem',
@@ -200,7 +200,7 @@ const da = {
         picture: 'Billede',
         pictures: 'Billeder',
         plural_suffix: 's',
-        powered_by_puter_js: 'Udviklet af {{link=docs}}Puter.js{{/link}}',
+        powered_by_mixt_js: 'Udviklet af {{link=docs}}Mixt.js{{/link}}',
         preparing: 'Forbereder...',
         preparing_for_upload: 'Forbereder til upload...',
         print: 'Udskriv',
@@ -216,7 +216,7 @@ const da = {
         public: 'Offentlig',
         publish: 'Offentliggør',
         publish_as_website: 'Offentliggør som websted',
-        puter_description: 'Mixt er en privatlivsorienteret personlig sky til at opbevare alle dine filer, apps og spil på ét sikkert sted, tilgængeligt fra hvor som helst, når som helst.',
+        mixt_description: 'Mixt er en privatlivsorienteret personlig sky til at opbevare alle dine filer, apps og spil på ét sikkert sted, tilgængeligt fra hvor som helst, når som helst.',
         reading_file: 'Læser %strong%',
         recent: 'Seneste',
         recommended: 'Anbefalet',
@@ -232,7 +232,7 @@ const da = {
         replace_all: 'Erstat alle',
         resend_confirmation_code: 'Send bekræftelseskode igen',
         reset_colors: 'Nulstil farver',
-        restart_puter_confirm: 'Er du sikker på, at du vil genstarte Mixt?',
+        restart_mixt_confirm: 'Er du sikker på, at du vil genstarte Mixt?',
         restore: 'Gendan',
         save: 'Gem',
         saturation: 'Mætning',
@@ -262,7 +262,7 @@ const da = {
         shortcut_to: 'Genvej til',
         show_all_windows: 'Vis alle vinduer',
         show_hidden: 'Vis skjulte',
-        sign_in_with_puter: 'Log ind med Mixt',
+        sign_in_with_mixt: 'Log ind med Mixt',
         sign_up: 'Tilmeld dig',
         signing_in: 'Logger ind…',
         size: 'Størrelse',
@@ -272,7 +272,7 @@ const da = {
         start: 'Start',
         status: 'Status',
         storage_usage: 'Lagerforbrug',
-        storage_puter_used: 'brugt af Mixt',
+        storage_mixt_used: 'brugt af Mixt',
         taking_longer_than_usual: 'Tager lidt længere tid end normalt. Vent venligst...',
         task_manager: 'Opgavehåndtering',
         taskmgr_header_name: 'Navn',
@@ -280,7 +280,7 @@ const da = {
         taskmgr_header_type: 'Type',
         terms: 'Vilkår',
         text_document: 'Tekstdokument',
-        tos_fineprint: 'Ved at klikke på \'Opret gratis konto\' accepterer du Puters {{link=terms}}Brugsvilkår{{/link}} og {{link=privacy}}Privatlivspolitik{{/link}}.',
+        tos_fineprint: 'Ved at klikke på \'Opret gratis konto\' accepterer du Mixts {{link=terms}}Brugsvilkår{{/link}} og {{link=privacy}}Privatlivspolitik{{/link}}.',
         transparency: 'Gennemsigtighed',
         trash: 'Papirkurv',
         two_factor: 'To-faktor autentifikation',
@@ -305,7 +305,7 @@ const da = {
         visibility: 'Synlighed',
         yes: 'Ja',
         yes_release_it: 'Ja, frigiv det',
-        you_have_been_referred_to_puter_by_a_friend: 'Du er blevet henvist til Mixt af en ven!',
+        you_have_been_referred_to_mixt_by_a_friend: 'Du er blevet henvist til Mixt af en ven!',
         zip: 'Zip',
         zipping_file: 'Zipper %strong%',
 
@@ -522,7 +522,7 @@ const da = {
         'window_title_public': undefined, // In English: "Public"
         'window_title_videos': undefined, // In English: "Videos"
         'window_title_pictures': undefined, // In English: "Pictures"
-        'window_title_puter': undefined, // In English: "Mixt"
+        'window_title_mixt': undefined, // In English: "Mixt"
         'window_folder_empty': undefined, // In English: "This folder is empty"
         'manage_your_subdomains': undefined, // In English: "Manage Your Subdomains"
         'open_containing_folder': undefined, // In English: "Open Containing Folder"

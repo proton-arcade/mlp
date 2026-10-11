@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { PuterService } from '../types.js';
+import { MixtService } from '../types.js';
 
 export interface BlockMatch {
     blocked: boolean;
@@ -45,7 +45,7 @@ const NOT_BLOCKED: BlockMatch = { blocked: false };
  * one TTL to take effect across the fleet — acceptable for an admin-initiated
  * block.
  */
-export class AppOriginBlocklistService extends PuterService {
+export class AppOriginBlocklistService extends MixtService {
     private static readonly CACHE_TTL_MS = 30_000;
 
     #entries: BlocklistEntry[] = [];

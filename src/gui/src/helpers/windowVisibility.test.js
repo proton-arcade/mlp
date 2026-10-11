@@ -55,7 +55,7 @@ describe('is_window_hidden', () => {
         expect(is_window_hidden(win({ visible: '0', minimized: '0' }))).toBe(true);
     });
 
-    it('is true for a window hidden by puter.ui.hideWindow()', () => {
+    it('is true for a window hidden by mixt.ui.hideWindow()', () => {
         // makeWindowInvisible only flips data-is_visible; nothing minimizes.
         expect(is_window_hidden(win({ visible: '0' }))).toBe(true);
     });
@@ -101,7 +101,7 @@ describe('is_unseen_background_window', () => {
     it('is false for an ordinary window, minimized or not', () => {
         expect(is_unseen_background_window(win())).toBe(false);
         expect(is_unseen_background_window(win({ minimized: 'true' }))).toBe(false);
-        // A window the app hid itself with puter.ui.hideWindow() is the user's
+        // A window the app hid itself with mixt.ui.hideWindow() is the user's
         // too — it just isn't on screen.
         expect(is_unseen_background_window(win({ visible: '0' }))).toBe(false);
     });

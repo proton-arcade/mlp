@@ -10,9 +10,9 @@ window.create_website = async (name, directoryPath = null) => {
     const websiteDir = directoryPath || window.default_website_file;
 
     try {
-        website = await puter.hosting.create(name, websiteDir);
+        website = await mixt.hosting.create(name, websiteDir);
     } catch ( error ) {
-        puter.ui.alert(`Error creating website: ${error.error.message}`);
+        mixt.ui.alert(`Error creating website: ${error.error.message}`);
     }
 
     return website;
@@ -21,11 +21,11 @@ window.create_website = async (name, directoryPath = null) => {
 window.refresh_websites_list = async (show_loading = false) => {
     if ( show_loading )
     {
-        puter.ui.showSpinner();
+        mixt.ui.showSpinner();
     }
 
-    // puter.hosting.list() returns an array of website objects
-    window.websites = await puter.hosting.list();
+    // mixt.hosting.list() returns an array of website objects
+    window.websites = await mixt.hosting.list();
 
     // Get websites
     if ( window.activeTab === 'websites' && window.websites.length > 0 ) {
@@ -43,11 +43,11 @@ window.refresh_websites_list = async (show_loading = false) => {
     }
 
     count_websites();
-    puter.ui.hideSpinner();
+    mixt.ui.hideSpinner();
 };
 
 async function init_websites () {
-    puter.hosting.list().then((websites) => {
+    mixt.hosting.list().then((websites) => {
         window.websites = websites;
         count_websites();
     });
@@ -57,7 +57,7 @@ $(document).on('click', '.create-a-website-btn', async function (e) {
     // Step 1: Show directory picker
     let selectedDirectory;
     try {
-        selectedDirectory = await puter.ui.showDirectoryPicker();
+        selectedDirectory = await mixt.ui.showDirectoryPicker();
     } catch ( err ) {
         // User cancelled directory picker or there was an error
         console.log('Directory picker cancelled or error:', err);
@@ -66,7 +66,7 @@ $(document).on('click', '.create-a-website-btn', async function (e) {
 
     // Step 2: Ask for website name
     if ( selectedDirectory && selectedDirectory.path ) {
-        let name = await puter.ui.prompt('Please enter a name for your website:', 'my-awesome-website');
+        let name = await mixt.ui.prompt('Please enter a name for your website:', 'my-awesome-website');
 
         // Step 3: Create website with selected directory
         if ( name ) {
@@ -150,10 +150,10 @@ $(document).on('change', '.select-all-websites', function (e) {
 });
 
 $('.refresh-website-list').on('click', function (e) {
-    puter.ui.showSpinner();
+    mixt.ui.showSpinner();
     refresh_websites_list();
 
-    puter.ui.hideSpinner();
+    mixt.ui.hideSpinner();
 });
 
 $('th.sort').on('click', function (e) {
@@ -255,7 +255,7 @@ function generate_website_card (website) {
             <td style="width:30px; vertical-align: middle; line-height: 1;">
                 <input type="checkbox" class="website-checkbox" data-website-name="${html_encode(website.subdomain)}">
             </td>
-            <td style="font-family: monospace; font-size: 14px; vertical-align: middle;"><a href="https://${html_encode(website.subdomain)}.puter.site" target="_blank">${html_encode(website.subdomain)}.puter.site</a></td>
+            <td style="font-family: monospace; font-size: 14px; vertical-align: middle;"><a href="https://${html_encode(website.subdomain)}.mixt.site" target="_blank">${html_encode(website.subdomain)}.mixt.site</a></td>
             <td style="font-size: 14px; vertical-align: middle;"> <span class="root-dir-name" data-root-dir-path="${website.root_dir ? html_encode(website.root_dir.path) : ''}">${website.root_dir ? html_encode(website.root_dir.name) : ''}</span></td>
             <td style="font-size: 14px; vertical-align: middle;">${html_encode(website.created_at)}</td>
             <td style="vertical-align: middle;"><img class="options-icon options-icon-website" data-website-name="${html_encode(website.subdomain)}" src="./img/options.svg"></td>
@@ -342,7 +342,7 @@ function remove_website_card (website_name, callback = null) {
 
 $(document).on('click', '.delete-websites-btn', async function (e) {
     // show confirmation alert
-    let resp = await puter.ui.alert('Are you sure you want to delete the selected websites?', [
+    let resp = await mixt.ui.alert('Are you sure you want to delete the selected websites?', [
         {
             label: 'Delete',
             type: 'danger',
@@ -360,7 +360,7 @@ $(document).on('click', '.delete-websites-btn', async function (e) {
         $('.delete-websites-btn').addClass('disabled');
 
         // show 'deleting' modal
-        puter.ui.showSpinner();
+        mixt.ui.showSpinner();
 
         let start_ts = Date.now();
         const websites = $('.website-checkbox:checked').toArray();
@@ -369,7 +369,7 @@ $(document).on('click', '.delete-websites-btn', async function (e) {
         for ( let website of websites ) {
             let website_name = $(website).attr('data-website-name');
             // delete website
-            await puter.hosting.delete(website_name);
+            await mixt.hosting.delete(website_name);
 
             // remove website card
             remove_website_card(website_name);
@@ -383,7 +383,7 @@ $(document).on('click', '.delete-websites-btn', async function (e) {
 
         // close 'deleting' modal
         setTimeout(() => {
-            puter.ui.hideSpinner();
+            mixt.ui.hideSpinner();
             if ( $('.website-checkbox:checked').length === 0 ) {
                 // disable delete button
                 $('.delete-websites-btn').addClass('disabled');
@@ -399,7 +399,7 @@ $(document).on('click', '.options-icon-website', function (e) {
     e.preventDefault();
     e.stopPropagation();
     e.stopImmediatePropagation();
-    puter.ui.contextMenu({
+    mixt.ui.contextMenu({
         items: [
             {
                 label: 'Change Directory',
@@ -421,7 +421,7 @@ $(document).on('click', '.options-icon-website', function (e) {
 
 async function attempt_website_deletion (website_name) {
     // confirm delete
-    const alert_resp = await puter.ui.alert(`Are you sure you want to premanently delete <strong>${html_encode(website_name)}.puter.site</strong>?`,
+    const alert_resp = await mixt.ui.alert(`Are you sure you want to premanently delete <strong>${html_encode(website_name)}.mixt.site</strong>?`,
                     [
                         {
                             label: 'Yes, delete permanently',
@@ -438,21 +438,21 @@ async function attempt_website_deletion (website_name) {
         remove_website_card(website_name);
 
         // delete website
-        puter.hosting.delete(website_name);
+        mixt.hosting.delete(website_name);
     }
 }
 
 async function change_website_directory (website_name) {
     try {
         // Step 1: Show directory picker
-        const selectedDirectory = await puter.ui.showDirectoryPicker();
+        const selectedDirectory = await mixt.ui.showDirectoryPicker();
 
         if ( !selectedDirectory || !selectedDirectory.path ) {
             return; // User cancelled
         }
 
         // Step 2: Confirm the change since it will replace the current website
-        const confirmResp = await puter.ui.alert(`Are you sure you want to change the directory for <strong>${html_encode(website_name)}.puter.site</strong>?<br><br>This will update the website to serve files from the new directory.`,
+        const confirmResp = await mixt.ui.alert(`Are you sure you want to change the directory for <strong>${html_encode(website_name)}.mixt.site</strong>?<br><br>This will update the website to serve files from the new directory.`,
                         [
                             {
                                 label: 'Yes, change directory',
@@ -472,31 +472,31 @@ async function change_website_directory (website_name) {
         }
 
         // Step 3: Show loading spinner
-        puter.ui.showSpinner();
+        mixt.ui.showSpinner();
 
         try {
             // Step 4: Delete the existing website
-            await puter.hosting.delete(website_name);
+            await mixt.hosting.delete(website_name);
 
             // Step 5: Create a new website with the same name but new directory
-            await puter.hosting.create(website_name, selectedDirectory.path);
+            await mixt.hosting.create(website_name, selectedDirectory.path);
 
             // Step 6: Refresh the websites list to show the updated directory
             await refresh_websites_list();
 
             // Step 7: Show success message
-            puter.ui.alert(`Website directory changed successfully! <strong>${html_encode(website_name)}.puter.site</strong> now serves files from the new directory.`, [], {
+            mixt.ui.alert(`Website directory changed successfully! <strong>${html_encode(website_name)}.mixt.site</strong> now serves files from the new directory.`, [], {
                 type: 'success',
             });
 
         } catch ( error ) {
             // If there's an error, show error message
-            puter.ui.alert(`Error changing website directory: ${error.error?.message || error.message || 'Unknown error'}`, [], {
+            mixt.ui.alert(`Error changing website directory: ${error.error?.message || error.message || 'Unknown error'}`, [], {
                 type: 'error',
             });
         } finally {
             // Hide loading spinner
-            puter.ui.hideSpinner();
+            mixt.ui.hideSpinner();
         }
 
     } catch ( error ) {
@@ -513,7 +513,7 @@ $(document).on('click', '.root-dir-name', function (e) {
     const root_dir_path = $(this).attr('data-root-dir-path');
 
     if ( root_dir_path ) {
-        puter.ui.launchApp('explorer', {
+        mixt.ui.launchApp('explorer', {
             path: root_dir_path,
         });
     }

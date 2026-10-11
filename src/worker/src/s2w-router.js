@@ -104,21 +104,21 @@ function initS2w () {
         async route(event) {
             if (!globalThis.me) {
                 globalThis.me = {
-                    puter: init_puter_portable(
-                        globalThis.puter_auth,
-                        globalThis.puter_endpoint || 'https://api.puter.com',
-                        'userPuter',
+                    mixt: init_mixt_portable(
+                        globalThis.mixt_auth,
+                        globalThis.mixt_endpoint || 'https://api.mixt.mpl',
+                        'userMixt',
                     ),
                 };
                 globalThis.my = me;
                 globalThis.myself = me;
             }
-            if (event.request.headers.has('puter-auth')) {
+            if (event.request.headers.has('mixt-auth')) {
                 event.requestor = {
-                    puter: init_puter_portable(
-                        event.request.headers.get('puter-auth'),
-                        globalThis.puter_endpoint || 'https://api.puter.com',
-                        'userPuter',
+                    mixt: init_mixt_portable(
+                        event.request.headers.get('mixt-auth'),
+                        globalThis.mixt_endpoint || 'https://api.mixt.mpl',
+                        'userMixt',
                         { socket: false },
                     ),
                 };

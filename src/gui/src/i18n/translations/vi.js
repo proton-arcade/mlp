@@ -134,7 +134,7 @@ const vi = {
         forgot_pass_c2a: 'Quên mật khẩu?',
         from: 'Từ',
         general: 'Chung',
-        get_a_copy_of_on_puter: 'Nhận một bản sao của \'%%\' trên Mixt.com!',
+        get_a_copy_of_on_mixt: 'Nhận một bản sao của \'%%\' trên Mixt.com!',
         get_copy_link: 'Lấy liên kết sao chép',
         hide_all_windows: 'Ẩn tất cả cửa sổ',
         home: 'Trang chủ',
@@ -200,7 +200,7 @@ const vi = {
         picture: 'Hình ảnh',
         pictures: 'Hình ảnh',
         plural_suffix: '',
-        powered_by_puter_js: 'Được hỗ trợ bởi {{link=docs}}Puter.js{{/link}}',
+        powered_by_mixt_js: 'Được hỗ trợ bởi {{link=docs}}Mixt.js{{/link}}',
         preparing: 'Đang chuẩn bị...',
         preparing_for_upload: 'Đang chuẩn bị để tải lên...',
         print: 'In',
@@ -216,7 +216,7 @@ const vi = {
         public: 'Công khai',
         publish: 'Xuất bản',
         publish_as_website: 'Xuất bản như trang web',
-        puter_description: 'Mixt là một đám mây cá nhân đặt quyền riêng tư lên hàng đầu để lưu trữ tất cả các tệp, ứng dụng và trò chơi của bạn trong một nơi an toàn, có thể truy cập từ mọi nơi vào bất kỳ lúc nào.',
+        mixt_description: 'Mixt là một đám mây cá nhân đặt quyền riêng tư lên hàng đầu để lưu trữ tất cả các tệp, ứng dụng và trò chơi của bạn trong một nơi an toàn, có thể truy cập từ mọi nơi vào bất kỳ lúc nào.',
         reading_file: 'Đang đọc %strong%',
         recent: 'Gần đây',
         recommended: 'Được đề xuất',
@@ -232,7 +232,7 @@ const vi = {
         replace_all: 'Thay thế tất cả',
         resend_confirmation_code: 'Gửi lại mã xác nhận',
         reset_colors: 'Đặt lại màu sắc',
-        restart_puter_confirm: 'Bạn có chắc chắn muốn khởi động lại Mixt không?',
+        restart_mixt_confirm: 'Bạn có chắc chắn muốn khởi động lại Mixt không?',
         restore: 'Khôi phục',
         save: 'Lưu',
         saturation: 'Độ bão hòa',
@@ -262,7 +262,7 @@ const vi = {
         shortcut_to: 'Lối tắt đến',
         show_all_windows: 'Hiển thị tất cả cửa sổ',
         show_hidden: 'Hiển thị mục ẩn',
-        sign_in_with_puter: 'Đăng nhập bằng Mixt',
+        sign_in_with_mixt: 'Đăng nhập bằng Mixt',
         sign_up: 'Đăng ký',
         signing_in: 'Đang đăng nhập…',
         size: 'Kích thước',
@@ -272,7 +272,7 @@ const vi = {
         start: 'Bắt đầu',
         status: 'Trạng thái',
         storage_usage: 'Sử dụng bộ nhớ',
-        storage_puter_used: 'đã sử dụng bởi Mixt',
+        storage_mixt_used: 'đã sử dụng bởi Mixt',
         taking_longer_than_usual: 'Đang mất nhiều thời gian hơn bình thường. Vui lòng đợi...',
         task_manager: 'Trình quản lý tác vụ',
         taskmgr_header_name: 'Tên',
@@ -305,7 +305,7 @@ const vi = {
         visibility: 'Hiển thị',
         yes: 'Có',
         yes_release_it: 'Có, giải phóng nó',
-        you_have_been_referred_to_puter_by_a_friend: 'Bạn đã được giới thiệu đến Mixt bởi một người bạn!',
+        you_have_been_referred_to_mixt_by_a_friend: 'Bạn đã được giới thiệu đến Mixt bởi một người bạn!',
         zip: 'Nén',
         zipping_file: 'Đang nén %strong%',
 
@@ -471,7 +471,7 @@ const vi = {
         'window_title_public': 'Công khai', // In English: "Public"
         'window_title_videos': 'Video', // In English: "Videos"
         'window_title_pictures': 'Hình ảnh', // In English: "Pictures"
-        'window_title_puter': 'Mixt', // In English: "Mixt"
+        'window_title_mixt': 'Mixt', // In English: "Mixt"
         'window_folder_empty': 'Thư mục này trống', // In English: "This folder is empty"
         'manage_your_subdomains': 'Quản lý tên miền phụ', // In English: "Manage Your Subdomains"
         'open_containing_folder': 'Mở thư mục chứa', // In English: "Open Containing Folder"

@@ -138,7 +138,7 @@ const ur = {
         forgot_pass_c2a: 'پاس ورڈ بھول گئے ہیں؟',
         from: 'سے',
         general: 'عام ',
-        get_a_copy_of_on_puter: "Mixt.com پر '%%' کی ایک کاپی حاصل کریں!",
+        get_a_copy_of_on_mixt: "Mixt.com پر '%%' کی ایک کاپی حاصل کریں!",
         get_copy_link: 'کاپی لنک حاصل کریں',
         hide_all_windows: 'تمام ونڈوز چھپائیں ',
         home: 'گھر',
@@ -204,8 +204,8 @@ const ur = {
         picture: 'تصویر ',
         pictures: 'تصویریں',
         plural_suffix: 'س',
-        powered_by_puter_js:
-      'پیوٹر جے ایس کے زریعے محرک{{link=docs}}Puter.js{{/link}}',
+        powered_by_mixt_js:
+      'پیوٹر جے ایس کے زریعے محرک{{link=docs}}Mixt.js{{/link}}',
         preparing: 'تیاری ',
         preparing_for_upload: 'اپلوڈ کے لئے تیاری ',
         print: 'پرنٹ کریں',
@@ -221,7 +221,7 @@ const ur = {
         public: 'عوام',
         publish: 'شائع کریں',
         publish_as_website: 'ویب سائٹ کے طور پر شائع کریں',
-        puter_description: 'Mixt ایک رازداری کا پہلا ذاتی کلاؤڈ ہے جو آپ کی تمام فائلوں، ایپس اور گیمز کو ایک محفوظ جگہ پر رکھتا ہے، کسی بھی وقت کہیں سے بھی قابل رسائی ہے۔',
+        mixt_description: 'Mixt ایک رازداری کا پہلا ذاتی کلاؤڈ ہے جو آپ کی تمام فائلوں، ایپس اور گیمز کو ایک محفوظ جگہ پر رکھتا ہے، کسی بھی وقت کہیں سے بھی قابل رسائی ہے۔',
         reading_file: 'پڑھنا %strong%',
         recent: 'حال ہی میں',
         recommended: 'تجویز کردہ',
@@ -239,7 +239,7 @@ const ur = {
         replace_all: 'سبھی کو تبدیل کریں۔',
         resend_confirmation_code: 'تصدیقی کوڈ دوبارہ بھیجیں',
         reset_colors: 'رنگوں کو دوبارہ ترتیب دیں۔',
-        restart_puter_confirm: 'کیا آپ واقعی Mixt کو دوبارہ شروع کرنا چاہتے ہیں؟',
+        restart_mixt_confirm: 'کیا آپ واقعی Mixt کو دوبارہ شروع کرنا چاہتے ہیں؟',
         restore: 'بحال کریں',
         saturation: 'سنترپتی',
         save_account: 'اکاؤنٹ محفوظ کریں۔',
@@ -267,7 +267,7 @@ const ur = {
         share_to: ' کے ساتھ شیئر کریں',
         show_all_windows: 'تمام ونڈوز دکھائیں ',
         show_hidden: 'پوشیدہ دکھائیں ',
-        sign_in_with_puter: 'پیوٹر کے ساتھ سائن ان کریں',
+        sign_in_with_mixt: 'پیوٹر کے ساتھ سائن ان کریں',
         sign_up: 'سائن اپ کریں',
         signing_in: 'لاگ ان کر رہے ہیں',
         size: 'سائز',
@@ -277,7 +277,7 @@ const ur = {
         start: 'شروع کریں ',
         status: 'حالت',
         storage_usage: 'اسٹوریج کا استعمال',
-        storage_puter_used: 'Mixt کی طرف سے استعمال کیا جاتا ہے',
+        storage_mixt_used: 'Mixt کی طرف سے استعمال کیا جاتا ہے',
         taking_longer_than_usual: 'عام طور پر سے زیادہ وقت لگ رہا ہے ',
         task_manager: 'ٹاسک مینیجر',
         taskmgr_header_name: 'نام',
@@ -311,7 +311,7 @@ const ur = {
         visibility: 'مرئیت',
         yes: 'جی ہاں',
         yes_release_it: 'ہاں اسے جاری کریں',
-        you_have_been_referred_to_puter_by_a_friend:
+        you_have_been_referred_to_mixt_by_a_friend:
       'آپ کو ایک دوست نے پیوٹر کی جانب رجوع کیا ہے!',
         zip: 'زپ فائل',
         zipping_file: 'زپ %strong%',
@@ -500,7 +500,7 @@ const ur = {
         'window_title_public': 'عوامی', // In English: "Public"
         'window_title_videos': 'ویڈیوز', // In English: "Videos"
         'window_title_pictures': 'تصاویر', // In English: "Pictures"
-        'window_title_puter': 'پیوٹر', // In English: "Mixt"
+        'window_title_mixt': 'پیوٹر', // In English: "Mixt"
         'window_folder_empty': 'یہ فولڈر خالی ہے', // In English: "This folder is empty"
         'manage_your_subdomains': 'اپنے سب ڈومینز کو منظم کریں', // In English: "Manage Your Subdomains"
         'open_containing_folder': 'موجودہ فولڈر کھولیں', // In English: "Open Containing Folder"

@@ -18,16 +18,16 @@
  */
 
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { setupPuterTestEnv, type PuterTestEnv } from '../../testUtil.js';
+import { setupMixtTestEnv, type MixtTestEnv } from '../../testUtil.js';
 
 // Launch adopts whatever directory already sits at `AppData/<appUid>`, and an
 // origin app's uid is derived from its origin, so another app knows where a
 // not-yet-opened app's root will be.
 describe('AppData roots over HTTP', () => {
-    let env: PuterTestEnv;
+    let env: MixtTestEnv;
 
     beforeAll(async () => {
-        env = await setupPuterTestEnv();
+        env = await setupMixtTestEnv();
     }, 120_000);
 
     afterAll(async () => {

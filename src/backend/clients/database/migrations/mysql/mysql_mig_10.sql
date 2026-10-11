@@ -23,9 +23,9 @@
 -- Idempotent: each ADD COLUMN / ADD INDEX is guarded so the migration
 -- directory can be replayed safely.
 
-DROP PROCEDURE IF EXISTS _puter_sessions_access_token_uid;
+DROP PROCEDURE IF EXISTS _mixt_sessions_access_token_uid;
 DELIMITER //
-CREATE PROCEDURE _puter_sessions_access_token_uid()
+CREATE PROCEDURE _mixt_sessions_access_token_uid()
 BEGIN
   IF NOT EXISTS (
     SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS
@@ -48,6 +48,6 @@ BEGIN
 END//
 DELIMITER ;
 
-CALL _puter_sessions_access_token_uid();
+CALL _mixt_sessions_access_token_uid();
 
-DROP PROCEDURE IF EXISTS _puter_sessions_access_token_uid;
+DROP PROCEDURE IF EXISTS _mixt_sessions_access_token_uid;

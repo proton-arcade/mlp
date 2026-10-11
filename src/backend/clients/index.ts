@@ -26,9 +26,9 @@ import { DDBClient } from './dynamodb/DDBClient';
 import { RedisClient } from './redis/RedisClient';
 import { S3Client } from './s3/S3Client';
 import { PreludeClient } from './prelude/PreludeClient';
-import type { IPuterClientRegistry } from './types';
+import type { IMixtClientRegistry } from './types';
 
-export const puterClients = {
+export const mixtClients = {
     alarm: AlarmClient,
     db: DatabaseClientFactory,
     email: EmailClient,
@@ -38,4 +38,4 @@ export const puterClients = {
     redis: RedisClient,
     s3: S3Client,
     prelude: PreludeClient,
-} satisfies IPuterClientRegistry;
+} satisfies IMixtClientRegistry;

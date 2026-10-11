@@ -1,5 +1,5 @@
 ---
-title: puter.fs.space()
+title: mixt.fs.space()
 description: Check how much storage capacity the user has and how much they have used.
 ---
 
@@ -11,7 +11,7 @@ This method requires permission to access the user's storage space. If the user 
 
 ## Syntax
 ```js
-puter.fs.space()
+mixt.fs.space()
 ```
 
 ## Parameters
@@ -28,10 +28,10 @@ A `Promise` that will resolve to an object with the following properties:
 ```html
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         // Retrieves the storage space capacity and usage for the current user, and prints them to the browser console
-        puter.space().then((space)=>{
+        mixt.space().then((space)=>{
             console.log(space)
         });
     </script>

@@ -1,10 +1,10 @@
 ---
-title: puter.fs.listShared()
+title: mixt.fs.listShared()
 description: List the files and directories other users have shared with you.
 platforms: [websites, apps, nodejs, workers]
 ---
 
-This method lists what other Puter users have shared with you, a page at a time.
+This method lists what other Mixt OS users have shared with you, a page at a time.
 
 > **What an app can share.** An app never gets more reach than it was given. It
 > can share its own AppData, and files the user specifically granted it, at up
@@ -19,8 +19,8 @@ This method lists what other Puter users have shared with you, a page at a time.
 ## Syntax
 
 ```js
-puter.fs.listShared()
-puter.fs.listShared(options)
+mixt.fs.listShared()
+mixt.fs.listShared(options)
 ```
 
 ## Parameters
@@ -43,7 +43,7 @@ A `Promise` that resolves to an object with:
 
 Iterate until `cursor` is absent rather than comparing `items.length` to `limit`. A page can come back short — items you can no longer see are filtered out after the page is read — while more pages still remain.
 
-Items shared with you appear at a **masked path**, `/<owner>/<uid>/<name>`, where `<uid>` stands in for wherever the owner keeps the item. Pass that path back to any `puter.fs` method and it resolves normally; what it does not tell you is the folder the item lives in, or what sits beside it. Your own items are never listed here.
+Items shared with you appear at a **masked path**, `/<owner>/<uid>/<name>`, where `<uid>` stands in for wherever the owner keeps the item. Pass that path back to any `mixt.fs` method and it resolves normally; what it does not tell you is the folder the item lives in, or what sits beside it. Your own items are never listed here.
 
 ## Examples
 
@@ -52,13 +52,13 @@ Items shared with you appear at a **masked path**, `/<owner>/<uid>/<name>`, wher
 ```html;fs-listShared
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
-            const page = await puter.fs.listShared({ includeTotal: true });
-            puter.print(`About ${page.total} item(s) shared with you<br>`);
+            const page = await mixt.fs.listShared({ includeTotal: true });
+            mixt.print(`About ${page.total} item(s) shared with you<br>`);
             for (const share of page.items) {
-                puter.print(`${share.path} — ${share.mode} from ${share.issuer}<br>`);
+                mixt.print(`${share.path} — ${share.mode} from ${share.issuer}<br>`);
             }
         })()
     </script>
@@ -72,7 +72,7 @@ Items shared with you appear at a **masked path**, `/<owner>/<uid>/<name>`, wher
 let cursor;
 const all = [];
 do {
-    const page = await puter.fs.listShared({ limit: 50, cursor });
+    const page = await mixt.fs.listShared({ limit: 50, cursor });
     all.push(...page.items);
     cursor = page.cursor;
 } while (cursor);
@@ -81,15 +81,15 @@ do {
 <strong class="example-title">Open a file someone shared with you</strong>
 
 ```js
-const page = await puter.fs.listShared();
+const page = await mixt.fs.listShared();
 const shared = page.items.find((item) => !item.isDir);
 if (shared) {
-    const blob = await puter.fs.read(shared.path);
-    puter.print(await blob.text());
+    const blob = await mixt.fs.read(shared.path);
+    mixt.print(await blob.text());
 }
 ```
 
 ## Related
 
-- [`puter.fs.share()`](/FS/share/) - Grant access
-- [`puter.fs.getShares()`](/FS/getShares/) - See who can reach an item you manage
+- [`mixt.fs.share()`](/FS/share/) - Grant access
+- [`mixt.fs.getShares()`](/FS/getShares/) - See who can reach an item you manage

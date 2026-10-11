@@ -1,15 +1,15 @@
 ---
-title: puter.ui.showSpinner()
+title: mixt.ui.showSpinner()
 description: Shows an overlay with a spinner in the center of the screen.
 platforms: [websites, apps]
 ---
 
-Shows an overlay with a spinner in the center of the screen. If multiple instances of `puter.ui.showSpinner()` are called, only one spinner will be shown until all instances are hidden.
+Shows an overlay with a spinner in the center of the screen. If multiple instances of `mixt.ui.showSpinner()` are called, only one spinner will be shown until all instances are hidden.
 
 ## Syntax
 ```js
-puter.ui.showSpinner()
-puter.ui.showSpinner(html)
+mixt.ui.showSpinner()
+mixt.ui.showSpinner(html)
 ```
 
 ## Parameters
@@ -21,14 +21,14 @@ Custom message rendered under the spinner. Accepts plain text or HTML. Defaults 
 ```html;ui-spinner
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         // show the spinner
-        puter.ui.showSpinner();
+        mixt.ui.showSpinner();
 
         // hide the spinner after 3 seconds
         setTimeout(()=>{
-            puter.ui.hideSpinner();
+            mixt.ui.hideSpinner();
         }, 3000);
     </script>
 </body>

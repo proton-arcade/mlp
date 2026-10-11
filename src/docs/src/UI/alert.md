@@ -1,18 +1,18 @@
 ---
-title: puter.ui.alert()
-description: Displays an alert dialog by Puter.
+title: mixt.ui.alert()
+description: Displays an alert dialog by Mixt OS.
 platforms: [ websites, apps]
 ---
 
-Displays an alert dialog by Puter. Puter improves upon the traditional browser alerts by providing more flexibility. For example, you can customize the buttons displayed.
+Displays an alert dialog by Mixt OS. Mixt OS improves upon the traditional browser alerts by providing more flexibility. For example, you can customize the buttons displayed.
 
-`puter.ui.alert()` will block the parent window until user responds by pressing a button.
+`mixt.ui.alert()` will block the parent window until user responds by pressing a button.
 
 ## Syntax
 ```js
-puter.ui.alert(message)
-puter.ui.alert(message, buttons)
-puter.ui.alert(message, buttons, options)
+mixt.ui.alert(message)
+mixt.ui.alert(message, buttons)
+mixt.ui.alert(message, buttons, options)
 ```
 
 ## Parameters
@@ -38,10 +38,10 @@ A `Promise` that resolves to the value of the button pressed. If the `value` pro
 ```html;ui-alert
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         // display an alert with a message and three different types of buttons
-        puter.ui.alert('Please press a button!', [
+        mixt.ui.alert('Please press a button!', [
             {
                 label: 'Hello :)',
                 value: 'hello',

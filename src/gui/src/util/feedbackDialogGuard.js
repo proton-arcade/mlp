@@ -19,7 +19,7 @@
 
 /**
  * Re-entry guard for the app-triggered feedback dialog
- * (`puter.ui.showFeedbackDialog`).
+ * (`mixt.ui.showFeedbackDialog`).
  *
  * There is exactly one rule: one dialog at a time. A second one would stack a
  * full-viewport overlay on top of the first, and closing the top one would

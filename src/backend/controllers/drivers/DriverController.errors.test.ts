@@ -20,7 +20,7 @@
 /**
  * Upstream-error translation and rate-limit rejection in `/drivers/call`.
  *
- * When a driver's upstream provider fails, the caller must see a stable Puter
+ * When a driver's upstream provider fails, the caller must see a stable Mixt
  * error code rather than a raw vendor payload. Each SDK reports its status
  * differently (`status`, `response.status`, an AWS `$metadata` block, or only a
  * message), so the controller sniffs all four — this suite pins the mapping for

@@ -21,12 +21,12 @@ import type { Request, Response } from 'express';
 import { Controller, Get, Post } from '../../core/http/decorators.js';
 import { HttpError } from '../../core/http/HttpError.js';
 import { AppFeedbackService } from '../../services/feedback/AppFeedbackService.js';
-import { PuterController } from '../types.js';
+import { MixtController } from '../types.js';
 
 /**
  * Endpoints behind the "send feedback to this app's developer" dialog
- * (`puter.ui.showFeedbackDialog()`). Only the GUI (desktop dialog or the
- * puter.com popup) calls these; apps cannot — both routes reject app actors,
+ * (`mixt.ui.showFeedbackDialog()`). Only the GUI (desktop dialog or the
+ * mixt.mpl popup) calls these; apps cannot — both routes reject app actors,
  * which is what makes feedback impossible to submit programmatically on a
  * user's behalf.
  *
@@ -53,11 +53,11 @@ const readTargetParam = (value: unknown): string | undefined => {
 };
 
 @Controller('/app-feedback')
-export class AppFeedbackController extends PuterController {
+export class AppFeedbackController extends MixtController {
     /**
      * GET /app-feedback/target — pre-flight for the dialog: whether the target
      * app accepts feedback, plus its canonical title/name for display. Reveals
-     * nothing that `puter.apps.get` doesn't already.
+     * nothing that `mixt.apps.get` doesn't already.
      */
     @Get('/target', {
         subdomain: 'api',

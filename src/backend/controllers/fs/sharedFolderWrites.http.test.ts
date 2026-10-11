@@ -20,18 +20,18 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import {
     createTestUser,
-    setupPuterTestEnv,
-    type PuterTestEnv,
+    setupMixtTestEnv,
+    type MixtTestEnv,
 } from '../../testUtil.js';
 
 // A recipient addresses the owner's entries by a masked `/<owner>/<uuid>/<name>`
 // path. Routes that create an entry have no row to resolve, so they unmask it
 // themselves before the ACL check runs against the result.
 describe('writes inside a folder shared with write', () => {
-    let env: PuterTestEnv;
+    let env: MixtTestEnv;
 
     beforeAll(async () => {
-        env = await setupPuterTestEnv();
+        env = await setupMixtTestEnv();
     }, 180_000);
 
     afterAll(async () => {
@@ -57,7 +57,7 @@ describe('writes inside a folder shared with write', () => {
     const makeUser = () =>
         createTestUser(env.server, {
             username: `sfw${Math.random().toString(36).slice(2, 9)}`,
-            password: 'puter-test-user-password',
+            password: 'mixt-test-user-password',
         });
 
     /** `/<owner>/SharedDir` with `note.txt`, shared `write` with a recipient. */
@@ -96,7 +96,7 @@ describe('writes inside a folder shared with write', () => {
         );
     };
 
-    // `{parent, path}` is the shape puter.js sends — the GUI's "New Folder".
+    // `{parent, path}` is the shape mixt.js sends — the GUI's "New Folder".
     it('mkdir accepts a masked parent', async () => {
         const s = await shareAFolder();
 

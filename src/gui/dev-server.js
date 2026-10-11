@@ -31,11 +31,11 @@ dotenv.config();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Arguments: the first bare argument selects the env ('dev' or 'prod');
-// `--server=<domain-or-origin>` points the GUI at a remote Puter backend,
-// e.g. `--server=puter.com` or `--server=http://localhost:4100`.
+// `--server=<domain-or-origin>` points the GUI at a remote Mixt backend,
+// e.g. `--server=mixt.mpl` or `--server=http://localhost:4100`.
 // `--extensions=<dir>[;<dir>...]` bundles extra (out-of-tree) GUI extension
-// directories into the build via PUTER_GUI_EXTENSION_PATHS.
-// `npm start --server=puter.com` (repo root) arrives via npm_config_server.
+// directories into the build via MIXT_GUI_EXTENSION_PATHS.
+// `npm start --server=mixt.mpl` (repo root) arrives via npm_config_server.
 let env = null;
 let server = process.env.npm_config_server || null;
 let extensions = process.env.npm_config_extensions || null;
@@ -53,8 +53,8 @@ if ( extensions ) {
             console.warn(chalk.yellow(`WARNING: GUI extensions directory not found: ${dir}`));
         }
     }
-    process.env.PUTER_GUI_EXTENSION_PATHS =
-        [process.env.PUTER_GUI_EXTENSION_PATHS, ...dirs].filter(Boolean).join(';');
+    process.env.MIXT_GUI_EXTENSION_PATHS =
+        [process.env.MIXT_GUI_EXTENSION_PATHS, ...dirs].filter(Boolean).join(';');
     console.log('Extra GUI extensions:', dirs.join(', '));
 }
 // A remote server implies the bundled GUI: the unbundled html loads raw
@@ -76,7 +76,7 @@ const bundled = env === 'prod';
 // comes back with a token in the URL: the password is only ever typed on the
 // remote's own origin, and the grant needs a type-to-confirm.
 const { apiOrigin, guiOrigin, appDomain } = (() => {
-    const value = server ?? 'puter.com';
+    const value = server ?? 'mixt.mpl';
     const url = new URL(value.includes('://') ? value : `https://${value}`);
     return {
         apiOrigin: value.includes('://') || url.hostname.startsWith('api.')
@@ -109,14 +109,14 @@ const startServer = (attempt, useAnyFreePort = false) => {
         }).href;
 
         const label = (s) => chalk.dim(s.padEnd(14));
-        console.log(`\n${chalk.bold('  Puter')} ${chalk.dim('(GUI only — backend is remote)')}\n`);
+        console.log(`\n${chalk.bold('  Mixt')} ${chalk.dim('(GUI only — backend is remote)')}\n`);
         console.log(`  ${label('GUI')}${chalk.underline.blue(guiUrl)}`);
         console.log(`  ${label('API')}${chalk.underline.blue(apiOrigin)}`);
         console.log(`  ${label('Accounts')}${chalk.underline.blue(guiOrigin)}`);
         console.log(`\n  ${label('Sign in')}${chalk.underline.cyan(signInUrl)}`);
         console.log(chalk.dim(`\n  Opening ${guiUrl} sends you there automatically when you have no\n  session. Signing in grants this local GUI a full account session, so\n  ${guiOrigin} asks you to confirm before handing it over.\n`));
 
-        if ( process.env.PUTER_NO_BROWSER ) return;
+        if ( process.env.MIXT_NO_BROWSER ) return;
         // Open the GUI rather than the sign-in link directly: it's idempotent.
         // An already-signed-in GUI loads straight to the desktop instead of
         // re-prompting for consent on every restart.
@@ -150,19 +150,19 @@ app.get(['/', '/app/*splat', '/action/*splat', '/desktop', '/desktop/app/*splat'
         api_origin: apiOrigin,
         gui_origin: guiOrigin,
         app_domain: appDomain,
-        title: 'Puter',
+        title: 'Mixt',
         max_item_name_length: 150,
         require_email_verification_to_publish_website: false,
-        short_description: 'Puter is a privacy-first personal cloud that houses all your files, apps, and games in one private and secure place, accessible from anywhere at any time.',
+        short_description: 'Mixt is a privacy-first personal cloud that houses all your files, apps, and games in one private and secure place, accessible from anywhere at any time.',
     }));
 });
 
-// The unbundled html loads the local puter.js build at /sdk/puter.dev.js;
+// The unbundled html loads the local mixt.js build at /sdk/mixt.dev.js;
 // fall back to the production build when only that one exists.
-const sdkDir = path.join(__dirname, '../puter-js/dist');
+const sdkDir = path.join(__dirname, '../mixt-js/dist');
 app.use('/sdk', express.static(sdkDir));
-app.get('/sdk/puter.dev.js', (req, res, next) => {
-    const prodBuild = path.join(sdkDir, 'puter.js');
+app.get('/sdk/mixt.dev.js', (req, res, next) => {
+    const prodBuild = path.join(sdkDir, 'mixt.js');
     if ( fs.existsSync(prodBuild) ) res.sendFile(prodBuild);
     else next();
 });

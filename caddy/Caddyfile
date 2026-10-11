@@ -1,10 +1,10 @@
-# Reverse proxy in front of Puter — mirrors what the prod ALB does:
-# accepts every Host header, forwards to the Puter container, and lets
-# the Puter app handle subdomain-based routing internally (api.*,
+# Reverse proxy in front of Mixt — mirrors what the prod ALB does:
+# accepts every Host header, forwards to the Mixt container, and lets
+# the Mixt app handle subdomain-based routing internally (api.*,
 # site.*, app.*, dev.*, plus the per-user subdomains under those).
 #
 # To enable TLS:
-#   1. Drop a wildcard fullchain.pem + privkey.pem into ./puter/tls/
+#   1. Drop a wildcard fullchain.pem + privkey.pem into ./mixt/tls/
 #      (see "Step 3 — TLS" in doc/self-hosting.md).
 #   2. Uncomment the `:443` block at the bottom of this file, and swap the
 #      `:80` block for the redirect shown alongside it.
@@ -12,7 +12,7 @@
 #      docker-compose.yml, and HTTPS_PORT in .env.
 #   4. Set `"protocol": "https"` and `"pub_port": 443` in config.json.
 {
-	# Certs are supplied by the operator, not issued by Caddy. Puter serves
+	# Certs are supplied by the operator, not issued by Caddy. Mixt serves
 	# per-user sites and apps on dynamic subdomains (<name>.site.<domain>,
 	# <name>.app.<domain>) — only a DNS-01 wildcard cert covers those, and
 	# DNS-01 needs a provider plugin that isn't in the stock caddy image.
@@ -23,9 +23,9 @@
 
 # Shared handling, imported by the HTTP and HTTPS site blocks below so the
 # two can't drift apart.
-(puter_routes) {
+(mixt_routes) {
 	# Rough size cap that mirrors prod ALB defaults; tune for your uploads.
-	# Puter chunks large uploads, so 1 GiB per request is plenty.
+	# Mixt chunks large uploads, so 1 GiB per request is plenty.
 	request_body {
 		max_size 1024MiB
 	}
@@ -40,12 +40,12 @@
 		reverse_proxy s3:9000
 	}
 
-	# Everything else, on every Host, goes to Puter — which routes on that
+	# Everything else, on every Host, goes to Mixt — which routes on that
 	# Host internally. Caddy forwards it unchanged and adds X-Forwarded-For
 	# / -Proto / -Host, which is what `trust_proxy` in config.json counts.
 	handle {
-		reverse_proxy puter:4100 {
-			# Stream responses through unbuffered — Puter uses SSE and
+		reverse_proxy mixt:4100 {
+			# Stream responses through unbuffered — Mixt uses SSE and
 			# socket.io. WebSocket upgrades need no config of their own;
 			# Caddy proxies them by default.
 			flush_interval -1
@@ -55,12 +55,12 @@
 
 # ── HTTP (port 80) ─────────────────────────────────────────────────────
 # A site address with no hostname is the catch-all: it answers for every
-# Host, which is what Puter's subdomain routing requires.
+# Host, which is what Mixt's subdomain routing requires.
 :80 {
-	import puter_routes
+	import mixt_routes
 }
 
-# ── HTTPS (port 443) — uncomment after dropping certs in ./puter/tls/ ──
+# ── HTTPS (port 443) — uncomment after dropping certs in ./mixt/tls/ ──
 # Replace the `:80` block above with a redirect to force HTTPS everywhere:
 #
 # :80 {
@@ -69,5 +69,5 @@
 #
 # :443 {
 # 	tls /etc/caddy/tls/fullchain.pem /etc/caddy/tls/privkey.pem
-# 	import puter_routes
+# 	import mixt_routes
 # }

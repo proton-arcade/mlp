@@ -38,14 +38,14 @@ const playgroundHtml = `
     <meta property="og:title" content="{{TITLE}}">
     <meta property="og:description" content="{{DESCRIPTION}}" />
     <meta property="og:type" content="website" />
-    <meta name="og:image" content="https://assets.puter.site/twitter.png">
+    <meta name="og:image" content="https://assets.mixt.site/twitter.png">
     <meta name="og:url" content="{{CANONICAL}}">
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@HeyPuter" />
+    <meta name="twitter:site" content="@proton-arcade" />
     <meta name="twitter:title" content="{{TITLE}}">
     <meta name="twitter:description" content="{{DESCRIPTION}}" />
-    <meta name="twitter:image" content="https://assets.puter.site/twitter.png">
+    <meta name="twitter:image" content="https://assets.mixt.site/twitter.png">
 
     <link rel="apple-touch-icon" sizes="57x57" href="/assets/favicon/apple-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="60x60" href="/assets/favicon/apple-icon-60x60.png">
@@ -73,18 +73,18 @@ const playgroundHtml = `
     <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.min.js"
         integrity="sha512-ZG31AN9z/CQD1YDDAK4RUAvogwbJHv6bHrumrnMLzdCrVu4HeAqrUX7Jsal/cbUwXGfaMUNmQU04tQ8XXl5Znw=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="/puter.js/v2"></script>
+    <script src="/mixt.js/v2"></script>
 
     <div style="height: 70px; padding: 10px; background-color: #474e5d; display: flex; flex-direction: row;">
         <h1 class="logo">
-            <a href="/playground/">Puter.js Playground</a>
+            <a href="/playground/">Mixt.js Playground</a>
             <span class="playground-page-title" style="margin: 0; font-size: 16px; color: #ccc;">{{PAGE_TITLE}}</span>
         </h1>
         <div style="float:right;" class="navbar">
             <a href="/" target="_blank" style="margin-right: 35px;">Docs</a>
             <a href="/recipes/" target="_blank" style="margin-right: 35px;">Recipes</a>
             <a style="display: flex; flex-direction: row; align-items: center;"
-                href="https://github.com/heyPuter/puter/" target="_blank"><svg role="img"
+                href="https://github.com/heyMixt/mixt/" target="_blank"><svg role="img"
                     style="margin-right:4px; margin-bottom: 3px;" width="17" height="17" viewBox="0 0 24 24" fill="#fff"
                     xmlns="http://www.w3.org/2000/svg">
                     <title>GitHub</title>
@@ -156,11 +156,11 @@ const generatePlayground = () => {
             let htmlTemplate = playgroundHtml.slice();
 
             htmlTemplate = htmlTemplate.replace('{{SIDEBAR}}', sidebarHtml);
-            const pageTitle = example.slug === '' ? 'Puter.js Playground' : `${example.title} | Puter.js Playground`;
+            const pageTitle = example.slug === '' ? 'Mixt.js Playground' : `${example.title} | Mixt.js Playground`;
             htmlTemplate = htmlTemplate.replaceAll('{{TITLE}}', pageTitle);
-            const pageDescription = example.description || 'Try Puter.js instantly with interactive examples in your browser. Run, edit, and experiment with code - no installation or setup required.';
+            const pageDescription = example.description || 'Try Mixt.js instantly with interactive examples in your browser. Run, edit, and experiment with code - no installation or setup required.';
             htmlTemplate = htmlTemplate.replaceAll('{{DESCRIPTION}}', pageDescription);
-            const canonicalUrl = `https://docs.puter.com/playground/${example.slug ? `${example.slug }/` : ''}`;
+            const canonicalUrl = `https://docs.mixt.mpl/playground/${example.slug ? `${example.slug }/` : ''}`;
             htmlTemplate = htmlTemplate.replaceAll('{{CANONICAL}}', canonicalUrl);
             htmlTemplate = htmlTemplate.replaceAll('{{PAGE_TITLE}}', example.title);
             const codeWithDescription = example.description

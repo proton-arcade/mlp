@@ -19,12 +19,12 @@
 
 import { v4 as uuidv4 } from 'uuid';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { PuterServer } from '../server.ts';
+import { MixtServer } from '../server.ts';
 import { setupTestServer } from '../testUtil.ts';
 import { getTaskbarItems } from './taskbarItems.ts';
 
 describe('getTaskbarItems', () => {
-    let server: PuterServer;
+    let server: MixtServer;
     let deps: Parameters<typeof getTaskbarItems>[1];
 
     beforeAll(async () => {
@@ -32,8 +32,8 @@ describe('getTaskbarItems', () => {
         deps = {
             clients: server.clients,
             stores: server.stores,
-            apiBaseUrl: 'https://api.puter.com',
-            config: { static_hosting_domain: 'puter.site' },
+            apiBaseUrl: 'https://api.mixt.mpl',
+            config: { static_hosting_domain: 'mixt.site' },
         } as unknown as Parameters<typeof getTaskbarItems>[1];
     });
 
@@ -164,7 +164,7 @@ describe('getTaskbarItems', () => {
             iconSize: 64,
         });
         expect(withIcon[0].icon).toBe(
-            `https://api.puter.com/app-icon/${app.uid}/64`,
+            `https://api.mixt.mpl/app-icon/${app.uid}/64`,
         );
 
         const withoutIcon = await getTaskbarItems(user as never, deps, {
@@ -178,7 +178,7 @@ describe('getTaskbarItems', () => {
         // An http(s) icon column is what the resize pipeline leaves behind, so
         // the sized PNG is on the subdomain.
         const app = await makeApp(owner.id, {
-            icon: 'https://api.puter.com/app-icon/x',
+            icon: 'https://api.mixt.mpl/app-icon/x',
         });
         const user = await makeUser([{ name: app.name, type: 'app' }]);
 
@@ -186,10 +186,10 @@ describe('getTaskbarItems', () => {
             iconSize: 64,
         });
         expect(items[0].icon).toBe(
-            `https://api.puter.com/app-icon/${app.uid}/64`,
+            `https://api.mixt.mpl/app-icon/${app.uid}/64`,
         );
         expect(items[0].iconCdnUrl).toBe(
-            `https://puter-app-icons.puter.site/${app.uid}-64.png`,
+            `https://mixt-app-icons.mixt.site/${app.uid}-64.png`,
         );
     });
 

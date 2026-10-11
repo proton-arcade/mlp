@@ -21,7 +21,7 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { v4 as uuidv4 } from 'uuid';
 import { makeActor, type Actor } from '../../core/actor.js';
 import { runWithContext } from '../../core/context.js';
-import { PuterServer } from '../../server.js';
+import { MixtServer } from '../../server.js';
 import { createTestUser, setupTestServer } from '../../testUtil.js';
 import { generateDefaultFsentries } from '../../util/userProvisioning.js';
 import { kv } from '../../util/kvSingleton.js';
@@ -186,7 +186,7 @@ describe('PermissionService.getHigherPermissions', () => {
 // ── Real-server integration tests ──────────────────────────────────
 
 describe('PermissionService (integration)', () => {
-    let server: PuterServer;
+    let server: MixtServer;
     let permService: PermissionService;
 
     beforeAll(async () => {
@@ -1463,7 +1463,7 @@ describe('PermissionService (integration)', () => {
 // -- Scan paths --------------------------------------------------------
 
 describe('PermissionService — scan paths', () => {
-    let server: PuterServer;
+    let server: MixtServer;
     let permService: PermissionService;
 
     beforeAll(async () => {
@@ -1543,13 +1543,13 @@ describe('PermissionService — scan paths', () => {
     describe('default user permissions and group grants', () => {
         it('grants the default permissions to a member of the default user group', async () => {
             const { actor } = await makeGroupedUser();
-            expect(await permService.check(actor, 'driver:puter-kvstore')).toBe(
+            expect(await permService.check(actor, 'driver:mixt-kvstore')).toBe(
                 true,
             );
             expect(
                 await permService.check(
                     actor,
-                    'service:puter-kvstore:ii:puter-kvstore',
+                    'service:mixt-kvstore:ii:mixt-kvstore',
                 ),
             ).toBe(true);
         });
@@ -1559,13 +1559,13 @@ describe('PermissionService — scan paths', () => {
             // the account whose best-effort group insert failed at signup —
             // previously locked out of every driver call with no recovery.
             const { actor } = await makeLooseUser();
-            expect(await permService.check(actor, 'driver:puter-kvstore')).toBe(
+            expect(await permService.check(actor, 'driver:mixt-kvstore')).toBe(
                 true,
             );
             expect(
                 await permService.check(
                     actor,
-                    'service:puter-kvstore:ii:puter-kvstore',
+                    'service:mixt-kvstore:ii:mixt-kvstore',
                 ),
             ).toBe(true);
         });
@@ -1576,7 +1576,7 @@ describe('PermissionService — scan paths', () => {
                 temp.username,
             ]);
             expect(
-                await permService.check(tempActor, 'driver:puter-kvstore'),
+                await permService.check(tempActor, 'driver:mixt-kvstore'),
             ).toBe(true);
         });
 
@@ -1735,13 +1735,13 @@ describe('PermissionService — scan paths', () => {
                 app: { uid: app.uid, id: app.id },
             });
             expect(
-                await permService.check(appActor, 'driver:puter-kvstore'),
+                await permService.check(appActor, 'driver:mixt-kvstore'),
             ).toBe(true);
             // Not in the implicit set, and no row grants it.
             expect(
                 await permService.check(
                     appActor,
-                    `driver:puter-analytics:record`,
+                    `driver:mixt-analytics:record`,
                 ),
             ).toBe(false);
         });
@@ -1756,7 +1756,7 @@ describe('PermissionService — scan paths', () => {
             expect(
                 await permService.check(
                     appActor,
-                    'driver:puter-analytics:record',
+                    'driver:mixt-analytics:record',
                 ),
             ).toBe(true);
         });
@@ -1919,13 +1919,13 @@ describe('PermissionService — scan paths', () => {
             // its own row, or a scoped token would silently widen to every
             // driver the moment its issuer held the `driver` root.
             const { actor } = await makeGroupedUser();
-            expect(await permService.check(actor, 'driver:puter-kvstore')).toBe(
+            expect(await permService.check(actor, 'driver:mixt-kvstore')).toBe(
                 true,
             );
             expect(
                 await permService.check(
                     scopedToken(actor, `tok-${uuidv4()}`),
-                    'driver:puter-kvstore',
+                    'driver:mixt-kvstore',
                 ),
             ).toBe(false);
         });
@@ -2318,7 +2318,7 @@ describe('PermissionService — scan paths', () => {
 
 describe('PermissionService — default user permissions vs. group config', () => {
     /** A user with no group membership, on an arbitrary server. */
-    const makeLooseActor = async (srv: PuterServer): Promise<Actor> => {
+    const makeLooseActor = async (srv: MixtServer): Promise<Actor> => {
         const username = `pdg${Math.random().toString(36).slice(2, 10)}`;
         const u = await srv.stores.user.create({
             username,
@@ -2349,11 +2349,11 @@ describe('PermissionService — default user permissions vs. group config', () =
             const perms = bare.services
                 .permission as unknown as PermissionService;
             const actor = await makeLooseActor(bare);
-            expect(await perms.check(actor, 'driver:puter-kvstore')).toBe(true);
+            expect(await perms.check(actor, 'driver:mixt-kvstore')).toBe(true);
             expect(
                 await perms.check(
                     actor,
-                    'service:puter-kvstore:ii:puter-kvstore',
+                    'service:mixt-kvstore:ii:mixt-kvstore',
                 ),
             ).toBe(true);
             // Still only the roots the floor names.

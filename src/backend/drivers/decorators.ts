@@ -70,8 +70,8 @@ type AnyCtor = new (...args: any[]) => any;
  * Equivalent imperative approach (no decorator needed):
  *
  * ```ts
- * class MyDriver extends PuterDriver {
- *     readonly driverInterface = 'puter-chat-completion';
+ * class MyDriver extends MixtDriver {
+ *     readonly driverInterface = 'mixt-chat-completion';
  *     readonly driverName = 'my-impl';
  *     readonly isDefault = true;
  * }
@@ -80,8 +80,8 @@ type AnyCtor = new (...args: any[]) => any;
  * Usage:
  *
  * ```ts
- * @Driver('puter-example', { name: 'example-driver', default: true })
- * class ExampleDriver extends PuterDriver {
+ * @Driver('mixt-example', { name: 'example-driver', default: true })
+ * class ExampleDriver extends MixtDriver {
  *     async complete(args) { ... }
  * }
  * ```

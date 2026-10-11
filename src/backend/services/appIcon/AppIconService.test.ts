@@ -19,7 +19,7 @@
 
 import { v4 as uuidv4 } from 'uuid';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
-import type { PuterServer } from '../../server';
+import type { MixtServer } from '../../server';
 import type { IConfig } from '../../types';
 import {
     POSTGRES_TEST_MIGRATIONS_PATH,
@@ -27,10 +27,10 @@ import {
 } from '../../testUtil.js';
 import type { AppIconService } from './AppIconService.js';
 
-const APP_ICONS_SUBDOMAIN = 'puter-app-icons';
+const APP_ICONS_SUBDOMAIN = 'mixt-app-icons';
 
 describe('AppIconService.ensureIconsDirectory', () => {
-    let server: PuterServer;
+    let server: MixtServer;
 
     beforeAll(async () => {
         // Boot on (pgmock) Postgres specifically: the `subdomains.subdomain`

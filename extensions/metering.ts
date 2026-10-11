@@ -1,16 +1,16 @@
-import { Context } from '@heyputer/backend/src/core';
-import { HttpError } from '@heyputer/backend/src/core/http';
+import { Context } from '@mixt/backend/src/core';
+import { HttpError } from '@mixt/backend/src/core/http';
 import {
     controllersContainers,
     driversContainers,
     servicesContainers,
-} from '@heyputer/backend/src/exports';
-import { extension } from '@heyputer/backend/src/extensions';
-import { GLOBAL_APP_KEY } from '@heyputer/backend/src/services/metering/consts';
+} from '@mixt/backend/src/exports';
+import { extension } from '@mixt/backend/src/extensions';
+import { GLOBAL_APP_KEY } from '@mixt/backend/src/services/metering/consts';
 import {
     creditMultiplierFrom,
     toCredits,
-} from '@heyputer/backend/src/services/metering/utils';
+} from '@mixt/backend/src/services/metering/utils';
 import type { Request, Response } from 'express';
 
 const services = extension.import('service');

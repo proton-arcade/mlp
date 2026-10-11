@@ -13,7 +13,7 @@ export class CLIError extends Error {
   }
 }
 
-// Puter SDK rejections are often plain objects like { status, message } or
+// Mixt SDK rejections are often plain objects like { status, message } or
 // { error: { message } } rather than Error instances — dig out something
 // human-readable before falling back to a stringified object.
 export function messageOf(err) {
@@ -33,7 +33,7 @@ export function messageOf(err) {
   );
 }
 
-// The Puter SDK holds an open connection that keeps the event loop alive, so
+// The Mixt SDK holds an open connection that keeps the event loop alive, so
 // commands won't exit on their own. Force an exit after flushing both streams
 // (writing '' invokes the callback once pending output has drained), so piped
 // output is never truncated.

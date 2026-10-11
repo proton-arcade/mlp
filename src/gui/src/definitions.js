@@ -39,8 +39,8 @@ export class Service extends AdvancedBase {
             || NOOP;
     }
     construct (o) {
-        this.$puter = {};
-        for ( const k in o ) this.$puter[k] = o[k];
+        this.$mixt = {};
+        for ( const k in o ) this.$mixt[k] = o[k];
         if ( ! this._construct ) return;
         return this._construct();
     }

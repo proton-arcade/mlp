@@ -1,18 +1,18 @@
 ---
-title: puter.email.list()
+title: mixt.email.list()
 description: List the messages in the user's mailbox, newest first, one page at a time.
 platforms: [websites, apps, nodejs, workers]
 ---
 
-Lists the messages in one folder of the user's mailbox, newest first. Every call returns one page of `items` plus, while more pages exist, a `cursor` to pass back for the next one. Listing reads the mailbox's folder structure only, so it never downloads a message: each item carries the subject, date, and size, and `puter.email.get()` fetches the rest.
+Lists the messages in one folder of the user's mailbox, newest first. Every call returns one page of `items` plus, while more pages exist, a `cursor` to pass back for the next one. Listing reads the mailbox's folder structure only, so it never downloads a message: each item carries the subject, date, and size, and `mixt.email.get()` fetches the rest.
 
-The mailbox belongs to the user, so it is protected like the rest of their files. An app reads it only after the user grants `fs:/{username}/.mail:read`, for example with `puter.perms.request('permission', { permission: `fs:/${username}/.mail:read` })`.
+The mailbox belongs to the user, so it is protected like the rest of their files. An app reads it only after the user grants `fs:/{username}/.mail:read`, for example with `mixt.perms.request('permission', { permission: `fs:/${username}/.mail:read` })`.
 
 ## Syntax
 
 ```js
-puter.email.list()
-puter.email.list(options)
+mixt.email.list()
+mixt.email.list(options)
 ```
 
 ## Parameters
@@ -46,14 +46,14 @@ Rejects with an object carrying a `code`:
 ```html
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
-            const page = await puter.email.list({ limit: 10 });
+            const page = await mixt.email.list({ limit: 10 });
             for (const message of page.items) {
-                puter.print(`${message.date}  ${message.subject}<br>`);
+                mixt.print(`${message.date}  ${message.subject}<br>`);
             }
-            if (page.cursor) puter.print('More messages available.');
+            if (page.cursor) mixt.print('More messages available.');
         })();
     </script>
 </body>
@@ -65,17 +65,17 @@ Rejects with an object carrying a `code`:
 ```html
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
             let cursor = null;
             let count = 0;
             do {
-                const page = await puter.email.list({ folder: 'sent', limit: 100, cursor });
+                const page = await mixt.email.list({ folder: 'sent', limit: 100, cursor });
                 count += page.items.length;
                 cursor = page.cursor;
             } while (cursor);
-            puter.print(`${count} sent messages`);
+            mixt.print(`${count} sent messages`);
         })();
     </script>
 </body>
@@ -87,12 +87,12 @@ Rejects with an object carrying a `code`:
 ```html
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
-            for await (const page of puter.email.list({ stream: true, limit: 25 })) {
+            for await (const page of mixt.email.list({ stream: true, limit: 25 })) {
                 for (const message of page.items) {
-                    puter.print(`${message.subject}<br>`);
+                    mixt.print(`${message.subject}<br>`);
                 }
             }
         })();

@@ -21,15 +21,15 @@
 -- admin tooling can find the accounts that verified with a given card. The card
 -- itself never touches our DB, only Stripe's fingerprint for it.
 --
--- Idempotent: the column add uses _puter_add_col (defined in mig_1, which
+-- Idempotent: the column add uses _mixt_add_col (defined in mig_1, which
 -- leaves it resident for later migrations); the index add is guarded against
 -- INFORMATION_SCHEMA.STATISTICS so the directory replays safely.
 
-CALL _puter_add_col('user', 'card_fingerprint', '`card_fingerprint` varchar(128) DEFAULT NULL');
+CALL _mixt_add_col('user', 'card_fingerprint', '`card_fingerprint` varchar(128) DEFAULT NULL');
 
-DROP PROCEDURE IF EXISTS _puter_add_user_card_fingerprint_index;
+DROP PROCEDURE IF EXISTS _mixt_add_user_card_fingerprint_index;
 DELIMITER //
-CREATE PROCEDURE _puter_add_user_card_fingerprint_index()
+CREATE PROCEDURE _mixt_add_user_card_fingerprint_index()
 BEGIN
   IF NOT EXISTS (
     SELECT 1 FROM INFORMATION_SCHEMA.STATISTICS
@@ -42,6 +42,6 @@ BEGIN
 END//
 DELIMITER ;
 
-CALL _puter_add_user_card_fingerprint_index();
+CALL _mixt_add_user_card_fingerprint_index();
 
-DROP PROCEDURE IF EXISTS _puter_add_user_card_fingerprint_index;
+DROP PROCEDURE IF EXISTS _mixt_add_user_card_fingerprint_index;

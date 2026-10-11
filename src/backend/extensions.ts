@@ -18,7 +18,7 @@
  */
 
 import type { RequestHandler } from 'express';
-import type { puterClients } from './clients';
+import type { mixtClients } from './clients';
 import {
     EventListener,
     EventMap,
@@ -28,12 +28,12 @@ import {
 } from './clients/event/types';
 import type {
     IExtensionClientInstances,
-    IPuterClientRegistry,
+    IMixtClientRegistry,
 } from './clients/types';
-import type { puterControllers } from './controllers';
+import type { mixtControllers } from './controllers';
 import type {
     IExtensionControllerInstances,
-    IPuterControllerRegistry,
+    IMixtControllerRegistry,
 } from './controllers/types';
 import type {
     RouteDescriptor,
@@ -45,10 +45,10 @@ import {
     addClaimedSubdomain,
     type SubdomainClaim,
 } from './core/http/middleware/hostRedirects';
-import type { puterDrivers } from './drivers';
+import type { mixtDrivers } from './drivers';
 import type {
     IExtensionDriverInstances,
-    IPuterDriverRegistry,
+    IMixtDriverRegistry,
 } from './drivers/types';
 import {
     clientsContainers,
@@ -58,35 +58,35 @@ import {
     servicesContainers,
     storesContainers,
 } from './exports';
-import type { puterServices } from './services';
+import type { mixtServices } from './services';
 import type {
     IExtensionServiceInstances,
-    IPuterServiceRegistry,
+    IMixtServiceRegistry,
 } from './services/types';
-import type { puterStores } from './stores';
+import type { mixtStores } from './stores';
 import type {
     IExtensionStoreInstances,
-    IPuterStoreRegistry,
+    IMixtStoreRegistry,
 } from './stores/types';
 import type { IConfig, LayerInstances } from './types';
 
 /**
  * The in-memory registry an extension's module-scope code writes into, and that
- * `PuterServer` drains during boot. Every field is optional at write time — an
+ * `MixtServer` drains during boot. Every field is optional at write time — an
  * extension that only needs routes never touches the registries.
  */
 export const extensionStore = {
-    clients: {} as IPuterClientRegistry,
-    stores: {} as IPuterStoreRegistry,
-    services: {} as IPuterServiceRegistry,
-    controllers: {} as IPuterControllerRegistry,
-    drivers: {} as IPuterDriverRegistry,
+    clients: {} as IMixtClientRegistry,
+    stores: {} as IMixtStoreRegistry,
+    services: {} as IMixtServiceRegistry,
+    controllers: {} as IMixtControllerRegistry,
+    drivers: {} as IMixtDriverRegistry,
     globalMiddlewares: [] as RequestHandler[],
     events: {} as Record<string, EventListener[]>,
     /**
      * Extension-declared routes. Shape matches the controller-layer
      * `RouteDescriptor`, so both flow through the same materializer
-     * (`PuterServer#materializeRoute`) and inherit the same options →
+     * (`MixtServer#materializeRoute`) and inherit the same options →
      * middleware translation (subdomain, auth, body parsers, ...).
      */
     routeHandlers: [] as RouteDescriptor[],
@@ -280,7 +280,7 @@ const makeLayerImportProxy = (
 export const extension = {
     // -- Config access -----------------------------------------------
     //
-    // Lazy proxy to the server config. Populated by PuterServer during
+    // Lazy proxy to the server config. Populated by MixtServer during
     // boot, so extensions can read it at request time (not import time).
 
     get config(): IConfig {
@@ -317,31 +317,31 @@ export const extension = {
 
     registerClient: (
         name: string,
-        client: IPuterClientRegistry[keyof IPuterClientRegistry],
+        client: IMixtClientRegistry[keyof IMixtClientRegistry],
     ) => {
         extensionStore.clients[name] = client;
     },
     registerStore: (
         name: string,
-        store: IPuterStoreRegistry[keyof IPuterStoreRegistry],
+        store: IMixtStoreRegistry[keyof IMixtStoreRegistry],
     ) => {
         extensionStore.stores[name] = store;
     },
     registerService: (
         name: string,
-        service: IPuterServiceRegistry[keyof IPuterServiceRegistry],
+        service: IMixtServiceRegistry[keyof IMixtServiceRegistry],
     ) => {
         extensionStore.services[name] = service;
     },
     registerController: (
         name: string,
-        controller: IPuterControllerRegistry[keyof IPuterControllerRegistry],
+        controller: IMixtControllerRegistry[keyof IMixtControllerRegistry],
     ) => {
         extensionStore.controllers[name] = controller;
     },
     registerDriver: (
         name: string,
-        driver: IPuterDriverRegistry[keyof IPuterDriverRegistry],
+        driver: IMixtDriverRegistry[keyof IMixtDriverRegistry],
     ) => {
         extensionStore.drivers[name] = driver;
     },
@@ -385,16 +385,16 @@ export const extension = {
     import: <S extends string>(
         name: S,
     ): S extends 'client' | 'clients'
-        ? LayerInstances<typeof puterClients> & IExtensionClientInstances
+        ? LayerInstances<typeof mixtClients> & IExtensionClientInstances
         : S extends 'store' | 'stores'
-          ? LayerInstances<typeof puterStores> & IExtensionStoreInstances
+          ? LayerInstances<typeof mixtStores> & IExtensionStoreInstances
           : S extends 'service' | 'services'
-            ? LayerInstances<typeof puterServices> & IExtensionServiceInstances
+            ? LayerInstances<typeof mixtServices> & IExtensionServiceInstances
             : S extends 'controller' | 'controllers'
-              ? LayerInstances<typeof puterControllers> &
+              ? LayerInstances<typeof mixtControllers> &
                     IExtensionControllerInstances
               : S extends 'driver' | 'drivers'
-                ? LayerInstances<typeof puterDrivers> &
+                ? LayerInstances<typeof mixtDrivers> &
                       IExtensionDriverInstances
                 : never => {
         switch (name) {

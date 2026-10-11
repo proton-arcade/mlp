@@ -34,7 +34,7 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { makeActor } from '../../core/actor.js';
 import { runWithContext } from '../../core/context.js';
-import { createTestUser, setupPuterTestEnv, type PuterTestEnv } from '../../testUtil.js';
+import { createTestUser, setupMixtTestEnv, type MixtTestEnv } from '../../testUtil.js';
 
 const BOOT_TIMEOUT_MS = 120_000;
 const SETTLE_MS = 300;
@@ -55,7 +55,7 @@ const uniqueSuffix = (): string =>
     `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 8)}`;
 
 /** An address nobody has an account for. */
-const uninvitedAddress = (): string => `invited-${uniqueSuffix()}@puter.local`;
+const uninvitedAddress = (): string => `invited-${uniqueSuffix()}@mixt.local`;
 
 const sleep = (ms: number): Promise<void> =>
     new Promise((resolve) => setTimeout(resolve, ms));
@@ -72,7 +72,7 @@ const sleep = (ms: number): Promise<void> =>
  * behaviour under test is what the digest *contains*, not how long it waits.
  */
 const withDigestWindow = async <T>(
-    env: PuterTestEnv,
+    env: MixtTestEnv,
     seconds: number,
     body: () => Promise<T>,
 ): Promise<T> => {
@@ -94,15 +94,15 @@ const withDigestWindow = async <T>(
 };
 
 describe('share email', () => {
-    let env: PuterTestEnv;
+    let env: MixtTestEnv;
     let sent: SentEmail[];
 
     beforeAll(async () => {
-        env = await setupPuterTestEnv({
+        env = await setupMixtTestEnv({
             // A transport has to exist for the service to try sending at all;
             // nothing reaches it, because `sendRaw` is spied below.
             email: {
-                from: '"Puter (test)" <no-reply@localhost>',
+                from: '"Mixt (test)" <no-reply@localhost>',
                 host: '127.0.0.1',
                 port: 1,
             },
@@ -141,9 +141,9 @@ describe('share email', () => {
         vi.restoreAllMocks();
     });
 
-    /** Where the "Open Puter" button points, as distinct from the item links. */
-    const openPuterHref = (html: string): string | undefined =>
-        html.match(/href="([^"]+)"[^>]*>Open Puter<\/a>/)?.[1];
+    /** Where the "Open Mixt" button points, as distinct from the item links. */
+    const openMixtHref = (html: string): string | undefined =>
+        html.match(/href="([^"]+)"[^>]*>Open Mixt<\/a>/)?.[1];
 
     const post = (path: string, token: string, body: unknown) =>
         fetch(new URL(path, env.apiOrigin), {
@@ -253,7 +253,7 @@ describe('share email', () => {
         const username = `se${uniqueSuffix()}`;
         const user = await createTestUser(env.server, {
             username,
-            password: 'puter-share-email-1234',
+            password: 'mixt-share-email-1234',
         });
         const row = await env.server.stores.user.getByUsername(username);
         await env.server.stores.user.update(row!.id, {
@@ -278,7 +278,7 @@ describe('share email', () => {
 
         const mail = await waitForMail({ to: invitee });
         expect(mail.subject).toBe(
-            `${owner.username} shared ${file.name} with you on Puter`,
+            `${owner.username} shared ${file.name} with you on Mixt`,
         );
         expect(mail.html).toContain(file.name);
         // The address is in the body because it is the one to sign up with: an
@@ -332,7 +332,7 @@ describe('share email', () => {
         // spent the one message they agreed to receive.
         await sleep(SETTLE_MS);
         expect(
-            mailTo(invitee).filter((mail) => mail.html.includes('Open Puter')),
+            mailTo(invitee).filter((mail) => mail.html.includes('Open Mixt')),
         ).toHaveLength(0);
     });
 
@@ -351,7 +351,7 @@ describe('share email', () => {
         expect(mail.html).toContain(first.name);
         // The button opens Shared with the item picked out — on the full
         // origin, port included, like every other link in the mail.
-        expect(openPuterHref(mail.html)).toBe(
+        expect(openMixtHref(mail.html)).toBe(
             `${env.origin}/?shared=${encodeURIComponent(
                 `/${owner.username}/${first.uid}/${first.name}`,
             )}&user_uuid=${encodeURIComponent(recipient.uuid)}`,
@@ -521,14 +521,14 @@ describe('share email', () => {
         for (const path of masked) {
             expect(mail.html).toContain(`?shared=${encodeURIComponent(path)}`);
         }
-        // "Open Puter" is one link for the whole mail: Shared, with every item
+        // "Open Mixt" is one link for the whole mail: Shared, with every item
         // in it picked out — not the origin, which would land them on Home.
-        const href = openPuterHref(mail.html);
+        const href = openMixtHref(mail.html);
         expect(href).toBeDefined();
         expect(new URL(href!).searchParams.getAll('shared').sort()).toEqual(
             [...masked].sort(),
         );
-        expect(mail.text).toContain(`Open Puter: ${href}`);
+        expect(mail.text).toContain(`Open Mixt: ${href}`);
     });
 
     /** An app of `owner`'s with reach over `file`, and a token to share as them. */
@@ -574,7 +574,7 @@ describe('share email', () => {
         const mail = await waitForMail({ to: recipient.email });
         expect(mail.html).toContain('via Mail App');
         expect(mail.text).toContain(`shared ${file.name} via Mail App`);
-        const href = openPuterHref(mail.html);
+        const href = openMixtHref(mail.html);
         expect(new URL(href!).searchParams.get('shared_app')).toBe(app.name);
         const masked = `/${owner.username}/${file.uid}/${file.name}`;
         // Each item's link names the app and the recipient both.
@@ -618,7 +618,7 @@ describe('share email', () => {
         expect(mail.html).toContain('via Mixer');
         expect(mail.html).toContain(`&shared_app=${app.name}`);
         // ...but the button speaks for the whole mail, so it names no app.
-        const href = openPuterHref(mail.html);
+        const href = openMixtHref(mail.html);
         expect(new URL(href!).searchParams.get('shared_app')).toBeNull();
     });
 
@@ -693,13 +693,13 @@ describe('share email', () => {
 });
 
 describe('share email digest durability', () => {
-    let env: PuterTestEnv;
+    let env: MixtTestEnv;
     let sent: SentEmail[];
 
     beforeAll(async () => {
-        env = await setupPuterTestEnv({
+        env = await setupMixtTestEnv({
             email: {
-                from: '"Puter (test)" <no-reply@localhost>',
+                from: '"Mixt (test)" <no-reply@localhost>',
                 host: '127.0.0.1',
                 port: 1,
             },
@@ -741,7 +741,7 @@ describe('share email digest durability', () => {
 
     it('sweeps a digest whose timer died with the node that armed it', async () => {
         const owner = env.users.user;
-        const invitee = `orphan-${crypto.randomUUID().slice(0, 8)}@puter.local`;
+        const invitee = `orphan-${crypto.randomUUID().slice(0, 8)}@mixt.local`;
 
         // An entry with no timer anywhere — what a restart or a rolling deploy
         // leaves behind. Queued far enough in the past to be past its window
@@ -767,7 +767,7 @@ describe('share email digest durability', () => {
 
     it('leaves an entry whose window has only just closed to its own timer', async () => {
         const owner = env.users.user;
-        const invitee = `fresh-${crypto.randomUUID().slice(0, 8)}@puter.local`;
+        const invitee = `fresh-${crypto.randomUUID().slice(0, 8)}@mixt.local`;
 
         // Past its window, but only just. Claiming an entry is exclusive only
         // among flushers that can see each other's deletes, so a sweep that
@@ -793,7 +793,7 @@ describe('share email digest durability', () => {
 
     it('holds queued sends durably and drains them once on shutdown', async () => {
         const owner = env.users.user;
-        const invitee = `drain-${crypto.randomUUID().slice(0, 8)}@puter.local`;
+        const invitee = `drain-${crypto.randomUUID().slice(0, 8)}@mixt.local`;
         const uid = crypto.randomUUID();
         const user = await env.server.stores.user.getByUsername(owner.username);
         await env.server.clients.db.write(

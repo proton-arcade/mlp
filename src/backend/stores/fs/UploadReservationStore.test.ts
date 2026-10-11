@@ -20,14 +20,14 @@
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import { PuterServer } from '../../server.js';
+import { MixtServer } from '../../server.js';
 import { setupTestServer } from '../../testUtil.js';
 import {
     toUploadReservationBytes,
     type UploadReservationStore,
 } from './UploadReservationStore.js';
 
-let server: PuterServer;
+let server: MixtServer;
 let store: UploadReservationStore;
 
 const owner = () => Math.floor(Math.random() * 1_000_000_000);

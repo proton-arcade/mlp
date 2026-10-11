@@ -11,14 +11,14 @@ import {
 const ANN = { kind: 'invite', id: 'ann@example.com', name: 'ann@example.com' };
 const BOB = { kind: 'user', id: 'bob', name: 'bob' };
 
-const original_puter = globalThis.puter;
+const original_mixt = globalThis.mixt;
 
 beforeEach(() => {
     forget_recent_recipients();
 });
 
 afterEach(() => {
-    globalThis.puter = original_puter;
+    globalThis.mixt = original_mixt;
 });
 
 describe('sanitize_recents', () => {
@@ -73,7 +73,7 @@ describe('merge_recent', () => {
 describe('recent_recipients', () => {
     it('reads the store once however many dialogs ask', async () => {
         const get = vi.fn(async () => [BOB]);
-        globalThis.puter = { kv: { get, set: vi.fn() } };
+        globalThis.mixt = { kv: { get, set: vi.fn() } };
 
         await expect(recent_recipients()).resolves.toEqual([BOB]);
         await expect(recent_recipients()).resolves.toEqual([BOB]);
@@ -81,7 +81,7 @@ describe('recent_recipients', () => {
     });
 
     it('suggests nothing when the store is unreachable', async () => {
-        globalThis.puter = { kv: { get: vi.fn(async () => { throw new Error('offline'); }) } };
+        globalThis.mixt = { kv: { get: vi.fn(async () => { throw new Error('offline'); }) } };
         await expect(recent_recipients()).resolves.toEqual([]);
     });
 });
@@ -89,7 +89,7 @@ describe('recent_recipients', () => {
 describe('remember_recipient', () => {
     it('writes the recipient to the front of the stored list', async () => {
         const set = vi.fn(async () => true);
-        globalThis.puter = { kv: { get: vi.fn(async () => [ANN]), set } };
+        globalThis.mixt = { kv: { get: vi.fn(async () => [ANN]), set } };
 
         await expect(remember_recipient(BOB)).resolves.toEqual([BOB, ANN]);
         expect(set).toHaveBeenCalledWith('recent_share_recipients', [BOB, ANN]);
@@ -98,7 +98,7 @@ describe('remember_recipient', () => {
     });
 
     it('still serves the session when the write is refused', async () => {
-        globalThis.puter = {
+        globalThis.mixt = {
             kv: {
                 get: vi.fn(async () => []),
                 set: vi.fn(async () => { throw new Error('quota'); }),

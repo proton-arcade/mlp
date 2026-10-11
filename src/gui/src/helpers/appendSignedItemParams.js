@@ -18,24 +18,24 @@
  */
 
 /**
- * Append a signed file's `puter.item.*` params onto the launch iframe URL.
+ * Append a signed file's `mixt.item.*` params onto the launch iframe URL.
  *
  * @param {URLSearchParams} searchParams the iframe URL's search params
  * @param {object} file_signature the /sign or /open_item signature object
  * @param {string} itemPath the (privacy-aware) path to advertise to the app
  */
 export const append_signed_item_params = (searchParams, file_signature, itemPath) => {
-    searchParams.append('puter.item.uid', file_signature.uid);
-    searchParams.append('puter.item.path', itemPath);
-    searchParams.append('puter.item.name', file_signature.fsentry_name);
-    searchParams.append('puter.item.read_url', file_signature.read_url);
+    searchParams.append('mixt.item.uid', file_signature.uid);
+    searchParams.append('mixt.item.path', itemPath);
+    searchParams.append('mixt.item.name', file_signature.fsentry_name);
+    searchParams.append('mixt.item.read_url', file_signature.read_url);
     // Read-only shares carry no write_url; appending undefined stringifies it to "undefined", a truthy invalid URL that stops the editor opening the file.
     if ( file_signature.write_url ) {
-        searchParams.append('puter.item.write_url', file_signature.write_url);
+        searchParams.append('mixt.item.write_url', file_signature.write_url);
     }
-    searchParams.append('puter.item.metadata_url', file_signature.metadata_url);
-    searchParams.append('puter.item.size', file_signature.fsentry_size);
-    searchParams.append('puter.item.accessed', file_signature.fsentry_accessed);
-    searchParams.append('puter.item.modified', file_signature.fsentry_modified);
-    searchParams.append('puter.item.created', file_signature.fsentry_created);
+    searchParams.append('mixt.item.metadata_url', file_signature.metadata_url);
+    searchParams.append('mixt.item.size', file_signature.fsentry_size);
+    searchParams.append('mixt.item.accessed', file_signature.fsentry_accessed);
+    searchParams.append('mixt.item.modified', file_signature.fsentry_modified);
+    searchParams.append('mixt.item.created', file_signature.fsentry_created);
 };

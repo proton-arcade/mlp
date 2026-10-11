@@ -30,7 +30,7 @@ import {
     isTrustedIconHost,
 } from '../../util/appIcon.js';
 import { resolvePrivateLaunchAccess } from '../../util/privateLaunchAccess.js';
-import { PuterController } from '../types.js';
+import { MixtController } from '../types.js';
 import DEFAULT_APP_ICON from './default-app-icon.js';
 
 /**
@@ -78,7 +78,7 @@ const APP_ICON_LIMIT = {
 const APP_LOOKUP_MAX_ENTRIES = 200;
 const APP_LOOKUP_MAX_SELECTOR_LEN = 200;
 
-export class AppController extends PuterController {
+export class AppController extends MixtController {
     get appStore() {
         return this.stores.app;
     }
@@ -136,7 +136,7 @@ export class AppController extends PuterController {
 
     get appDriver() {
         // Drivers are wired into the shared driversContainers export by
-        // PuterServer at boot. Controllers get them lazily via this getter
+        // MixtServer at boot. Controllers get them lazily via this getter
         // since they're instantiated before drivers in the boot order.
         const d = driversContainers.apps;
         if (!d) throw new Error('AppDriver not registered yet');
@@ -144,7 +144,7 @@ export class AppController extends PuterController {
     }
 
     registerRoutes(
-        /** @type {import('../../core/http/PuterRouter').PuterRouter} */ router,
+        /** @type {import('../../core/http/MixtRouter').MixtRouter} */ router,
     ) {
         // GET /apps — list apps owned by the current user
         router.get(

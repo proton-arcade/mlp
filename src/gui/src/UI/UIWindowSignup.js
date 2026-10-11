@@ -93,7 +93,7 @@ function UIWindowSignup(options) {
         h += `<h1 class="signup-form-title">${i18n('create_free_account')}</h1>`;
         // In a sign-in popup, say which site brought the user here.
         if (window.embedded_in_popup && isAttestedOrigin(window.openerOrigin)) {
-            h += `<p class="auth-opener-notice">${i18n('popup_opener_uses_puter', [new URL(window.openerOrigin).hostname])}</p>`;
+            h += `<p class="auth-opener-notice">${i18n('popup_opener_uses_mixt', [new URL(window.openerOrigin).hostname])}</p>`;
         }
         h += '<div class="signup-bonus-notice" style="display:none;"></div>';
         // signup form
@@ -715,7 +715,7 @@ function UIWindowSignup(options) {
                                 <div class="signup-blocked-content">
                                     <img src="${window.icons['logo.svg'] || window.icons['logo-white.svg'] || ''}" style="width:64px;margin-bottom:24px;" />
                                     <p>${html_encode(blockedMsg)}</p>
-                                    <p>If you already have an account, try <a href="/action/login">logging in</a>. Otherwise, contact <a href="mailto:support@puter.com">support@puter.com</a> for assistance.</p>
+                                    <p>If you already have an account, try <a href="/action/login">logging in</a>. Otherwise, contact <a href="mailto:support@mixt.mpl">support@mixt.mpl</a> for assistance.</p>
                                 </div>
                             `;
                                 document.body.appendChild(overlay);

@@ -43,7 +43,7 @@ import {
 
 import type { Actor } from '../../core/actor.js';
 import { runWithContext } from '../../core/context.js';
-import { PuterServer } from '../../server.js';
+import { MixtServer } from '../../server.js';
 import type { FSEntry } from '../../stores/fs/FSEntry.js';
 import { setupTestServer } from '../../testUtil.js';
 import { generateDefaultFsentries } from '../../util/userProvisioning.js';
@@ -56,7 +56,7 @@ const ACCOUNT_ID = 'cf-account';
 const AUTH_KEY = 'cf-auth-key';
 const SCRIPTS_BASE = `https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/workers/scripts`;
 
-let server: PuterServer;
+let server: MixtServer;
 let target: WorkerDriver;
 let fetchSpy: MockInstance<typeof fetch>;
 
@@ -184,7 +184,7 @@ describe('WorkerDriver.create with a configured deploy backend', () => {
         expect(result).toEqual({
             success: true,
             errors: [],
-            url: `https://${name}.puter.work`,
+            url: `https://${name}.mixt.work`,
         });
 
         const [url, init] = putCalls()[0]!;
@@ -195,14 +195,14 @@ describe('WorkerDriver.create with a configured deploy backend', () => {
         });
 
         const row = await server.stores.subdomain.getBySubdomain(
-            `workers.puter.${name}`,
+            `workers.mixt.${name}`,
         );
         expect(row).toBeTruthy();
         expect(Number(row!.user_id)).toBe(user.id);
         expect(Number(row!.root_dir_id)).toBe(entry.id);
     });
 
-    it('sends the puter_auth secret and puter_endpoint binding in the deploy metadata', async () => {
+    it('sends the mixt_auth secret and mixt_endpoint binding in the deploy metadata', async () => {
         const { user, actor } = await makeUser();
         const path = `/${user.username}/worker.js`;
         await writeSource(actor, user.id, path, 'source');
@@ -227,16 +227,16 @@ describe('WorkerDriver.create with a configured deploy backend', () => {
                 ],
             ),
         );
-        expect(bindings.puter_auth.type).toBe('secret_text');
-        expect(typeof bindings.puter_auth.text).toBe('string');
-        expect(bindings.puter_auth.text.length).toBeGreaterThan(0);
-        expect(bindings.puter_endpoint).toMatchObject({
+        expect(bindings.mixt_auth.type).toBe('secret_text');
+        expect(typeof bindings.mixt_auth.text).toBe('string');
+        expect(bindings.mixt_auth.text.length).toBeGreaterThan(0);
+        expect(bindings.mixt_endpoint).toMatchObject({
             type: 'plain_text',
-            text: 'https://api.puter.com',
+            text: 'https://api.mixt.mpl',
         });
     });
 
-    it('prepends the puter.js preamble to the deployed source', async () => {
+    it('prepends the mixt.js preamble to the deployed source', async () => {
         const { user, actor } = await makeUser();
         const path = `/${user.username}/worker.js`;
         const marker = '/*__worker_body_marker__*/';
@@ -253,7 +253,7 @@ describe('WorkerDriver.create with a configured deploy backend', () => {
         const form = (putCalls()[0]![1] as RequestInit).body as FormData;
         const code = await (form.get('swCode') as Blob).text();
         expect(code.endsWith(marker)).toBe(true);
-        // The preamble is what gives worker code access to puter.js.
+        // The preamble is what gives worker code access to mixt.js.
         expect(code.length).toBeGreaterThan(marker.length);
     });
 
@@ -274,13 +274,13 @@ describe('WorkerDriver.create with a configured deploy backend', () => {
 
         const rows = await server.stores.subdomain.listByUserIdAndPrefix(
             user.id,
-            'workers.puter.',
+            'workers.mixt.',
         );
         expect(
-            rows.filter((r) => r.subdomain === `workers.puter.${name}`),
+            rows.filter((r) => r.subdomain === `workers.mixt.${name}`),
         ).toHaveLength(1);
         const row = await server.stores.subdomain.getBySubdomain(
-            `workers.puter.${name}`,
+            `workers.mixt.${name}`,
         );
         expect(Number(row!.root_dir_id)).toBe(secondEntry.id);
     });
@@ -507,7 +507,7 @@ describe('WorkerDriver.destroy with a configured deploy backend', () => {
         });
         expect(
             await server.stores.subdomain.getBySubdomain(
-                `workers.puter.${name}`,
+                `workers.mixt.${name}`,
             ),
         ).toBeFalsy();
     });
@@ -527,7 +527,7 @@ describe('WorkerDriver.destroy with a configured deploy backend', () => {
 
         expect(
             await server.stores.subdomain.getBySubdomain(
-                `workers.puter.${name}`,
+                `workers.mixt.${name}`,
             ),
         ).toBeFalsy();
     });
@@ -594,7 +594,7 @@ describe('WorkerDriver.getFilePaths source resolution', () => {
 
         const row = rows.find((r) => r.name === name)!;
         expect(row).toBeDefined();
-        expect(row.url).toBe(`https://${name}.puter.work`);
+        expect(row.url).toBe(`https://${name}.mixt.work`);
         expect(row.file_path).toBe(path);
         expect(row.file_uid).toBe(entry.uuid);
         expect(row.app_uid).toBeNull();
@@ -605,7 +605,7 @@ describe('WorkerDriver.getFilePaths source resolution', () => {
         const { user, actor } = await makeUser();
         await server.stores.subdomain.create({
             userId: user.id,
-            subdomain: `workers.puter.orphan-${user.username}`,
+            subdomain: `workers.mixt.orphan-${user.username}`,
             rootDirId: null,
             associatedAppId: null,
             appOwner: null,
@@ -662,7 +662,7 @@ describe('WorkerDriver hot reload', () => {
         expect(notifySpy).toHaveBeenCalledWith(
             [user.id],
             expect.objectContaining({
-                title: `Successfully deployed https://${name}.puter.work`,
+                title: `Successfully deployed https://${name}.mixt.work`,
             }),
             expect.objectContaining({
                 type: 'app.worker.deployed',
@@ -704,7 +704,7 @@ describe('WorkerDriver hot reload', () => {
 
         await waitFor(async () => {
             const row = await server.stores.subdomain.getBySubdomain(
-                `workers.puter.${name}`,
+                `workers.mixt.${name}`,
             );
             return !row;
         }, 'subdomain row removal after source delete');
@@ -731,7 +731,7 @@ describe('WorkerDriver hot reload', () => {
 
         await waitFor(async () => {
             const row = await server.stores.subdomain.getBySubdomain(
-                `workers.puter.${name}`,
+                `workers.mixt.${name}`,
             );
             return !row;
         }, 'subdomain row removal after trash move');
@@ -759,7 +759,7 @@ describe('WorkerDriver hot reload', () => {
         expect(deleteCalls()).toHaveLength(0);
         expect(
             await server.stores.subdomain.getBySubdomain(
-                `workers.puter.${name}`,
+                `workers.mixt.${name}`,
             ),
         ).toBeTruthy();
     });
@@ -821,7 +821,7 @@ describe('WorkerDriver hot reload', () => {
         const rowsFor = () =>
             server.stores.subdomain.listByUserIdAndPrefix(
                 user.id,
-                `workers.puter.${name}`,
+                `workers.mixt.${name}`,
             );
         const [row] = await rowsFor();
         expect(Number(row!.app_owner)).toBe(child.id);

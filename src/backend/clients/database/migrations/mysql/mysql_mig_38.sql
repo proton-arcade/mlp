@@ -16,6 +16,6 @@
 -- along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 -- See sqlite/0083_team-directory.sql for the column rationale.
--- No per-file applied-state tracking, so the column goes through _puter_add_col.
+-- No per-file applied-state tracking, so the column goes through _mixt_add_col.
 
-CALL _puter_add_col('group', 'directory_enabled', '`directory_enabled` tinyint(1) NOT NULL DEFAULT 0');
+CALL _mixt_add_col('group', 'directory_enabled', '`directory_enabled` tinyint(1) NOT NULL DEFAULT 0');

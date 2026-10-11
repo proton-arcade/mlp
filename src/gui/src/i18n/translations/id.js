@@ -145,7 +145,7 @@ const id = {
         forgot_pass_c2a: 'Lupa kata sandi?',
         from: 'Dari',
         general: 'Umum',
-        get_a_copy_of_on_puter: 'Dapatkan salinan \'%%\' di Mixt.com!',
+        get_a_copy_of_on_mixt: 'Dapatkan salinan \'%%\' di Mixt.com!',
         get_copy_link: 'Dapatkan Salinan Tautan',
         hide_all_windows: 'Sembunyikan Semua Jendela',
         home: 'Beranda',
@@ -216,7 +216,7 @@ const id = {
         picture: 'Gambar',
         pictures: 'Gambar',
         plural_suffix: 's',
-        powered_by_puter_js: 'Ditenagai oleh {{link=docs}}Puter.js{{/link}}',
+        powered_by_mixt_js: 'Ditenagai oleh {{link=docs}}Mixt.js{{/link}}',
         preparing: 'Mempersiapkan...',
         preparing_for_upload: 'Mempersiapkan untuk menggunggah...',
         print: 'Cetak',
@@ -232,7 +232,7 @@ const id = {
         public: 'Publik',
         publish: 'Publikasi',
         publish_as_website: 'Publikasikan sebagai situs web',
-        puter_description: 'Mixt adalah cloud pribadi yang mengutamakan privasi untuk menyimpan semua file, aplikasi, dan permainan Anda di satu tempat yang aman, dapat diakses dari mana pun dan kapan pun.',
+        mixt_description: 'Mixt adalah cloud pribadi yang mengutamakan privasi untuk menyimpan semua file, aplikasi, dan permainan Anda di satu tempat yang aman, dapat diakses dari mana pun dan kapan pun.',
         reading_file: 'Membaca %strong%',
         recent: 'Terbaru',
         recommended: 'Direkomendasikan',
@@ -249,7 +249,7 @@ const id = {
         replace_all: 'Ganti Semua',
         resend_confirmation_code: 'Kirim Ulang Kode Konfirmasi',
         reset_colors: 'Mengatur Ulang Warna',
-        restart_puter_confirm: 'Apakah Anda yakin ingin memulai ulang Mixt?',
+        restart_mixt_confirm: 'Apakah Anda yakin ingin memulai ulang Mixt?',
         restore: 'Pulihkan',
         save: 'Simpan',
         saturation: 'Saturasi',
@@ -280,7 +280,7 @@ const id = {
         shortcut_to: 'Pintasan ke',
         show_all_windows: 'Tampilkan Semua Jendela',
         show_hidden: 'Tampilkan yang tersembunyi',
-        sign_in_with_puter: 'Masuk dengan Mixt',
+        sign_in_with_mixt: 'Masuk dengan Mixt',
         sign_up: 'Daftar',
         signing_in: 'Masuk…',
         size: 'Ukuran',
@@ -290,7 +290,7 @@ const id = {
         start: 'Mulai',
         status: 'Status',
         storage_usage: 'Penggunaan Penyimpanan',
-        storage_puter_used: 'digunakan oleh Mixt',
+        storage_mixt_used: 'digunakan oleh Mixt',
         taking_longer_than_usual:
       'Memakan waktu sedikit lebih lama dari biasanya. Silakan tunggu...',
         task_manager: 'Pengelola Tugas',
@@ -324,7 +324,7 @@ const id = {
         visibility: 'Visibilitas',
         yes: 'Ya',
         yes_release_it: 'Ya, Lepaskan',
-        you_have_been_referred_to_puter_by_a_friend:
+        you_have_been_referred_to_mixt_by_a_friend:
       'Anda telah dirujuk ke Mixt oleh seorang teman!',
         zip: 'Zip',
         zipping_file: 'Mengekstrak %strong%',
@@ -497,7 +497,7 @@ const id = {
         'window_title_public': 'Publik', // In English: "Public"
         'window_title_videos': 'Video', // In English: "Videos"
         'window_title_pictures': 'Gambar', // In English: "Pictures"
-        'window_title_puter': 'Mixt', // In English: "Mixt"
+        'window_title_mixt': 'Mixt', // In English: "Mixt"
         'window_folder_empty': 'Folder ini kosong', // In English: "This folder is empty"
         'manage_your_subdomains': 'Kelola Subdomain Anda', // In English: "Manage Your Subdomains"
         'open_containing_folder': 'Buka Folder Saat Ini', // In English: "Open Containing Folder"

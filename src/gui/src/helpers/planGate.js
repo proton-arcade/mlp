@@ -28,7 +28,7 @@ export const is_plan_gate_error = (error) =>
     Boolean(error && typeof error === 'object' && error.code === 'subscription_required');
 
 /**
- * Open the upgrade flow, where the deployment has one. Hosted puter.com
+ * Open the upgrade flow, where the deployment has one. Hosted mixt.mpl
  * attaches `UIUpgradeAccount`; a self-hosted install has no plan to offer,
  * and the caller explains the refusal in its own words instead.
  *

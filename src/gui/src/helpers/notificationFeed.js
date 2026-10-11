@@ -18,7 +18,7 @@
  */
 
 /**
- * Notifications over `puter.events`, where the server says it has them.
+ * Notifications over `mixt.events`, where the server says it has them.
  *
  * The desktop and the dashboard have always rendered from the socket wire
  * (`notif.message` / `notif.unreads`). Where the events surface is
@@ -76,7 +76,7 @@ const UNACKNOWLEDGED_LIMIT = 200;
  * call.
  *
  * @param {Object} [params] - `window.gui_params`
- * @param {Object} [sdk] - `window.puter`
+ * @param {Object} [sdk] - `window.mixt`
  * @returns {boolean}
  */
 export const eventsNotificationsAvailable = (params, sdk) => (
@@ -190,14 +190,14 @@ const undismissedUids = async () => {
  *
  * @param {Object} opts
  * @param {(items: FeedNotification[], meta: { replay: boolean }) => void} opts.deliver
- * @param {Object} [opts.sdk] - `window.puter`
+ * @param {Object} [opts.sdk] - `window.mixt`
  * @param {Object} [opts.params] - `window.gui_params`
  * @param {{ undismissed?: () => Promise<Set<string>>, claimShown?: (uid: string) => Promise<boolean> }} [opts.mailbox]
  * @returns {{ isActive: () => boolean, start: () => Promise<boolean>, stop: () => Promise<void> }}
  */
 export function createNotificationFeed ({
     deliver,
-    sdk = globalThis.puter,
+    sdk = globalThis.mixt,
     params = globalThis.gui_params,
     mailbox = {},
 } = {}) {

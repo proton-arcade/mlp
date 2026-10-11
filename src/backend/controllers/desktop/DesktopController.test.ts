@@ -21,25 +21,25 @@ import type { Request, RequestHandler, Response } from 'express';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { v4 as uuidv4 } from 'uuid';
 import type { Actor } from '../../core/actor.js';
-import { PuterRouter } from '../../core/http/PuterRouter.js';
-import { PuterServer } from '../../server.js';
+import { MixtRouter } from '../../core/http/MixtRouter.js';
+import { MixtServer } from '../../server.js';
 import { setupTestServer } from '../../testUtil.js';
 import { generateDefaultFsentries } from '../../util/userProvisioning.js';
 
 // ── Test harness ────────────────────────────────────────────────────
 //
-// Boots one real PuterServer (in-memory sqlite + dynamo + s3 + mock
+// Boots one real MixtServer (in-memory sqlite + dynamo + s3 + mock
 // redis) and re-registers DesktopController's inline lambda routes
-// onto a fresh PuterRouter so each handler is reachable. Each test
+// onto a fresh MixtRouter so each handler is reachable. Each test
 // makes its own user via `makeUser` and exercises the live controller
 // against the real wired stores (user, fsEntry) and DB client.
 
-let server: PuterServer;
-let router: PuterRouter;
+let server: MixtServer;
+let router: MixtRouter;
 
 beforeAll(async () => {
     server = await setupTestServer();
-    router = new PuterRouter();
+    router = new MixtRouter();
     server.controllers.desktop.registerRoutes(router);
 });
 

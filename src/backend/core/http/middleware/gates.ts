@@ -88,7 +88,7 @@ export const requireAuthGate = (): RequestHandler => {
             next(
                 new HttpError(
                     403,
-                    'This app is not allowed to access Puter resources',
+                    'This app is not allowed to access Mixt resources',
                     { legacyCode: 'app_blocked' },
                 ),
             );

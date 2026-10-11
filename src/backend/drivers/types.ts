@@ -17,11 +17,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import type { puterClients } from '../clients';
+import type { mixtClients } from '../clients';
 import type { IExtensionClientInstances } from '../clients/types';
-import type { puterServices } from '../services';
+import type { mixtServices } from '../services';
 import type { IExtensionServiceInstances } from '../services/types';
-import type { puterStores } from '../stores';
+import type { mixtStores } from '../stores';
 import type { IExtensionStoreInstances } from '../stores/types';
 import type {
     DriverConcurrentConfig,
@@ -35,23 +35,23 @@ export interface IExtensionDriverInstances {
     [key: string]: unknown;
 }
 
-export type IPuterDriver<T extends WithCostsReporting = WithCostsReporting> =
+export type IMixtDriver<T extends WithCostsReporting = WithCostsReporting> =
     new (
         config: IConfig,
-        clients: LayerInstances<typeof puterClients> &
+        clients: LayerInstances<typeof mixtClients> &
             IExtensionClientInstances,
-        stores: LayerInstances<typeof puterStores> & IExtensionStoreInstances,
-        services: LayerInstances<typeof puterServices> &
+        stores: LayerInstances<typeof mixtStores> & IExtensionStoreInstances,
+        services: LayerInstances<typeof mixtServices> &
             IExtensionServiceInstances,
     ) => T;
 
 /**
  * Base class for drivers. A driver implements a named interface (e.g.
- * `puter-chat-completion`); several drivers may implement the same one. Declare
+ * `mixt-chat-completion`); several drivers may implement the same one. Declare
  * it with `@Driver(interface, options)` or by setting the readonly fields below
  * imperatively.
  */
-export const PuterDriver = class PuterDriver implements WithCostsReporting {
+export const MixtDriver = class MixtDriver implements WithCostsReporting {
     /** The interface this driver implements. Set by `@Driver` or override. */
     declare readonly driverInterface?: string;
     /** Unique name within its interface. Set by `@Driver` or override. */
@@ -86,11 +86,11 @@ export const PuterDriver = class PuterDriver implements WithCostsReporting {
 
     constructor(
         protected config: IConfig,
-        protected clients: LayerInstances<typeof puterClients> &
+        protected clients: LayerInstances<typeof mixtClients> &
             IExtensionClientInstances,
-        protected stores: LayerInstances<typeof puterStores> &
+        protected stores: LayerInstances<typeof mixtStores> &
             IExtensionStoreInstances,
-        protected services: LayerInstances<typeof puterServices> &
+        protected services: LayerInstances<typeof mixtServices> &
             IExtensionServiceInstances,
     ) {}
     public onServerStart() {
@@ -108,10 +108,10 @@ export const PuterDriver = class PuterDriver implements WithCostsReporting {
         | Promise<Record<string, any>[]> {
         return [];
     }
-} satisfies IPuterDriver<WithCostsReporting>;
+} satisfies IMixtDriver<WithCostsReporting>;
 
-export type IPuterDriverRegistry = Record<
+export type IMixtDriverRegistry = Record<
     string,
-    | IPuterDriver<WithCostsReporting>
-    | (InstanceType<IPuterDriver<WithCostsReporting>> & Record<string, unknown>)
+    | IMixtDriver<WithCostsReporting>
+    | (InstanceType<IMixtDriver<WithCostsReporting>> & Record<string, unknown>)
 >;

@@ -16,7 +16,7 @@
 // opened, the launcher stops with instructions instead of starting half-way.
 //
 // Any arguments are passed through to tools/start.mjs, e.g.
-// `node server.cjs --server=puter.com`. In those modes no HTTPS front is started.
+// `node server.cjs --server=mixt.mpl`. In those modes no HTTPS front is started.
 
 const { spawn, execFileSync } = require('node:child_process');
 const fs = require('node:fs');

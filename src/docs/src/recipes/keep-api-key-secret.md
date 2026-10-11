@@ -1,6 +1,6 @@
 ---
 title: Keep an API Key Secret
-description: "Learn how to call a third-party API from your app without exposing its API key, by keeping the key in a Puter.js serverless worker."
+description: "Learn how to call a third-party API from your app without exposing its API key, by keeping the key in a Mixt.js serverless worker."
 tags: [workers, kv, auth]
 order: 43
 ---
@@ -41,14 +41,14 @@ router.get('/forecast', async ({ request }) => {
 });
 ```
 
-The worker's source file stays private in your Puter account. Calling the
+The worker's source file stays private in your Mixt OS account. Calling the
 worker's URL only runs its routes and never returns the file, so callers cannot
 see the key. Keep the key out of anything you publish yourself, such as a public
 Git repository.
 
 ## Deploy the Worker
 
-Deploy the worker to get its URL, such as `https://forecast-proxy.puter.work`.
+Deploy the worker to get its URL, such as `https://forecast-proxy.mixt.work`.
 The [Workers deployment guide](/Workers/#deployment) covers each way to deploy.
 
 ## Call It From Your App
@@ -57,7 +57,7 @@ Call the worker's URL with `fetch()`, the same way you would call the API
 directly:
 
 ```js
-const API = 'https://forecast-proxy.puter.work';
+const API = 'https://forecast-proxy.mixt.work';
 
 const res = await fetch(`${API}/forecast?city=${encodeURIComponent('Paris')}`);
 const forecast = await res.json();
@@ -114,16 +114,16 @@ To limit each visitor without asking them to sign in, count calls by IP address.
 [Add a contact form](/recipes/add-contact-form/#limit-how-often-a-visitor-can-send)
 shows a complete worker that does this.
 
-To limit each user, have your users sign in with their Puter account. Call the
-worker with [`puter.workers.exec()`](/Workers/exec/) instead of `fetch()`. If the
-user is not signed in yet, Puter.js opens the Puter sign-in window first. The
+To limit each user, have your users sign in with their Mixt OS account. Call the
+worker with [`mixt.workers.exec()`](/Workers/exec/) instead of `fetch()`. If the
+user is not signed in yet, Mixt.js opens the Mixt OS sign-in window first. The
 request then carries the user's session, and the route gets a `user` for them.
 The route can answer `401` to callers without a `user`, and count each user's
 calls.
 
 Here is the complete worker with a limit of 100 calls per user per day. The
-count is kept in your own [key-value store](/KV/) with `me.puter`, which is
-Puter.js signed in to your account as the worker's owner, so users cannot reset
+count is kept in your own [key-value store](/KV/) with `me.mixt`, which is
+Mixt.js signed in to your account as the worker's owner, so users cannot reset
 it:
 
 ```js
@@ -133,7 +133,7 @@ const DAILY_LIMIT = 100;
 async function getCaller(user) {
     if (!user) return null;
     try {
-        return await user.puter.getUser();
+        return await user.mixt.getUser();
     } catch {
         return null;
     }
@@ -143,9 +143,9 @@ async function isOverLimit(uuid) {
     const day = new Date().toISOString().slice(0, 10);
     const key = `forecast:calls:${uuid}:${day}`;
 
-    const count = await me.puter.kv.incr(key);
+    const count = await me.mixt.kv.incr(key);
     if (count === 1) {
-        await me.puter.kv.expire(key, 2 * 24 * 60 * 60);
+        await me.mixt.kv.expire(key, 2 * 24 * 60 * 60);
     }
     return count > DAILY_LIMIT;
 }
@@ -185,11 +185,11 @@ counter per day. The [`incr()`](/KV/incr/) method starts a missing counter at 0,
 and [`expire()`](/KV/expire/) deletes it two days later, so your store only
 keeps recent counters.
 
-In your app, call the worker with [`puter.workers.exec()`](/Workers/exec/) and
+In your app, call the worker with [`mixt.workers.exec()`](/Workers/exec/) and
 show the message when the limit is reached:
 
 ```js
-const res = await puter.workers.exec(`${API}/forecast?city=${encodeURIComponent('Paris')}`);
+const res = await mixt.workers.exec(`${API}/forecast?city=${encodeURIComponent('Paris')}`);
 
 if (res.ok) {
     const forecast = await res.json();

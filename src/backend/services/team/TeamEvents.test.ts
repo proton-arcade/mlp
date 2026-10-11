@@ -19,12 +19,12 @@
 
 import { v4 as uuidv4 } from 'uuid';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { PuterServer } from '../../server.ts';
+import { MixtServer } from '../../server.ts';
 import { setupTestServer } from '../../testUtil.ts';
 
 describe('team billing events', () => {
-    let server: PuterServer;
-    let service: PuterServer['services']['team'];
+    let server: MixtServer;
+    let service: MixtServer['services']['team'];
     let owner: { id: number };
 
     /** Every billing event emitted since the last reset, in order. */
@@ -351,7 +351,7 @@ describe('team billing events', () => {
         expect(of('team.account.deleted')).toHaveLength(1);
     });
 
-    it('refuses to delete a seat Puter suspended', async () => {
+    it('refuses to delete a seat Mixt suspended', async () => {
         const team = await makeTeam();
         const seat = await provision(team);
         await server.stores.user.update(seat.userId, {

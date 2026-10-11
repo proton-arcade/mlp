@@ -20,7 +20,7 @@
 /**
  * Whether an app's window should start hidden: either the app always runs
  * without one (`background` on the app itself), or this particular launch asked
- * for one (`puter.ui.launchApp(name, args, { background: true })`), which lets a
+ * for one (`mixt.ui.launchApp(name, args, { background: true })`), which lets a
  * dual-purpose app serve another app without a window flashing on screen.
  *
  * Either way the window starts out of sight and out of reach: no taskbar item,

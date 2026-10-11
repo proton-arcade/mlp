@@ -1,5 +1,5 @@
 ---
-title: puter.ui.launchApp()
+title: mixt.ui.launchApp()
 description: Dynamically launches another app from within your app.
 platforms: [apps]
 ---
@@ -8,10 +8,10 @@ Allows you to dynamically launch another app from within your app.
 
 ## Syntax
 ```js
-puter.ui.launchApp()
-puter.ui.launchApp(appName)
-puter.ui.launchApp(appName, args)
-puter.ui.launchApp(options)
+mixt.ui.launchApp()
+mixt.ui.launchApp(appName)
+mixt.ui.launchApp(appName, args)
+mixt.ui.launchApp(options)
 ```
 
 ## Parameters
@@ -41,15 +41,15 @@ A pseudonym to launch the app under.
 #### `options.background` (Boolean)
 If `true`, the app starts with its window hidden — for an app launched to do work
 rather than to be looked at, such as one serving an API to yours over its
-[`AppConnection`](/Objects/AppConnection). Without this, Puter creates and shows
+[`AppConnection`](/Objects/AppConnection). Without this, Mixt OS creates and shows
 the window before the app's own code runs, so a service app cannot avoid briefly
 appearing on screen.
 
 The instance stays private to your app for as long as it is hidden: it has no
 taskbar item and no running mark on its icon, and opening the app from the
-taskbar or from Puter's app list starts a separate, ordinary instance for the
+taskbar or from Mixt OS's app list starts a separate, ordinary instance for the
 user rather than handing them the one you are talking to. It can show itself at
-any time with [`puter.ui.showWindow()`](/UI/showWindow), and from that moment it
+any time with [`mixt.ui.showWindow()`](/UI/showWindow), and from that moment it
 is an ordinary window — it takes its place in the taskbar, and the user can
 return to it, hide it, or close it like any other. Defaults to `false`.
 
@@ -72,10 +72,10 @@ When private-access routing applies, the resolved connection may include
 ```html
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         // launches the Editor app
-        puter.ui.launchApp('editor');
+        mixt.ui.launchApp('editor');
     </script>
 </body>
 </html>
@@ -87,10 +87,10 @@ appearing on screen:
 ```html
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
-            const service = await puter.ui.launchApp({
+            const service = await mixt.ui.launchApp({
                 name: 'contacts',
                 args: { service: 'contacts-api' },
                 background: true,

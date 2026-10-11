@@ -38,9 +38,9 @@ import type { LayerInstances } from '../../types';
 import { sessionCookieFlags } from '../../util/cookieFlags.js';
 import { isGodmodeApp } from '../../util/godmodeApps.js';
 import { Span } from '../../util/span.js';
-import type { puterServices } from '../index';
+import type { mixtServices } from '../index';
 import { FULL_API_ACCESS, PERMISSION_MAX_LEN } from '../permission/consts';
-import { PuterService } from '../types';
+import { MixtService } from '../types';
 import type {
     AccessTokenPayload,
     AnyTokenPayload,
@@ -81,13 +81,13 @@ export interface AuthResult {
  * and the rest of the auth surface will land when the auth controller is wired
  * up (it will own mint / rotate / revoke).
  */
-export class AuthService extends PuterService {
-    declare protected services: LayerInstances<typeof puterServices>;
+export class AuthService extends MixtService {
+    declare protected services: LayerInstances<typeof mixtServices>;
 
     override onServerStart(): void {
         // Users implicitly hold read access to their own email — needed for
         // any permission-gated path that asks for `user:<uuid>:email:read`
-        // (puter-js's `user:<uuid>:email:read` permission request flows
+        // (mixt-js's `user:<uuid>:email:read` permission request flows
         // through the scan even though the v2 whoami extension inlines the
         // email field directly and skips the check).
         this.services.permission.registerImplicator({
@@ -478,7 +478,7 @@ export class AuthService extends PuterService {
      *
      * A full-access ("personal access token") actor is the third shape: it
      * carries the issuing user's own API reach, which is exactly what
-     * `puter.workers.create` needs — its default sandbox binds the worker to a
+     * `mixt.workers.create` needs — its default sandbox binds the worker to a
      * `sandbox-<name>` app the same call just created under that user. Blanket-
      * refusing it broke every worker deploy from a credential minted through
      * AuthMe (the MCP connector, the CLI). It stays narrower than a root
@@ -819,7 +819,7 @@ export class AuthService extends PuterService {
      *
      * 1. **Canonical DB match.** If any app in the DB has an `index_url` that
      *    normalizes to this origin (across every configured hosting variant —
-     *    `puter.site`, `puter.app`, etc.), return that app's real UID. Required
+     *    `mixt.site`, `mixt.app`, etc.), return that app's real UID. Required
      *    for private apps: their `/auth/get-user-app-token` tokens must
      *    reference the real app row so the app-under-user verification path can
      *    load them.
@@ -839,13 +839,13 @@ export class AuthService extends PuterService {
         }
 
         // Blocked origins can't acquire an app token (or have one minted /
-        // checked / granted), so the app loses every path to Puter resources.
+        // checked / granted), so the app loses every path to Mixt resources.
         const block =
             await this.services.appOriginBlocklist.isOriginBlocked(appOrigin);
         if (block.blocked) {
             throw new HttpError(
                 403,
-                'This app is not allowed to access Puter resources',
+                'This app is not allowed to access Mixt resources',
                 { legacyCode: 'app_blocked' },
             );
         }
@@ -1185,7 +1185,7 @@ export class AuthService extends PuterService {
 
     /**
      * Extract the subdomain label under the longest matching hosting domain —
-     * longest-first avoids matching `puter.app` before `foo.puter.app`. Null
+     * longest-first avoids matching `mixt.app` before `foo.mixt.app`. Null
      * when the host IS a hosting domain or sits under none of them.
      */
     #hostedSubdomainForHost(
@@ -1493,7 +1493,7 @@ export class AuthService extends PuterService {
     // -- Private / public hosted asset cookies -----------------------
     //
     // Ported from v1's `createPrivateAssetToken` / `createPublicHostedActor
-    // Token`. These are sticky cookies set by the puter-site middleware
+    // Token`. These are sticky cookies set by the mixt-site middleware
     // after a visitor successfully passes the private-app access gate
     // (or is resolved as an actor on a public hosted app). Subsequent
     // requests read the cookie and skip the full entitlement lookup.
@@ -1508,22 +1508,22 @@ export class AuthService extends PuterService {
      * `resolvePrivateIdentity` still reads it as a fallback.
      */
     getPrivateAssetCookieName(): string {
-        return 'puter.private.asset.token';
+        return 'mixt.private.asset.token';
     }
 
     /** Cookie name that carries the public hosted-actor token (legacy). */
     getPublicHostedActorCookieName(): string {
-        return 'puter.public.hosted.actor.token';
+        return 'mixt.public.hosted.actor.token';
     }
 
     /** V2 cookie name for the sticky private-asset token. */
     getPrivateAssetCookieNameV2(): string {
-        return 'puter_private_asset_token_v2';
+        return 'mixt_private_asset_token_v2';
     }
 
     /** V2 cookie name for the public hosted-actor token. */
     getPublicHostedActorCookieNameV2(): string {
-        return 'puter_public_hosted_actor_token_v2';
+        return 'mixt_public_hosted_actor_token_v2';
     }
 
     /** Shared cookie options for both sticky-auth cookies. */

@@ -228,7 +228,7 @@ const postAuthActions = async (action) => {
             UIDesktop({});
         } else {
             await window.get_auto_arrange_data();
-            puter.fs.stat({ path: window.desktop_path, consistency: 'eventual' }).then(desktop_fsentry => {
+            mixt.fs.stat({ path: window.desktop_path, consistency: 'eventual' }).then(desktop_fsentry => {
                 UIDesktop({ desktop_fsentry: desktop_fsentry });
             });
         }
@@ -248,11 +248,11 @@ const postAuthActions = async (action) => {
             && window.url_paths[1]
             && ! window.url_query_params.has('c') ) {
             const app_name = window.url_paths[1];
-            // any query param that doesn't start with 'puter.' is passed
+            // any query param that doesn't start with 'mixt.' is passed
             // through to the app (mirrors the desktop URL-launch flow)
             const app_query_params = {};
             for ( const [key, value] of window.url_query_params ) {
-                if ( ! key.startsWith('puter.') ) {
+                if ( ! key.startsWith('mixt.') ) {
                     app_query_params[key] = value;
                 }
             }
@@ -272,7 +272,7 @@ const postAuthActions = async (action) => {
             // launch's lazy base-title capture would keep the app's name
             // forever — preset the title to fall back to when the app's
             // history entry is popped.
-            window.dashboard_base_title = i18n('window_title_puter');
+            window.dashboard_base_title = i18n('window_title_mixt');
             // ...and make it the DOCUMENT title before the replaceState
             // below commits the dashboard's own entry. Chrome stamps a
             // session entry with the document title current at commit and
@@ -293,7 +293,7 @@ const postAuthActions = async (action) => {
             // when the landing is what installs the app). A failed prefetch
             // hands nothing over — launch_app refetches and fails exactly
             // the way it always did.
-            const app_info_promise = puter.apps.get(app_name, { icon_size: 128 })
+            const app_info_promise = mixt.apps.get(app_name, { icon_size: 128 })
                 .catch(() => null);
             (async () => {
                 // If the app already has a tile in the Apps tab, play the
@@ -381,7 +381,7 @@ const postAuthActions = async (action) => {
                 return;
             }
             window.opener?.postMessage({
-                msg: 'puter.token',
+                msg: 'mixt.token',
                 success: false,
                 token: null,
                 msg_id: msg_id,
@@ -457,7 +457,7 @@ const postAuthActions = async (action) => {
                 // flows learn the outcome server-side instead.
                 if ( deliver_token_to_opener ) {
                     window.opener?.postMessage({
-                        msg: 'puter.token',
+                        msg: 'mixt.token',
                         success: true,
                         token: data.token,
                         app_uid: data.app_uid,
@@ -474,7 +474,7 @@ const postAuthActions = async (action) => {
                 // send error to parent
                 if ( deliver_token_to_opener ) {
                     window.opener?.postMessage({
-                        msg: 'puter.token',
+                        msg: 'mixt.token',
                         success: false,
                         token: null,
                         msg_id: msg_id,
@@ -517,7 +517,7 @@ const postAuthActions = async (action) => {
             if ( token_sent_to_opener || ! user_app_token ) return;
             token_sent_to_opener = true;
             window.opener?.postMessage({
-                msg: 'puter.token',
+                msg: 'mixt.token',
                 success: true,
                 token: user_app_token,
                 app_uid: window.host_app_uid,
@@ -645,7 +645,7 @@ const postAuthActions = async (action) => {
                             }
                             // upload
                             try {
-                                const res = await puter.fs.write(
+                                const res = await mixt.fs.write(
                                     target_path,
                                     file_to_upload,
                                     {
@@ -654,7 +654,7 @@ const postAuthActions = async (action) => {
                                     },
                                 );
 
-                                let file_signature = await puter.fs.sign(app_uid, { uid: res.uid, action: 'write' });
+                                let file_signature = await mixt.fs.sign(app_uid, { uid: res.uid, action: 'write' });
                                 file_signature = file_signature.items;
 
                                 item_with_same_name_already_exists = false;
@@ -1006,7 +1006,7 @@ if (jQuery) {
 // through to the desktop.
 // URLs that carry a desktop-only flow keep booting the desktop: auth popups
 // (`?embedded_in_popup=`), app deep links (`?app=`), direct downloads (`?download=`),
-// fullpage mode (`?puter.fullpage=`), and iframe embeds. A share link (`?shared=`,
+// fullpage mode (`?mixt.fullpage=`), and iframe embeds. A share link (`?shared=`,
 // from an email) lands in the dashboard: Files, on Shared, with the items it names
 // picked out; `/desktop?shared=` opens the item on the desktop instead. App metadata
 // like fullpage_on_landing does NOT opt a landing out of the dashboard; it only
@@ -1022,7 +1022,7 @@ if (jQuery) {
     const needs_desktop_at_root =
         window.embedded_in_popup ||
         in_iframe ||
-        search_params.has('puter.fullpage') ||
+        search_params.has('mixt.fullpage') ||
         search_params.has('app') ||
         search_params.has('download');
     const is_dashboard_alias =
@@ -1107,7 +1107,7 @@ function authErrorDisplayMessage() {
  *
  * The shell renders that markup from the session cookie alone, and a browser
  * drops that cookie on quit while our localStorage token lives on. So a
- * returning user gets served it, and `PuterHomepageService`'s `<head>` gate
+ * returning user gets served it, and `MixtHomepageService`'s `<head>` gate
  * hides it pre-paint on the strength of the stored token (the
  * `has-stored-session` class) rather than letting it flash and be torn down a
  * round-trip later.
@@ -1124,7 +1124,7 @@ function authErrorDisplayMessage() {
  */
 function reveal_anonymous_markup(reveal) {
     // Stands the gate's own failsafe timer down: the guess has been ruled on.
-    window.__puter_session_settled = true;
+    window.__mixt_session_settled = true;
     if (reveal) {
         document.documentElement.classList.remove('has-stored-session');
         return;
@@ -1154,7 +1154,7 @@ window.showTurnstileChallenge = function (options) {
         let message = 'Setting up your account...';
         if (window.embedded_in_popup) {
             message =
-                'Setting up your <a href="https://puter.com" target="_blank">Puter.com</a> account...';
+                'Setting up your <a href="https://mixt.mpl" target="_blank">Mixt.mpl</a> account...';
         }
         // Create modal HTML
         let modalHtml = `
@@ -1162,7 +1162,7 @@ window.showTurnstileChallenge = function (options) {
                 <div class="modal-content">
                     <div class="modal-header" style="margin-bottom: 20px;">
                         <img src="${window.icons['logo-white.svg']}" class="captcha-logo">
-                        <h2 class="captcha-title">Welcome to Puter!</h2>
+                        <h2 class="captcha-title">Welcome to Mixt!</h2>
                     </div>
 
                     <div class="captcha-container">
@@ -1288,10 +1288,10 @@ window.initgui = async function (options) {
     let showed_account_picker = false;
 
     // update SDK if auth_token is different from the one in the SDK
-    if (window.auth_token && puter.authToken !== window.auth_token) {
-        puter.setAuthToken(window.auth_token);
+    if (window.auth_token && mixt.authToken !== window.auth_token) {
+        mixt.setAuthToken(window.auth_token);
     }
-    // Point the SDK at this deployment's own API. Anywhere but a Puter served
+    // Point the SDK at this deployment's own API. Anywhere but a Mixt served
     // off the developer's own machine, that is the only origin we'll use — see
     // resolveAPIOrigin for why, and for the dev flow that is the exception.
     if (window.api_origin) {
@@ -1309,16 +1309,16 @@ window.initgui = async function (options) {
             localStorage.setItem('api_origin', api_origin);
             window.api_origin = api_origin;
         }
-        if (puter.APIOrigin !== api_origin) puter.setAPIOrigin(api_origin);
+        if (mixt.APIOrigin !== api_origin) mixt.setAPIOrigin(api_origin);
     }
 
     // Print the version to the console
-    puter.os
+    mixt.os
         .version()
         .then((res) => {
             const deployed_date = new Date(res.deploy_timestamp);
             console.log(
-                `Your Puter information:\n• Version: ${res.version}\n• Server: ${res.location}\n• Deployed: ${deployed_date}`,
+                `Your Mixt information:\n• Version: ${res.version}\n• Server: ${res.location}\n• Deployed: ${deployed_date}`,
             );
         })
         .catch((error) => {
@@ -1381,23 +1381,23 @@ window.initgui = async function (options) {
 
     //--------------------------------------------------------------------------------------
     // Determine if we are in full-page mode
-    // i.e. https://puter.com/app/<app_name>/?puter.fullpage=true
+    // i.e. https://mixt.mpl/app/<app_name>/?mixt.fullpage=true
     //--------------------------------------------------------------------------------------
     if (
-        window.url_query_params.has('puter.fullpage') &&
-        (window.url_query_params.get('puter.fullpage') === 'false' ||
-            window.url_query_params.get('puter.fullpage') === '0')
+        window.url_query_params.has('mixt.fullpage') &&
+        (window.url_query_params.get('mixt.fullpage') === 'false' ||
+            window.url_query_params.get('mixt.fullpage') === '0')
     ) {
         window.is_fullpage_mode = false;
     } else if (
-        window.url_query_params.has('puter.fullpage') &&
-        (window.url_query_params.get('puter.fullpage') === 'true' ||
-            window.url_query_params.get('puter.fullpage') === '1')
+        window.url_query_params.has('mixt.fullpage') &&
+        (window.url_query_params.get('mixt.fullpage') === 'true' ||
+            window.url_query_params.get('mixt.fullpage') === '1')
     ) {
         // In fullpage mode, we want to hide the taskbar for better UX
         window.taskbar_height = 0;
 
-        // Puter is in fullpage mode.
+        // Mixt is in fullpage mode.
         window.is_fullpage_mode = true;
     } else if (window.is_dashboard_mode) {
         window.is_fullpage_mode = true;
@@ -1426,13 +1426,13 @@ window.initgui = async function (options) {
             } catch (e) {
                 /* ignore */
             }
-            if (typeof puter !== 'undefined')
-                puter.setAuthToken(token, window.api_origin);
+            if (typeof mixt !== 'undefined')
+                mixt.setAuthToken(token, window.api_origin);
             const tokenChanged = token !== window.auth_token;
             if (tokenChanged) {
                 // This will update the list of logged in users and set the current one
                 try {
-                    const whoami = await puter.os.user({
+                    const whoami = await mixt.os.user({
                         query: 'icon_size=64',
                     });
                     if (whoami) await window.update_auth_data(token, whoami);
@@ -1450,7 +1450,7 @@ window.initgui = async function (options) {
 
     //--------------------------------------------------------------------------------------
     // Is attempt_temp_user_creation?
-    // i.e. https://puter.com/?attempt_temp_user_creation=true
+    // i.e. https://mixt.mpl/?attempt_temp_user_creation=true
     //--------------------------------------------------------------------------------------
     if (
         window.url_query_params.has('attempt_temp_user_creation') &&
@@ -1462,7 +1462,7 @@ window.initgui = async function (options) {
 
     //--------------------------------------------------------------------------------------
     // Is GUI embedded in a popup?
-    // i.e. https://puter.com/?embedded_in_popup=true
+    // i.e. https://mixt.mpl/?embedded_in_popup=true
     // (the flag itself is parsed once at module level, alongside the dashboard-mode check)
     //--------------------------------------------------------------------------------------
     if (window.embedded_in_popup) {
@@ -1591,7 +1591,7 @@ window.initgui = async function (options) {
             // Ensure current user is in logged_in_users (e.g. after OIDC redirect we have token but no user in list)
             let currentUserUuid = window.user?.uuid ?? null;
             try {
-                const whoami_popup = await puter.os.user({
+                const whoami_popup = await mixt.os.user({
                     query: 'icon_size=64',
                 });
                 currentUserUuid = whoami_popup?.uuid ?? currentUserUuid;
@@ -1691,7 +1691,7 @@ window.initgui = async function (options) {
         window.url_paths[1]
     ) {
         try {
-            const app_info = await puter.apps.get(window.url_paths[1], {
+            const app_info = await mixt.apps.get(window.url_paths[1], {
                 icon_size: 64,
             });
             if (app_info?.metadata?.fullpage_on_landing) {
@@ -1831,10 +1831,10 @@ window.initgui = async function (options) {
         // The token is resolved against our own API origin — deliberately not
         // one named by the same URL that carried the token, which would leave
         // the identity we're about to render up to whoever wrote the link.
-        puter.setAuthToken(query_param_auth_token);
+        mixt.setAuthToken(query_param_auth_token);
 
         try {
-            whoami = await puter.os.user({ query: 'icon_size=64' });
+            whoami = await mixt.os.user({ query: 'icon_size=64' });
         } catch (e) {
             if (e.status === 401) {
                 window.logout();
@@ -1862,7 +1862,7 @@ window.initgui = async function (options) {
             if (!proceed) {
                 // Back to whatever session was already here; normal boot
                 // picks up below.
-                puter.setAuthToken(previous_auth_token);
+                mixt.setAuthToken(previous_auth_token);
                 whoami = null;
             }
         }
@@ -1942,8 +1942,8 @@ window.initgui = async function (options) {
                     if (changed === false && !window.auth_token) return;
                 } while (!changed);
             }
-            // if user is logging in using an auth token that means it's not their first ever visit to Puter.com
-            // it might be their first visit to Puter on this specific device but it's not their first time ever visiting Puter.
+            // if user is logging in using an auth token that means it's not their first ever visit to Mixt.mpl
+            // it might be their first visit to Mixt on this specific device but it's not their first time ever visiting Mixt.
             window.first_visit_ever = false;
             // show login progress window
             UIWindowLoginInProgress({ user_info: whoami });
@@ -1953,7 +1953,7 @@ window.initgui = async function (options) {
             // in this tab hand off to AuthMe again (see the remote-backend
             // branch below).
             try {
-                sessionStorage.removeItem('puter.authme_redirect_attempted');
+                sessionStorage.removeItem('mixt.authme_redirect_attempted');
             } catch (e) { /* sessionStorage unavailable */ }
         }
         // remove the token from URL, keeping the current path (e.g. `/` or
@@ -2127,7 +2127,7 @@ window.initgui = async function (options) {
         // try to get user data using /whoami, only if that data is missing
         if (!whoami) {
             try {
-                whoami = await puter.os.user({ query: 'icon_size=64' });
+                whoami = await mixt.os.user({ query: 'icon_size=64' });
             } catch (e) {
                 if (e.status === 401) {
                     bad_session_logout();
@@ -2264,7 +2264,7 @@ window.initgui = async function (options) {
         (!window.first_visit_ever || window.disable_temp_users || is_app_landing_page || is_share_link)
     ) {
         // `npm start --server=<remote>` serves this GUI locally while pointing
-        // `gui_origin` at a remote Puter. There is nothing here to log into:
+        // `gui_origin` at a remote Mixt. There is nothing here to log into:
         // `/login` accepts only its own origin, because it answers with a full
         // session token and reflected CORS would otherwise let any page read
         // one. So hand off to the remote's AuthMe flow — the password is typed
@@ -2272,7 +2272,7 @@ window.initgui = async function (options) {
         if (shouldUseRemoteAuthme(window.gui_origin, window.location.origin)) {
             // One attempt per tab. A token that comes back but fails `whoami`
             // would otherwise bounce us straight back out again forever.
-            const ATTEMPTED_KEY = 'puter.authme_redirect_attempted';
+            const ATTEMPTED_KEY = 'mixt.authme_redirect_attempted';
             let attempted = false;
             try {
                 attempted = sessionStorage.getItem(ATTEMPTED_KEY) === '1';
@@ -2459,7 +2459,7 @@ window.initgui = async function (options) {
                                         if (deliversTokenAtBoot(action)) {
                                             window.opener?.postMessage(
                                                 {
-                                                    msg: 'puter.token',
+                                                    msg: 'mixt.token',
                                                     success: true,
                                                     msg_id: msg_id,
                                                     token: data.token,
@@ -2549,7 +2549,7 @@ window.initgui = async function (options) {
                                         if (deliversTokenAtBoot(action)) {
                                             window.opener?.postMessage(
                                                 {
-                                                    msg: 'puter.token',
+                                                    msg: 'mixt.token',
                                                     success: true,
                                                     msg_id: msg_id,
                                                     token: data.token,
@@ -2592,7 +2592,7 @@ window.initgui = async function (options) {
                             <div class="signup-blocked-content">
                                 <img src="${window.icons['logo.svg'] || window.icons['logo-white.svg'] || ''}" style="width:64px;margin-bottom:24px;" />
                                 <p>${html_encode(blockedMsg)}</p>
-                                <p>If you already have an account, try <a href="/action/login">logging in</a>. Otherwise, contact <a href="mailto:support@puter.com">support@puter.com</a> for assistance.</p>
+                                <p>If you already have an account, try <a href="/action/login">logging in</a>. Otherwise, contact <a href="mailto:support@mixt.mpl">support@mixt.mpl</a> for assistance.</p>
                             </div>
                         `;
                         document.body.appendChild(overlay);
@@ -2653,7 +2653,7 @@ window.initgui = async function (options) {
             window.url_paths[1]
         ) {
             try {
-                const app_info = await puter.apps.get(window.url_paths[1], {
+                const app_info = await mixt.apps.get(window.url_paths[1], {
                     icon_size: 64,
                 });
                 if (app_info?.metadata?.fullpage_on_landing) {
@@ -2908,7 +2908,7 @@ window.privacy_aware_path = privacy_aware_path_factory({ window });
 
 $(window).on('system-logout-event', function () {
     // Clear cookie
-    document.cookie = 'puter=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    document.cookie = 'mixt=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
     // Redirect to clean URL without any query parameters
     const cleanUrl = window.location.origin + window.location.pathname;
     window.location.replace(cleanUrl);

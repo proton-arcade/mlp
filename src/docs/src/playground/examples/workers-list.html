@@ -1,22 +1,22 @@
 <html>
 <body>
-    <script src="/puter.js/v2"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
     (async () => {
         // Create a simple dashboard of all workers
-        const workers = await puter.workers.list();
+        const workers = await mixt.workers.list();
 
         if (Object.keys(workers).length === 0) {
-            puter.print('No workers found. Create your first worker!<br>');
+            mixt.print('No workers found. Create your first worker!<br>');
         } else {
-            puter.print(`Found ${Object.keys(workers).length} worker(s):<br>`);
+            mixt.print(`Found ${Object.keys(workers).length} worker(s):<br>`);
             
             Object.entries(workers).forEach(([name, details], index) => {
-                puter.print(`${index + 1}. ${name}<br>`);
-                puter.print(`URL: ${details.url}<br>`);
-                puter.print(`Source: ${details.file_path}<br>`);
-                puter.print(`Deployed: ${new Date(details.created_at)}<br>`);
-                puter.print('<br>');
+                mixt.print(`${index + 1}. ${name}<br>`);
+                mixt.print(`URL: ${details.url}<br>`);
+                mixt.print(`Source: ${details.file_path}<br>`);
+                mixt.print(`Deployed: ${new Date(details.created_at)}<br>`);
+                mixt.print('<br>');
             });
         }
     })();

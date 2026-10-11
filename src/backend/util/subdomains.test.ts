@@ -22,7 +22,7 @@ import { subdomainOffsetForDomain } from './subdomains.ts';
 
 describe('subdomainOffsetForDomain', () => {
     it('keeps express default for a two-label root domain', () => {
-        expect(subdomainOffsetForDomain('puter.com')).toBe(2);
+        expect(subdomainOffsetForDomain('mixt.mpl')).toBe(2);
     });
 
     it('counts the single label of a plain localhost root domain', () => {
@@ -30,8 +30,8 @@ describe('subdomainOffsetForDomain', () => {
     });
 
     it('counts every label of a deeper root domain', () => {
-        expect(subdomainOffsetForDomain('puter.example.com')).toBe(3);
-        expect(subdomainOffsetForDomain('puter.eu.example.co.uk')).toBe(5);
+        expect(subdomainOffsetForDomain('mixt.example.com')).toBe(3);
+        expect(subdomainOffsetForDomain('mixt.eu.example.co.uk')).toBe(5);
     });
 
     it('counts a single-label root domain as one', () => {
@@ -39,9 +39,9 @@ describe('subdomainOffsetForDomain', () => {
     });
 
     it('ignores casing, surrounding space, port and a leading dot', () => {
-        expect(subdomainOffsetForDomain('  Puter.Example.COM  ')).toBe(3);
-        expect(subdomainOffsetForDomain('puter.example.com:4100')).toBe(3);
-        expect(subdomainOffsetForDomain('.puter.example.com')).toBe(3);
+        expect(subdomainOffsetForDomain('  Mixt.Example.COM  ')).toBe(3);
+        expect(subdomainOffsetForDomain('mixt.example.com:4100')).toBe(3);
+        expect(subdomainOffsetForDomain('.mixt.example.com')).toBe(3);
     });
 
     it('falls back to the express default when no domain is configured', () => {

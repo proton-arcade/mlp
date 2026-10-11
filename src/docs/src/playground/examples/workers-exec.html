@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Workers Exec - Puter.js Playground</title>
+    <title>Workers Exec - Mixt.js Playground</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -158,7 +158,7 @@
 <body>
     <div class="container">
         <h1>Workers Exec - Authenticated Requests</h1>
-        <p>Test authenticated requests to worker endpoints using <code>puter.workers.exec()</code>.</p>
+        <p>Test authenticated requests to worker endpoints using <code>mixt.workers.exec()</code>.</p>
 
         <!-- Setup Section -->
         <div class="section">
@@ -166,7 +166,7 @@
             <p>First, create a test worker with the following code:</p>
             <textarea id="workerCode" readonly>// Test worker with authentication
 router.get('/api/hello', async (event) => {
-    const authHeader = event.request.headers.get('puter-auth');
+    const authHeader = event.request.headers.get('mixt-auth');
     return { 
         message: 'Hello from authenticated worker!', 
         authenticated: !!authHeader,
@@ -175,7 +175,7 @@ router.get('/api/hello', async (event) => {
 });
 
 router.get('/api/user-profile', async (event) => {
-    const authHeader = event.request.headers.get('puter-auth');
+    const authHeader = event.request.headers.get('mixt-auth');
     if (!authHeader) {
         return new Response(JSON.stringify({ error: 'Authentication required' }), {
             status: 401,
@@ -190,7 +190,7 @@ router.get('/api/user-profile', async (event) => {
 });
 
 router.post('/api/data', async (event) => {
-    const authHeader = event.request.headers.get('puter-auth');
+    const authHeader = event.request.headers.get('mixt-auth');
     if (!authHeader) {
         return new Response(JSON.stringify({ error: 'Authentication required' }), {
             status: 401,
@@ -206,7 +206,7 @@ router.post('/api/data', async (event) => {
 });
 
 router.put('/api/settings', async (event) => {
-    const authHeader = event.request.headers.get('puter-auth');
+    const authHeader = event.request.headers.get('mixt-auth');
     if (!authHeader) {
         return new Response(JSON.stringify({ error: 'Authentication required' }), {
             status: 401,
@@ -222,7 +222,7 @@ router.put('/api/settings', async (event) => {
 });
 
 router.delete('/api/resource/:id', async (event) => {
-    const authHeader = event.request.headers.get('puter-auth');
+    const authHeader = event.request.headers.get('mixt-auth');
     if (!authHeader) {
         return new Response(JSON.stringify({ error: 'Authentication required' }), {
             status: 401,
@@ -272,7 +272,7 @@ router.options('/*page', ({request}) => {
 
             <div class="form-group">
                 <label>Endpoint:</label>
-                <input type="text" id="endpoint" placeholder="https://your-worker.puter.work/api/hello" value="https://your-worker.puter.work/api/hello">
+                <input type="text" id="endpoint" placeholder="https://your-worker.mixt.work/api/hello" value="https://your-worker.mixt.work/api/hello">
             </div>
 
             <div class="form-group" id="bodyGroup" style="display: none;">
@@ -312,7 +312,7 @@ router.options('/*page', ({request}) => {
         </div>
     </div>
 
-    <script src="/puter.js/v2"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         let currentMethod = 'GET';
         let workerUrl = '';
@@ -345,11 +345,11 @@ router.options('/*page', ({request}) => {
                 
                 showOutput('setupOutput', 'Creating test worker...');
                 
-                const workerFile = await puter.fs.write(`${workerName}.js`, workerCode);
-                const result = await puter.workers.create(workerName, workerFile.path);
+                const workerFile = await mixt.fs.write(`${workerName}.js`, workerCode);
+                const result = await mixt.workers.create(workerName, workerFile.path);
                 workerUrl = result.url;
                 
-                showOutput('setupOutput', `Worker created successfully!\n\nWorker Name: ${workerName}\nWorker URL: ${result.url}\n\nYou can now test authenticated requests using puter.workers.exec()`);
+                showOutput('setupOutput', `Worker created successfully!\n\nWorker Name: ${workerName}\nWorker URL: ${result.url}\n\nYou can now test authenticated requests using mixt.workers.exec()`);
             } catch (error) {
                 showOutput('setupOutput', `Error creating worker: ${error.message}`, true);
             }
@@ -388,7 +388,7 @@ router.options('/*page', ({request}) => {
                 }
                 
                 const startTime = Date.now();
-                const response = await puter.workers.exec(workerUrl + endpoint, options);
+                const response = await mixt.workers.exec(workerUrl + endpoint, options);
                 const endTime = Date.now();
                 
                 let responseData;
@@ -422,7 +422,7 @@ ${JSON.stringify(responseData, null, 2)}`;
 
         async function testHello() {
             try {
-                const response = await puter.workers.exec(workerUrl + '/api/hello');
+                const response = await mixt.workers.exec(workerUrl + '/api/hello');
                 const data = await response.json();
                 showOutput('quickTestsOutput', `Hello Test:\n${JSON.stringify(data, null, 2)}`);
             } catch (error) {
@@ -432,7 +432,7 @@ ${JSON.stringify(responseData, null, 2)}`;
 
         async function testUserProfile() {
             try {
-                const response = await puter.workers.exec(workerUrl + '/api/user-profile');
+                const response = await mixt.workers.exec(workerUrl + '/api/user-profile');
                 const data = await response.json();
                 showOutput('quickTestsOutput', `User Profile Test:\n${JSON.stringify(data, null, 2)}`);
             } catch (error) {
@@ -443,7 +443,7 @@ ${JSON.stringify(responseData, null, 2)}`;
         async function testPostData() {
             try {
                 const testData = { message: 'Hello from exec!', timestamp: Date.now() };
-                const response = await puter.workers.exec(workerUrl + '/api/data', {
+                const response = await mixt.workers.exec(workerUrl + '/api/data', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(testData)
@@ -458,7 +458,7 @@ ${JSON.stringify(responseData, null, 2)}`;
         async function testPutSettings() {
             try {
                 const settings = { theme: 'dark', notifications: true, language: 'en' };
-                const response = await puter.workers.exec(workerUrl + '/api/settings', {
+                const response = await mixt.workers.exec(workerUrl + '/api/settings', {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(settings)
@@ -472,7 +472,7 @@ ${JSON.stringify(responseData, null, 2)}`;
 
         async function testDeleteResource() {
             try {
-                const response = await puter.workers.exec(workerUrl + '/api/resource/123', {
+                const response = await mixt.workers.exec(workerUrl + '/api/resource/123', {
                     method: 'DELETE'
                 });
                 const data = await response.json();
@@ -484,7 +484,7 @@ ${JSON.stringify(responseData, null, 2)}`;
 
         async function testHealth() {
             try {
-                const response = await puter.workers.exec(workerUrl + '/api/health');
+                const response = await mixt.workers.exec(workerUrl + '/api/health');
                 const data = await response.json();
                 showOutput('quickTestsOutput', `Health Test:\n${JSON.stringify(data, null, 2)}`);
             } catch (error) {
@@ -524,7 +524,7 @@ ${JSON.stringify(responseData, null, 2)}`;
                 ];
                 
                 const results = await Promise.allSettled(
-                    operations.map(op => puter.workers.exec(workerUrl + op.endpoint, { method: op.method }))
+                    operations.map(op => mixt.workers.exec(workerUrl + op.endpoint, { method: op.method }))
                 );
                 
                 const successful = results.filter(r => r.status === 'fulfilled');
@@ -553,7 +553,7 @@ ${JSON.stringify(responseData, null, 2)}`;
                 const timeoutId = setTimeout(() => controller.abort(), 3000);
                 
                 const startTime = Date.now();
-                const response = await puter.workers.exec(workerUrl + '/api/health', {
+                const response = await mixt.workers.exec(workerUrl + '/api/health', {
                     signal: controller.signal
                 });
                 const endTime = Date.now();
@@ -573,7 +573,7 @@ ${JSON.stringify(responseData, null, 2)}`;
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('workerName').value = puter.randName();
+            document.getElementById('workerName').value = mixt.randName();
         });
     </script>
 </body>

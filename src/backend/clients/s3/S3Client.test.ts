@@ -26,7 +26,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { IConfig } from '../../types';
 import { S3Client } from './S3Client';
 
-const LOCAL_BUCKET = 'puter-local';
+const LOCAL_BUCKET = 'mixt-local';
 
 /**
  * The multipart helper takes its command sender as a parameter, so the failure
@@ -205,7 +205,7 @@ describe('S3Client — legacy storage migration', () => {
 
     beforeEach(async () => {
         client = await startLocal();
-        dir = mkdtempSync(join(tmpdir(), 'puter-s3-legacy-'));
+        dir = mkdtempSync(join(tmpdir(), 'mixt-s3-legacy-'));
     });
 
     afterEach(async () => {
@@ -258,7 +258,7 @@ describe('S3Client — multipart failure handling', () => {
 
     beforeEach(async () => {
         client = await startLocal();
-        dir = mkdtempSync(join(tmpdir(), 'puter-s3-multipart-'));
+        dir = mkdtempSync(join(tmpdir(), 'mixt-s3-multipart-'));
         filePath = join(dir, 'part-source.bin');
         writeFileSync(filePath, 'Y'.repeat(30));
         client.partSize = 10;
@@ -398,7 +398,7 @@ describe('S3Client — disk-backed local store', () => {
 
     beforeEach(() => {
         cwd = process.cwd();
-        dir = mkdtempSync(join(tmpdir(), 'puter-s3-disk-'));
+        dir = mkdtempSync(join(tmpdir(), 'mixt-s3-disk-'));
     });
 
     afterEach(async () => {
@@ -447,7 +447,7 @@ describe('S3Client — short reads during multipart', () => {
 
     beforeEach(async () => {
         client = await startLocal();
-        dir = mkdtempSync(join(tmpdir(), 'puter-s3-short-'));
+        dir = mkdtempSync(join(tmpdir(), 'mixt-s3-short-'));
     });
 
     afterEach(async () => {

@@ -1,6 +1,6 @@
 <html>
 <body>
-    <script src="/puter.js/v2"></script>
+    <script src="/mixt.js/v2"></script>
     <h3>Settings</h3>
     <ul id="rows"></ul>
     <script>
@@ -15,12 +15,12 @@
 
         (async () => {
             // Same array as request(), but every entry answers a boolean.
-            const held = await puter.perms.check(WANTED);
+            const held = await mixt.perms.check(WANTED);
 
             document.getElementById('rows').innerHTML = held
                 .map((on, i) => `<li>${LABELS[i]}: <b>${on ? 'on' : 'off'}</b></li>`)
                 .join('');
-            puter.print('Nothing was prompted for — check() never asks.');
+            mixt.print('Nothing was prompted for — check() never asks.');
         })();
     </script>
 </body>

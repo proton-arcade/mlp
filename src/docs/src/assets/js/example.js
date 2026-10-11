@@ -50,7 +50,7 @@ $(document).ready(function () {
     $(document).on('click', '.download-code-button', function (e) {
         const $codeWrapper = $(this).closest('.code-wrapper');
         const $codeBlock = $codeWrapper.find('code').first();
-        const $filename = 'puter-example.html';
+        const $filename = 'mixt-example.html';
         const $code = $codeBlock.text();
 
         const blob = new Blob([$code], { type: 'text/plain' });

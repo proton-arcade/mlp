@@ -18,7 +18,7 @@
  */
 
 import { v4 as uuidv4 } from 'uuid';
-import { PuterStore } from '../types';
+import { MixtStore } from '../types';
 import { HttpError } from '../../core/http/HttpError.js';
 import { isUniqueViolation } from '../../util/dbError.js';
 import {
@@ -137,7 +137,7 @@ const APP_BOOLEAN_COLUMNS = new Set([
     'feedback_enabled',
 ]);
 
-export class AppStore extends PuterStore {
+export class AppStore extends MixtStore {
     // -- Reads --------------------------------------------------------
 
     async getByUid(uid) {
@@ -282,7 +282,7 @@ export class AppStore extends PuterStore {
 
     /**
      * Find the oldest app whose `index_url` matches one of `candidates`. Used
-     * by the driver to detect duplicate puter-hosted index_url rows
+     * by the driver to detect duplicate mixt-hosted index_url rows
      * (origin-bootstrap apps + same-owner duplicates) so they can be merged on
      * `create` / `update`. Returns the minimal row shape needed by the merge
      * path; falsy when nothing matches.

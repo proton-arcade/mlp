@@ -9,7 +9,7 @@ import {
 const thumbnail = 'data:image/png;base64,AAAA';
 const bundledThumbnail = 'data:image/webp;base64,BBBB';
 const bundledImageGenerator = vi.fn(async () => bundledThumbnail);
-vi.mock('../../../../puter-js/src/modules/FileSystem/operations/upload/thumbnails.js', () => ({
+vi.mock('../../../../mixt-js/src/modules/FileSystem/operations/upload/thumbnails.js', () => ({
     defaultThumbnailGenerator: (...args) => bundledImageGenerator(...args),
 }));
 const pdf = () => new File(['%PDF-1.7'], 'document.pdf', { type: 'application/pdf' });

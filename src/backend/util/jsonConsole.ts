@@ -50,7 +50,7 @@ export interface JsonConsoleOptions {
 }
 
 // Guard against double-installation across duplicate module instances.
-const INSTALLED_FLAG = '__puterJsonConsoleInstalled';
+const INSTALLED_FLAG = '__mixtJsonConsoleInstalled';
 
 /**
  * Replace the global console severity methods so every call emits exactly one

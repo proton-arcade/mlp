@@ -1,6 +1,6 @@
 ---
 title: Build an API with a Worker
-description: "Learn how to build a backend API for your app with Puter.js serverless workers."
+description: "Learn how to build a backend API for your app with Mixt.js serverless workers."
 tags: [workers, kv, auth]
 order: 38
 ---
@@ -13,12 +13,12 @@ for a server.
 A [serverless worker](/Workers/) gives you that backend with no server to run,
 like Cloudflare Workers or AWS Lambda. It is JavaScript that runs in the cloud
 and answers HTTP requests at its own URL, such as
-`https://notes-api.puter.work`. You write it as a list of routes, each one a
+`https://notes-api.mixt.work`. You write it as a list of routes, each one a
 path and the function that handles it.
 
 When your app calls a worker with
-[`puter.workers.exec()`](/Workers/exec/), the worker knows which user is calling
-and gets that user's Puter account as `user.puter`. A route can then read and
+[`mixt.workers.exec()`](/Workers/exec/), the worker knows which user is calling
+and gets that user's Mixt OS account as `user.mixt`. A route can then read and
 write the user's own [key-value store](/KV/), and files, the same way your
 app does in the browser. The data stays in the user's account, and the usage is
 billed to them under the [User-Pays model](/user-pays-model/), so you get a
@@ -35,7 +35,7 @@ router.get('/me', async ({ user }) => {
         return new Response('sign in required', { status: 401 });
     }
 
-    const { username } = await user.puter.getUser();
+    const { username } = await user.mixt.getUser();
     return { username };
 });
 ```
@@ -44,12 +44,12 @@ There is one method per HTTP verb: `router.get()`, `router.post()`,
 `router.put()`, `router.delete()` and `router.options()`.
 
 `user` is only there when the request came through
-[`puter.workers.exec()`](/Workers/exec/), so every route that uses it starts by
+[`mixt.workers.exec()`](/Workers/exec/), so every route that uses it starts by
 checking for it.
 
 ## Store Data in the User's Account
 
-To save something for the caller, write it with `user.puter.kv`. Read the JSON
+To save something for the caller, write it with `user.mixt.kv`. Read the JSON
 body with `request.json()`:
 
 ```js
@@ -64,14 +64,14 @@ router.post('/notes', async ({ request, user }) => {
     }
 
     const note = { id: crypto.randomUUID(), text, at: Date.now() };
-    await user.puter.kv.set(`notes:${note.id}`, note);
+    await user.mixt.kv.set(`notes:${note.id}`, note);
     return note;
 });
 ```
 
 Each user's notes land in their own store, so one user can never read or
 overwrite another's, whatever the request body says. These are the same keys
-your app sees through [`puter.kv`](/KV/) in the browser, so the app can also
+your app sees through [`mixt.kv`](/KV/) in the browser, so the app can also
 read a note directly.
 
 ## Read the Request
@@ -86,7 +86,7 @@ router.get('/notes/:id', async ({ params, user }) => {
         return new Response('sign in required', { status: 401 });
     }
 
-    const note = await user.puter.kv.get(`notes:${params.id}`);
+    const note = await user.mixt.kv.get(`notes:${params.id}`);
     if (!note) {
         return new Response('note not found', { status: 404 });
     }
@@ -107,7 +107,7 @@ router.get('/notes', async ({ request, user }) => {
     }
 
     const q = new URL(request.url).searchParams.get('q') ?? '';
-    const rows = await user.puter.kv.list('notes:', true);
+    const rows = await user.mixt.kv.list('notes:', true);
 
     return rows
         .map(row => row.value)
@@ -142,8 +142,8 @@ character and does not match anything else.
 ## Routes Without a User
 
 A worker is also an ordinary HTTP endpoint, so it can serve callers that have
-never heard of Puter. A webhook from another service, a `curl` in a script, or a
-page without Puter.js can all call it. These routes never touch `user`.
+never heard of Mixt OS. A webhook from another service, a `curl` in a script, or a
+page without Mixt.js can all call it. These routes never touch `user`.
 
 A route can do its work and answer, with nothing to store:
 
@@ -162,18 +162,18 @@ router.get('/slugify', async ({ request }) => {
 Any HTTP client can call it:
 
 ```sh
-curl "https://notes-api.puter.work/slugify?text=Hello%20World"
+curl "https://notes-api.mixt.work/slugify?text=Hello%20World"
 # hello-world
 ```
 
 To keep what an outside service sends you, store it in your own account with
-`me.puter`, which is available to every request whoever made it:
+`me.mixt`, which is available to every request whoever made it:
 
 ```js
 router.post('/webhooks/payments', async ({ request }) => {
     const event = await request.json();
 
-    await me.puter.kv.set(`payments:${event.id}`, event);
+    await me.mixt.kv.set(`payments:${event.id}`, event);
     return { received: true };
 });
 ```
@@ -196,28 +196,28 @@ behind routes that check for `user`.
 ## Call It From Your App
 
 Once the worker is [deployed](/Workers/#deployment), call it with
-[`puter.workers.exec()`](/Workers/exec/). It takes the same arguments as
+[`mixt.workers.exec()`](/Workers/exec/). It takes the same arguments as
 `fetch()` and adds the signed-in user's session, which is what gives the worker
-`user.puter`:
+`user.mixt`:
 
 ```js
-const API = 'https://notes-api.puter.work';
+const API = 'https://notes-api.mixt.work';
 
-const res = await puter.workers.exec(`${API}/notes`, {
+const res = await mixt.workers.exec(`${API}/notes`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ text: 'Buy milk' }),
 });
 const note = await res.json();    // { id: '5f0c…', text: 'Buy milk', at: 1788827048741 }
 
-const notes = await (await puter.workers.exec(`${API}/notes?q=milk`)).json();
+const notes = await (await mixt.workers.exec(`${API}/notes?q=milk`)).json();
 ```
 
 A plain `fetch()` of the same URL carries no session, so `user` is undefined
 and the notes routes answer `401`. It works for
 [routes without a user](#routes-without-a-user), which is how
-callers without Puter.js reach them.
+callers without Mixt.js reach them.
 
 To keep data that every user reads and writes together, such as a leaderboard,
-store it with `me.puter` instead. See
+store it with `me.mixt` instead. See
 [Store server-side data](/recipes/store-server-side-data/).

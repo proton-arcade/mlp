@@ -1,15 +1,15 @@
 ---
-title: puter.kv.MAX_KEY_SIZE
+title: mixt.kv.MAX_KEY_SIZE
 description: Returns the maximum key size (in bytes) for the key-value store.
 platforms: [websites, apps, nodejs, workers]
 ---
 
-A property of the `puter.kv` object that returns the maximum key size (in bytes) for the key-value store. A key is measured in UTF-8 bytes, so a key with non-ASCII characters fits fewer characters.
+A property of the `mixt.kv` object that returns the maximum key size (in bytes) for the key-value store. A key is measured in UTF-8 bytes, so a key with non-ASCII characters fits fewer characters.
 
 ## Syntax
 
 ```js
-puter.kv.MAX_KEY_SIZE
+mixt.kv.MAX_KEY_SIZE
 ```
 
 ## Examples
@@ -19,9 +19,9 @@ puter.kv.MAX_KEY_SIZE
 ```html
 <html>
   <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
-      puter.print("Max Key Size: " + puter.kv.MAX_KEY_SIZE);
+      mixt.print("Max Key Size: " + mixt.kv.MAX_KEY_SIZE);
     </script>
   </body>
 </html>

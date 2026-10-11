@@ -20,7 +20,7 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { makeActor } from '../../actor.js';
 import { runWithContext } from '../../context.js';
-import { setupPuterTestEnv, type PuterTestEnv } from '../../../testUtil.js';
+import { setupMixtTestEnv, type MixtTestEnv } from '../../../testUtil.js';
 
 /**
  * Which routes the account's own API token reaches. A privileged app runs on
@@ -28,12 +28,12 @@ import { setupPuterTestEnv, type PuterTestEnv } from '../../../testUtil.js';
  * while account and security management keeps refusing it.
  */
 describe('full-access token route admissions', () => {
-    let env: PuterTestEnv;
+    let env: MixtTestEnv;
     let pat = '';
     let scoped = '';
 
     beforeAll(async () => {
-        env = await setupPuterTestEnv();
+        env = await setupMixtTestEnv();
         pat = env.users.user.apiToken;
         const row = await env.server.stores.user.getByUsername(
             env.users.user.username,

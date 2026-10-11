@@ -30,7 +30,7 @@ import { expandTildePath } from '../../services/fs/resolveNode.js';
 import { toClientShare } from './clientShare.js';
 import { runWithConcurrencyLimitSettled } from '../../util/concurrency.js';
 import { normalizeLimit } from '../../util/pagination.js';
-import { PuterController } from '../types.js';
+import { MixtController } from '../types.js';
 import { SHARE_LIMIT, SHARE_LIST_LIMIT } from './limits.js';
 
 /** Distinct (holder, item) pairs run together; see the note on grouping below. */
@@ -78,7 +78,7 @@ interface ShareOutcome {
  * else its user happens to own.
  */
 @Controller('/share')
-export class ShareController extends PuterController {
+export class ShareController extends MixtController {
     /**
      * POST /share — grant `mode` on one or more items to one or more
      * recipients. Partial success is the contract: each pair reports its own

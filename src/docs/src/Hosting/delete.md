@@ -1,5 +1,5 @@
 ---
-title: puter.hosting.delete()
+title: mixt.hosting.delete()
 description: Delete a subdomain from your account.
 platforms: [websites, apps, nodejs, workers]
 ---
@@ -9,7 +9,7 @@ Deletes a subdomain from your account. The subdomain will no longer be served by
 ## Syntax
 
 ```js
-puter.hosting.delete(subdomain)
+mixt.hosting.delete(subdomain)
 ```
 
 ## Parameters
@@ -29,24 +29,24 @@ A `Promise` that will resolve to an object of the form `{ success: true, uid: <s
 ```html;hosting-delete
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
             // (1) Create a random website
-            let subdomain = puter.randName();
-            const site = await puter.hosting.create(subdomain, '.')
-            puter.print(`Website hosted at: ${site.subdomain}.puter.site (This is an empty website with no files)<br>`);
+            let subdomain = mixt.randName();
+            const site = await mixt.hosting.create(subdomain, '.')
+            mixt.print(`Website hosted at: ${site.subdomain}.mixt.site (This is an empty website with no files)<br>`);
 
             // (2) Delete the website using delete()
-            await puter.hosting.delete(site.subdomain);
-            puter.print('Website deleted<br>');
+            await mixt.hosting.delete(site.subdomain);
+            mixt.print('Website deleted<br>');
 
             // (3) Try to retrieve the website (should fail)
-            puter.print('Trying to retrieve website... (should fail)<br>');
+            mixt.print('Trying to retrieve website... (should fail)<br>');
             try {
-                await puter.hosting.get(site.subdomain);
+                await mixt.hosting.get(site.subdomain);
             } catch (e) {
-                puter.print('Website could not be retrieved<br>');
+                mixt.print('Website could not be retrieved<br>');
             }
         })();
     </script>

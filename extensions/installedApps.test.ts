@@ -10,7 +10,7 @@ import {
 } from 'vitest';
 import { runWithContext } from '../src/backend/core/context.ts';
 import { extension } from '../src/backend/extensions.ts';
-import { PuterServer } from '../src/backend/server.ts';
+import { MixtServer } from '../src/backend/server.ts';
 import { setupTestServer } from '../src/backend/testUtil.ts';
 import { handleInstalledApps } from './installedApps.ts';
 
@@ -32,7 +32,7 @@ const makeRes = () => {
     return { res: res as unknown as Response, captured };
 };
 
-let server: PuterServer;
+let server: MixtServer;
 
 beforeAll(async () => {
     server = await setupTestServer();
@@ -152,7 +152,7 @@ describe('installedApps extension — handleInstalledApps', () => {
         // The resize pipeline leaves an http(s) icon column behind, which is
         // what says the sized PNG is on the icons subdomain.
         const app = await seedApp(user.id as number, {
-            icon: 'https://api.puter.com/app-icon/x',
+            icon: 'https://api.mixt.mpl/app-icon/x',
         });
         await grantInstalled(app!.id as number, user.id as number);
 
@@ -165,7 +165,7 @@ describe('installedApps extension — handleInstalledApps', () => {
         const list = captured.body as Array<Record<string, unknown>>;
         const { protocol, static_hosting_domain } = extension.config;
         expect(list[0].iconCdnUrl).toBe(
-            `${protocol}://puter-app-icons.${static_hosting_domain}/${app!.uid}-256.png`,
+            `${protocol}://mixt-app-icons.${static_hosting_domain}/${app!.uid}-256.png`,
         );
     });
 

@@ -1,5 +1,5 @@
 ---
-title: puter.auth.signOut()
+title: mixt.auth.signOut()
 description: Sign out the current user from your application.
 platforms: [websites, apps]
 ---
@@ -9,7 +9,7 @@ Signs the user out of the application.
 ## Syntax
 
 ```js
-puter.auth.signOut()
+mixt.auth.signOut()
 ```
 
 ## Parameters
@@ -25,9 +25,9 @@ None
 ```html;auth-sign-out
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
-        puter.auth.signOut();
+        mixt.auth.signOut();
     </script>
 </body>
 </html>

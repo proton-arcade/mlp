@@ -28,7 +28,7 @@ import {
 import { isAccountContext } from '../../core/actor.js';
 import { HttpError } from '../../core/http/HttpError.js';
 import type { TeamRow } from '../../stores/team/TeamStore.js';
-import { PuterController } from '../types.js';
+import { MixtController } from '../types.js';
 
 /** Mirrors ShareController's dual-window shape. */
 const TEAM_LIMIT = [
@@ -71,7 +71,7 @@ const toClientTeam = (team: TeamRow, isOwner: boolean) => ({
 });
 
 @Controller('/teams')
-export class TeamController extends PuterController {
+export class TeamController extends MixtController {
     // Most routes gate with `requireUserActor`; `listTeams` and `listMembers`
     // use `requireAuth` so an app can read a team whose owner opted into the
     // directory (see `directory_enabled`).

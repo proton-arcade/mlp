@@ -19,7 +19,7 @@
 
 import http from 'node:http';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { setupPuterTestEnv, type PuterTestEnv } from '../../testUtil.js';
+import { setupMixtTestEnv, type MixtTestEnv } from '../../testUtil.js';
 
 /**
  * Contact Us attachments over real HTTP. Multipart bodies must skip the global
@@ -27,10 +27,10 @@ import { setupPuterTestEnv, type PuterTestEnv } from '../../testUtil.js';
  * listening server shows that.
  */
 describe('POST /contactUs over HTTP', () => {
-    let env: PuterTestEnv;
+    let env: MixtTestEnv;
 
     beforeAll(async () => {
-        env = await setupPuterTestEnv();
+        env = await setupMixtTestEnv();
     }, 120_000);
 
     afterAll(async () => {

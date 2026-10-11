@@ -1,23 +1,23 @@
 ---
 title: Add Counters
-description: "Learn how to add counters to your app with Puter.js that stay accurate even when many updates happen at once."
+description: "Learn how to add counters to your app with Mixt.js that stay accurate even when many updates happen at once."
 tags: [kv]
 order: 8
 ---
 
 Many apps count something: how often the user opened the app, how many words
-they wrote, how many hints they have left. `puter.kv` is your database in
-Puter.js, and it has counter methods built in. The database does the addition
+they wrote, how many hints they have left. `mixt.kv` is your database in
+Mixt.js, and it has counter methods built in. The database does the addition
 for you, so a count stays accurate even when two tabs update it at the same
 moment. [Store data](/recipes/store-data/) covers the basic reads and writes.
 
 ## Count Up
 
-To add one, use the [`puter.kv.incr()`](/KV/incr/) method. It returns the new
+To add one, use the [`mixt.kv.incr()`](/KV/incr/) method. It returns the new
 value:
 
 ```js
-const opens = await puter.kv.incr('opens');
+const opens = await mixt.kv.incr('opens');
 ```
 
 A key that doesn't exist yet starts at 0, so the first call returns 1. There is
@@ -26,7 +26,7 @@ nothing to set up first.
 To add more than one, pass the amount:
 
 ```js
-await puter.kv.incr('wordsWritten', 250);
+await mixt.kv.incr('wordsWritten', 250);
 ```
 
 The addition happens inside the database in a single write, so two calls at the
@@ -36,11 +36,11 @@ stored value stays as it was.
 
 ## Count Down
 
-To subtract, use the [`puter.kv.decr()`](/KV/decr/) method. It works the same
+To subtract, use the [`mixt.kv.decr()`](/KV/decr/) method. It works the same
 way and also returns the new value:
 
 ```js
-await puter.kv.decr('unread');
+await mixt.kv.decr('unread');
 ```
 
 A counter keeps going below zero, so a counter at 0 goes to -1. When a count
@@ -48,10 +48,10 @@ must stay at zero or above, check the value it returns and undo the step if it
 went too far:
 
 ```js
-const hintsLeft = await puter.kv.decr('hintsLeft');
+const hintsLeft = await mixt.kv.decr('hintsLeft');
 
 if ( hintsLeft < 0 ) {
-    await puter.kv.incr('hintsLeft');   // there was nothing left to use
+    await mixt.kv.incr('hintsLeft');   // there was nothing left to use
 } else {
     showHint();
 }
@@ -62,12 +62,12 @@ Only one of them sees 0, and the other sees -1 and gives it back.
 
 ## Read a Counter
 
-To show the count, read it with the [`puter.kv.get()`](/KV/get/) method. A key
+To show the count, read it with the [`mixt.kv.get()`](/KV/get/) method. A key
 that was never counted, or whose TTL ran out, comes back as `null`, so default
 it to 0:
 
 ```js
-const opens = await puter.kv.get('opens') ?? 0;
+const opens = await mixt.kv.get('opens') ?? 0;
 ```
 
 ## Count Several Things in One Key
@@ -89,12 +89,12 @@ For example, a writing app can keep all of its usage counts in one object.
 ```
 
 To add to these counts, pass an object with the fields you want to change to
-[`puter.kv.incr()`](/KV/incr/). The value of each field is the amount to add.
+[`mixt.kv.incr()`](/KV/incr/). The value of each field is the amount to add.
 All the fields change in the same write, and the call returns the whole stored
 object:
 
 ```js
-const stats = await puter.kv.incr('stats', { opens: 1, wordsWritten: 250 });
+const stats = await mixt.kv.incr('stats', { opens: 1, wordsWritten: 250 });
 // { opens: 13, wordsWritten: 4750, hintsLeft: 3, features: { export: 2 } }
 ```
 
@@ -102,7 +102,7 @@ To reach a field inside a nested object, such as `features`, write its path
 with dot notation:
 
 ```js
-await puter.kv.incr('stats', { 'features.export': 1 });
+await mixt.kv.incr('stats', { 'features.export': 1 });
 // { opens: 13, wordsWritten: 4750, hintsLeft: 3, features: { export: 3 } }
 ```
 
@@ -118,20 +118,20 @@ starts at 0:
 ```js
 const today = new Date().toISOString().slice(0, 10);   // '2026-09-30', in UTC
 
-await puter.kv.incr(`opens:${ today }`);
+await mixt.kv.incr(`opens:${ today }`);
 ```
 
 To have old days delete themselves, set a TTL with the
-[`puter.kv.expire()`](/KV/expire/) method the first time a day is counted. Only
+[`mixt.kv.expire()`](/KV/expire/) method the first time a day is counted. Only
 one call ever gets 1 back, so the TTL is set once. Later calls to
-[`puter.kv.incr()`](/KV/incr/) keep that TTL as it is:
+[`mixt.kv.incr()`](/KV/incr/) keep that TTL as it is:
 
 ```js
 const key = `opens:${ today }`;
-const count = await puter.kv.incr(key);
+const count = await mixt.kv.incr(key);
 
 if ( count === 1 ) {
-    await puter.kv.expire(key, 60 * 60 * 24 * 90);   // keep 90 days
+    await mixt.kv.expire(key, 60 * 60 * 24 * 90);   // keep 90 days
 }
 ```
 
@@ -140,16 +140,16 @@ dated keys back, such as one month.
 
 ## Keep the Highest Score
 
-[`puter.kv.incr()`](/KV/incr/) can add to a number, but it can't keep track of
+[`mixt.kv.incr()`](/KV/incr/) can add to a number, but it can't keep track of
 the highest one, like a game's best score. The simple way is to read the current
 best, compare, and save:
 
 ```js
 async function saveScore (score) {
-    const best = await puter.kv.get('highScore') ?? 0;
+    const best = await mixt.kv.get('highScore') ?? 0;
 
     if ( score > best ) {
-        await puter.kv.set('highScore', score);
+        await mixt.kv.set('highScore', score);
     }
 }
 ```
@@ -163,13 +163,13 @@ is then the last key:
 const scoreKey = (score) => `score:${ String(score).padStart(10, '0') }`;
 
 async function bestScore () {
-    const { items } = await puter.kv.list({ pattern: 'score:', reverse: true, limit: 1 });
+    const { items } = await mixt.kv.list({ pattern: 'score:', reverse: true, limit: 1 });
     return items.length > 0 ? Number(items[0].slice('score:'.length)) : 0;
 }
 
 async function saveScore (score) {
     if ( score > await bestScore() ) {
-        await puter.kv.set(scoreKey(score), { at: Date.now() });
+        await mixt.kv.set(scoreKey(score), { at: Date.now() });
     }
 }
 ```
@@ -180,11 +180,11 @@ score still comes out on top.
 
 ## Reset a Counter
 
-To start over, delete the key with the [`puter.kv.del()`](/KV/del/) method. The
-next [`puter.kv.incr()`](/KV/incr/) starts from 0 again:
+To start over, delete the key with the [`mixt.kv.del()`](/KV/del/) method. The
+next [`mixt.kv.incr()`](/KV/incr/) starts from 0 again:
 
 ```js
-await puter.kv.del('opens');
+await mixt.kv.del('opens');
 ```
 
 ## Notes
@@ -192,4 +192,4 @@ await puter.kv.del('opens');
 - Each user has their own counters, like the rest of their data. A count that
   every user adds to, such as the total views of a public page, goes [behind a
   worker](/recipes/store-server-side-data/) with
-  [`me.puter.kv.incr()`](/KV/incr/).
+  [`me.mixt.kv.incr()`](/KV/incr/).

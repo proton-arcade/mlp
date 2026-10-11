@@ -1,5 +1,5 @@
 ---
-title: puter.ui.parentApp()
+title: mixt.ui.parentApp()
 description: Obtains a connection to the app that launched this app.
 platforms: [apps]
 ---
@@ -8,11 +8,11 @@ Obtain a connection to the app that launched this app.
 
 ## Syntax
 ```js
-puter.ui.parentApp()
+mixt.ui.parentApp()
 ```
 
 ## Parameters
-`puter.ui.parentApp()` does not accept any parameters.
+`mixt.ui.parentApp()` does not accept any parameters.
 
 ## Return value 
 An [`AppConnection`](/Objects/AppConnection) to the parent, or null if there is no parent app.
@@ -22,9 +22,9 @@ An [`AppConnection`](/Objects/AppConnection) to the parent, or null if there is 
 ```html
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
-        const parent = puter.ui.parentApp();
+        const parent = mixt.ui.parentApp();
         if (!parent) {
             alert('This app was launched directly');
         } else {

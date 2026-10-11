@@ -460,7 +460,7 @@ const UIWindowManageSessions = async function UIWindowManageSessions (options) {
                         {
                             method: 'PATCH',
                             headers: {
-                                Authorization: `Bearer ${puter.authToken}`,
+                                Authorization: `Bearer ${mixt.authToken}`,
                                 'Content-Type': 'application/json',
                             },
                             body: JSON.stringify({
@@ -573,7 +573,7 @@ const UIWindowManageSessions = async function UIWindowManageSessions (options) {
                     const resp = await fetch(`${window.api_origin}/auth/revoke-session`, {
                         method: 'POST',
                         headers: {
-                            Authorization: `Bearer ${puter.authToken}`,
+                            Authorization: `Bearer ${mixt.authToken}`,
                             'Content-Type': 'application/json',
                         },
                         body: JSON.stringify({ uuid: session.uuid, anti_csrf }),
@@ -675,7 +675,7 @@ const UIWindowManageSessions = async function UIWindowManageSessions (options) {
         let resp, sessions;
         try {
             resp = await fetch(`${window.api_origin}/auth/list-sessions`, {
-                headers: { Authorization: `Bearer ${puter.authToken}` },
+                headers: { Authorization: `Bearer ${mixt.authToken}` },
                 method: 'GET',
             });
             sessions = await resp.json();
@@ -735,7 +735,7 @@ const UIWindowManageSessions = async function UIWindowManageSessions (options) {
                 {
                     method: 'POST',
                     headers: {
-                        Authorization: `Bearer ${puter.authToken}`,
+                        Authorization: `Bearer ${mixt.authToken}`,
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
@@ -769,9 +769,9 @@ const UIWindowManageSessions = async function UIWindowManageSessions (options) {
 
     // =====================================================================
     // Events workers section — apps that publish background event handlers.
-    // Hidden entirely on older SDKs that have no `puter.events.workers`.
+    // Hidden entirely on older SDKs that have no `mixt.events.workers`.
     // =====================================================================
-    const workersClient = puter.events?.workers;
+    const workersClient = mixt.events?.workers;
     const hasWorkersApi =
         !!workersClient &&
         typeof workersClient.list === 'function' &&

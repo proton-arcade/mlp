@@ -1,6 +1,6 @@
 ---
 title: Add a Backend to Your Website
-description: "Learn how to add a backend to a website hosted on Puter, so the site can save data and run code on the server without a separate deploy."
+description: "Learn how to add a backend to a website hosted on Mixt OS, so the site can save data and run code on the server without a separate deploy."
 tags: [workers, hosting]
 order: 44
 ---
@@ -10,7 +10,7 @@ features need code that runs on a server instead, such as a visit counter that
 every visitor sees, or a call to an API with a secret key. Usually that means
 running a server next to your site and deploying the two separately.
 
-If your site is [hosted on Puter](/deployments/#deploy-to-puter), the server
+If your site is [hosted on Mixt OS](/deployments/#deploy-to-mixt), the server
 code can be a file inside the site's folder. This file is called a
 [dynamic worker](/Workers/dynamic/). It goes online when you publish the site,
 and it answers on the site's own address.
@@ -34,13 +34,13 @@ visits:
 ```js
 // __workers/api.worker.js
 router.post('/visits', async () => {
-    const visits = await me.puter.kv.incr('visits');
+    const visits = await me.mixt.kv.incr('visits');
     return { visits };
 });
 ```
 
-The worker runs as you, the owner of the site. Inside it, `me.puter` is
-Puter.js signed in to your account, so the count is saved in your
+The worker runs as you, the owner of the site. Inside it, `me.mixt` is
+Mixt.js signed in to your account, so the count is saved in your
 [key-value store](/KV/) and every visitor adds to the same number. The
 [`incr()`](/KV/incr/) method adds 1 and returns the new value.
 
@@ -73,9 +73,9 @@ The path is the same on every site, so this code does not change if you
 publish the site under another name.
 
 To know which visitor is calling, call the worker with
-[`puter.workers.exec()`](/Workers/exec/) instead of `fetch()`. See
+[`mixt.workers.exec()`](/Workers/exec/) instead of `fetch()`. See
 [Build an API with a worker](/recipes/build-an-api/) for how a route uses the
-visitor's Puter account.
+visitor's Mixt OS account.
 
 ## Update the Code
 

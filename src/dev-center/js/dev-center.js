@@ -22,16 +22,16 @@ import init_workers from './workers.js';
 import init_websites from './websites.js';
 
 window.url_params = new URLSearchParams(window.location.search);
-window.domain = 'puter.com';
+window.domain = 'mixt.mpl';
 window.auth_username = null;
-window.dev_center_uid = puter.appID;
+window.dev_center_uid = mixt.appID;
 window.developer;
 window.activeTab = 'apps';
 window.user = null;
 
 // auth_username
 (async () => {
-    window.user = await puter.auth.getUser();
+    window.user = await mixt.auth.getUser();
 
     if ( user?.username ) {
         window.auth_username = user.username;
@@ -39,34 +39,34 @@ window.user = null;
 })();
 
 // domain and APIOrigin
-if ( window.url_params.has('puter.domain') ) {
-    window.domain = window.url_params.get('puter.domain');
+if ( window.url_params.has('mixt.domain') ) {
+    window.domain = window.url_params.get('mixt.domain');
 }
 
 // static hosting domain
-window.static_hosting_domain = 'puter.site';
+window.static_hosting_domain = 'mixt.site';
    if ( window.domain === 'localhost' ) {
        window.static_hosting_domain = 'site.localhost';
-   } else if ( window.domain && window.domain !== 'puter.com' ) {
+   } else if ( window.domain && window.domain !== 'mixt.mpl' ) {
        window.static_hosting_domain = `site.${window.domain}`;
    }
 
 // add port to static_hosting_domain if provided
-if ( window.url_params.has('puter.port') && window.url_params.get('puter.port') ) {
-    window.static_hosting_domain = `${window.static_hosting_domain }:${ html_encode(window.url_params.get('puter.port'))}`;
+if ( window.url_params.has('mixt.port') && window.url_params.get('mixt.port') ) {
+    window.static_hosting_domain = `${window.static_hosting_domain }:${ html_encode(window.url_params.get('mixt.port'))}`;
 }
 
 // protocol
 window.protocol = 'https';
-if ( window.url_params.has('puter.protocol') && window.url_params.get('puter.protocol') === 'http' )
+if ( window.url_params.has('mixt.protocol') && window.url_params.get('mixt.protocol') === 'http' )
 {
     window.protocol = 'http';
 }
 
 // port
 window.port = '';
-if ( window.url_params.has('puter.port') && window.url_params.get('puter.port') ) {
-    window.port = html_encode(window.url_params.get('puter.port'));
+if ( window.url_params.has('mixt.port') && window.url_params.get('mixt.port') ) {
+    window.port = html_encode(window.url_params.get('mixt.port'));
 }
 
 // source_path
@@ -83,20 +83,20 @@ $(document).ready(async function () {
     // initialize assets directory
     await initializeAssetsDirectory();
 
-    puter.ui.showSpinner();
+    mixt.ui.showSpinner();
 
     init_apps();
     init_websites();
     init_workers();
 
-    puter.ui.hideSpinner();
+    mixt.ui.hideSpinner();
 });
 
 // ---------------------------------------------------------------
 // Tab Buttons
 // ---------------------------------------------------------------
 $(document).on('click', '.tab-btn', async function (e) {
-    puter.ui.showSpinner();
+    mixt.ui.showSpinner();
     $('section:not(.sidebar)').hide();
     $('.tab-btn').removeClass('active');
     $(this).addClass('active');
@@ -134,14 +134,14 @@ $(document).on('click', '.tab-btn', async function (e) {
     // ---------------------------------------------------------------
     else if ( $(this).attr('data-tab') === 'payout-method' ) {
         activeTab = 'payout-method';
-        puter.ui.showSpinner();
+        mixt.ui.showSpinner();
         setTimeout(function () {
-            puter.apps.getDeveloperProfile(function (dev_profile) {
+            mixt.apps.getDeveloperProfile(function (dev_profile) {
                 // show payout method tab if dev has joined incentive program
                 if ( dev_profile.joined_incentive_program ) {
                     $('#payout-method-email').html(dev_profile.paypal);
                 }
-                puter.ui.hideSpinner();
+                mixt.ui.hideSpinner();
                 if ( activeTab === 'payout-method' )
                 {
                     $('#tab-payout-method').show();
@@ -191,7 +191,7 @@ $('.jip-submit-btn').on('click', async function (e) {
     $('.jip-submit-btn').prop('disabled', true);
 
     $.ajax({
-        url: `${puter.APIOrigin }/jip`,
+        url: `${mixt.APIOrigin }/jip`,
         type: 'POST',
         async: true,
         contentType: 'application/json',
@@ -201,7 +201,7 @@ $('.jip-submit-btn').on('click', async function (e) {
             paypal: paypal,
         }),
         headers: {
-            'Authorization': `Bearer ${ puter.authToken}`,
+            'Authorization': `Bearer ${ mixt.authToken}`,
         },
         success: function () {
             $('#jip-success').show();
@@ -228,13 +228,13 @@ $('.jip-submit-btn').on('click', async function (e) {
 
 $('#earn-money-c2a-close').click(async function (e) {
     $('#earn-money').get(0).close();
-    puter.kv.set('earn-money-c2a-closed', 'true');
+    mixt.kv.set('earn-money-c2a-closed', 'true');
 });
 
 $('#earn-money::backdrop').click(async function (e) {
     alert();
     $('#earn-money').get(0).close();
-    puter.kv.set('earn-money-c2a-closed', 'true');
+    mixt.kv.set('earn-money-c2a-closed', 'true');
 });
 
 // https://stackoverflow.com/a/43467144/1764493
@@ -364,11 +364,11 @@ $('body').on('drop', async function (event) {
     event.preventDefault();
     event.stopPropagation();
 
-    // retrieve puter items from the event
+    // retrieve mixt items from the event
     if ( event.detail?.items?.length > 0 ) {
         window.dropped_items = event.detail.items;
         window.source_path = window.dropped_items[0].path;
-        // by deploying an existing Puter folder. So we create the app and deploy it.
+        // by deploying an existing Mixt folder. So we create the app and deploy it.
         if ( window.source_path ) {
             // todo if there are no apps, go straight to creating a new app
             $('.insta-deploy-modal').get(0).showModal();
@@ -386,7 +386,7 @@ $('body').on('drop', async function (event) {
     }
 
     // Get dropped items
-    window.dropped_items = await puter.ui.getEntriesFromDataTransferItems(e.dataTransfer.items);
+    window.dropped_items = await mixt.ui.getEntriesFromDataTransferItems(e.dataTransfer.items);
 
     // Generate a flat array of full paths from the dropped items
     let paths = [];
@@ -401,7 +401,7 @@ $('body').on('drop', async function (event) {
 
     // Alert if no index.html in root
     if ( ! hasRootIndexHtml(tree) ) {
-        puter.ui.alert(index_missing_error, [
+        mixt.ui.alert(index_missing_error, [
             {
                 label: 'Ok',
             },

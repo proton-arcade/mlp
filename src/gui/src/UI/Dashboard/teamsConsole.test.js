@@ -74,7 +74,7 @@ describe('annotateMembers', () => {
     });
 
     it('never reports an account the team does not own as suspended', () => {
-        // A joined account can be suspended by Puter, which is not the
+        // A joined account can be suspended by Mixt, which is not the
         // team's to show or to lift.
         const annotated = annotateMembers(
             [member('carol', false)],

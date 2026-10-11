@@ -1,14 +1,14 @@
 <html>
 <body>
-    <script src="/puter.js/v2"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // Get a worker's information
-            const workerInfo = await puter.workers.get('my-api');
+            const workerInfo = await mixt.workers.get('my-api');
             if (workerInfo) {
-                puter.print(`Worker information: ${JSON.stringify(workerInfo, null, 2)}`);
+                mixt.print(`Worker information: ${JSON.stringify(workerInfo, null, 2)}`);
             } else {
-                puter.print('Worker not found!');
+                mixt.print('Worker not found!');
             }
         })();
     </script>

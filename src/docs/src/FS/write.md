@@ -1,18 +1,18 @@
 ---
-title: puter.fs.write()
-description: Write data to files in the user's own Puter file system.
+title: mixt.fs.write()
+description: Write data to files in the user's own Mixt OS file system.
 platforms: [websites, apps, nodejs, workers]
 ---
 
-Writes data to a specified file path. This method is useful for creating new files or modifying existing ones in the Puter cloud storage.
+Writes data to a specified file path. This method is useful for creating new files or modifying existing ones in the Mixt OS cloud storage.
 
 ## Syntax
 
 ```js
-puter.fs.write(path)
-puter.fs.write(path, data)
-puter.fs.write(path, data, options)
-puter.fs.write(file)
+mixt.fs.write(path)
+mixt.fs.write(path, data)
+mixt.fs.write(path, data, options)
+mixt.fs.write(file)
 ```
 
 ## Parameters
@@ -49,11 +49,11 @@ Returns a `Promise` that resolves to the [`FSItem`](/Objects/fsitem) object of t
 ```html;fs-write
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         // Create a new file called "hello.txt" containing "Hello, world!"
-        puter.fs.write('hello.txt', 'Hello, world!').then(() => {
-            puter.print('File written successfully');
+        mixt.fs.write('hello.txt', 'Hello, world!').then(() => {
+            mixt.print('File written successfully');
         })
     </script>
 </body>
@@ -65,15 +65,15 @@ Returns a `Promise` that resolves to the [`FSItem`](/Objects/fsitem) object of t
 ```html;fs-write-from-input
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <input type="file" id="file-input">
     <script>
         // Example: Writing a file with input coming from a file input
         document.getElementById('file-input').addEventListener('change', (event) => {
-            puter.fs.write('hello.txt', event.target.files[0]).then(() => {
-                puter.print('File written successfully');
+            mixt.fs.write('hello.txt', event.target.files[0]).then(() => {
+                mixt.print('File written successfully');
             }).catch((error) => {
-                puter.print('Error writing file:', error);
+                mixt.print('Error writing file:', error);
             });
         });
     </script>
@@ -86,15 +86,15 @@ Returns a `Promise` that resolves to the [`FSItem`](/Objects/fsitem) object of t
 ```html;fs-write-dedupe
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
             // create a file named 'hello.txt'
-            let file_1 = await puter.fs.write('hello.txt', 'Hello, world!');
-            puter.print(`File 1: ${file_1.name}<br>`);
+            let file_1 = await mixt.fs.write('hello.txt', 'Hello, world!');
+            mixt.print(`File 1: ${file_1.name}<br>`);
             // create a file named 'hello.txt' again, it should be automatically renamed to 'hello (n).txt' where n is the next available number
-            let file_2 = await puter.fs.write('hello.txt', 'Hello, world!', { dedupeName: true });
-            puter.print(`File 2: ${file_2.name}<br>`);
+            let file_2 = await mixt.fs.write('hello.txt', 'Hello, world!', { dedupeName: true });
+            mixt.print(`File 2: ${file_2.name}<br>`);
         })();
     </script>
 </body>
@@ -106,12 +106,12 @@ Returns a `Promise` that resolves to the [`FSItem`](/Objects/fsitem) object of t
 ```html;fs-write-create-missing-parents
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
             // create a file named 'hello.txt' in a directory that does not exist
-            let file = await puter.fs.write('my-directory/another-directory/hello.txt', 'Hello, world!', { createMissingParents: true });
-            puter.print(`File created at: ${file.path}<br>`);
+            let file = await mixt.fs.write('my-directory/another-directory/hello.txt', 'Hello, world!', { createMissingParents: true });
+            mixt.print(`File created at: ${file.path}<br>`);
         })();
     </script>
 </body>

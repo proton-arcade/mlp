@@ -125,7 +125,7 @@ export default function UIItemPropertiesModal ({ name, path: item_path, uid, $co
     // address the entry by uid when we have one and fall back to the path.
     let item_uid = uid;
 
-    puter.fs.stat({
+    mixt.fs.stat({
         ...(uid ? { uid } : { path: item_path }),
         returnSubdomains: true,
         returnPermissions: true,
@@ -217,7 +217,7 @@ export default function UIItemPropertiesModal ({ name, path: item_path, uid, $co
             // Disassociate handler
             $overlay.on('click', '.item-props-disassociate', function () {
                 const $link = $(this);
-                puter.hosting.update($link.attr('data-subdomain'), null).then(() => {
+                mixt.hosting.update($link.attr('data-subdomain'), null).then(() => {
                     $overlay.find(`.item-props-website-entry[data-uuid="${$link.attr('data-uuid')}"]`).remove();
                     // Remove the website badge from every row for this item.
                     $(`.item[data-uid="${item_uid}"]`).find('.item-has-website-badge').fadeOut(200);

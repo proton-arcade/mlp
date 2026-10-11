@@ -82,7 +82,7 @@ $('#sidebar').on('scroll', hideSidebarTooltip);
 function fetchGitHubData () {
     // GitHub API fetching and handling
 
-    const url = 'https://api.github.com/repos/HeyPuter/puter';
+    const url = 'https://api.github.com/repos/proton-arcade/mlp';
 
     function formatNumber (num) {
         if ( num < 1000 ) {
@@ -99,7 +99,7 @@ function fetchGitHubData () {
     }).fail(function (jqxhr, textStatus, error) {
         let err = `${textStatus }, ${ error}`;
         console.error(`Request Failed: ${ err}`);
-        $('.github-stars').text('Heyputer/Puter');
+        $('.github-stars').text('Heyputer/Mixt');
     });
 }
 

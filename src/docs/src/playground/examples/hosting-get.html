@@ -1,19 +1,19 @@
 <html>
 <body>
-    <script src="/puter.js/v2"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // (1) Create a random website
-            let subdomain = puter.randName();
-            const site = await puter.hosting.create(subdomain, '.')
-            document.write(`Website hosted at: ${site.subdomain}.puter.site (This is an empty website with no files)<br>`);
+            let subdomain = mixt.randName();
+            const site = await mixt.hosting.create(subdomain, '.')
+            document.write(`Website hosted at: ${site.subdomain}.mixt.site (This is an empty website with no files)<br>`);
 
             // (2) Retrieve the website using get()
-            const site2 = await puter.hosting.get(site.subdomain);
-            document.write(`Website retrieved: subdomain=${site2.subdomain}.puter.site UID=${site2.uid}<br>`);
+            const site2 = await mixt.hosting.get(site.subdomain);
+            document.write(`Website retrieved: subdomain=${site2.subdomain}.mixt.site UID=${site2.uid}<br>`);
 
             // (3) Delete the website (cleanup)
-            await puter.hosting.delete(subdomain);
+            await mixt.hosting.delete(subdomain);
         })();
     </script>
 </body>

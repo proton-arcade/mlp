@@ -4,15 +4,15 @@ description: Deploy shared server-side code from inside a hosted website by drop
 platforms: [workers]
 ---
 
-If you already [deploy your site to Puter](/deployments/#deploy-to-puter), dynamic workers let you add backend endpoints to it without managing workers separately.
+If you already [deploy your site to Mixt OS](/deployments/#deploy-to-mixt), dynamic workers let you add backend endpoints to it without managing workers separately.
 
-A dynamic worker is server-side code that lives inside your hosted site and deploys itself on demand. Drop a file at `__workers/api.worker.js` next to your `index.html`, publish the site as you normally would, and `https://your-site.puter.site/__workers/api/...` starts serving it. There is no deploy step of its own, no worker name to register, and nothing to keep in sync between the site and its backend.
+A dynamic worker is server-side code that lives inside your hosted site and deploys itself on demand. Drop a file at `__workers/api.worker.js` next to your `index.html`, publish the site as you normally would, and `https://your-site.mixt.site/__workers/api/...` starts serving it. There is no deploy step of its own, no worker name to register, and nothing to keep in sync between the site and its backend.
 
-<div class="info">Dynamic workers are routed on <code>*.puter.site</code> only, and they don't appear in <code>puter.workers.list()</code> or the Developer Center. Read <a href="#limitations">Limitations</a> before you build on them.</div>
+<div class="info">Dynamic workers are routed on <code>*.mixt.site</code> only, and they don't appear in <code>mixt.workers.list()</code> or the Developer Center. Read <a href="#limitations">Limitations</a> before you build on them.</div>
 
 ## Comparison
 
-A regular [Serverless Worker](/Workers/) is a separate thing from the site that uses it: you deploy the worker, it gets its own `*.puter.work` subdomain, and from then on you keep the site and the worker in sync by hand — matching versions, updating URLs, remembering which worker belongs to which site.
+A regular [Serverless Worker](/Workers/) is a separate thing from the site that uses it: you deploy the worker, it gets its own `*.mixt.work` subdomain, and from then on you keep the site and the worker in sync by hand — matching versions, updating URLs, remembering which worker belongs to which site.
 
 With a dynamic worker, the code is just a file in the site, so:
 
@@ -20,7 +20,7 @@ With a dynamic worker, the code is just a file in the site, so:
 - the URL is derived from where the file lives, so there is nothing to wire up;
 - there is no worker record to create, rename, or clean up.
 
-The tradeoff is that there are fewer tools for working with them: they don't show up in [`puter.workers.list()`](/Workers/list/) or the Developer Center. See [Limitations](#limitations).
+The tradeoff is that there are fewer tools for working with them: they don't show up in [`mixt.workers.list()`](/Workers/list/) or the Developer Center. See [Limitations](#limitations).
 
 ## File Layout
 
@@ -54,17 +54,17 @@ router.get("/health", async () => {
 
 router.post("/scores/:game", async ({ request, params }) => {
   const body = await request.json();
-  await me.puter.kv.set(`score:${params.game}:${body.player}`, body.score);
+  await me.mixt.kv.set(`score:${params.game}:${body.player}`, body.score);
   return { saved: true };
 });
 ```
 
-Everything in the [`router`](/Workers/router/) documentation applies unchanged: [route parameters](/Workers/router/#route-parameters), [wildcards](/Workers/router/#wildcard-routes), [`me.puter` and `user.puter`](/Workers/router/#integration-with-puter-js), [CORS](/Workers/router/#cors), and returning objects vs. a `Response`.
+Everything in the [`router`](/Workers/router/) documentation applies unchanged: [route parameters](/Workers/router/#route-parameters), [wildcards](/Workers/router/#wildcard-routes), [`me.mixt` and `user.mixt`](/Workers/router/#integration-with-mixt-js), [CORS](/Workers/router/#cors), and returning objects vs. a `Response`.
 
 ## URLs and Path Mapping
 
 ```
-https://<site>.puter.site/__workers/<worker>/<path>
+https://<site>.mixt.site/__workers/<worker>/<path>
 ```
 
 The `/__workers/<worker>` prefix is stripped before the request reaches your code; the worker sees the remainder:
@@ -92,8 +92,8 @@ Details worth knowing:
 
 ## Limitations
 
-**`puter.site` only.** Dynamic workers are routed on the primary hosting domain. The alternate hosting domain and `puter.app` (private apps) are not routed yet, and custom domains aren't supported.
+**`mixt.site` only.** Dynamic workers are routed on the primary hosting domain. The alternate hosting domain and `mixt.app` (private apps) are not routed yet, and custom domains aren't supported.
 
-**Not listed by the Workers API.** [`puter.workers.list()`](/Workers/list/) and the Developer Center's Workers view do not show dynamic workers. They have no worker record by design: that's what saves you from keeping one in sync, and it's also why there's nothing to list.
+**Not listed by the Workers API.** [`mixt.workers.list()`](/Workers/list/) and the Developer Center's Workers view do not show dynamic workers. They have no worker record by design: that's what saves you from keeping one in sync, and it's also why there's nothing to list.
 
 **One sandbox per site.** All of a site's workers share the same KV and AppData namespace, so they can read and write each other's data. That's intentional — it's how two workers in one site cooperate — but it means you can't keep one worker's data private from another in the same site.

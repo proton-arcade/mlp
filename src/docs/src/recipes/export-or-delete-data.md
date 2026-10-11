@@ -1,19 +1,19 @@
 ---
 title: Export or Delete Data
-description: "Learn how to let users export, import and delete their data in the Puter.js key-value database."
+description: "Learn how to let users export, import and delete their data in the Mixt.js key-value database."
 tags: [kv, data-modeling]
 order: 33
 ---
 
 Users often want to download their data or delete it, with something like a
-"Download my data" or "Clear history" button. With [`puter.kv`](/KV/), both
+"Download my data" or "Clear history" button. With [`mixt.kv`](/KV/), both
 work the same way: list the keys with a prefix, then do something with each one.
 
 This recipe uses a journal app. Each entry's key starts with its date, so the
 keys sort from oldest to newest:
 
 ```js
-await puter.kv.set(`entry:${ new Date().toISOString() }:${ crypto.randomUUID() }`, {
+await mixt.kv.set(`entry:${ new Date().toISOString() }:${ crypto.randomUUID() }`, {
     title: 'First day',
     text: 'Started a journal.',
 });
@@ -29,7 +29,7 @@ the value:
 async function exportEntries () {
     const entries = [];
 
-    for await ( const page of puter.kv.list({ pattern: 'entry:', returnValues: true, stream: true }) ) {
+    for await ( const page of mixt.kv.list({ pattern: 'entry:', returnValues: true, stream: true }) ) {
         entries.push(...page.items);   // each item is { key, value }
     }
     return JSON.stringify(entries, null, 2);
@@ -50,11 +50,11 @@ link.click();
 URL.revokeObjectURL(url);
 ```
 
-Or let them pick where to save it in their Puter files with
-[`puter.ui.showSaveFilePicker()`](/UI/showSaveFilePicker/):
+Or let them pick where to save it in their Mixt OS files with
+[`mixt.ui.showSaveFilePicker()`](/UI/showSaveFilePicker/):
 
 ```js
-await puter.ui.showSaveFilePicker(json, 'journal.json');
+await mixt.ui.showSaveFilePicker(json, 'journal.json');
 ```
 
 To export everything your app has stored, not just entries, leave out the
@@ -63,7 +63,7 @@ To export everything your app has stored, not just entries, leave out the
 ## Import from a File
 
 An exported file is a list of `{ key, value }` items, which is exactly what
-[`puter.kv.set()`](/KV/set/) takes for a batch write. Write it back in groups of
+[`mixt.kv.set()`](/KV/set/) takes for a batch write. Write it back in groups of
 100 so a big file doesn't turn into one huge request:
 
 ```js
@@ -72,7 +72,7 @@ async function importEntries (file) {
         .filter(({ key }) => typeof key === 'string' && key.startsWith('entry:'));
 
     for ( let i = 0; i < items.length; i += 100 ) {
-        await puter.kv.set(items.slice(i, i + 100));
+        await mixt.kv.set(items.slice(i, i + 100));
     }
 }
 
@@ -89,9 +89,9 @@ There's no call to delete every key with a prefix, so list the keys and delete
 them one by one:
 
 ```js
-for await ( const page of puter.kv.list({ pattern: 'entry:', stream: true }) ) {
+for await ( const page of mixt.kv.list({ pattern: 'entry:', stream: true }) ) {
     for ( const key of page.items ) {
-        await puter.kv.del(key);
+        await mixt.kv.del(key);
     }
 }
 ```
@@ -112,12 +112,12 @@ const ninetyDaysAgo = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000);
 const cutoff = `entry:${ ninetyDaysAgo.toISOString() }`;
 
 deleting:
-for await ( const page of puter.kv.list({ pattern: 'entry:', stream: true }) ) {
+for await ( const page of mixt.kv.list({ pattern: 'entry:', stream: true }) ) {
     for ( const key of page.items ) {
         if ( key >= cutoff ) {
             break deleting;
         }
-        await puter.kv.del(key);
+        await mixt.kv.del(key);
     }
 }
 ```
@@ -132,11 +132,11 @@ Data](/recipes/store-temporary-data/).
 ## Delete Everything Your App Stored
 
 To delete all of your app's data for this user, like for a "Reset app" button,
-use the [`puter.kv.flush()`](/KV/flush/) method:
+use the [`mixt.kv.flush()`](/KV/flush/) method:
 
 ```js
 if ( confirm('Delete all your journal data? This cannot be undone.') ) {
-    await puter.kv.flush();
+    await mixt.kv.flush();
 }
 ```
 

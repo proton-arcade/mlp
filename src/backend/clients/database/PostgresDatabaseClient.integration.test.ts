@@ -21,7 +21,7 @@ import { Pool } from 'pg';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { v4 as uuidv4 } from 'uuid';
 import type { IConfig } from '../../types';
-import type { PuterServer } from '../../server';
+import type { MixtServer } from '../../server';
 import { generateDefaultFsentries } from '../../util/userProvisioning.js';
 import {
     createPgMockPostgresDatabaseClient,
@@ -30,9 +30,9 @@ import {
 } from '../../testUtil.js';
 import { PostgresDatabaseClient } from './PostgresDatabaseClient.js';
 
-const postgresUrl = process.env.PUTER_TEST_POSTGRES_URL;
+const postgresUrl = process.env.MIXT_TEST_POSTGRES_URL;
 const postgresMigrationsPath = POSTGRES_TEST_MIGRATIONS_PATH;
-const postgresTestSchemaPattern = /^puter_test_[a-f0-9]{32}$/u;
+const postgresTestSchemaPattern = /^mixt_test_[a-f0-9]{32}$/u;
 const postgresIntegrationTimeoutMs = 180_000;
 
 let postgresTestSchema: string | undefined;
@@ -88,7 +88,7 @@ const postgresConnectionStringForSchema = (
 const createPostgresTestSchema = async (): Promise<void> => {
     if (!postgresUrl) return;
 
-    const schema = `puter_test_${uuidv4().replaceAll('-', '')}`;
+    const schema = `mixt_test_${uuidv4().replaceAll('-', '')}`;
     const pool = new Pool({ connectionString: postgresUrl });
     try {
         await pool.query(`CREATE SCHEMA ${quoteTestSchemaIdentifier(schema)}`);
@@ -120,7 +120,7 @@ const dropPostgresTestSchema = async (): Promise<void> => {
 };
 
 describe('PostgresDatabaseClient integration', () => {
-    let server: PuterServer | undefined;
+    let server: MixtServer | undefined;
 
     beforeEach(async () => {
         await createPostgresTestSchema();
@@ -172,7 +172,7 @@ describe('PostgresDatabaseClient integration', () => {
                     expect(devCenter).toMatchObject({
                         name: 'dev-center',
                         index_url:
-                            'https://builtins.namespaces.puter.com/dev-center',
+                            'https://builtins.namespaces.mixt.mpl/dev-center',
                     });
                 } finally {
                     await secondClient.onServerShutdown();

@@ -1333,7 +1333,7 @@ async function UIItem (options) {
                 menu_items.push({
                     html: i18n('set_as_background'),
                     onClick: async function () {
-                        const read_url = await puter.fs.sign(undefined, { uid: $(el_item).attr('data-uid'), action: 'read' });
+                        const read_url = await mixt.fs.sign(undefined, { uid: $(el_item).attr('data-uid'), action: 'read' });
                         window.set_desktop_background({
                             url: read_url.items.read_url,
                             fit: window.desktop_bg_fit,
@@ -1521,7 +1521,7 @@ async function UIItem (options) {
                     html: i18n('share_remove_from_shared'),
                     onClick: async function () {
                         try {
-                            await puter.fs.unshare(
+                            await mixt.fs.unshare(
                                 $(el_item).attr('data-path'),
                                 window.user.username,
                             );
@@ -1711,7 +1711,7 @@ $(document).on('contextmenu', '.item-has-website-url-badge', async function (e) 
 });
 
 $(document).on('click', '.item-has-website-badge', async function (e) {
-    puter.fs.stat({
+    mixt.fs.stat({
         uid: $(this).closest('.item').attr('data-uid'),
         returnSubdomains: true,
         returnPermissions: false,
@@ -1727,7 +1727,7 @@ $(document).on('click', '.item-has-website-badge', async function (e) {
 });
 
 $(document).on('long-hover', '.item-has-website-badge', function (e) {
-    puter.fs.stat({
+    mixt.fs.stat({
         uid: $(this).closest('.item').attr('data-uid'),
         returnSubdomains: true,
         returnPermissions: false,

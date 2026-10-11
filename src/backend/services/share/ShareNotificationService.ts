@@ -20,7 +20,7 @@
 import { createHash, randomUUID } from 'node:crypto';
 import type { Actor } from '../../core/actor';
 import { checkRateLimit } from '../../core/http/middleware/rateLimit.js';
-import { PuterService } from '../types';
+import { MixtService } from '../types';
 import {
     digestItemPaths,
     digestLines,
@@ -166,7 +166,7 @@ interface DigestEntryRecord {
  * notification says is always kept current; whether it may interrupt them
  * (push, email) is budgeted.
  */
-export class ShareNotificationService extends PuterService {
+export class ShareNotificationService extends MixtService {
     /**
      * The flush timers this node owns, keyed per recipient. Timers only — the
      * queued sends live in KV, where any node's flush can pick them up.
@@ -976,7 +976,7 @@ export class ShareNotificationService extends PuterService {
                             recipient: first.recipient,
                             subject_line: digestSubject(entries),
                             shares: digestLines(entries),
-                            // "Open Puter" lands on Shared with everything
+                            // "Open Mixt" lands on Shared with everything
                             // in this mail picked out, not just one item.
                             link: sharedViewLink(
                                 this.#appLink(),
@@ -998,7 +998,7 @@ export class ShareNotificationService extends PuterService {
                         {
                             email: first.to,
                             subject_line: digestSubject(entries, {
-                                suffix: 'on Puter',
+                                suffix: 'on Mixt',
                             }),
                             shares: digestLines(entries),
                             link: this.#appLink(),
@@ -1038,7 +1038,7 @@ export class ShareNotificationService extends PuterService {
 
     /**
      * Email an address with no account. Sent whatever
-     * `share_email_notifications` says — there is no Puter inbox to use instead
+     * `share_email_notifications` says — there is no Mixt inbox to use instead
      * — but still budgeted: an invite reaches someone who never asked for it.
      */
     async #emailInvites(
@@ -1124,12 +1124,12 @@ export class ShareNotificationService extends PuterService {
     /**
      * `config.origin` is what every other email link uses, and it carries the
      * port — re-deriving from protocol and domain sent self-hosters' "Open it
-     * on Puter" links to an address nothing answers on.
+     * on Mixt" links to an address nothing answers on.
      */
     #appLink(): string {
         return (
             this.config.origin ??
-            `${this.config.protocol ?? 'http'}://${this.config.domain ?? 'puter.com'}`
+            `${this.config.protocol ?? 'http'}://${this.config.domain ?? 'mixt.mpl'}`
         );
     }
 }

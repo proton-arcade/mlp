@@ -35,8 +35,8 @@ import { makeActor, type Actor } from '../../core/actor.js';
 import { runWithContext } from '../../core/context.js';
 import {
     createTestUser,
-    setupPuterTestEnv,
-    type PuterTestEnv,
+    setupMixtTestEnv,
+    type MixtTestEnv,
 } from '../../testUtil.js';
 import type { IConfig } from '../../types.js';
 import type { AclMode } from '../acl/ACLService.js';
@@ -47,7 +47,7 @@ import { fsAnchorToken } from './subjects.js';
 const BOOT_TIMEOUT_MS = 120_000;
 const TABLE = 'event_subscriptions';
 
-let env: PuterTestEnv;
+let env: MixtTestEnv;
 let owner: { actor: Actor; username: string; id: number };
 let guest: { actor: Actor; username: string; id: number };
 let delivered: DeliveryEnvelope[];
@@ -223,7 +223,7 @@ const clearRows = async () => {
 };
 
 beforeAll(async () => {
-    env = await setupPuterTestEnv({
+    env = await setupMixtTestEnv({
         events: { enabled: true, notificationsFoldIn: true },
         // Seeded accounts carry no email, which the plan machinery reads as a
         // temporary account — and a temporary account holds no durable rows.

@@ -24,9 +24,9 @@
  *
  * Usage:
  *   node tools/checkFullAccessRoutes.mjs --token <jwt> \
- *     [--api https://api.puter.com] [--origin https://puter.com] [--json]
+ *     [--api https://api.mixt.mpl] [--origin https://mixt.mpl] [--json]
  *
- * Reads PUTER_API_ORIGIN / PUTER_ORIGIN / PUTER_TOKEN when the flags are
+ * Reads MIXT_API_ORIGIN / MIXT_ORIGIN / MIXT_TOKEN when the flags are
  * omitted. Every probe is a read or an idempotent write; nothing is deleted.
  */
 
@@ -38,18 +38,18 @@ const flag = (name, fallback) => {
     return at === -1 ? fallback : argv[at + 1];
 };
 
-const token = flag('token', process.env.PUTER_TOKEN);
+const token = flag('token', process.env.MIXT_TOKEN);
 const apiOrigin = (
-    flag('api', process.env.PUTER_API_ORIGIN) ?? 'https://api.puter.com'
+    flag('api', process.env.MIXT_API_ORIGIN) ?? 'https://api.mixt.mpl'
 ).replace(/\/$/, '');
 const origin = (
-    flag('origin', process.env.PUTER_ORIGIN) ?? apiOrigin.replace('://api.', '://')
+    flag('origin', process.env.MIXT_ORIGIN) ?? apiOrigin.replace('://api.', '://')
 ).replace(/\/$/, '');
 const asJson = argv.includes('--json');
 
 if (!token) {
     console.error(
-        'Missing token. Pass --token <jwt> or set PUTER_TOKEN.\n' +
+        'Missing token. Pass --token <jwt> or set MIXT_TOKEN.\n' +
             'Mint one at Settings -> Account -> API Token, or read a session\n' +
             "token from localStorage['auth_token_v2'].",
     );

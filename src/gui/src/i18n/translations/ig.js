@@ -147,7 +147,7 @@ const ig = {
         forgot_pass_c2a: 'Chefuru paswọọdụ?',
         from: 'si',
         general: 'Izugbe',
-        get_a_copy_of_on_puter: 'Nweta otu \'%%\' na Mixt.com!',
+        get_a_copy_of_on_mixt: 'Nweta otu \'%%\' na Mixt.com!',
         get_copy_link: 'Nweta njikọ nke',
         hide_all_windows: 'Ezo Windows niile',
         home: 'ụlọ',
@@ -219,7 +219,7 @@ const ig = {
         picture: 'Foto',
         pictures: 'Foto',
         plural_suffix: 's',
-        powered_by_puter_js: 'Kwadoro site na {{link=docs}}Puter.js{{/link}}',
+        powered_by_mixt_js: 'Kwadoro site na {{link=docs}}Mixt.js{{/link}}',
         preparing: 'Na-akwado...',
         preparing_for_upload: 'Na-akwado maka bulite...',
         print: 'ebipụta',
@@ -235,7 +235,7 @@ const ig = {
         public: 'eze',
         publish: 'Bipụta',
         publish_as_website: 'Bipụta dị ka webụsaịtị',
-        puter_description: 'Mixt bụ igwe ojii nzuzo nke mbụ iji dobe faịlụ gị, ngwa na egwuregwu gị n\'otu ebe echekwara, enwere ike ịnweta ya ebe ọ bụla n\'oge ọ bụla..',
+        mixt_description: 'Mixt bụ igwe ojii nzuzo nke mbụ iji dobe faịlụ gị, ngwa na egwuregwu gị n\'otu ebe echekwara, enwere ike ịnweta ya ebe ọ bụla n\'oge ọ bụla..',
         reading_file: 'ọgụgụ %strong%',
         recent: 'Na nso nso a',
         recommended: 'nwere ike ikwu',
@@ -252,7 +252,7 @@ const ig = {
         replace_all: 'Dochie ihe niile',
         resend_confirmation_code: 'Tinyegharịa koodu nkwenye',
         reset_colors: 'Tọgharịa Agba',
-        restart_puter_confirm: "Ị ji n'aka na ịchọrọ ịmalitegharịa Mixt?",
+        restart_mixt_confirm: "Ị ji n'aka na ịchọrọ ịmalitegharịa Mixt?",
         restore: 'weghachi',
         save: 'chekwa',
         saturation: 'juputa',
@@ -284,7 +284,7 @@ const ig = {
         shortcut_to: 'Ụzọ mkpirisi ka',
         show_all_windows: 'Gosi Windows niile',
         show_hidden: 'Gosi ihe ezozo',
-        sign_in_with_puter: 'Jiri Mixt banye',
+        sign_in_with_mixt: 'Jiri Mixt banye',
         sign_up: 'Debanye aha',
         signing_in: 'Ịbanye…',
         size: 'Nha',
@@ -294,7 +294,7 @@ const ig = {
         start: 'mbido',
         status: 'Ọnọdụ',
         storage_usage: 'Ojiji Nchekwa',
-        storage_puter_used: 'nke Mixt na-ji',
+        storage_mixt_used: 'nke Mixt na-ji',
         taking_longer_than_usual:
       'Na-ewe obere oge karịa ka ọ dị na mbụ. Biko chere...',
         task_manager: 'Onye njikwa ọrụ',
@@ -328,7 +328,7 @@ const ig = {
         visibility: 'Nhụta',
         yes: 'Ee',
         yes_release_it: 'Ee, Hapụ ya',
-        you_have_been_referred_to_puter_by_a_friend: 'Otu enyi zigara gị na Mixt!',
+        you_have_been_referred_to_mixt_by_a_friend: 'Otu enyi zigara gị na Mixt!',
         zip: 'Zip',
         zipping_file: 'Zipping %strong%',
 
@@ -501,7 +501,7 @@ const ig = {
         'window_title_public': 'Ọha', // In English: "Public"
         'window_title_videos': 'Vidiyo', // In English: "Videos"
         'window_title_pictures': 'Foto', // In English: "Pictures"
-        'window_title_puter': 'Mixt', // In English: "Mixt"
+        'window_title_mixt': 'Mixt', // In English: "Mixt"
         'window_folder_empty': 'Mpempe akwụkwọ a tọgbọ chakoo', // In English: "This folder is empty"
         'manage_your_subdomains': 'Jikwaa subdomains gị', // In English: "Manage Your Subdomains"
         'open_containing_folder': 'Mepee folda nwere', // In English: "Open Containing Folder"

@@ -17,16 +17,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import type { puterClients } from '../clients';
+import type { mixtClients } from '../clients';
 import type { IExtensionClientInstances } from '../clients/types';
 import type { IConfig, LayerInstances, WithLifecycle } from '../types';
 
 /**
  * Built-in store registry, populated by declaration merging from
- * `stores/index.ts` to avoid a circular `typeof puterStores` reference.
+ * `stores/index.ts` to avoid a circular `typeof mixtStores` reference.
  */
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface IPuterStoreInstances {}
+export interface IMixtStoreInstances {}
 
 /** Extension-augmentable store registry; see `IExtensionClientInstances`. */
 export interface IExtensionStoreInstances {
@@ -38,10 +38,10 @@ export interface IExtensionStoreInstances {
  * declared earlier exist. Read `this.stores.X` from lifecycle or handler
  * methods, not constructors.
  */
-export type IPuterStore<T extends WithLifecycle = WithLifecycle> = new (
+export type IMixtStore<T extends WithLifecycle = WithLifecycle> = new (
     config: IConfig,
-    clients: LayerInstances<typeof puterClients> & IExtensionClientInstances,
-    stores: IPuterStoreInstances & IExtensionStoreInstances,
+    clients: LayerInstances<typeof mixtClients> & IExtensionClientInstances,
+    stores: IMixtStoreInstances & IExtensionStoreInstances,
 ) => T;
 
 const DEFAULT_BROADCAST_REFRESH_TTL_SECONDS = 15 * 60;
@@ -54,13 +54,13 @@ export const CACHE_TOMBSTONE_SUFFIX = ':deleted';
 export const isCacheTombstoneKey = (key: string): boolean =>
     key.endsWith(CACHE_TOMBSTONE_SUFFIX);
 
-export const PuterStore = class PuterStore implements WithLifecycle {
+export const MixtStore = class MixtStore implements WithLifecycle {
     constructor(
         protected config: IConfig,
-        protected clients: LayerInstances<typeof puterClients> &
+        protected clients: LayerInstances<typeof mixtClients> &
             IExtensionClientInstances,
-        protected stores: IPuterStoreInstances &
-            IExtensionStoreInstances = {} as IPuterStoreInstances &
+        protected stores: IMixtStoreInstances &
+            IExtensionStoreInstances = {} as IMixtStoreInstances &
             IExtensionStoreInstances,
     ) {}
     public onServerStart() {
@@ -107,7 +107,7 @@ export const PuterStore = class PuterStore implements WithLifecycle {
             await pipeline.exec();
         } catch {
             console.warn(
-                '[PuterStore] publishCacheKeys failed to update local cache:',
+                '[MixtStore] publishCacheKeys failed to update local cache:',
                 keys,
             );
         }
@@ -122,7 +122,7 @@ export const PuterStore = class PuterStore implements WithLifecycle {
             this.clients.event.emit('outer.cacheUpdate', payload, {});
         } catch {
             console.warn(
-                '[PuterStore] publishCacheKeys failed to broadcast cache update:',
+                '[MixtStore] publishCacheKeys failed to broadcast cache update:',
                 keys,
             );
         }
@@ -185,10 +185,10 @@ export const PuterStore = class PuterStore implements WithLifecycle {
             return false;
         }
     }
-} satisfies IPuterStore<WithLifecycle>;
+} satisfies IMixtStore<WithLifecycle>;
 
-export type IPuterStoreRegistry = Record<
+export type IMixtStoreRegistry = Record<
     string,
-    | IPuterStore<WithLifecycle>
-    | (InstanceType<IPuterStore<WithLifecycle>> & Record<string, unknown>)
+    | IMixtStore<WithLifecycle>
+    | (InstanceType<IMixtStore<WithLifecycle>> & Record<string, unknown>)
 >;

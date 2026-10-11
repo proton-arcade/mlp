@@ -1,10 +1,10 @@
 ---
-title: puter.auth.getMonthlyUsage()
-description: Get the user's current monthly resource usage in the Puter ecosystem.
+title: mixt.auth.getMonthlyUsage()
+description: Get the user's current monthly resource usage in the Mixt OS ecosystem.
 platforms: [websites, apps, nodejs, workers]
 ---
 
-Get the user's current monthly resource usage in the Puter ecosystem.
+Get the user's current monthly resource usage in the Mixt OS ecosystem.
 
 <div class="info">
 
@@ -15,7 +15,7 @@ When called from an app, `usage` and `appTotals` cover only that app's own usage
 ## Syntax
 
 ```js
-puter.auth.getMonthlyUsage()
+mixt.auth.getMonthlyUsage()
 ```
 
 ## Parameters
@@ -31,10 +31,10 @@ A `Promise` that resolves to a [`MonthlyUsage`](/Objects/monthlyusage) object co
 ```html;auth-get-monthly-usage
 <html>
   <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
-      puter.auth.getMonthlyUsage().then(function (usage) {
-        puter.print(`<pre>${JSON.stringify(usage, null, 2)}</pre>`);
+      mixt.auth.getMonthlyUsage().then(function (usage) {
+        mixt.print(`<pre>${JSON.stringify(usage, null, 2)}</pre>`);
       });
     </script>
   </body>

@@ -19,7 +19,7 @@
 
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { v4 as uuidv4 } from 'uuid';
-import { PuterServer } from '../../server.js';
+import { MixtServer } from '../../server.js';
 import { setupTestServer } from '../../testUtil.js';
 
 // ── Test harness ────────────────────────────────────────────────────
@@ -30,7 +30,7 @@ import { setupTestServer } from '../../testUtil.js';
 // launch-metadata producer in its own right, so it carries the same
 // hosted-backing guard — these tests pin that.
 
-let server: PuterServer;
+let server: MixtServer;
 
 beforeAll(async () => {
     server = await setupTestServer();
@@ -276,7 +276,7 @@ describe('SuggestedAppsService hosted-backing guard', () => {
 
     // Built-ins enter the list by stable name rather than through
     // `app_filetype_association`, which is a separate loop. In prod their
-    // index_urls aren't puter-hosted, but nothing structurally prevents it
+    // index_urls aren't mixt-hosted, but nothing structurally prevents it
     // — so the guard has to cover that branch too. Split across two
     // extensions because the per-extension cache would otherwise serve the
     // first call's result to the second.

@@ -17,14 +17,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import type { puterClients } from '../clients';
+import type { mixtClients } from '../clients';
 import type { IExtensionClientInstances } from '../clients/types';
-import type { PuterRouter } from '../core/http/PuterRouter';
-import type { puterDrivers } from '../drivers';
+import type { MixtRouter } from '../core/http/MixtRouter';
+import type { mixtDrivers } from '../drivers';
 import type { IExtensionDriverInstances } from '../drivers/types';
-import type { puterServices } from '../services';
+import type { mixtServices } from '../services';
 import type { IExtensionServiceInstances } from '../services/types';
-import type { puterStores } from '../stores';
+import type { mixtStores } from '../stores';
 import type { IExtensionStoreInstances } from '../stores/types';
 import type {
     IConfig,
@@ -37,31 +37,31 @@ export interface IExtensionControllerInstances {
     [key: string]: unknown;
 }
 
-export type IPuterController<
+export type IMixtController<
     T extends WithControllerRegistration = WithControllerRegistration,
 > = new (
     config: IConfig,
-    clients: LayerInstances<typeof puterClients> & IExtensionClientInstances,
-    stores: LayerInstances<typeof puterStores> & IExtensionStoreInstances,
-    services: LayerInstances<typeof puterServices> & IExtensionServiceInstances,
-    drivers: LayerInstances<typeof puterDrivers> & IExtensionDriverInstances,
+    clients: LayerInstances<typeof mixtClients> & IExtensionClientInstances,
+    stores: LayerInstances<typeof mixtStores> & IExtensionStoreInstances,
+    services: LayerInstances<typeof mixtServices> & IExtensionServiceInstances,
+    drivers: LayerInstances<typeof mixtDrivers> & IExtensionDriverInstances,
 ) => T;
 
 /**
  * Base class for controllers. Override `registerRoutes(router)` or use the
  * `@Controller` / `@Post` decorators, which install a default one.
  */
-export const PuterController =
-    class PuterController implements WithControllerRegistration {
+export const MixtController =
+    class MixtController implements WithControllerRegistration {
         constructor(
             protected config: IConfig,
-            protected clients: LayerInstances<typeof puterClients> &
+            protected clients: LayerInstances<typeof mixtClients> &
                 IExtensionClientInstances,
-            protected stores: LayerInstances<typeof puterStores> &
+            protected stores: LayerInstances<typeof mixtStores> &
                 IExtensionStoreInstances,
-            protected services: LayerInstances<typeof puterServices> &
+            protected services: LayerInstances<typeof mixtServices> &
                 IExtensionServiceInstances,
-            protected drivers: LayerInstances<typeof puterDrivers> &
+            protected drivers: LayerInstances<typeof mixtDrivers> &
                 IExtensionDriverInstances,
         ) {}
         public onServerStart() {
@@ -80,12 +80,12 @@ export const PuterController =
             | Record<string, any>[] {
             return [];
         }
-        public registerRoutes(_router: PuterRouter) {}
-    } satisfies IPuterController<WithControllerRegistration>;
+        public registerRoutes(_router: MixtRouter) {}
+    } satisfies IMixtController<WithControllerRegistration>;
 
-export type IPuterControllerRegistry = Record<
+export type IMixtControllerRegistry = Record<
     string,
-    | IPuterController<WithControllerRegistration>
-    | (InstanceType<IPuterController<WithControllerRegistration>> &
+    | IMixtController<WithControllerRegistration>
+    | (InstanceType<IMixtController<WithControllerRegistration>> &
           Record<string, unknown>)
 >;

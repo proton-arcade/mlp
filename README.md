@@ -1,12 +1,12 @@
 # Mixt
 
-Mixt is a browser desktop styled after Linux Mint and Cinnamon: a dark bottom panel with a menu button, flat windows with light title bars, and a Mint-Y green accent. Underneath, it runs on the internals of [Puter](https://github.com/HeyPuter/puter), the open-source internet computer. It keeps Puter's backend, GUI, and Puter.js SDK, removes all AI features, and runs the server in a locked-down mode where only the administrator can use it.
+Mixt is a browser desktop styled after Linux Mint and Cinnamon: a dark bottom panel with a menu button, flat windows with light title bars, and a Mint-Y green accent. Underneath, it runs on the internals of [Mixt OS](https://github.com/proton-arcade/mlp), the open-source internet computer. It keeps Mixt OS's backend, GUI, and Mixt.js SDK, removes all AI features, and runs the server in a locked-down mode where only the administrator can use it.
 
-## What is different from Puter
+## What is different from Mixt OS
 
-- **No AI features.** The AI drivers, the `puter.ai` surface, the `/puterai` routes, the AI SDK dependencies, and the AI documentation and examples are removed.
+- **No AI features.** The AI drivers, the `mixt.ai` surface, the `/mixtai` routes, the AI SDK dependencies, and the AI documentation and examples are removed.
 - **Admin-only backend.** Only the `admin` account can use the server. The administrator can whitelist other users, and removing someone from the whitelist revokes their access.
-- **Administration app.** The Admin tab in the dashboard shows the live user count, every account with its creation time, username, email, the built-in `<username>@puter.email` address and mailbox, whether a password is set, app counts, and other server data. Password hashes and plaintext passwords are never shown.
+- **Administration app.** The Admin tab in the dashboard shows the live user count, every account with its creation time, username, email, the built-in `<username>@mixt.email` address and mailbox, whether a password is set, app counts, and other server data. Password hashes and plaintext passwords are never shown.
 - **Mint look.** The Mint-style panel, window chrome, palette, and fonts come from [webmpl](https://github.com/proton-arcade/webmpl). The stylesheet is `src/gui/src/css/mixt.css`.
 - **One run command.** `node server.cjs` does everything. `npm start` runs the same thing.
 
@@ -60,10 +60,10 @@ The defaults set the domain to `localhost`, the HTTPS front to port 443, and dis
 | --- | --- |
 | `server.cjs` | The single entry point. Starts the HTTPS front and `tools/start.mjs`. |
 | `tools/` | Startup, build, and configuration helpers. |
-| `src/backend` | The Puter backend: HTTP controllers, services, drivers, and storage. The lockdown and whitelist live in `core/http/middleware/adminLockdown.ts` and `util/serverWhitelist.ts`. |
+| `src/backend` | The Mixt OS backend: HTTP controllers, services, drivers, and storage. The lockdown and whitelist live in `core/http/middleware/adminLockdown.ts` and `util/serverWhitelist.ts`. |
 | `extensions/` | Server extensions, including the administration API (`admin.ts`). |
 | `src/gui` | The desktop, dashboard, and Admin tab. Mixt's theme is `src/gui/src/css/mixt.css`. |
-| `src/puter-js` | The Puter.js SDK (package `@heyputer/puter.js`, global `puter`). |
+| `src/mixt-js` | The Mixt.js SDK (package `@mixt/mixt.js`, global `mixt`). |
 | `src/docs` | The documentation site. |
 | `src/cli`, `src/dev-center`, `src/worker-types` | Developer tools for the same platform. |
 | `doc/` | Architecture, self-hosting, and internal API notes. |
@@ -73,7 +73,7 @@ The defaults set the domain to `localhost`, the HTTPS front to port 443, and dis
 ```bash
 npm run typecheck                 # TypeScript check against the committed baseline
 npm run test:backend              # backend test suite
-npm run test:puterjs              # Puter.js API tests
+npm run test:mixtjs              # Mixt.js API tests
 npx vitest run --config src/gui/vitest.config.js   # GUI unit tests
 ```
 

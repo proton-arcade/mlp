@@ -22,7 +22,7 @@ import type { ClickhouseClient } from './clickhouse/ClickhouseClient';
 
 /**
  * Extension-augmentable client registry. Extensions add typed keys by
- * declaration-merging this interface from `@heyputer/backend/clients/types`;
+ * declaration-merging this interface from `@mixt/backend/clients/types`;
  * the result is what `this.clients` and `extension.import('client')` see. The
  * same pattern applies to the store, service, driver and controller
  * registries.
@@ -38,11 +38,11 @@ export interface IExtensionClientInstances {
     clickhouse?: ClickhouseClient;
 }
 
-export interface IPuterClient<T extends WithLifecycle = WithLifecycle> {
+export interface IMixtClient<T extends WithLifecycle = WithLifecycle> {
     new (config: IConfig): T;
 }
 
-export const PuterClient = class PuterClient implements WithLifecycle {
+export const MixtClient = class MixtClient implements WithLifecycle {
     constructor(protected config: IConfig) {}
     public onServerStart() {
         return;
@@ -53,10 +53,10 @@ export const PuterClient = class PuterClient implements WithLifecycle {
     public onServerShutdown() {
         return;
     }
-} satisfies IPuterClient<WithLifecycle>;
+} satisfies IMixtClient<WithLifecycle>;
 
-export type IPuterClientRegistry = Record<
+export type IMixtClientRegistry = Record<
     string,
-    | IPuterClient<WithLifecycle>
-    | (InstanceType<IPuterClient<WithLifecycle>> & Record<string, unknown>)
+    | IMixtClient<WithLifecycle>
+    | (InstanceType<IMixtClient<WithLifecycle>> & Record<string, unknown>)
 >;

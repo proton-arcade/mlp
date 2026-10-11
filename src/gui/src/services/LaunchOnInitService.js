@@ -29,7 +29,7 @@ export class LaunchOnInitService extends Service {
         };
     }
     async _init () {
-        const launch_options = this.$puter.gui_params.launch_options;
+        const launch_options = this.$mixt.gui_params.launch_options;
         if ( ! launch_options ) return;
 
         if ( launch_options.on_initialized ) {

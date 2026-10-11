@@ -20,8 +20,8 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import {
     createTestUser,
-    setupPuterTestEnv,
-    type PuterTestEnv,
+    setupMixtTestEnv,
+    type MixtTestEnv,
     type TestUserCredentials,
 } from '../../testUtil.js';
 import type { IConfig } from '../../types.js';
@@ -33,10 +33,10 @@ import { resetCardVerificationStatusCache } from '../../util/cardFallback.js';
  * gate is inert by design.
  */
 describe('share verification gate over HTTP', () => {
-    let env: PuterTestEnv;
+    let env: MixtTestEnv;
 
     beforeAll(async () => {
-        env = await setupPuterTestEnv({
+        env = await setupMixtTestEnv({
             prelude: { apiKey: 'test-key' },
         } as IConfig);
     }, 120_000);
@@ -65,7 +65,7 @@ describe('share verification gate over HTTP', () => {
         const username = `svg${Math.random().toString(36).slice(2, 9)}`;
         const creds = await createTestUser(env.server, {
             username,
-            password: 'puter-test-user-password',
+            password: 'mixt-test-user-password',
         });
         if (Object.keys(patch).length > 0) {
             const row = await env.server.stores.user.getByUsername(username);
@@ -142,7 +142,7 @@ describe('share verification gate over HTTP', () => {
         };
         resetCardVerificationStatusCache();
         env.server.clients.event.on(
-            'puter.card-verification.status',
+            'mixt.card-verification.status',
             cardGateOn,
         );
         try {
@@ -161,7 +161,7 @@ describe('share verification gate over HTTP', () => {
             });
         } finally {
             env.server.clients.event.off(
-                'puter.card-verification.status',
+                'mixt.card-verification.status',
                 cardGateOn,
             );
             resetCardVerificationStatusCache();

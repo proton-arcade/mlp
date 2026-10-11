@@ -45,7 +45,7 @@ const copyContainer = (value: Container): Container => {
 
 // This file is re-evaluated for every test file, so the pristine snapshot
 // lives on globalThis, taken before the first file in the worker runs.
-const SNAPSHOT_KEY = Symbol.for('puter.test.extensionStoreSnapshot');
+const SNAPSHOT_KEY = Symbol.for('mixt.test.extensionStoreSnapshot');
 const globals = globalThis as {
     [SNAPSHOT_KEY]?: Record<string, Container>;
 };

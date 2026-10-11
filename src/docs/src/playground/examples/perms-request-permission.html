@@ -1,18 +1,18 @@
 <html>
 <body>
-    <script src="/puter.js/v2"></script>
+    <script src="/mixt.js/v2"></script>
     <button id="request-permission">Request Permission</button>
     <script>
         document.getElementById('request-permission').addEventListener('click', async () => {
             // Get the current user's UUID
-            const user = await puter.auth.getUser();
+            const user = await mixt.auth.getUser();
             const permission = `user:${user.uuid}:email:read`;
             
-            const granted = await puter.perms.request('permission', { permission });
+            const granted = await mixt.perms.request('permission', { permission });
             if (granted) {
-                puter.print('Permission granted');
+                mixt.print('Permission granted');
             } else {
-                puter.print('Permission denied');
+                mixt.print('Permission denied');
             }
         });
     </script>

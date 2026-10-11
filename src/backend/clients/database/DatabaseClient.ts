@@ -18,7 +18,7 @@
  */
 
 import type { IConfig } from '../../types';
-import { PuterClient } from '../types';
+import { MixtClient } from '../types';
 
 export interface WriteResult {
     insertId: number | bigint;
@@ -40,7 +40,7 @@ type SqlJsonPath = readonly [string, ...string[]];
  * `clients/database/index.ts` which picks the right implementation based on
  * `config.database.engine`.
  */
-export class AbstractDatabaseClient extends PuterClient {
+export class AbstractDatabaseClient extends MixtClient {
     /** Short name used by `case()` to pick engine-specific values. */
     readonly engineName: string = '';
 

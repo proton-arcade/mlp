@@ -1,5 +1,5 @@
 ---
-title: puter.print()
+title: mixt.print()
 description: Prints a string by appending it to the body of the document.
 platforms: [websites, apps]
 ---
@@ -9,8 +9,8 @@ Prints a string by appending it to the body of the document. This is useful for 
 ## Syntax
 
 ```js
-puter.print(text)
-puter.print(text, options)
+mixt.print(text)
+mixt.print(text, options)
 ```
 
 ## Parameters
@@ -35,9 +35,9 @@ An object containing options for the print function. It must be the last argumen
 ```html
 <html>
   <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
-      puter.print("Hello, world!");
+      mixt.print("Hello, world!");
     </script>
   </body>
 </html>
@@ -52,9 +52,9 @@ An object containing options for the print function. It must be the last argumen
 ```html
 <html>
   <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
-      puter.print("Hello, world!", { code: true });
+      mixt.print("Hello, world!", { code: true });
     </script>
   </body>
 </html>

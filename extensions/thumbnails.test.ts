@@ -22,7 +22,7 @@ import type {
 } from '../src/backend/controllers/fs/requestTypes.ts';
 import type { Actor } from '../src/backend/core/actor.ts';
 import { runWithContext } from '../src/backend/core/context.ts';
-import { PuterServer } from '../src/backend/server.ts';
+import { MixtServer } from '../src/backend/server.ts';
 import { setupTestServer } from '../src/backend/testUtil.ts';
 import { generateDefaultFsentries } from '../src/backend/util/userProvisioning.ts';
 import {
@@ -37,8 +37,8 @@ import {
 const TINY_PNG_BASE64 =
     'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
 
-const BUCKET = 'puter-local';
-const BUCKET_ENDPOINT = 'http://127.0.0.1:4566/puter-local/';
+const BUCKET = 'mixt-local';
+const BUCKET_ENDPOINT = 'http://127.0.0.1:4566/mixt-local/';
 
 // Keys the extension mints: `thumbnails/<entry uuid>/<uuid>`.
 const mintedKey = (entryUuid: string = crypto.randomUUID()) =>
@@ -74,7 +74,7 @@ const streamToBuffer = async (
 };
 
 describe('thumbnails extension — handleThumbnailCreated', () => {
-    let server: PuterServer;
+    let server: MixtServer;
     let s3: S3Client;
 
     beforeAll(async () => {
@@ -196,7 +196,7 @@ describe('thumbnails extension — handleThumbnailCreated', () => {
 });
 
 describe('thumbnails extension — handleThumbnailUploadPrepare', () => {
-    let server: PuterServer;
+    let server: MixtServer;
     let s3Presign: S3Client;
 
     beforeAll(async () => {
@@ -300,7 +300,7 @@ describe('thumbnails extension — handleThumbnailUploadPrepare', () => {
 });
 
 describe('thumbnails extension — handleThumbnailRead', () => {
-    let server: PuterServer;
+    let server: MixtServer;
     let s3: S3Client;
     let s3Presign: S3Client;
 
@@ -343,7 +343,7 @@ describe('thumbnails extension — handleThumbnailRead', () => {
                 s3,
                 s3Presign,
                 bucketName: BUCKET,
-                bucketEndpoint: 'http://127.0.0.1:4566/puter-local/',
+                bucketEndpoint: 'http://127.0.0.1:4566/mixt-local/',
                 db: stubDb,
             });
 
@@ -382,7 +382,7 @@ describe('thumbnails extension — handleThumbnailRead', () => {
             s3,
             s3Presign,
             bucketName: BUCKET,
-            bucketEndpoint: 'http://127.0.0.1:4566/puter-local/',
+            bucketEndpoint: 'http://127.0.0.1:4566/mixt-local/',
             db: stubDb,
         });
         expect(entry.thumbnail).toBeNull();
@@ -397,7 +397,7 @@ describe('thumbnails extension — handleThumbnailRead', () => {
             s3,
             s3Presign,
             bucketName: BUCKET,
-            bucketEndpoint: 'http://127.0.0.1:4566/puter-local/',
+            bucketEndpoint: 'http://127.0.0.1:4566/mixt-local/',
             db: stubDb,
         });
         // Signed for OUR bucket; `attacker-named-bucket` never reached S3.
@@ -413,7 +413,7 @@ describe('thumbnails extension — handleThumbnailRead', () => {
             s3,
             s3Presign,
             bucketName: BUCKET,
-            bucketEndpoint: 'http://127.0.0.1:4566/puter-local/',
+            bucketEndpoint: 'http://127.0.0.1:4566/mixt-local/',
             db: stubDb,
         });
         expect(entry.thumbnail).toBe('about:blank');
@@ -425,7 +425,7 @@ describe('thumbnails extension — handleThumbnailRead', () => {
             s3,
             s3Presign,
             bucketName: BUCKET,
-            bucketEndpoint: 'http://127.0.0.1:4566/puter-local/',
+            bucketEndpoint: 'http://127.0.0.1:4566/mixt-local/',
             db: stubDb,
         });
         expect(entry.thumbnail).toBeUndefined();
@@ -442,7 +442,7 @@ describe('thumbnails extension — handleThumbnailRead', () => {
             s3,
             s3Presign,
             bucketName: BUCKET,
-            bucketEndpoint: 'http://127.0.0.1:4566/puter-local/',
+            bucketEndpoint: 'http://127.0.0.1:4566/mixt-local/',
             db: stubDb,
         });
 
@@ -478,7 +478,7 @@ describe('thumbnails extension — handleThumbnailRead', () => {
 });
 
 describe('thumbnails extension — handleFsRemoveNodeThumbnail', () => {
-    let server: PuterServer;
+    let server: MixtServer;
     let s3: S3Client;
 
     beforeAll(async () => {
@@ -551,7 +551,7 @@ describe('thumbnails extension — handleFsRemoveNodeThumbnail', () => {
 });
 
 describe('thumbnails extension — handleFsCopyNodeThumbnail', () => {
-    let server: PuterServer;
+    let server: MixtServer;
     let s3: S3Client;
 
     beforeAll(async () => {
@@ -793,11 +793,11 @@ describe('thumbnails extension — handleFsCopyNodeThumbnail', () => {
     });
 });
 
-// The flow `puter.fs.upload()` runs — start, PUT to the signed URLs, complete
+// The flow `mixt.fs.upload()` runs — start, PUT to the signed URLs, complete
 // with the returned pointer — through the real controller and the listeners
 // this extension registers.
 describe('thumbnails extension — signed batch upload through /fs', () => {
-    let server: PuterServer;
+    let server: MixtServer;
     let controller: FSController;
     const png = Buffer.from(TINY_PNG_BASE64, 'base64');
 

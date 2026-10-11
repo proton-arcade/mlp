@@ -1,16 +1,16 @@
 <html>
 <body>
-    <script src="/puter.js/v2"></script>
+    <script src="/mixt.js/v2"></script>
     <button id="request-subdomains">Request Subdomains Write Access</button>
     <script>
         document.getElementById('request-subdomains').addEventListener('click', async () => {
-            const granted = await puter.perms.request('subdomains', { access: 'write' });
+            const granted = await mixt.perms.request('subdomains', { access: 'write' });
             if (granted) {
-                puter.print('Subdomains write access granted');
-                const sites = await puter.hosting.list();
-                puter.print(`User has ${sites.length} site(s)`);
+                mixt.print('Subdomains write access granted');
+                const sites = await mixt.hosting.list();
+                mixt.print(`User has ${sites.length} site(s)`);
             } else {
-                puter.print('Subdomains write access denied');
+                mixt.print('Subdomains write access denied');
             }
         });
     </script>

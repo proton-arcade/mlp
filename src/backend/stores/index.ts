@@ -41,17 +41,17 @@ import { TeamStore } from './team/TeamStore.js';
 import { UploadReservationStore } from './fs/UploadReservationStore.js';
 import { UserBlockStore } from './userBlock/UserBlockStore.js';
 import { UserStore } from './user/UserStore.js';
-import type { IPuterStoreRegistry } from './types.js';
+import type { IMixtStoreRegistry } from './types.js';
 
 /**
- * Populate `IPuterStoreInstances` (declared in `./types`) with the concrete
+ * Populate `IMixtStoreInstances` (declared in `./types`) with the concrete
  * types of built-in stores. Done via declaration merging instead of
- * `LayerInstances<typeof puterStores>` because every concrete store extends
- * `PuterStore`, whose `protected stores` field references this type — a direct
- * `typeof puterStores` lookup would self-cycle.
+ * `LayerInstances<typeof mixtStores>` because every concrete store extends
+ * `MixtStore`, whose `protected stores` field references this type — a direct
+ * `typeof mixtStores` lookup would self-cycle.
  */
 declare module './types.js' {
-    interface IPuterStoreInstances {
+    interface IMixtStoreInstances {
         kv: SystemKVStore;
         meteringBuffer: MeteringBufferStore;
         creditHold: CreditHoldStore;
@@ -91,7 +91,7 @@ declare module './types.js' {
 // ShareStore / UserBlockStore are leaves — only use clients.db.
 // SessionStore also reaches UserStore to retire an account its insert found
 // deleted, so it must stay after `user`.
-export const puterStores = {
+export const mixtStores = {
     kv: SystemKVStore,
     meteringBuffer: MeteringBufferStore,
     creditHold: CreditHoldStore,
@@ -121,4 +121,4 @@ export const puterStores = {
     kvShareHandle: KvShareHandleStore,
     // Writes presence rows through `kv`'s reserved-item path, so it follows it.
     presence: PresenceStore,
-} satisfies IPuterStoreRegistry;
+} satisfies IMixtStoreRegistry;

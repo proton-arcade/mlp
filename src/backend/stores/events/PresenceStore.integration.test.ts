@@ -41,14 +41,14 @@ import {
     vi,
 } from 'vitest';
 import { setupTestServer } from '../../testUtil.js';
-import type { PuterServer } from '../../server.js';
+import type { MixtServer } from '../../server.js';
 import type { IConfig } from '../../types.js';
 import { CONCURRENT_SLOT_TTL_MS } from '../../core/http/middleware/rateLimit.js';
 import { presenceItemKey } from './PresenceStore.js';
 
 const BOOT_TIMEOUT_MS = 120_000;
 
-let server: PuterServer;
+let server: MixtServer;
 let emitted: string[];
 let seq = 0;
 

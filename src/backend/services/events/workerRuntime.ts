@@ -40,7 +40,7 @@ export const EVENTS_WORKER_PREFIX = 'evw-';
  */
 // Contains `:`, which WORKER_NAME_REGEX forbids a user-created worker name
 // from having — so this session can never collide with an ordinary
-// `puter.workers.*` session under the same (user, app_uid) key.
+// `mixt.workers.*` session under the same (user, app_uid) key.
 export const EVENTS_WORKER_SESSION_NAME = 'events:handlers';
 
 /**
@@ -53,7 +53,7 @@ export const EVENTS_HANDLER_TOKEN_TTL_SECONDS = 15 * 60;
  * What scopes a script name to one backend. Two backends can share a dispatch
  * namespace and database (staging and production, say); folding this into the
  * name is what keeps a script deployed by one from resolving as the other's.
- * The same value `#cfDeploy` binds a script's `puter_endpoint` as, so a script
+ * The same value `#cfDeploy` binds a script's `mixt_endpoint` as, so a script
  * is always scoped to the backend whose requests it would actually answer.
  */
 export const eventsWorkerScope = (config: {

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>mixt-js test fixture: boot reauth</title>
+    <style>
+        body { font-family: system-ui, sans-serif; padding: 16px; }
+        button { padding: 8px 12px; font-size: 14px; }
+        .ready #status { color: green; }
+    </style>
+</head>
+<body>
+    <h1>mixt-js boot reauth fixture</h1>
+    <p id="status">Loading mixt.js…</p>
+
+    <!-- A call the user asks for, to check prompting still happens. -->
+    <button id="kv-get" disabled>KV get</button>
+
+    <script>
+        // Point the SDK at the local Mixt OS instance (env=web).
+        window.MIXT_ORIGIN = 'http://localhost:4100';
+        // Must be the real api subdomain: the SDK sends credentialed CORS
+        // requests, and only the api host answers with
+        // Access-Control-Allow-Credentials.
+        window.MIXT_API_ORIGIN = 'http://api.localhost:4100';
+    </script>
+    <script src="/dist/mixt.dev.js"></script>
+    <script>
+        const statusEl = document.getElementById('status');
+
+        function ready() {
+            document.body.classList.add('ready');
+            statusEl.textContent = `Ready (env=${mixt.env})`;
+            document.getElementById('kv-get').disabled = false;
+        }
+
+        function waitForMixt() {
+            if (window.mixt && mixt.kv) ready();
+            else setTimeout(waitForMixt, 50);
+        }
+        waitForMixt();
+
+        document.getElementById('kv-get').addEventListener('click', () => {
+            mixt.kv.get('boot-reauth-probe').catch(() => {});
+        });
+    </script>
+</body>
+</html>

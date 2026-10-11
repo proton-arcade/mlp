@@ -239,14 +239,14 @@ describe('createStepUpGate', () => {
         expect(next.mock.calls[0][0]?.statusCode).toBe(403);
     });
 
-    it('accepts the elevation via the x-puter-elevation header (API clients)', () => {
+    it('accepts the elevation via the x-mixt-elevation header (API clients)', () => {
         const ts = tokenService();
         const gate = createStepUpGate({ tokenService: ts });
         const token = signStepUpToken(ts, { uuid: USER_UUID });
         const next = vi.fn();
         const req = {
             cookies: {},
-            headers: { 'x-puter-elevation': token },
+            headers: { 'x-mixt-elevation': token },
             actor: { user: { uuid: USER_UUID } },
         } as never;
         gate(req, {} as Response, next);
@@ -262,7 +262,7 @@ describe('createStepUpGate', () => {
         const next = vi.fn();
         const req = {
             cookies: {},
-            headers: { 'x-puter-elevation': token },
+            headers: { 'x-mixt-elevation': token },
             actor: { user: { uuid: USER_UUID } },
         } as never;
         gate(req, {} as Response, next);

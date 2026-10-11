@@ -1,11 +1,11 @@
 ---
-title: puter.peer.createGuestGrant()
-description: Let guests without a Puter account use Puter's TURN relays on your account.
+title: mixt.peer.createGuestGrant()
+description: Let guests without a Mixt OS account use Mixt OS's TURN relays on your account.
 platforms: [websites, apps]
 ---
 
 
-Creates a **guest grant**: a short-lived token that lets people without a Puter session use the Puter-managed TURN relays. Hand it to the people you invite alongside the invite code, and they pass it to [`puter.peer.connect()`](/Peer/connect/) as `turnGrant`.
+Creates a **guest grant**: a short-lived token that lets people without a Mixt OS session use the Mixt OS-managed TURN relays. Hand it to the people you invite alongside the invite code, and they pass it to [`mixt.peer.connect()`](/Peer/connect/) as `turnGrant`.
 
 Without a grant, a guest can still join a session — but only over direct connections. Relay credentials are what make a connection work when one side is behind a NAT or firewall that blocks direct traffic, and minting them requires an account. The grant is how your account vouches for the guest.
 
@@ -18,7 +18,7 @@ Relay traffic a guest sends is metered against **your** account, at the same rat
 ## Syntax
 
 ```js
-const { grant, expiresAt } = await puter.peer.createGuestGrant();
+const { grant, expiresAt } = await mixt.peer.createGuestGrant();
 ```
 
 ## Parameters
@@ -39,7 +39,7 @@ Rejects if the caller isn't authenticated, or if the deployment doesn't offer gu
 ```html
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <h3>Host a session guests can join</h3>
     <button id="host">Start hosting</button>
     <pre id="out" style="background:#f4f4f4; padding:10px;"></pre>
@@ -48,9 +48,9 @@ Rejects if the caller isn't authenticated, or if the deployment doesn't offer gu
         const out = document.getElementById('out');
 
         document.getElementById('host').addEventListener('click', async () => {
-            // Hosting requires a Puter account; joining will not.
-            const server = await puter.peer.serve();
-            const { grant, expiresAt } = await puter.peer.createGuestGrant();
+            // Hosting requires a Mixt OS account; joining will not.
+            const server = await mixt.peer.serve();
+            const { grant, expiresAt } = await mixt.peer.createGuestGrant();
 
             // Everything a guest needs, in one link.
             const link = new URL(location.href);
@@ -79,7 +79,7 @@ Rejects if the caller isn't authenticated, or if the deployment doesn't offer gu
             const grant = params.get('grant');
             if ( !code ) return;
 
-            const conn = await puter.peer.connect(code, {
+            const conn = await mixt.peer.connect(code, {
                 anonToken: crypto.randomUUID(),
                 turnGrant: grant,
             });

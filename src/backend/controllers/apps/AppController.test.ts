@@ -22,21 +22,21 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { v4 as uuidv4 } from 'uuid';
 import { makeActor, type Actor } from '../../core/actor.js';
 import { runWithContext } from '../../core/context.js';
-import { PuterRouter } from '../../core/http/PuterRouter.js';
-import { PuterServer } from '../../server.js';
+import { MixtRouter } from '../../core/http/MixtRouter.js';
+import { MixtServer } from '../../server.js';
 import { setupTestServer } from '../../testUtil.js';
 
 // ── Test harness ────────────────────────────────────────────────────
 //
-// Boots one real PuterServer (in-memory sqlite + dynamo + s3 + mock
+// Boots one real MixtServer (in-memory sqlite + dynamo + s3 + mock
 // redis) and re-registers AppController's inline lambda routes onto a
-// fresh PuterRouter so each handler is reachable. Tests run against
+// fresh MixtRouter so each handler is reachable. Tests run against
 // the live wired AppDriver, AppStore, DB client, and EventClient —
 // no method spies. Apps are created via the real AppDriver so
 // ownership / approval / metadata behave exactly like prod.
 
-let server: PuterServer;
-let router: PuterRouter;
+let server: MixtServer;
+let router: MixtRouter;
 
 interface CrudQDriver {
     create: (args: Record<string, unknown>) => Promise<Record<string, unknown>>;
@@ -48,7 +48,7 @@ let driver: CrudQDriver;
 
 beforeAll(async () => {
     server = await setupTestServer();
-    router = new PuterRouter();
+    router = new MixtRouter();
     server.controllers.apps.registerRoutes(router);
     driver = server.drivers.apps as unknown as CrudQDriver;
 });
@@ -504,7 +504,7 @@ describe('AppController GET /apps/:name', () => {
     // The driver is the authoritative producer of launch metadata: it runs
     // the hosted-subdomain guard, which this route knows nothing about. The
     // route's own entitlement re-check must never turn that denial into an
-    // affirmative verdict — the GUI launcher appends `puter.auth.token` to
+    // affirmative verdict — the GUI launcher appends `mixt.auth.token` to
     // whatever `index_url` it is handed.
 
     it('preserves the hosted-backing denial for the app owner', async () => {
@@ -1058,7 +1058,7 @@ describe('AppController GET /app-icon remote icons', () => {
                 config: { static_hosting_domain: string };
             }
         ).config;
-        const trusted = `https://puter-app-icons.${hostingDomain}/${app.uid}-128.png`;
+        const trusted = `https://mixt-app-icons.${hostingDomain}/${app.uid}-128.png`;
         await setIcon(String(app.uid), trusted);
 
         const { res, captured } = makeRes();

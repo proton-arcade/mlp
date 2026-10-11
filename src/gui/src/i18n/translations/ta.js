@@ -151,7 +151,7 @@ const ta = {
         forgot_pass_c2a: 'கடவுச்சொல்லை மறந்துவிட்டீர்களா?',
         from: 'இருந்து',
         general: 'பொது',
-        get_a_copy_of_on_puter: 'Mixt.com இல் \'%%\' நகலைப் பெறுங்கள்!',
+        get_a_copy_of_on_mixt: 'Mixt.com இல் \'%%\' நகலைப் பெறுங்கள்!',
         get_copy_link: 'நகல் இணைப்பைப் பெறவும்',
         hide_all_windows: 'அனைத்து விண்டோஸையும் மறைக்கவும்',
         home: 'வீடு',
@@ -224,7 +224,7 @@ const ta = {
         picture: 'படம்',
         pictures: 'படங்கள்',
         plural_suffix: 'கள்',
-        powered_by_puter_js: 'மூலம் இயக்கப்படுகிறது {{link=docs}}Puter.js{{/link}}',
+        powered_by_mixt_js: 'மூலம் இயக்கப்படுகிறது {{link=docs}}Mixt.js{{/link}}',
         preparing: 'தயாராகிறது...',
         preparing_for_upload: 'பதிவேற்றம் செய்ய தயாராகிறது...',
         print: 'அச்சிடுக',
@@ -240,7 +240,7 @@ const ta = {
         public: 'பொது',
         publish: 'வெளியிடு',
         publish_as_website: 'இணையதளமாக வெளியிடவும்',
-        puter_description:
+        mixt_description:
       'உங்கள் கோப்புகள், பயன்பாடுகள் மற்றும் கேம்கள் அனைத்தையும் ஒரே பாதுகாப்பான இடத்தில் வைத்திருக்க, எந்த நேரத்திலும் எங்கிருந்தும் அணுகக்கூடிய தனியுரிமை-முதல் தனிப்பட்ட கிளவுட் புட்டர் ஆகும்.',
         reading_file: 'படித்தல் %strong%',
         recent: 'அண்மையில்',
@@ -260,7 +260,7 @@ const ta = {
         replace_all: 'அனைத்தையும் மாற்றவும்',
         resend_confirmation_code: 'உறுதிப்படுத்தல் குறியீட்டை மீண்டும் அனுப்பவும்',
         reset_colors: 'வண்ணங்களை மீட்டமைக்கவும்',
-        restart_puter_confirm:
+        restart_mixt_confirm:
       'நிச்சயமாக புட்டர்-ஐ மீண்டும் தொடங்க விரும்புகிறீர்களா?',
         restore: 'மீட்டமை',
         save: 'சேமிக்கவும்',
@@ -296,7 +296,7 @@ const ta = {
         shortcut_to: 'குறுக்குவழி',
         show_all_windows: 'அனைத்து விண்டோஸையும் காட்டு',
         show_hidden: 'மறைக்கப்பட்டதைக் காட்டு',
-        sign_in_with_puter: 'புட்டர் மூலம் உள்நுழையவும்',
+        sign_in_with_mixt: 'புட்டர் மூலம் உள்நுழையவும்',
         sign_up: 'பதிவு செய்யவும்',
         signing_in: 'உள்நுழைகிறேன்…',
         size: 'அளவு',
@@ -306,7 +306,7 @@ const ta = {
         start: 'தொடங்கு',
         status: 'நிலை',
         storage_usage: 'சேமிப்பக பயன்பாடு',
-        storage_puter_used: 'புட்டரால் பயன்படுத்தப்பட்டது',
+        storage_mixt_used: 'புட்டரால் பயன்படுத்தப்பட்டது',
         taking_longer_than_usual:
       'வழக்கத்தை விட சிறிது நேரம் எடுக்கும். தயவுசெய்து காத்திருங்கள்...',
         task_manager: 'பணி மேலாளர்',
@@ -342,7 +342,7 @@ const ta = {
         visibility: 'தெரிவுநிலை',
         yes: 'ஆம்',
         yes_release_it: 'ஆம், வெளியிடு',
-        you_have_been_referred_to_puter_by_a_friend:
+        you_have_been_referred_to_mixt_by_a_friend:
       'நீங்கள் ஒரு நண்பரால் புட்டருக்கு பரிந்துரைக்கப்பட்டீர்கள்!',
         zip: 'ஜிப்',
         zipping_file: 'ஜிப்பிங் %strong%',
@@ -532,7 +532,7 @@ const ta = {
         window_title_public: 'பொது',
         window_title_videos: 'வீடியோக்கள்',
         window_title_pictures: 'படங்கள்',
-        window_title_puter: 'Mixt',
+        window_title_mixt: 'Mixt',
         window_folder_empty: 'இந்த கோப்புறை காலியாக உள்ளது',
         manage_your_subdomains: 'உங்கள் துணை-டொமைன்களை நிர்வகிக்கவும்',
         open_containing_folder: 'கொண்டுள்ள கோப்புறையைத் திற',

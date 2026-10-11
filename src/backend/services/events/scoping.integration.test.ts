@@ -34,7 +34,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { EVENTS_COALESCE_WINDOW_MS } from '../../controllers/events/limits.js';
 import type { Actor } from '../../core/actor.js';
 import { isHttpError } from '../../core/http/HttpError.js';
-import { setupPuterTestEnv, type PuterTestEnv } from '../../testUtil.js';
+import { setupMixtTestEnv, type MixtTestEnv } from '../../testUtil.js';
 import type { IConfig } from '../../types.js';
 import type { AuthResult } from '../auth/AuthService.js';
 import { decideSocketAuth } from '../socket/SocketService.js';
@@ -43,7 +43,7 @@ import type { DeliveryEnvelope } from './EventsService.js';
 const BOOT_TIMEOUT_MS = 120_000;
 const SOCKET_ID = 'matrix-socket';
 
-let env: PuterTestEnv;
+let env: MixtTestEnv;
 let username: string;
 let userId: number;
 let anchor: string;
@@ -157,7 +157,7 @@ const connects = (token: string): Promise<boolean> =>
     });
 
 beforeAll(async () => {
-    env = await setupPuterTestEnv({ events: { enabled: true } } as IConfig);
+    env = await setupMixtTestEnv({ events: { enabled: true } } as IConfig);
     username = env.users.user.username;
     const row = await env.server.stores.user.getByUsername(username);
     userId = row!.id;

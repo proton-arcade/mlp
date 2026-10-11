@@ -24,7 +24,7 @@ import {
     chunkPathsForIncr,
     type RecursiveRecord,
 } from '../systemKv/SystemKVStore';
-import { PuterStore } from '../types';
+import { MixtStore } from '../types';
 import {
     meteringRecordExpiresAt,
     resolveMeteringRetentionMonths,
@@ -41,7 +41,7 @@ import {
  * Deliberately undimensioned — the natural dimensions (counter key, actor) are
  * unbounded, and each distinct combination is its own CloudWatch series.
  */
-const meter = metrics.getMeter('puter-backend');
+const meter = metrics.getMeter('mixt-backend');
 
 const absorbedCounter = meter.createCounter('metering.buffer.absorbed', {
     description: 'Metering increments taken into the cache buffer',
@@ -590,7 +590,7 @@ type ScriptRunner = {
  * For an actor served by a single deployment that is exact at all times. When a
  * decision genuinely turns on the number, `readExact` is the way to be sure.
  */
-export class MeteringBufferStore extends PuterStore {
+export class MeteringBufferStore extends MixtStore {
     #flushTimer: ReturnType<typeof setTimeout> | null = null;
     #stopped = false;
     #definedScripts = false;

@@ -1,16 +1,16 @@
 ---
 title: Peer
-description: Create peer-to-peer connections between Puter.js clients with WebRTC data channels.
+description: Create peer-to-peer connections between Mixt.js clients with WebRTC data channels.
 ---
 
 
-The Puter.js Peer API gives you WebRTC data channels with built-in signaling and TURN relays, so you can connect clients directly without running your own signaling server.
+The Mixt.js Peer API gives you WebRTC data channels with built-in signaling and TURN relays, so you can connect clients directly without running your own signaling server.
 
 Use the Peer API to build peer-to-peer applications without the need for a server or proxy. Multiplayer games, collaborative editing, and real-time communication are all possible with the Peer API!
 
 <div class="info">
 
-Hosting a session requires authentication — on websites, Puter.js will prompt the user if needed. Guests can join without an account: pass `anonToken`, plus a `turnGrant` from the host so the connection can still use Puter's relays. See [`puter.peer.createGuestGrant()`](/Peer/createGuestGrant/).
+Hosting a session requires authentication — on websites, Mixt.js will prompt the user if needed. Guests can join without an account: pass `anonToken`, plus a `turnGrant` from the host so the connection can still use Mixt OS's relays. See [`mixt.peer.createGuestGrant()`](/Peer/createGuestGrant/).
 
 </div>
 
@@ -21,7 +21,7 @@ Hosting a session requires authentication — on websites, Puter.js will prompt 
 ```html;peer-basic
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <h3>Peer Chat</h3>
     <p>Open this page in two tabs. Start a server in one tab, then connect from the other.</p>
 
@@ -82,7 +82,7 @@ Hosting a session requires authentication — on websites, Puter.js will prompt 
         document.getElementById('start-server').addEventListener('click', async () => {
             inviteEl.textContent = 'Starting...';
             try {
-                const server = await puter.peer.serve();
+                const server = await mixt.peer.serve();
                 inviteEl.textContent = `Invite code: ${server.inviteCode}`;
                 log('[server] ready, waiting for connection');
 
@@ -104,7 +104,7 @@ Hosting a session requires authentication — on websites, Puter.js will prompt 
             }
 
             try {
-                const conn = await puter.peer.connect(inviteCode);
+                const conn = await mixt.peer.connect(inviteCode);
                 log('[client] connecting...');
                 setConnection(conn, 'client');
             } catch (err) {
@@ -126,11 +126,11 @@ Hosting a session requires authentication — on websites, Puter.js will prompt 
 
 ## Functions
 
-These peer features are supported out of the box when using Puter.js:
+These peer features are supported out of the box when using Mixt.js:
 
-- **[`puter.peer.serve()`](/Peer/serve/)** - Create a peer server and generate an invite code
-- **[`puter.peer.connect()`](/Peer/connect/)** - Connect to a peer server using an invite code
-- **[`puter.peer.ensureTurnRelays()`](/Peer/ensureTurnRelays/)** - Preload TURN relays for faster connections
+- **[`mixt.peer.serve()`](/Peer/serve/)** - Create a peer server and generate an invite code
+- **[`mixt.peer.connect()`](/Peer/connect/)** - Connect to a peer server using an invite code
+- **[`mixt.peer.ensureTurnRelays()`](/Peer/ensureTurnRelays/)** - Preload TURN relays for faster connections
 
 ## Examples
 

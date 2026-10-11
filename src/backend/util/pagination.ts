@@ -80,7 +80,7 @@ const sealKey = (secret: string): Buffer => {
         sealKeyMemo = {
             secret,
             key: Buffer.from(
-                hkdfSync('sha256', secret, '', 'puter:pagination-cursor', 32),
+                hkdfSync('sha256', secret, '', 'mixt:pagination-cursor', 32),
             ),
         };
     return sealKeyMemo.key;

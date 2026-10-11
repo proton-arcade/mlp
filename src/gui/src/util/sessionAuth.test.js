@@ -44,7 +44,7 @@ describe('syncSessionCookie', () => {
     it('returns false without a bearer token and does not call fetch', async () => {
         let called = false;
         const ok = await syncSessionCookie({
-            origin: 'https://puter.test',
+            origin: 'https://mixt.test',
             authToken: null,
             fetchFn: () => { called = true; },
         });
@@ -55,7 +55,7 @@ describe('syncSessionCookie', () => {
     it('calls /session/sync-cookie with the bearer token and cookies', async () => {
         let seen = null;
         const ok = await syncSessionCookie({
-            origin: 'https://puter.test',
+            origin: 'https://mixt.test',
             authToken: 'tok-123',
             fetchFn: (url, opts) => {
                 seen = { url, opts };
@@ -63,19 +63,19 @@ describe('syncSessionCookie', () => {
             },
         });
         expect(ok).toBe(true);
-        expect(seen.url).toBe('https://puter.test/session/sync-cookie');
+        expect(seen.url).toBe('https://mixt.test/session/sync-cookie');
         expect(seen.opts.credentials).toBe('include');
         expect(seen.opts.headers.Authorization).toBe('Bearer tok-123');
     });
 
     it('returns false on a non-ok response or a network error', async () => {
         expect(await syncSessionCookie({
-            origin: 'https://puter.test',
+            origin: 'https://mixt.test',
             authToken: 'tok',
             fetchFn: () => Promise.resolve({ ok: false }),
         })).toBe(false);
         expect(await syncSessionCookie({
-            origin: 'https://puter.test',
+            origin: 'https://mixt.test',
             authToken: 'tok',
             fetchFn: () => Promise.reject(new Error('offline')),
         })).toBe(false);
@@ -87,7 +87,7 @@ describe('fetchWithSessionCookieRetry', () => {
         let syncCalled = false;
         const res = await fetchWithSessionCookieRetry(
             () => Promise.resolve(jsonResponse(200, { success: true })),
-            { origin: 'https://puter.test', authToken: 'tok', fetchFn: () => { syncCalled = true; } },
+            { origin: 'https://mixt.test', authToken: 'tok', fetchFn: () => { syncCalled = true; } },
         );
         expect(res.ok).toBe(true);
         expect(syncCalled).toBe(false);
@@ -104,7 +104,7 @@ describe('fetchWithSessionCookieRetry', () => {
                     ? jsonResponse(401, { code })
                     : jsonResponse(200, { success: true })),
                 {
-                    origin: 'https://puter.test',
+                    origin: 'https://mixt.test',
                     authToken: 'tok',
                     fetchFn: () => {
                         synced = true;
@@ -122,7 +122,7 @@ describe('fetchWithSessionCookieRetry', () => {
         let sends = 0;
         const res = await fetchWithSessionCookieRetry(
             () => Promise.resolve((sends++, jsonResponse(401, { code: 'session_required' }))),
-            { origin: 'https://puter.test', authToken: null },
+            { origin: 'https://mixt.test', authToken: null },
         );
         expect(sends).toBe(1);
         expect(res.status).toBe(401);
@@ -135,7 +135,7 @@ describe('fetchWithSessionCookieRetry', () => {
         let syncCalled = false;
         const res = await fetchWithSessionCookieRetry(
             () => Promise.resolve((sends++, jsonResponse(401, { code: 'unauthorized' }))),
-            { origin: 'https://puter.test', authToken: 'tok', fetchFn: () => { syncCalled = true; } },
+            { origin: 'https://mixt.test', authToken: 'tok', fetchFn: () => { syncCalled = true; } },
         );
         expect(sends).toBe(1);
         expect(syncCalled).toBe(false);

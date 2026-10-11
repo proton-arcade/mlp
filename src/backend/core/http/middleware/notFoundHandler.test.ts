@@ -25,7 +25,7 @@ import { createNotFoundHandler } from './notFoundHandler';
 const makeReq = (over: Partial<Request> = {}): Request =>
     ({
         method: 'GET',
-        hostname: 'puter.example',
+        hostname: 'mixt.example',
         path: '/no-such-page',
         ...over,
     }) as Request;
@@ -61,7 +61,7 @@ describe('createNotFoundHandler', () => {
     });
 
     describe('with guiDomain set', () => {
-        const handler = createNotFoundHandler({ guiDomain: 'puter.example' });
+        const handler = createNotFoundHandler({ guiDomain: 'mixt.example' });
 
         it('redirects an unmatched GET on the GUI domain to /', () => {
             const next = vi.fn();
@@ -102,7 +102,7 @@ describe('createNotFoundHandler', () => {
             const next = vi.fn();
             const res = makeRes();
             handler(
-                makeReq({ hostname: 'api.puter.example' }),
+                makeReq({ hostname: 'api.mixt.example' }),
                 res as unknown as Response,
                 next,
             );

@@ -32,9 +32,9 @@
 -- column type copies the table, and this one grows without bound — a migration
 -- directory that replays on every boot must not rebuild it every time.
 
-DROP PROCEDURE IF EXISTS _puter_widen_notification_stamps;
+DROP PROCEDURE IF EXISTS _mixt_widen_notification_stamps;
 DELIMITER //
-CREATE PROCEDURE _puter_widen_notification_stamps()
+CREATE PROCEDURE _mixt_widen_notification_stamps()
 BEGIN
   IF EXISTS (
     SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS
@@ -57,5 +57,5 @@ BEGIN
   END IF;
 END //
 DELIMITER ;
-CALL _puter_widen_notification_stamps();
-DROP PROCEDURE IF EXISTS _puter_widen_notification_stamps;
+CALL _mixt_widen_notification_stamps();
+DROP PROCEDURE IF EXISTS _mixt_widen_notification_stamps;

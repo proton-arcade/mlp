@@ -1,10 +1,10 @@
 <html>
 <body>
-    <script src="/puter.js/v2"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
     (async () => {
-        // 1. Create a worker file in your Puter account.
-        puter.print('→ Writing the worker code to my-worker.js<br>');
+        // 1. Create a worker file in your Mixt OS account.
+        mixt.print('→ Writing the worker code to my-worker.js<br>');
         const workerCode = `
         // API routes
         router.get('/api/hello', async (event) => {
@@ -12,20 +12,20 @@
         });
         `;
 
-        // Save the worker code to my-worker.js in your Puter account
-        await puter.fs.write('my-worker.js', workerCode);
+        // Save the worker code to my-worker.js in your Mixt OS account
+        await mixt.fs.write('my-worker.js', workerCode);
 
         // 2. Deploy the worker using the file path
-        const workerName = puter.randName();
-        puter.print(`→ Deploying ${workerName} worker. May take up to 10 seconds to deploy.<br>`);
-        const deployment = await puter.workers.create(workerName, 'my-worker.js');
+        const workerName = mixt.randName();
+        mixt.print(`→ Deploying ${workerName} worker. May take up to 10 seconds to deploy.<br>`);
+        const deployment = await mixt.workers.create(workerName, 'my-worker.js');
         
         // 3. Test the worker
-        puter.print(`→ Wait 5 seconds before testing the worker to make sure it's propagated.<br>`);
+        mixt.print(`→ Wait 5 seconds before testing the worker to make sure it's propagated.<br>`);
 
         setTimeout(async ()=>{
             const response = await fetch(`${deployment.url}/api/hello`);
-            puter.print('→ Test response: ', await response.text());
+            mixt.print('→ Test response: ', await response.text());
         }, 5000);
     })();
     </script>

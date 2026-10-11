@@ -17,14 +17,14 @@
 
 -- User-to-developer feedback for apps that opt in. Opt-in is the new
 -- `apps.feedback_enabled` column (developer-writable through the regular
--- `puter.apps.update` path; a dedicated column rather than a `metadata` key
+-- `mixt.apps.update` path; a dedicated column rather than a `metadata` key
 -- because Dev Center saves replace the whole metadata blob and would erase
 -- it). Each row of `app_feedback` is one message a signed-in user submitted
 -- through the GUI feedback dialog; a copy is emailed to the app owner unless
 -- the per-app daily email cap suppressed it (`email_sent` records which).
 -- `app_uid` is denormalized alongside `app_id` so rows stay attributable
 -- after an app is deleted (abuse forensics). `source_env` is 'app' (desktop
--- dialog) or 'web' (puter.com popup opened from an external site);
+-- dialog) or 'web' (mixt.mpl popup opened from an external site);
 -- `source_origin` is the popup opener's browser-attested origin, null for
 -- desktop submissions. `created_at` is unix seconds. The (user_id,
 -- created_at) and (app_id, created_at) indexes serve the sliding-window

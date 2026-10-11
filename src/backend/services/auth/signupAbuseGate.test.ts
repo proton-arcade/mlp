@@ -1,22 +1,22 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { setupPuterTestEnv, type PuterTestEnv } from '../../testUtil.js';
+import { setupMixtTestEnv, type MixtTestEnv } from '../../testUtil.js';
 import { extensionStore } from '../../extensions.js';
 
 // A hook that could not run is not a hook that approved.
 describe('signup abuse hooks fail closed', () => {
-    let env: PuterTestEnv;
+    let env: MixtTestEnv;
     beforeAll(async () => {
-        env = await setupPuterTestEnv();
+        env = await setupMixtTestEnv();
     }, 120_000);
     afterAll(async () => {
-        delete extensionStore.events['puter.signup.validate'];
+        delete extensionStore.events['mixt.signup.validate'];
         await env?.shutdown();
     });
 
     // SKIPPED: anonymous signup; closed by the admin-only lockdown
 
     it.skip('refuses a signup when the validate hook throws', async () => {
-        extensionStore.events['puter.signup.validate'] = [
+        extensionStore.events['mixt.signup.validate'] = [
             () => {
                 throw new Error('harness down');
             },

@@ -1,5 +1,5 @@
 ---
-title: puter.kv.update()
+title: mixt.kv.update()
 description: Update one or more paths within a stored value in the user's own key-value store.
 platforms: [websites, apps, nodejs, workers]
 ---
@@ -9,9 +9,9 @@ Update one or more paths within the value stored at a key. You can update nested
 ## Syntax
 
 ```js
-puter.kv.update(key, pathAndValueMap)
-puter.kv.update(key, pathAndValueMap, ttl)
-puter.kv.update({ key, pathAndValueMap, ttl })
+mixt.kv.update(key, pathAndValueMap)
+mixt.kv.update(key, pathAndValueMap, ttl)
+mixt.kv.update({ key, pathAndValueMap, ttl })
 ```
 
 ## Parameters
@@ -24,7 +24,7 @@ The key to update.
 
 An object where each key is a path (for example, `"profile.name"`) and each value is the new value for that path.
 
-Each value follows the same limits as [`puter.kv.set()`](/KV/set/): **400 KB**, and every number within **±9,007,199,254,740,991** — a larger one is stored clamped to that bound.
+Each value follows the same limits as [`mixt.kv.set()`](/KV/set/): **400 KB**, and every number within **±9,007,199,254,740,991** — a larger one is stored clamped to that bound.
 
 #### `ttl` (Number | null) (optional)
 
@@ -62,12 +62,12 @@ A rejection carries an `Error` with a stable `code`:
 ```html;kv-update-root-array
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
-            await puter.kv.set('players', [{ score: 1 }, { score: 2 }]);
-            const updated = await puter.kv.update('players', { '[0].score': 10 });
-            puter.print(JSON.stringify(updated));
+            await mixt.kv.set('players', [{ score: 1 }, { score: 2 }]);
+            const updated = await mixt.kv.update('players', { '[0].score': 10 });
+            mixt.print(JSON.stringify(updated));
         })();
     </script>
 </body>
@@ -79,18 +79,18 @@ A rejection carries an `Error` with a stable `code`:
 ```html;kv-update
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
-            await puter.kv.set('profile', { name: 'Puter', stats: { score: 10 } });
+            await mixt.kv.set('profile', { name: 'Mixt OS', stats: { score: 10 } });
 
-            const updated = await puter.kv.update(
+            const updated = await mixt.kv.update(
                 'profile',
-                { 'stats.score': 11, 'name': 'Puter Smith' },
+                { 'stats.score': 11, 'name': 'Mixt OS Smith' },
                 3600
             );
 
-            puter.print(`Updated profile: ${JSON.stringify(updated)}`);
+            mixt.print(`Updated profile: ${JSON.stringify(updated)}`);
         })();
     </script>
 </body>

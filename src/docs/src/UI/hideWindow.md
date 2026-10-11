@@ -1,5 +1,5 @@
 ---
-title: puter.ui.hideWindow()
+title: mixt.ui.hideWindow()
 description: Hides the window of your application.
 platforms: [apps]
 ---
@@ -9,7 +9,7 @@ The `hideWindow` method allows you to hide the window of your application.
 ## Syntax
 
 ```javascript
-puter.ui.hideWindow()
+mixt.ui.hideWindow()
 ```
 
 ## Parameters
@@ -25,9 +25,9 @@ None.
 ```html
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
-        puter.ui.hideWindow();
+        mixt.ui.hideWindow();
     </script>
 </body>
 </html>

@@ -19,11 +19,11 @@
 
 import { v4 as uuidv4 } from 'uuid';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import type { PuterServer } from '../../server.js';
+import type { MixtServer } from '../../server.js';
 import { createTestUser, setupTestServer } from '../../testUtil.js';
 import type { PermissionService } from '../permission/PermissionService.js';
 
-let server: PuterServer;
+let server: MixtServer;
 let permissions: PermissionService;
 let ownerUserId: number;
 

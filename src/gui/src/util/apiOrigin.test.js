@@ -20,11 +20,11 @@
 import { describe, it, expect } from 'vitest';
 import { isLoopbackOrigin, resolveAPIOrigin } from './apiOrigin.js';
 
-const CONFIGURED = 'https://api.puter.com';
+const CONFIGURED = 'https://api.mixt.mpl';
 const EVIL = 'https://attacker.example';
 
 describe('isLoopbackOrigin', () => {
-    it('accepts the hosts a local Puter is served from', () => {
+    it('accepts the hosts a local Mixt is served from', () => {
         for ( const origin of [
             'http://localhost:4100',
             'http://localhost:4100',
@@ -39,7 +39,7 @@ describe('isLoopbackOrigin', () => {
 
     it('rejects everything else, including lookalikes', () => {
         for ( const origin of [
-            'https://puter.com',
+            'https://mixt.mpl',
             'https://myputer.example',
             'https://localhost.attacker.example',
             'https://notlocalhost',
@@ -56,7 +56,7 @@ describe('resolveAPIOrigin', () => {
     it('ignores a URL-supplied origin on a hosted deployment', () => {
         expect(resolveAPIOrigin({
             configuredOrigin: CONFIGURED,
-            guiOrigin: 'https://puter.com',
+            guiOrigin: 'https://mixt.mpl',
             urlOrigin: EVIL,
         })).toBe(CONFIGURED);
     });
@@ -64,7 +64,7 @@ describe('resolveAPIOrigin', () => {
     it('ignores a stored origin on a hosted deployment', () => {
         expect(resolveAPIOrigin({
             configuredOrigin: CONFIGURED,
-            guiOrigin: 'https://puter.com',
+            guiOrigin: 'https://mixt.mpl',
             storedOrigin: EVIL,
         })).toBe(CONFIGURED);
     });
@@ -78,7 +78,7 @@ describe('resolveAPIOrigin', () => {
         })).toBe('https://api.myputer.example');
     });
 
-    it('honors a URL-supplied origin on a local Puter', () => {
+    it('honors a URL-supplied origin on a local Mixt', () => {
         expect(resolveAPIOrigin({
             configuredOrigin: 'http://api.localhost:4100',
             guiOrigin: 'http://localhost:4100',
@@ -86,7 +86,7 @@ describe('resolveAPIOrigin', () => {
         })).toBe(CONFIGURED);
     });
 
-    it('falls back to a stored origin on a local Puter, URL winning', () => {
+    it('falls back to a stored origin on a local Mixt, URL winning', () => {
         const local = {
             configuredOrigin: 'http://api.localhost:4100',
             guiOrigin: 'http://localhost:4100',

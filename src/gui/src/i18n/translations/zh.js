@@ -134,7 +134,7 @@ const zh = {
         forgot_pass_c2a: '忘记密码？',
         from: '从',
         general: '常用',
-        get_a_copy_of_on_puter: '在 Mixt.com 上获取 \'%%\' 的副本！',
+        get_a_copy_of_on_mixt: '在 Mixt.com 上获取 \'%%\' 的副本！',
         get_copy_link: '获取复制链接',
         hide_all_windows: '隐藏所有窗口',
         home: '主页',
@@ -200,7 +200,7 @@ const zh = {
         picture: '图片',
         pictures: '图片',
         plural_suffix: '',
-        powered_by_puter_js: '由 {{link=docs}}Puter.js{{/link}} 提供支持',
+        powered_by_mixt_js: '由 {{link=docs}}Mixt.js{{/link}} 提供支持',
         preparing: '准备中...',
         preparing_for_upload: '准备上传...',
         print: '打印',
@@ -216,7 +216,7 @@ const zh = {
         public: '公开',
         publish: '发布',
         publish_as_website: '发布为网站',
-        puter_description: 'Mixt 是一个隐私优先的个人云，可将您的所有文件、应用程序和游戏保存在一个安全的地方，方便随时随地访问。',
+        mixt_description: 'Mixt 是一个隐私优先的个人云，可将您的所有文件、应用程序和游戏保存在一个安全的地方，方便随时随地访问。',
         reading_file: '正在读取 %strong%',
         recent: '最近',
         recommended: '推荐',
@@ -232,7 +232,7 @@ const zh = {
         replace_all: '全部替换',
         resend_confirmation_code: '重新发送确认码',
         reset_colors: '重置颜色',
-        restart_puter_confirm: '确定要重启Puter?',
+        restart_mixt_confirm: '确定要重启Mixt?',
         restore: '还原',
         save: '保存',
         saturation: '饱和度',
@@ -262,7 +262,7 @@ const zh = {
         shortcut_to: '快捷方式',
         show_all_windows: '显示所有窗口',
         show_hidden: '显示隐藏',
-        sign_in_with_puter: '使用 Mixt 登录',
+        sign_in_with_mixt: '使用 Mixt 登录',
         sign_up: '注册',
         signing_in: '登录中…',
         size: '大小',
@@ -272,7 +272,7 @@ const zh = {
         start: '开始',
         status: '状态',
         storage_usage: '存储使用量',
-        storage_puter_used: '被Puter使用',
+        storage_mixt_used: '被Mixt使用',
         taking_longer_than_usual: '需要的时间比平时长一点。请稍等...',
         task_manager: '任务管理器',
         taskmgr_header_name: '状态',
@@ -305,7 +305,7 @@ const zh = {
         visibility: '可见性',
         yes: '确定',
         yes_release_it: '是的，释放它',
-        you_have_been_referred_to_puter_by_a_friend: '您已经被朋友推荐到 Mixt！',
+        you_have_been_referred_to_mixt_by_a_friend: '您已经被朋友推荐到 Mixt！',
         zip: '压缩',
         zipping_file: '正在压缩 %strong%',
 
@@ -472,7 +472,7 @@ const zh = {
         'window_title_public': '公开', // In English: "Public"
         'window_title_videos': '视频', // In English: "Videos"
         'window_title_pictures': '图片', // In English: "Pictures"
-        'window_title_puter': 'Mixt', // In English: "Mixt"
+        'window_title_mixt': 'Mixt', // In English: "Mixt"
         'window_folder_empty': '此文件夹为空', // In English: "This folder is empty"
         'manage_your_subdomains': '管理您的子域名', // In English: "Manage Your Subdomains"
         'open_containing_folder': '打开所在文件夹', // In English: "Open Containing Folder"

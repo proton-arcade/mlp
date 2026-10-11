@@ -19,9 +19,9 @@
 -- so re-running the migration directory is safe (required — the runner
 -- has no per-file tracking).
 
-DROP PROCEDURE IF EXISTS _puter_add_subdomains_preamble_version;
+DROP PROCEDURE IF EXISTS _mixt_add_subdomains_preamble_version;
 DELIMITER //
-CREATE PROCEDURE _puter_add_subdomains_preamble_version()
+CREATE PROCEDURE _mixt_add_subdomains_preamble_version()
 BEGIN
   IF NOT EXISTS (
     SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS
@@ -34,6 +34,6 @@ BEGIN
 END//
 DELIMITER ;
 
-CALL _puter_add_subdomains_preamble_version();
+CALL _mixt_add_subdomains_preamble_version();
 
-DROP PROCEDURE IF EXISTS _puter_add_subdomains_preamble_version;
+DROP PROCEDURE IF EXISTS _mixt_add_subdomains_preamble_version;

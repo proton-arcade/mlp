@@ -21,12 +21,12 @@ import { v4 as uuidv4 } from 'uuid';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { makeActor, type Actor } from '../../core/actor.js';
 import { runWithContext } from '../../core/context.js';
-import { PuterServer } from '../../server.js';
+import { MixtServer } from '../../server.js';
 import { createTestUser, setupTestServer } from '../../testUtil.js';
 import { MANAGE_PERM_PREFIX } from '../permission/consts.js';
 
 describe('ShareService', () => {
-    let server: PuterServer;
+    let server: MixtServer;
 
     beforeAll(async () => {
         server = await setupTestServer();
@@ -3170,7 +3170,7 @@ describe('ShareService', () => {
         }
 
         // The second batch is still recorded — the recipient must not open
-        // Puter to a notification that undercounts what is waiting — but it
+        // Mixt to a notification that undercounts what is waiting — but it
         // arrives silently, without a second interruption.
         expect(notified.map((call) => call.ids)).toEqual([
             [recipient.user.id],

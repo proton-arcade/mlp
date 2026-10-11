@@ -1,15 +1,15 @@
 ---
 title: Team
-description: The Team object containing information about a Puter team.
+description: The Team object containing information about a Mixt OS team.
 ---
 
-The `Team` object contains information about a Puter team, returned by [`puter.teams.list()`](/Teams/list/).
+The `Team` object contains information about a Mixt OS team, returned by [`mixt.teams.list()`](/Teams/list/).
 
 ## Attributes
 
 #### `uid` (String)
 
-The team's unique identifier. Pass this to [`puter.teams.listDirectory()`](/Teams/listDirectory/).
+The team's unique identifier. Pass this to [`mixt.teams.listDirectory()`](/Teams/listDirectory/).
 
 #### `name` (String)
 

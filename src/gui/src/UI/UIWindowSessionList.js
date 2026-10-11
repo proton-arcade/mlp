@@ -48,7 +48,7 @@ async function UIWindowSessionList (options) {
         </div>`;
         // session list
         h += '<div class="hide-scrollbar" style="overflow-y: scroll; max-width: 400px; margin: 0 auto;">';
-        h += `<h1 style="text-align: center; font-size: 18px; font-weight: normal; color: #757575; margin-bottom: 30px;"><img src="${window.icons['logo-white.svg']}" style="padding: 4px; background-color: blue; border-radius: 5px; width: 25px; box-sizing: border-box; margin-bottom: -6px; margin-right: 6px;">${i18n('sign_in_with_puter')}</h1>`;
+        h += `<h1 style="text-align: center; font-size: 18px; font-weight: normal; color: #757575; margin-bottom: 30px;"><img src="${window.icons['logo-white.svg']}" style="padding: 4px; background-color: blue; border-radius: 5px; width: 25px; box-sizing: border-box; margin-bottom: -6px; margin-right: 6px;">${i18n('sign_in_with_mixt')}</h1>`;
         for ( let index = 0; index < window.logged_in_users.length; index++ ) {
             const l_user = window.logged_in_users[index];
             h += `<div data-uuid="${l_user.uuid}" class="session-entry" style="display: flex; padding: 15px 10px;">`;

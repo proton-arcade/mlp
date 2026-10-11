@@ -1,5 +1,5 @@
 ---
-title: puter.ui.showFontPicker()
+title: mixt.ui.showFontPicker()
 description: Presents a list of fonts for previewing and selecting.
 platforms: [ websites, apps]
 ---
@@ -8,9 +8,9 @@ Presents the user with a list of fonts allowing them to preview and select a fon
 
 ## Syntax
 ```js
-puter.ui.showFontPicker()
-puter.ui.showFontPicker(defaultFont)
-puter.ui.showFontPicker(options)
+mixt.ui.showFontPicker()
+mixt.ui.showFontPicker(defaultFont)
+mixt.ui.showFontPicker(options)
 ```
 
 ## Parameters
@@ -23,11 +23,11 @@ The default font to select when the font picker is opened.
 ```html;ui-show-font-picker
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <h1>A cool Font Picker demo!</h1>
 
     <script>
-        puter.ui.showFontPicker().then((font)=>{
+        mixt.ui.showFontPicker().then((font)=>{
             document.body.style.fontFamily = font.fontFamily;
         })
     </script>

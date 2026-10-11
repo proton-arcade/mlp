@@ -104,7 +104,7 @@ export const createErrorHandler = (
         // A route declaring `errorRenderer` (the Anthropic/OpenAI-compatible
         // wire surface) wants every error — including gate failures this
         // middleware never threw itself — in its vendor's envelope instead
-        // of the default Puter shape.
+        // of the default Mixt shape.
         const renderer = res.locals?.errorRenderer;
         const rendered = renderer?.(err, req);
         if (rendered) {

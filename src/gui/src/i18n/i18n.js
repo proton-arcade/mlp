@@ -22,9 +22,9 @@ import translations from './translations/translations.js';
 window.listSupportedLanguages = () => Object.keys(translations).map(lang => translations[lang]);
 
 const variables = {
-    docs: 'https://docs.puter.com/',
-    terms: 'https://puter.com/terms',
-    privacy: 'https://puter.com/privacy',
+    docs: 'https://docs.mixt.mpl/',
+    terms: 'https://mixt.mpl/terms',
+    privacy: 'https://mixt.mpl/privacy',
 };
 
 function ReplacePlaceholders (str, arg_variables = {}) {

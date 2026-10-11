@@ -1,15 +1,15 @@
 ---
-title: puter.kv.MAX_VALUE_SIZE
+title: mixt.kv.MAX_VALUE_SIZE
 description: Returns the maximum value size (in bytes) for the key-value store.
 platforms: [websites, apps, nodejs, workers]
 ---
 
-A property of the `puter.kv` object that returns the maximum value size (in bytes) for the key-value store. A value is measured as the UTF-8 bytes of `JSON.stringify(value)`, so a string's quotes and escapes count.
+A property of the `mixt.kv` object that returns the maximum value size (in bytes) for the key-value store. A value is measured as the UTF-8 bytes of `JSON.stringify(value)`, so a string's quotes and escapes count.
 
 ## Syntax
 
 ```js
-puter.kv.MAX_VALUE_SIZE
+mixt.kv.MAX_VALUE_SIZE
 ```
 
 ## Examples
@@ -19,9 +19,9 @@ puter.kv.MAX_VALUE_SIZE
 ```html
 <html>
   <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
-      puter.print("Max Value Size: " + puter.kv.MAX_VALUE_SIZE);
+      mixt.print("Max Value Size: " + mixt.kv.MAX_VALUE_SIZE);
     </script>
   </body>
 </html>

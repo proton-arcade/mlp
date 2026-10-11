@@ -56,7 +56,7 @@ export {
     stepUpCookieOptions,
     verifyStepUpSession,
 } from './middleware/stepUpSession';
-export { PuterRouter } from './PuterRouter';
+export { MixtRouter } from './MixtRouter';
 export {
     PREFIX_METADATA_KEY,
     ROUTES_METADATA_KEY,

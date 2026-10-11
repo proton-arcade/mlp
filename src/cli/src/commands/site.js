@@ -14,7 +14,7 @@ import * as ui from '../lib/ui.js';
 
 function normalizeSubdomain(input) {
   let s = String(input).trim().toLowerCase();
-  // accept a pasted full host like "my-app.puter.site"
+  // accept a pasted full host like "my-app.mixt.site"
   const suffix = `.${SITE_DOMAIN}`;
   if (s.endsWith(suffix)) s = s.slice(0, -suffix.length);
   return s;
@@ -54,7 +54,7 @@ export async function siteDeploy(dirArg, subArg, opts) {
   if (!interactive && (!dirArg || !subArg)) {
     throw new CLIError(
       'Both a directory and subdomain are required in non-interactive mode.',
-      { hint: 'Usage: puter site deploy <dir> <subdomain>' },
+      { hint: 'Usage: mixt site deploy <dir> <subdomain>' },
     );
   }
 
@@ -70,11 +70,11 @@ export async function siteDeploy(dirArg, subArg, opts) {
   if (!fs.existsSync(dir) || !fs.statSync(dir).isDirectory()) {
     // Positional footgun mitigation (spec §5.4): a lone arg is the directory.
     throw new CLIError(`No such directory '${dirInput}'.`, {
-      hint: `(To deploy the current folder to that subdomain, run: puter site deploy . ${dirInput})`,
+      hint: `(To deploy the current folder to that subdomain, run: mixt site deploy . ${dirInput})`,
     });
   }
 
-  const puter = await ensureClient();
+  const mixt = await ensureClient();
 
   // 1b. Resolve + validate subdomain (re-prompt interactively).
   let subdomain;
@@ -83,7 +83,7 @@ export async function siteDeploy(dirArg, subArg, opts) {
     const err = subdomainError(subdomain);
     if (err) throw new CLIError(`Invalid subdomain: ${err}`);
   } else if (interactive) {
-    const suggested = await randName(puter);
+    const suggested = await randName(mixt);
     subdomain = normalizeSubdomain(
       bail(
         await clack.text({
@@ -129,12 +129,12 @@ export async function siteDeploy(dirArg, subArg, opts) {
   // dedupe only. Each deploy then gets its own auto-numbered folder
   // (deployment, deployment (1), ...) and older versions are preserved.
   try {
-    await puter.fs.mkdir(`~/Sites/${subdomain}`, { createMissingParents: true });
+    await mixt.fs.mkdir(`~/Sites/${subdomain}`, { createMissingParents: true });
   } catch (err) {
     // Parent already exists (the common case after the first deploy) — fine.
     ui.debug('parent mkdir note:', err?.message ?? JSON.stringify(err));
   }
-  const folder = await puter.fs.mkdir(`~/Sites/${subdomain}/deployment`, {
+  const folder = await mixt.fs.mkdir(`~/Sites/${subdomain}/deployment`, {
     dedupeName: true,
   });
   const targetPath = folder?.path ?? folder;
@@ -148,7 +148,7 @@ export async function siteDeploy(dirArg, subArg, opts) {
   let uploaded;
   let failures;
   try {
-    ({ uploaded, failures } = await uploadFiles(puter, {
+    ({ uploaded, failures } = await uploadFiles(mixt, {
       files,
       destination: targetPath,
       onProgress: (done, total) => sp.message(`Uploaded ${done}/${total} file(s)...`),
@@ -176,7 +176,7 @@ export async function siteDeploy(dirArg, subArg, opts) {
   // 5. Point the subdomain at the new folder.
   let existing = null;
   try {
-    existing = await puter.hosting.get(subdomain);
+    existing = await mixt.hosting.get(subdomain);
   } catch {
     existing = null; // treat "not found" as creatable
   }
@@ -191,10 +191,10 @@ export async function siteDeploy(dirArg, subArg, opts) {
       );
       if (!go) throw new CLIError('Cancelled.');
     }
-    await puter.hosting.update(subdomain, targetPath);
+    await mixt.hosting.update(subdomain, targetPath);
   } else {
     try {
-      await puter.hosting.create(subdomain, targetPath);
+      await mixt.hosting.create(subdomain, targetPath);
     } catch (err) {
       throw new CLIError(
         `Could not create subdomain '${subdomain}': ${err.message}`,
@@ -210,11 +210,11 @@ export async function siteDeploy(dirArg, subArg, opts) {
 // --- list / get / delete --------------------------------------------------
 
 export async function siteList() {
-  const puter = await ensureClient();
-  const sites = (await puter.hosting.list()) ?? [];
+  const mixt = await ensureClient();
+  const sites = (await mixt.hosting.list()) ?? [];
 
   if (sites.length === 0) {
-    ui.info('No sites yet. Deploy one with: puter site deploy');
+    ui.info('No sites yet. Deploy one with: mixt site deploy');
     return;
   }
   for (const s of sites) {
@@ -224,12 +224,12 @@ export async function siteList() {
 }
 
 export async function siteGet(subdomainArg) {
-  const puter = await ensureClient();
+  const mixt = await ensureClient();
   const subdomain = normalizeSubdomain(subdomainArg);
 
   let site;
   try {
-    site = await puter.hosting.get(subdomain);
+    site = await mixt.hosting.get(subdomain);
   } catch (err) {
     throw new CLIError(`Could not fetch '${subdomain}': ${err.message}`);
   }
@@ -242,7 +242,7 @@ export async function siteGet(subdomainArg) {
 }
 
 export async function siteDelete(subdomainArg, opts) {
-  const puter = await ensureClient();
+  const mixt = await ensureClient();
   const subdomain = normalizeSubdomain(subdomainArg);
 
   if (isInteractive() && !opts.yes) {
@@ -256,7 +256,7 @@ export async function siteDelete(subdomainArg, opts) {
   }
 
   try {
-    await puter.hosting.delete(subdomain);
+    await mixt.hosting.delete(subdomain);
   } catch (err) {
     throw new CLIError(`Could not delete '${subdomain}': ${err.message}`);
   }

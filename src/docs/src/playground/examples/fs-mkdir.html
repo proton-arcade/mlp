@@ -1,13 +1,13 @@
 <html>
 <body>
-    <script src="/puter.js/v2"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         // Create a directory with random name
-        let dirName = puter.randName();
-        puter.fs.mkdir(dirName).then((directory) => {
-            puter.print(`"${dirName}" created at ${directory.path}`);
+        let dirName = mixt.randName();
+        mixt.fs.mkdir(dirName).then((directory) => {
+            mixt.print(`"${dirName}" created at ${directory.path}`);
         }).catch((error) => {
-            puter.print('Error creating directory:', error);
+            mixt.print('Error creating directory:', error);
         });
     </script>
 </body>

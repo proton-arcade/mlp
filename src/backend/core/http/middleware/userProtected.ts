@@ -44,14 +44,14 @@ import type { TokenService } from '../../../services/auth/TokenService';
  *    reach `/delete-own-user`. Opt in by constructing with `{ allowTempUsers:
  *    true }` on that route.
  * 4. **Password OR OIDC revalidation cookie** — `req.body.password` is verified
- *    via bcrypt against the user row; otherwise a valid `puter_revalidation`
+ *    via bcrypt against the user row; otherwise a valid `mixt_revalidation`
  *    cookie (signed via `services.token.sign('oidc-state')`) is required.
  *    OIDC-only accounts (no password) MUST use the revalidation cookie —
  *    password path returns `oidc_revalidation_required` with a `revalidate_url`
  *    so the GUI can open the OIDC popup.
  */
 
-const REVALIDATION_COOKIE_NAME = 'puter_revalidation';
+const REVALIDATION_COOKIE_NAME = 'mixt_revalidation';
 
 interface RevalidationPayload {
     user_uuid: string;
@@ -75,7 +75,7 @@ export interface UserProtectedGateDeps {
  * issuing web session).
  */
 export const createSessionCookieGate = (config: IConfig): RequestHandler => {
-    const cookieName = config.cookie_name ?? 'puter_token';
+    const cookieName = config.cookie_name ?? 'mixt_token';
     return (req, _res, next) => {
         const cookieValue = req.cookies?.[cookieName];
         if (!cookieValue || (req.token && req.token !== cookieValue)) {
@@ -92,7 +92,7 @@ export const createSessionCookieGate = (config: IConfig): RequestHandler => {
 /**
  * Same intent as `createSessionCookieGate` ("an access token can't revoke its
  * issuing web session") but identity-shape based instead of cookie- value
- * based, so it works for the cross-subdomain GUI -> api.puter.com call path
+ * based, so it works for the cross-subdomain GUI -> api.mixt.mpl call path
  * where the session cookie isn't sent. Accepts a plain user actor
  * (web/session/gui-token); rejects app-under-user actors and access-token
  * actors. Pair with `antiCsrf: true` on the route.
@@ -183,7 +183,7 @@ export const createUserProtectedGate = (
     //   - `req.body.password` → bcrypt match against user row. OIDC-only
     //     accounts bounce with `oidc_revalidation_required` + a
     //     `revalidate_url` helper so the GUI can open the OIDC popup.
-    //   - Otherwise accept a valid `puter_revalidation` cookie. Expiry,
+    //   - Otherwise accept a valid `mixt_revalidation` cookie. Expiry,
     //     `purpose === 'revalidate'`, matching `user_uuid` all required.
     //   - Password account, neither credential → 403 `password_required`.
     const verifyIdentity: RequestHandler = async (

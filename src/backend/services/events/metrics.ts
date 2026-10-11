@@ -25,7 +25,7 @@ import { metrics } from '@opentelemetry/api';
  * landed. Attributes carry only region names and enum labels, never user data.
  */
 
-const meter = metrics.getMeter('puter-backend');
+const meter = metrics.getMeter('mixt-backend');
 
 /** Deliveries handed to a peer region, by class. */
 export const forwardSent = meter.createCounter('events.forward.sent', {

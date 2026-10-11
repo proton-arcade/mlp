@@ -1,5 +1,5 @@
 ---
-title: puter.workers.exec()
+title: mixt.workers.exec()
 description: Call a worker as the calling user, while the worker's code acts on the worker owner's shared KV and storage.
 platforms: [websites, apps, nodejs]
 ---
@@ -7,13 +7,13 @@ platforms: [websites, apps, nodejs]
 Sends a request to a worker endpoint while automatically passing the user's session.
 
 <div class="info">
-Unlike standard <code>fetch()</code>, <code>puter.workers.exec()</code> automatically includes the user's session. This provides the worker with the <strong>user context</strong> (<code>user.puter</code>), enabling the <a href="/user-pays-model/">User-Pays model</a>.
+Unlike standard <code>fetch()</code>, <code>mixt.workers.exec()</code> automatically includes the user's session. This provides the worker with the <strong>user context</strong> (<code>user.mixt</code>), enabling the <a href="/user-pays-model/">User-Pays model</a>.
 </div>
 
 ## Syntax
 
 ```js
-puter.workers.exec(workerURL, options)
+mixt.workers.exec(workerURL, options)
 ```
 
 ## Parameters
@@ -37,13 +37,13 @@ A `Promise` that resolves to a `Response` object (similar to the Fetch API).
 ```html
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
             // Execute a worker and get the response
-            const response = await puter.workers.exec('https://my-worker.puter.work');
+            const response = await mixt.workers.exec('https://my-worker.mixt.work');
             const data = await response.text();
-            puter.print(`Response: ${data}`);
+            mixt.print(`Response: ${data}`);
         })();
     </script>
 </body>

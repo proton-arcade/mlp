@@ -16,7 +16,7 @@
     --mixt-window-bg: #f2f2f1;
     --mixt-window-border: rgba(0, 0, 0, 0.32);
 
-    /* Puter's selection and taskbar tokens, retuned to the Mint-Y palette. */
+    /* Mixt's selection and taskbar tokens, retuned to the Mint-Y palette. */
     --select-hue: 96;
     --select-saturation: 58%;
     --select-lightness: 42%;

@@ -22,7 +22,7 @@ import path from 'node:path';
 import type { IConfig } from './types';
 
 // Config resolution order:
-//   1. `process.env.PUTER_CONFIG_PATH` — absolute path to a config file. Used
+//   1. `process.env.MIXT_CONFIG_PATH` — absolute path to a config file. Used
 //      by deployments whose outer bootstrap writes a merged config to a known
 //      location.
 //   2. `<PACKAGE_ROOT>/config.json` — user's runtime override (gitignored),
@@ -30,8 +30,8 @@ import type { IConfig } from './types';
 //      don't care to override (e.g. gui_assets_root, database).
 //   3. `<PACKAGE_ROOT>/config.default.json` — bundled OSS defaults.
 //
-// Post-flatten depth: compiled file is at `packages/puter/dist/src/backend/index.js`,
-// so three `..`s land at `packages/puter/`.
+// Post-flatten depth: compiled file is at `packages/mixt/dist/src/backend/index.js`,
+// so three `..`s land at `packages/mixt/`.
 const PACKAGE_ROOT = path.resolve(__dirname, '../../..');
 // Root of the running code tree. Matches PACKAGE_ROOT for a source run, but
 // points at `dist/` for a compiled run — so config-declared paths like
@@ -57,7 +57,7 @@ const deepMerge = <T extends Record<string, unknown>>(
 };
 
 export const loadConfig = (): IConfig => {
-    const envPath = process.env.PUTER_CONFIG_PATH;
+    const envPath = process.env.MIXT_CONFIG_PATH;
     const runtimePath = path.join(PACKAGE_ROOT, 'config.json');
     const defaultPath = path.join(PACKAGE_ROOT, 'config.default.json');
 
@@ -119,7 +119,7 @@ export const loadConfig = (): IConfig => {
         config.origin = `${protocol}://${domain}${portSuffix}`;
     }
     // API lives on the `api.` subdomain on the same host+port as the main
-    // origin (see PuterRouter subdomain handling in server.ts). Compute it
+    // origin (see MixtRouter subdomain handling in server.ts). Compute it
     // from pub_port/domain so a single-port override (e.g. port: 5101) flows
     // through to the GUI bootstrap without users having to restate the URL.
     if (config.api_base_url === undefined) {
@@ -130,7 +130,7 @@ export const loadConfig = (): IConfig => {
     // - `extensions` uses RUNTIME_ROOT because extensions ship inside the
     //   build output (dist/extensions) and the loader's dynamic import()
     //   resolves relative paths against the *importing* module file.
-    // - GUI/puter-js/builtin-apps use PACKAGE_ROOT because those assets
+    // - GUI/mixt-js/builtin-apps use PACKAGE_ROOT because those assets
     //   live only in the source tree (not copied into dist/) and are served
     //   via express.static at runtime.
     const resolveRuntime = (p: string): string =>
@@ -144,8 +144,8 @@ export const loadConfig = (): IConfig => {
     if (typeof config.gui_assets_root === 'string') {
         config.gui_assets_root = resolvePackage(config.gui_assets_root);
     }
-    if (typeof config.puterjs_root === 'string') {
-        config.puterjs_root = resolvePackage(config.puterjs_root);
+    if (typeof config.mixtjs_root === 'string') {
+        config.mixtjs_root = resolvePackage(config.mixtjs_root);
     }
     if (isPlainObject(config.builtin_apps)) {
         for (const [k, v] of Object.entries(config.builtin_apps)) {

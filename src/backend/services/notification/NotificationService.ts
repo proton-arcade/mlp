@@ -21,7 +21,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { handlerDepthOf, type Actor } from '../../core/actor.js';
 import { Context } from '../../core/context.js';
 import type { NotifEventContext } from '../events/registry.js';
-import { PuterService } from '../types.js';
+import { MixtService } from '../types.js';
 import {
     NotificationSocketAdapter,
     notificationsFoldInEnabled,
@@ -58,10 +58,10 @@ const UNREAD_REPLAY_LIMIT = 200;
  * connects → send unreads, notification acked → socket event).
  *
  * Other services push notifications via `notify(userIds, notification)`. The
- * driver (`puter-notifications`) handles read/select/mark for API consumers;
+ * driver (`mixt-notifications`) handles read/select/mark for API consumers;
  * this service handles the write-and-push side.
  */
-export class NotificationService extends PuterService {
+export class NotificationService extends MixtService {
     /** User.id → debounce timeout */
     #connectTimeouts = new Map<number, ReturnType<typeof setTimeout>>();
     #retentionSweep: ReturnType<typeof setInterval> | null = null;

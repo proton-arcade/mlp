@@ -1,12 +1,12 @@
 # Contributing APIs
 
-How to add a new public API to Puter, and how to maintain one that already exists. "Public API" means anything applications can call: HTTP endpoints, `/drivers/*` methods, and the puter.js methods that wrap them. This guide is written for human contributors and AI agents alike — [AGENTS.md](../AGENTS.md) defers to it for API work.
+How to add a new public API to Mixt OS, and how to maintain one that already exists. "Public API" means anything applications can call: HTTP endpoints, `/drivers/*` methods, and the mixt.js methods that wrap them. This guide is written for human contributors and AI agents alike — [AGENTS.md](../AGENTS.md) defers to it for API work.
 
-Companion docs: [architecture.md](architecture.md) (backend layering), [pagination.md](pagination.md) (list APIs), [src/puter-js/tests/api/README.md](../src/puter-js/tests/api/README.md) (SDK test environment).
+Companion docs: [architecture.md](architecture.md) (backend layering), [pagination.md](pagination.md) (list APIs), [src/mixt-js/tests/api/README.md](../src/mixt-js/tests/api/README.md) (SDK test environment).
 
 ## Rule zero: don't break callers
 
-puter.js is served live from `https://js.puter.com/v2/` with no version pinning — every app in existence picks up your change the moment it deploys, and the backend endpoints underneath have the same property. Assume every observable behavior (parameter handling, response fields, error codes, ordering) has someone depending on it.
+mixt.js is served live from `https://js.mixt.mpl/v2/` with no version pinning — every app in existence picks up your change the moment it deploys, and the backend endpoints underneath have the same property. Assume every observable behavior (parameter handling, response fields, error codes, ordering) has someone depending on it.
 
 Every change is backward compatible unless a maintainer has explicitly agreed to a break beforehand.
 
@@ -26,7 +26,7 @@ extension.post('/my-feature/frobnicate', opts, handler); // or plain routes
 
 Follow the same layered structure inside the extension (driver/controller → service → store) unless it genuinely only needs a couple of route handlers — then the lightweight `extension.get/post/...` helpers are enough on their own.
 
-The test is the direction of dependency: Puter must still work with the extension removed. The moment core needs to call your API, it belongs in core — see [whoami](../extensions/whoami.ts) for the cautionary example of a load-bearing "extension".
+The test is the direction of dependency: Mixt OS must still work with the extension removed. The moment core needs to call your API, it belongs in core — see [whoami](../extensions/whoami.ts) for the cautionary example of a load-bearing "extension".
 
 ## Adding a new API
 
@@ -45,10 +45,10 @@ Follow the layered stack ([architecture.md](architecture.md)): a controller or d
 
 #### Controller or driver?
 
-Both are supported ways to define an API. **Prefer a controller when you need fine-grained control** — URL shape, HTTP verbs, per-route gates, response and streaming formats. A **driver** fits when the API is a set of RPC methods implementing one of the named interfaces on `/drivers/*` (`puter-kvstore`, `puter-chat-completion`, …) and the generic driver plumbing — one call envelope, interchangeable implementations, per-method policies — covers what you need.
+Both are supported ways to define an API. **Prefer a controller when you need fine-grained control** — URL shape, HTTP verbs, per-route gates, response and streaming formats. A **driver** fits when the API is a set of RPC methods implementing one of the named interfaces on `/drivers/*` (`mixt-kvstore`, `mixt-chat-completion`, …) and the generic driver plumbing — one call envelope, interchangeable implementations, per-method policies — covers what you need.
 
-- **Controller:** extend `PuterController` ([src/backend/controllers/types.ts](../src/backend/controllers/types.ts)) and declare routes with the `@Controller(prefix)` class decorator plus `@Get`/`@Post`/… method decorators ([src/backend/core/http/decorators.ts](../src/backend/core/http/decorators.ts)), each taking `(path, routeOptions)` — or override `registerRoutes(router)` imperatively. Core controllers register in [src/backend/controllers/index.ts](../src/backend/controllers/index.ts); extensions use `extension.registerController(...)` or the plain route helpers.
-- **Driver:** extend `PuterDriver` ([src/backend/drivers/types.ts](../src/backend/drivers/types.ts)) and mark it with the `@Driver(interfaceName, opts)` decorator ([src/backend/drivers/decorators.ts](../src/backend/drivers/decorators.ts)), which also declares its policies. Core drivers register in [src/backend/drivers/index.ts](../src/backend/drivers/index.ts); extensions use `extension.registerDriver(...)`.
+- **Controller:** extend `MixtController` ([src/backend/controllers/types.ts](../src/backend/controllers/types.ts)) and declare routes with the `@Controller(prefix)` class decorator plus `@Get`/`@Post`/… method decorators ([src/backend/core/http/decorators.ts](../src/backend/core/http/decorators.ts)), each taking `(path, routeOptions)` — or override `registerRoutes(router)` imperatively. Core controllers register in [src/backend/controllers/index.ts](../src/backend/controllers/index.ts); extensions use `extension.registerController(...)` or the plain route helpers.
+- **Driver:** extend `MixtDriver` ([src/backend/drivers/types.ts](../src/backend/drivers/types.ts)) and mark it with the `@Driver(interfaceName, opts)` decorator ([src/backend/drivers/decorators.ts](../src/backend/drivers/decorators.ts)), which also declares its policies. Core drivers register in [src/backend/drivers/index.ts](../src/backend/drivers/index.ts); extensions use `extension.registerDriver(...)`.
 
 #### Middleware and gates
 
@@ -59,17 +59,17 @@ Both are supported ways to define an API. **Prefer a controller when you need fi
 - **An account must have verified a specific factor** — `requireVerified` (email, and only under `strict_email_verification_required`), `requirePhoneVerified`, `requireCardVerified`. These are opt-in and require the factor to have actually been verified, unlike the default-on gate that turns away accounts still carrying a pending verification the abuse harness asked for. `requireAnyVerified: ['phone', 'card']` is the OR of the last two: any listed factor verified at any point passes, as does a paid plan where `card` is listed (a paying account has a card on file already); otherwise only the factors the deployment can verify are asked for (an SMS provider configured, a card gate an extension reports on), and with none verifiable the gate is inert rather than locking the route on a self-hosted install. It denies with the first verifiable factor's code plus `factors`, the verifiable ones in the route's order, so a client can lead with one flow and offer the other. `verifiedFactorGate.enabled: false` in config stops every declared gate at once, for an SMS-provider outage.
 - **An endpoint that spends metered resources** on the caller's behalf — moving file content, making object-store requests, anything else the account is billed for — also declares `requireCredits: true`, which turns an account with nothing left of its budget away with a 402 before the handler runs. Endpoints that only describe or delete things deliberately don't: an account that has run out still has to be able to see what it has, clear it, and reach its billing pages. Drivers have no route options to declare this on, so they call `assertActorHasCredits` themselves ([src/backend/services/metering/enforcement.ts](../src/backend/services/metering/enforcement.ts)) — see `KVStoreDriver`, which does it once for every method.
 
-### 3. puter.js
+### 3. mixt.js
 
-- Add the method to the matching module in [src/puter-js/src/modules/](../src/puter-js/src/modules/), matching the calling conventions of its siblings (promise-returning; positional shortcut plus options form where that's the local pattern).
+- Add the method to the matching module in [src/mixt-js/src/modules/](../src/mixt-js/src/modules/), matching the calling conventions of its siblings (promise-returning; positional shortcut plus options form where that's the local pattern).
 - Validate cheap preconditions client-side and throw `{ message, code }` objects; pass backend errors through unchanged rather than swallowing or re-wrapping them.
 
 ### 4. Types
 
 - Type the method where you wrote it, in JSDoc: `@param`/`@returns` on the implementation, one `@overload` block per accepted call form, and `@typedef {Object}` + `@property` for any new shape. The JSDoc is the source of truth — declarations are generated from it, so there is nothing to keep in sync by hand.
-- Put a shape more than one file needs in the module's `types.js` (e.g. [src/puter-js/src/modules/kv/types.js](../src/puter-js/src/modules/kv/types.js)); anything shared across modules goes in [src/puter-js/src/lib/types.js](../src/puter-js/src/lib/types.js). A shape with one consumer can stay next to it.
-- Run `npm run check:puterjs:types` — it generates the declarations and type-checks the published surface without `skipLibCheck`. **Never edit anything under `src/puter-js/types/`**: it is gitignored build output, produced by the SDK build and shipped in the npm tarball, and the next build overwrites it.
-- Name the new type in [src/puter-js/index.d.ts](../src/puter-js/index.d.ts) if consumers should be able to import it. That file is the one hand-written declaration in the package: it decides what is public and re-exports nothing else.
+- Put a shape more than one file needs in the module's `types.js` (e.g. [src/mixt-js/src/modules/kv/types.js](../src/mixt-js/src/modules/kv/types.js)); anything shared across modules goes in [src/mixt-js/src/lib/types.js](../src/mixt-js/src/lib/types.js). A shape with one consumer can stay next to it.
+- Run `npm run check:mixtjs:types` — it generates the declarations and type-checks the published surface without `skipLibCheck`. **Never edit anything under `src/mixt-js/types/`**: it is gitignored build output, produced by the SDK build and shipped in the npm tarball, and the next build overwrites it.
+- Name the new type in [src/mixt-js/index.d.ts](../src/mixt-js/index.d.ts) if consumers should be able to import it. That file is the one hand-written declaration in the package: it decides what is public and re-exports nothing else.
 
 ### 5. Docs
 
@@ -77,9 +77,9 @@ Both are supported ways to define an API. **Prefer a controller when you need fi
 
 ### 6. Tests
 
-- **Backend:** colocated Vitest tests; prefer the in-memory test server (`setupPuterTestEnv` in [src/backend/testUtil.ts](../src/backend/testUtil.ts)) over mocking.
-- **SDK:** add cases to [src/puter-js/tests/api/suites/](../src/puter-js/tests/api/suites/)`<area>.suite.ts` (register new suites in `suites/index.ts`). One suite runs on node, browser, and workerd via `npm run test:puterjs` — never write per-platform tests, and rebuild first with `npm run build:workerLib` since the runners execute the built bundle.
-- **Desktop-rendered UI** (`puter.ui.*`): add a Playwright spec per [src/puter-js/TESTING.md](../src/puter-js/TESTING.md).
+- **Backend:** colocated Vitest tests; prefer the in-memory test server (`setupMixtTestEnv` in [src/backend/testUtil.ts](../src/backend/testUtil.ts)) over mocking.
+- **SDK:** add cases to [src/mixt-js/tests/api/suites/](../src/mixt-js/tests/api/suites/)`<area>.suite.ts` (register new suites in `suites/index.ts`). One suite runs on node, browser, and workerd via `npm run test:mixtjs` — never write per-platform tests, and rebuild first with `npm run build:workerLib` since the runners execute the built bundle.
+- **Desktop-rendered UI** (`mixt.ui.*`): add a Playwright spec per [src/mixt-js/TESTING.md](../src/mixt-js/TESTING.md).
 
 ### 7. Security pass
 
@@ -107,7 +107,7 @@ The old surface keeps working. Mark it `@deprecated` in the type declarations, n
 
 - [ ] Backward compatible (or the break was explicitly approved)
 - [ ] Right home: extension if core never calls it; layered structure either way
-- [ ] puter.js method matches sibling conventions; errors are `{ message, code }` with stable codes
+- [ ] mixt.js method matches sibling conventions; errors are `{ message, code }` with stable codes
 - [ ] Types updated and matching runtime behavior
 - [ ] Docs page + area overview updated, with a runnable example
 - [ ] Tests: backend + three-platform SDK suite (+ e2e for desktop-rendered UI)

@@ -1,5 +1,5 @@
 ---
-title: puter.fs.listSharedByMe()
+title: mixt.fs.listSharedByMe()
 description: List everything you have shared with other users, across all items.
 platforms: [websites, apps, nodejs, workers]
 ---
@@ -14,8 +14,8 @@ This method lists everything you have shared out, a page at a time, without nami
 ## Syntax
 
 ```js
-puter.fs.listSharedByMe()
-puter.fs.listSharedByMe(options)
+mixt.fs.listSharedByMe()
+mixt.fs.listSharedByMe(options)
 ```
 
 ## Parameters
@@ -48,16 +48,16 @@ Items you own appear at their real path. An item you shared as a delegate (from 
 ```html;fs-listSharedByMe
 <html>
 <body>
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://js.mixt.mpl/v2/"></script>
     <script>
         (async () => {
-            const page = await puter.fs.listSharedByMe({ includeTotal: true });
-            puter.print(`About ${page.total} share(s) you made<br>`);
+            const page = await mixt.fs.listSharedByMe({ includeTotal: true });
+            mixt.print(`About ${page.total} share(s) you made<br>`);
             for (const share of page.items) {
                 const who = share.pending
                     ? `${share.recipientEmail} (invited)`
                     : share.holder;
-                puter.print(`${share.path} — ${share.mode} to ${who}<br>`);
+                mixt.print(`${share.path} — ${share.mode} to ${who}<br>`);
             }
         })()
     </script>
@@ -71,7 +71,7 @@ Items you own appear at their real path. An item you shared as a delegate (from 
 let cursor;
 const all = [];
 do {
-    const page = await puter.fs.listSharedByMe({ limit: 50, cursor });
+    const page = await mixt.fs.listSharedByMe({ limit: 50, cursor });
     all.push(...page.items);
     cursor = page.cursor;
 } while (cursor);
@@ -80,15 +80,15 @@ do {
 <strong class="example-title">Withdraw everything shared on one item</strong>
 
 ```js
-const page = await puter.fs.listSharedByMe();
+const page = await mixt.fs.listSharedByMe();
 const target = page.items.find((share) => share.name === 'report.txt');
 if (target && !target.pending) {
-    await puter.fs.unshare(target.path, target.holder);
+    await mixt.fs.unshare(target.path, target.holder);
 }
 ```
 
 ## Related
 
-- [`puter.fs.share()`](/FS/share/) - Grant access
-- [`puter.fs.listShared()`](/FS/listShared/) - List what others shared with you
-- [`puter.fs.getShares()`](/FS/getShares/) - See who can reach one item you manage
+- [`mixt.fs.share()`](/FS/share/) - Grant access
+- [`mixt.fs.listShared()`](/FS/listShared/) - List what others shared with you
+- [`mixt.fs.getShares()`](/FS/getShares/) - See who can reach one item you manage

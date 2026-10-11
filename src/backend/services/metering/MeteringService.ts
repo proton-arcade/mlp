@@ -21,7 +21,7 @@ import murmurhash from 'murmurhash';
 import type { Actor } from '../../core/actor';
 import { isSystemActor } from '../../core/actor';
 import { HttpError } from '../../core/http/HttpError.js';
-import { PuterService } from '../types';
+import { MixtService } from '../types';
 import {
     DEFAULT_FREE_SUBSCRIPTION,
     DEFAULT_TEMP_SUBSCRIPTION,
@@ -131,7 +131,7 @@ function detailPathAndAmountMap(
  * Callers (typically drivers or controllers) pass the user-scoped actor in; we
  * fan that out into several aggregated KV records.
  */
-export class MeteringService extends PuterService {
+export class MeteringService extends MixtService {
     /**
      * How wide the global and per-app aggregates are spread. These are counters
      * many actors increment at once, so spreading them keeps any single record
@@ -987,7 +987,7 @@ export class MeteringService extends PuterService {
         );
 
         this.handleAuxPromise(
-            `puterConsumption ${userId}/${appId}`,
+            `mixtConsumption ${userId}/${appId}`,
             this.stores.meteringBuffer.incrAux({
                 key: this.globalUsageKey(userId, appId, month),
                 pathAndAmountMap: { total: appTotalCost },
@@ -2346,7 +2346,7 @@ export class MeteringService extends PuterService {
     /** Summed over every global shard for the month — each is `{ total }` only. */
     async getGlobalUsage(): Promise<UsageByType> {
         const currentMonth = this.monthYearString();
-        const keyPrefix = `${METRICS_V2_PREFIX}:puter:`;
+        const keyPrefix = `${METRICS_V2_PREFIX}:mixt:`;
         const keys = Array.from(
             { length: MeteringService.GLOBAL_SHARD_COUNT },
             (_, shard) => `${keyPrefix}${shard}:${currentMonth}`,
@@ -2447,7 +2447,7 @@ export class MeteringService extends PuterService {
         const hash =
             murmurhash.v3(`${userId}:${appId}`) %
             MeteringService.GLOBAL_SHARD_COUNT;
-        return `${METRICS_V2_PREFIX}:puter:${hash}:${currentMonth}`;
+        return `${METRICS_V2_PREFIX}:mixt:${hash}:${currentMonth}`;
     }
 
     private appUsageKey(

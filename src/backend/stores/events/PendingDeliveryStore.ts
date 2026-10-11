@@ -29,7 +29,7 @@ import type {
     DeliverableEvent,
     GapMarker,
 } from '../../services/events/registry.js';
-import { PuterStore } from '../types.js';
+import { MixtStore } from '../types.js';
 
 /**
  * Deliveries that are waiting for a consumer, in the region that emitted them.
@@ -257,7 +257,7 @@ const batched = <T>(items: readonly T[], size = COMMAND_BATCH): T[][] => {
     return batches;
 };
 
-export class PendingDeliveryStore extends PuterStore {
+export class PendingDeliveryStore extends MixtStore {
     /** Tells this process's ids from a peer's, so two cannot mint the same. */
     readonly #minter = randomUUID().slice(0, 8);
     #minted = 0;

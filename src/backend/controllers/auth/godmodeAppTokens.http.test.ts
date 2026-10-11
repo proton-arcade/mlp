@@ -20,7 +20,7 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { isAccountContext } from '../../core/actor.js';
 import type { AccessTokenPayload } from '../../services/auth/types.js';
-import { setupPuterTestEnv, type PuterTestEnv } from '../../testUtil.js';
+import { setupMixtTestEnv, type MixtTestEnv } from '../../testUtil.js';
 
 // Seeded with godmode on.
 const DEV_CENTER = 'app-0b37f054-07d4-4627-8765-11bd23e889d4';
@@ -32,11 +32,11 @@ const TWELVE_HOURS = 12 * 60 * 60;
  * attribution, and expiring unless the desktop asks again.
  */
 describe('godmode app tokens', () => {
-    let env: PuterTestEnv;
+    let env: MixtTestEnv;
     let userId = 0;
 
     beforeAll(async () => {
-        env = await setupPuterTestEnv();
+        env = await setupMixtTestEnv();
         const row = await env.server.stores.user.getByUsername(
             env.users.user.username,
         );

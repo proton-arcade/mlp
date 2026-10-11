@@ -29,16 +29,16 @@ import * as uuid from 'uuid';
  * The user mailbox, shared by everything that fills one: external ingress,
  * user-to-user sends and transactional sends.
  *
- * `<username>@<puter domain>` names an account, and that account's mail lives
+ * `<username>@<mixt domain>` names an account, and that account's mail lives
  * under `/<username>/.mail` as `message/rfc822` objects - one folder per UTC
  * day, each object named `<uuidv7>--<base64url(subject)>` so a listing can sort
  * by time and show the subject without opening anything. The SDK's mailbox
  * reader is written against this layout, so it is defined once here.
  */
 
-export const PUTER_EMAIL_DOMAINS = [
-    'puter.email',
-    'puterstaging.email',
+export const MIXT_EMAIL_DOMAINS = [
+    'mixt.email',
+    'mixtstaging.email',
 ] as const;
 
 export const MAIL_CONTENT_TYPE = 'message/rfc822';
@@ -50,18 +50,18 @@ export type MailFolder = 'objects' | 'sent' | 'outbox';
 
 const SUBJECT_NAME_CHARS = 80;
 
-export const isPuterEmailAddress = (address: string): boolean =>
-    (PUTER_EMAIL_DOMAINS as readonly string[]).includes(
+export const isMixtEmailAddress = (address: string): boolean =>
+    (MIXT_EMAIL_DOMAINS as readonly string[]).includes(
         address.split('@')[1]?.toLowerCase() ?? '',
     );
 
-/** The username a Puter address names. The domain is not checked here. */
-export const puterEmailUsername = (address: string): string =>
+/** The username a Mixt address names. The domain is not checked here. */
+export const mixtEmailUsername = (address: string): string =>
     address.split('@')[0];
 
 /** Every address that resolves to `username`. */
-export const puterEmailAddressesOf = (username: string): string[] =>
-    PUTER_EMAIL_DOMAINS.map((domain) => `${username}@${domain}`);
+export const mixtEmailAddressesOf = (username: string): string[] =>
+    MIXT_EMAIL_DOMAINS.map((domain) => `${username}@${domain}`);
 
 /**
  * A temp account has neither a password nor an email - the same test
@@ -95,7 +95,7 @@ export const mailObjectName = (subject: unknown): string => {
 };
 
 /**
- * The account behind a Puter address, or null when nothing can receive there:
+ * The account behind a Mixt address, or null when nothing can receive there:
  * no such user, or a temp account (unverified and free to mint, so it has no
  * mailbox in either direction). Callers report both as one thing, so mailing an
  * address never tells one user which accounts are temp.
@@ -104,7 +104,7 @@ export async function findMailboxOwner(
     users: UserStore,
     address: string,
 ): Promise<UserRow | null> {
-    const user = await users.getByUsername(puterEmailUsername(address));
+    const user = await users.getByUsername(mixtEmailUsername(address));
     return user && !isTempUser(user) ? user : null;
 }
 

@@ -18,19 +18,19 @@
  */
 
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { setupPuterTestEnv, type PuterTestEnv } from '../../testUtil.js';
+import { setupMixtTestEnv, type MixtTestEnv } from '../../testUtil.js';
 
 const PICTURE =
     'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aD1sAAAAASUVORK5CYII=';
 
 describe('profile routes over HTTP', () => {
-    let env: PuterTestEnv;
+    let env: MixtTestEnv;
     let userUuid = '';
     /** The plan `env.users.user` is on; see the resolver below. */
     let plan: string | null = null;
 
     beforeAll(async () => {
-        env = await setupPuterTestEnv();
+        env = await setupMixtTestEnv();
         userUuid = (await env.server.stores.user.getByUsername(
             env.users.user.username,
         ))!.uuid;

@@ -174,8 +174,8 @@ describe('PreludeClient', () => {
         const client = new PreludeClient({
             prelude: {
                 apiKey: 'sk_test',
-                templateId: 'tmpl_puter',
-                senderId: 'Puter',
+                templateId: 'tmpl_mixt',
+                senderId: 'Mixt',
                 preferredChannel: 'sms',
             },
         } as unknown as IConfig);
@@ -187,8 +187,8 @@ describe('PreludeClient', () => {
             code_size: 6,
             preferred_channel: 'sms', // config override beats the rcs default
             locale: 'en-US',
-            template_id: 'tmpl_puter',
-            sender_id: 'Puter',
+            template_id: 'tmpl_mixt',
+            sender_id: 'Mixt',
         });
     });
 

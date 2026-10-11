@@ -43,7 +43,7 @@ import {
     EVENTS_SUSPENDED_PENDING_CAP,
     EVENTS_WORKER_SOURCE_MAX_BYTES,
 } from '../../controllers/events/limits.js';
-import { setupPuterTestEnv, type PuterTestEnv } from '../../testUtil.js';
+import { setupMixtTestEnv, type MixtTestEnv } from '../../testUtil.js';
 import { hashContent } from '../../stores/events/EventHandlerStore.js';
 import type { IConfig } from '../../types.js';
 import { EVENTS_BACKGROUND_PERMISSION } from './authorization.js';
@@ -57,7 +57,7 @@ const SOURCE =
 const NEXT_SOURCE =
     'async ({ event, ctx }) => { console.log(event.path, ctx.url); }';
 
-let env: PuterTestEnv;
+let env: MixtTestEnv;
 let userId: number;
 let otherUserId: number;
 let anchor: string;
@@ -166,7 +166,7 @@ const touch = (holder: number, path: string) =>
     env.server.services.fs.touch(holder, { path });
 
 beforeAll(async () => {
-    env = await setupPuterTestEnv({
+    env = await setupMixtTestEnv({
         events: { enabled: true },
         // Seeded accounts carry no email, which the plan machinery reads as a
         // temporary account — and a temporary account holds no durable rows.

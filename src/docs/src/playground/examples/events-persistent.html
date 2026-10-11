@@ -1,15 +1,15 @@
 <html>
 <body>
-    <script src="/puter.js/v2"></script>
+    <script src="/mixt.js/v2"></script>
     <script>
         (async () => {
             // (1) An app of your own to publish the handler under
-            const name = `ingest-${puter.randName()}`;
-            const app = await puter.apps.create(name, `https://example.com/${name}`);
+            const name = `ingest-${mixt.randName()}`;
+            const app = await mixt.apps.create(name, `https://example.com/${name}`);
 
             // (2) Publish the handler. It closes over nothing — everything it
             //     needs arrives as `ctx`.
-            await puter.events.handlers.publish(
+            await mixt.events.handlers.publish(
                 'ingestUpload',
                 async ({ event, ctx }) => {
                     await fetch(ctx.endpoint, {
@@ -21,18 +21,18 @@
             );
 
             // (3) Subscribe. `context` is read now and never again.
-            const dir = puter.randName();
-            await puter.fs.mkdir(dir);
-            const sub = await puter.events.onPersistent({
+            const dir = mixt.randName();
+            await mixt.fs.mkdir(dir);
+            const sub = await mixt.events.onPersistent({
                 subject: `fs:${dir}`,
                 handlerName: 'ingestUpload',
                 context: { endpoint: 'https://example.com/ingest', apiKey: 'k-123' },
             });
 
-            puter.print(`watching ${dir} as ${sub.subId}<br>`);
+            mixt.print(`watching ${dir} as ${sub.subId}<br>`);
 
             // (4) It outlives this page. End it explicitly when you are done.
-            await puter.events.unsubscribe(sub.subId);
+            await mixt.events.unsubscribe(sub.subId);
         })();
     </script>
 </body>

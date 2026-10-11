@@ -1,6 +1,6 @@
-// `puter fs` — one-shot file operations against Puter's cloud drive.
+// `mixt fs` — one-shot file operations against Mixt's cloud drive.
 //
-// Every path is either remote (`puter:/...`), stdin/stdout (`-`), or local,
+// Every path is either remote (`mixt:/...`), stdin/stdout (`-`), or local,
 // and the direction of a transfer is read off the operands rather than a
 // flag. See ../lib/remotePath.js for the resolution rules and ../lib/
 // transfer.js for how bulk transfers are batched and retried.
@@ -63,14 +63,14 @@ const isMissing = (err) =>
  * is visible exactly when it matters.
  */
 async function connect(opts) {
-  const puter = await ensureClient();
-  if (!opts.app) return { puter, opts, root: HOME_ROOT, label: null };
+  const mixt = await ensureClient();
+  if (!opts.app) return { mixt, opts, root: HOME_ROOT, label: null };
 
-  const { name, uid, byUid, kind } = await resolveTarget(puter, opts.app);
+  const { name, uid, byUid, kind } = await resolveTarget(mixt, opts.app);
   const label = byUid
     ? uid
     : `${kind === 'worker' ? 'worker ' : ''}${name} (${uid})`;
-  return { puter, opts, root: appRoot(uid), label };
+  return { mixt, opts, root: appRoot(uid), label };
 }
 
 // With `--app` an absolute path means something other than what it reads as,
@@ -82,32 +82,32 @@ function echoResolved(ctx, command, resolved) {
 
 // --- remote helpers --------------------------------------------------------
 
-async function statOrNull(puter, remotePath) {
+async function statOrNull(mixt, remotePath) {
   try {
-    return await puter.fs.stat(remotePath);
+    return await mixt.fs.stat(remotePath);
   } catch (err) {
     if (isMissing(err)) return null;
     throw wrap(err, `Could not read '${remotePath}'`);
   }
 }
 
-async function statRemote(puter, remotePath, label) {
-  const info = await statOrNull(puter, remotePath);
+async function statRemote(mixt, remotePath, label) {
+  const info = await statOrNull(mixt, remotePath);
   if (!info) throw new CLIError(`No such file or directory '${label}'.`);
   return info;
 }
 
 // readdir returns the full listing as an array, or a `{items}` page when
 // pagination params were passed.
-async function listAll(puter, arg) {
-  const result = await puter.fs.readdir(arg);
+async function listAll(mixt, arg) {
+  const result = await mixt.fs.readdir(arg);
   return Array.isArray(result) ? result : (result?.items ?? []);
 }
 
 // One page with a total beats pulling a whole tree just to count it; a
 // backend that ignores `includeTotal` falls back to the full listing.
-async function countEntries(puter, target) {
-  const page = await puter.fs.readdir({
+async function countEntries(mixt, target) {
+  const page = await mixt.fs.readdir({
     path: target,
     recursive: true,
     includeTotal: true,
@@ -116,18 +116,18 @@ async function countEntries(puter, target) {
   if (!Array.isArray(page) && Number.isFinite(page?.total)) return page.total;
   if (Array.isArray(page)) return page.length;
   if (!page?.cursor) return page?.items?.length ?? 0;
-  return (await listAll(puter, { path: target, recursive: true })).length;
+  return (await listAll(mixt, { path: target, recursive: true })).length;
 }
 
 // The paths of a directory's files, relative to it. Used by `-n` — one
 // recursive listing beats a stat per file.
-async function remoteRelativeFiles(puter, dir) {
-  const info = await statOrNull(puter, dir);
+async function remoteRelativeFiles(mixt, dir) {
+  const info = await statOrNull(mixt, dir);
   if (!info?.is_dir) return new Set();
 
   const base = info.path;
   const relatives = new Set();
-  for (const entry of await listAll(puter, { path: dir, recursive: true })) {
+  for (const entry of await listAll(mixt, { path: dir, recursive: true })) {
     if (entry.is_dir) continue;
     const entryPath = typeof entry.path === 'string' ? entry.path : '';
     if (entryPath.startsWith(`${base}/`)) {
@@ -139,9 +139,9 @@ async function remoteRelativeFiles(puter, dir) {
 
 // mkdir -p on the destination root. upload() creates the directories its
 // items sit in, but not the root they sit under.
-async function ensureRemoteDir(puter, dir) {
+async function ensureRemoteDir(mixt, dir) {
   try {
-    await puter.fs.mkdir(dir, { createMissingParents: true, dedupeName: false });
+    await mixt.fs.mkdir(dir, { createMissingParents: true, dedupeName: false });
   } catch (err) {
     // Already there is the common case; a real failure surfaces on upload.
     ui.debug('mkdir note:', messageOf(err));
@@ -254,14 +254,14 @@ export async function fsLs(pathArg, opts) {
 
   try {
     if (opts.json || opts.long) {
-      const entries = await listAll(ctx.puter, target);
+      const entries = await listAll(ctx.mixt, target);
       if (opts.json) ui.out(JSON.stringify(entries, null, 2));
       else printLongListing(entries);
       return;
     }
 
     // A terminal gets bare names; a pipe gets operands that feed straight
-    // back into another `puter fs` command.
+    // back into another `mixt fs` command.
     const human = canAnimate();
     const emit = (entries) => {
       for (const entry of entries) {
@@ -278,7 +278,7 @@ export async function fsLs(pathArg, opts) {
     // Streamed page by page, so a large directory starts printing instead of
     // buffering. An SDK without a streaming readdir answers the same call
     // with the whole listing, so use that rather than asking twice.
-    const listing = ctx.puter.fs.readdir({ path: target, stream: true });
+    const listing = ctx.mixt.fs.readdir({ path: target, stream: true });
     if (typeof listing?.[Symbol.asyncIterator] === 'function') {
       for await (const page of listing) emit(page.items ?? []);
       return;
@@ -294,15 +294,15 @@ export async function fsLs(pathArg, opts) {
 
 async function catRemote(ctx, pathArg) {
   const target = resolveRemote(pathArg, ctx.root);
-  const info = await statRemote(ctx.puter, target, pathArg);
+  const info = await statRemote(ctx.mixt, target, pathArg);
   if (info.is_dir) {
     throw new CLIError(`'${pathArg}' is a directory.`, {
-      hint: `List it with: puter fs ls ${pathArg}`,
+      hint: `List it with: mixt fs ls ${pathArg}`,
     });
   }
 
   try {
-    for await (const chunk of readRemote(ctx.puter, target, Number(info.size))) {
+    for await (const chunk of readRemote(ctx.mixt, target, Number(info.size))) {
       await writeChunk(process.stdout, chunk);
     }
   } catch (err) {
@@ -318,11 +318,11 @@ export async function fsCat(pathArg, opts) {
 // --- cp --------------------------------------------------------------------
 
 async function uploadLocal(ctx, sourceArg, destArg, concurrency) {
-  const { puter, opts } = ctx;
+  const { mixt, opts } = ctx;
   const source = path.resolve(sourceArg);
   const localStat = statLocal(source, sourceArg);
   const destination = resolveRemote(destArg, ctx.root);
-  const destInfo = await statOrNull(puter, destination);
+  const destInfo = await statOrNull(mixt, destination);
 
   // Like cp: into the destination when it's an existing directory, otherwise
   // the destination names the copy itself.
@@ -332,7 +332,7 @@ async function uploadLocal(ctx, sourceArg, destArg, concurrency) {
     const target = intoDir
       ? remoteJoin(destination, path.basename(source))
       : destination;
-    if (opts.noClobber && (intoDir ? await statOrNull(puter, target) : destInfo)) {
+    if (opts.noClobber && (intoDir ? await statOrNull(mixt, target) : destInfo)) {
       ui.info(`Skipped ${target} (exists).`);
       return;
     }
@@ -343,7 +343,7 @@ async function uploadLocal(ctx, sourceArg, destArg, concurrency) {
     }
     try {
       await withRetry(() =>
-        puter.fs.write(target, fs.readFileSync(source), {
+        mixt.fs.write(target, fs.readFileSync(source), {
           overwrite: !opts.noClobber,
           dedupeName: false,
           createMissingParents: true,
@@ -373,7 +373,7 @@ async function uploadLocal(ctx, sourceArg, destArg, concurrency) {
 
   let planned = files;
   if (opts.noClobber) {
-    const existing = await remoteRelativeFiles(puter, targetDir);
+    const existing = await remoteRelativeFiles(mixt, targetDir);
     planned = files.filter((file) => !existing.has(file.rel));
     const skipped = files.length - planned.length;
     if (skipped > 0) ui.info(`Skipping ${skipped} file(s) that already exist.`);
@@ -386,10 +386,10 @@ async function uploadLocal(ctx, sourceArg, destArg, concurrency) {
   }
   if (planned.length === 0) return;
 
-  await ensureRemoteDir(puter, targetDir);
+  await ensureRemoteDir(mixt, targetDir);
 
   const spinner = ui.spinner(`Copying ${planned.length} file(s) to ${targetDir}…`);
-  const { uploaded, failures } = await uploadFiles(puter, {
+  const { uploaded, failures } = await uploadFiles(mixt, {
     files: planned,
     destination: targetDir,
     concurrency,
@@ -402,15 +402,15 @@ async function uploadLocal(ctx, sourceArg, destArg, concurrency) {
   reportFailures(failures, planned.length, 'copy');
 }
 
-async function downloadFile(puter, remotePath, size, target) {
+async function downloadFile(mixt, remotePath, size, target) {
   fs.mkdirSync(path.dirname(target), { recursive: true });
 
   // Write beside the target and rename, so a failed transfer never leaves a
   // truncated file under the name the caller asked for.
-  const partial = `${target}.puter-partial`;
+  const partial = `${target}.mixt-partial`;
   const handle = fs.openSync(partial, 'w');
   try {
-    for await (const chunk of readRemote(puter, remotePath, size)) {
+    for await (const chunk of readRemote(mixt, remotePath, size)) {
       fs.writeSync(handle, chunk);
     }
   } catch (err) {
@@ -427,9 +427,9 @@ async function downloadFile(puter, remotePath, size, target) {
 }
 
 async function downloadRemote(ctx, sourceArg, destArg, concurrency) {
-  const { puter, opts } = ctx;
+  const { mixt, opts } = ctx;
   const source = resolveRemote(sourceArg, ctx.root);
-  const info = await statRemote(puter, source, sourceArg);
+  const info = await statRemote(mixt, source, sourceArg);
   const destination = path.resolve(destArg);
   const intoDir = isLocalDir(destination);
 
@@ -447,7 +447,7 @@ async function downloadRemote(ctx, sourceArg, destArg, concurrency) {
       return;
     }
     try {
-      await downloadFile(puter, source, Number(info.size), target);
+      await downloadFile(mixt, source, Number(info.size), target);
     } catch (err) {
       throw wrap(err, `Could not copy '${sourceArg}'`);
     }
@@ -465,7 +465,7 @@ async function downloadRemote(ctx, sourceArg, destArg, concurrency) {
   // Entry paths come back resolved (`/username/...`), so relative paths are
   // taken against the source's own resolved path rather than the `~` form.
   const base = info.path;
-  const files = (await listAll(puter, { path: source, recursive: true }))
+  const files = (await listAll(mixt, { path: source, recursive: true }))
     .filter((entry) => !entry.is_dir && typeof entry.path === 'string')
     .filter((entry) => entry.path.startsWith(`${base}/`))
     .map((entry) => ({
@@ -498,7 +498,7 @@ async function downloadRemote(ctx, sourceArg, destArg, concurrency) {
   const spinner = ui.spinner(`Copying ${planned.length} file(s) to ${targetDir}…`);
   await pool(planned, concurrency, async (file) => {
     try {
-      await downloadFile(puter, file.remote, file.size, path.join(targetDir, file.rel));
+      await downloadFile(mixt, file.remote, file.size, path.join(targetDir, file.rel));
     } catch (err) {
       failures.push({ rel: file.rel, message: messageOf(err) });
     }
@@ -510,23 +510,23 @@ async function downloadRemote(ctx, sourceArg, destArg, concurrency) {
 }
 
 async function copyWithinDrive(ctx, sourceArg, destArg) {
-  const { puter, opts } = ctx;
+  const { mixt, opts } = ctx;
   const source = resolveRemote(sourceArg, ctx.root);
   const destination = resolveRemote(destArg, ctx.root);
-  const info = await statRemote(puter, source, sourceArg);
+  const info = await statRemote(mixt, source, sourceArg);
 
   if (info.is_dir && !opts.recursive) {
     throw new CLIError(`'${sourceArg}' is a directory — pass -r to copy it.`);
   }
 
-  const destInfo = await statOrNull(puter, destination);
+  const destInfo = await statOrNull(mixt, destination);
   const intoDir = Boolean(destInfo?.is_dir);
   const finalPath = intoDir
     ? remoteJoin(destination, remoteBasename(source))
     : destination;
 
   if (opts.noClobber) {
-    const existing = intoDir ? await statOrNull(puter, finalPath) : destInfo;
+    const existing = intoDir ? await statOrNull(mixt, finalPath) : destInfo;
     if (existing) {
       ui.info(`Skipped ${finalPath} (exists).`);
       return;
@@ -544,7 +544,7 @@ async function copyWithinDrive(ctx, sourceArg, destArg) {
   // itself, which means splitting the new name off the destination.
   try {
     await withRetry(() =>
-      puter.fs.copy(source, intoDir ? destination : remoteDirname(destination), {
+      mixt.fs.copy(source, intoDir ? destination : remoteDirname(destination), {
         overwrite: true,
         dedupeName: false,
         ...(intoDir ? {} : { newName: remoteBasename(destination) }),
@@ -557,9 +557,9 @@ async function copyWithinDrive(ctx, sourceArg, destArg) {
 }
 
 async function writeStdinTo(ctx, destArg) {
-  const { puter, opts } = ctx;
+  const { mixt, opts } = ctx;
   const destination = resolveRemote(destArg, ctx.root);
-  const destInfo = await statOrNull(puter, destination);
+  const destInfo = await statOrNull(mixt, destination);
   if (destInfo?.is_dir) {
     throw new CLIError(`'${destArg}' is a directory — name the file to write.`);
   }
@@ -577,7 +577,7 @@ async function writeStdinTo(ctx, destArg) {
 
   try {
     await withRetry(() =>
-      puter.fs.write(destination, data, {
+      mixt.fs.write(destination, data, {
         overwrite: !opts.noClobber,
         dedupeName: false,
         createMissingParents: true,
@@ -592,7 +592,7 @@ async function writeStdinTo(ctx, destArg) {
 export async function fsCp(sourceArg, destArg, opts) {
   if (destArg === undefined) {
     throw new CLIError('cp needs a source and a destination.', {
-      hint: 'Usage: puter fs cp <source> <destination>',
+      hint: 'Usage: mixt fs cp <source> <destination>',
     });
   }
   // Everything that doesn't need the network happens before authenticating,
@@ -628,7 +628,7 @@ export async function fsCp(sourceArg, destArg, opts) {
 export async function fsMv(sourceArg, destArg, opts) {
   if (destArg === undefined) {
     throw new CLIError('mv needs a source and a destination.', {
-      hint: 'Usage: puter fs mv <source> <destination>',
+      hint: 'Usage: mixt fs mv <source> <destination>',
     });
   }
   assertMovable(sourceArg, destArg);
@@ -641,7 +641,7 @@ export async function fsMv(sourceArg, destArg, opts) {
   if (isRoot(source, ctx.root)) {
     throw new CLIError(`Refusing to move ${sourceArg} — that is the root itself.`);
   }
-  await statRemote(ctx.puter, source, sourceArg);
+  await statRemote(ctx.mixt, source, sourceArg);
 
   echoResolved(ctx, `mv ${sourceArg} ${destArg}`, destination);
 
@@ -649,7 +649,7 @@ export async function fsMv(sourceArg, destArg, opts) {
   // move into or the item's new path.
   try {
     await withRetry(() =>
-      ctx.puter.fs.move(source, destination, {
+      ctx.mixt.fs.move(source, destination, {
         overwrite: true,
         dedupeName: false,
       }),
@@ -674,7 +674,7 @@ export async function fsRm(pathArg, opts) {
     );
   }
 
-  const info = await statRemote(ctx.puter, target, pathArg);
+  const info = await statRemote(ctx.mixt, target, pathArg);
   if (info.is_dir && !opts.recursive) {
     throw new CLIError(
       `'${pathArg}' is a directory — pass -r to remove it and its contents.`,
@@ -683,7 +683,7 @@ export async function fsRm(pathArg, opts) {
 
   if (opts.dryRun) {
     if (info.is_dir) {
-      for (const entry of await listAll(ctx.puter, { path: target, recursive: true })) {
+      for (const entry of await listAll(ctx.mixt, { path: target, recursive: true })) {
         ui.out(entry.path);
       }
     }
@@ -693,7 +693,7 @@ export async function fsRm(pathArg, opts) {
   }
 
   // What is about to go, in resolved terms, before anything goes.
-  const count = info.is_dir ? await countEntries(ctx.puter, target) : 0;
+  const count = info.is_dir ? await countEntries(ctx.mixt, target) : 0;
   const what = info.is_dir
     ? `${target} (${count} ${count === 1 ? 'entry' : 'entries'})`
     : target;
@@ -720,7 +720,7 @@ export async function fsRm(pathArg, opts) {
   // The SDK deletes recursively by default; a plain `rm` must say otherwise.
   try {
     await withRetry(() =>
-      ctx.puter.fs.delete(target, { recursive: Boolean(opts.recursive) }),
+      ctx.mixt.fs.delete(target, { recursive: Boolean(opts.recursive) }),
     );
   } catch (err) {
     throw wrap(err, `Could not delete '${pathArg}'`);
@@ -743,7 +743,7 @@ export async function fsMkdir(pathArg, opts) {
   let item;
   try {
     item = await withRetry(() =>
-      ctx.puter.fs.mkdir(target, {
+      ctx.mixt.fs.mkdir(target, {
         createMissingParents: Boolean(opts.parents),
         dedupeName: false,
       }),
@@ -760,7 +760,7 @@ export async function fsStat(pathArg, opts) {
   assertRemoteOperand(pathArg);
   const ctx = await connect(opts);
   const target = resolveRemote(pathArg, ctx.root);
-  const info = await statRemote(ctx.puter, target, pathArg);
+  const info = await statRemote(ctx.mixt, target, pathArg);
 
   if (opts.json) {
     ui.out(JSON.stringify(info, null, 2));

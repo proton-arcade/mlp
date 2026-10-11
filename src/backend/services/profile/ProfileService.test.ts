@@ -22,8 +22,8 @@ import type { Request, Response } from 'express';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { v4 as uuidv4 } from 'uuid';
 import { SYSTEM_ACTOR_UUID } from '../../core/actor.js';
-import { createPuterSiteMiddleware } from '../../core/http/middleware/puterSite.js';
-import type { PuterServer } from '../../server.js';
+import { createMixtSiteMiddleware } from '../../core/http/middleware/mixtSite.js';
+import type { MixtServer } from '../../server.js';
 import type { IConfig } from '../../types.js';
 import type { UserRow } from '../../stores/user/UserStore.js';
 import { setupTestServer } from '../../testUtil.js';
@@ -41,7 +41,7 @@ const PICTURE =
     'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aD1sAAAAASUVORK5CYII=';
 
 describe('ProfileService', () => {
-    let server: PuterServer;
+    let server: MixtServer;
     let service: ProfileService;
 
     /**
@@ -297,7 +297,7 @@ describe('ProfileService', () => {
     it('serves <uuid>.profile on the profiles subdomain only for a paid owner', async () => {
         const user = await makeUser();
         await service.updateProfile(user, { picture: PICTURE });
-        const middleware = createPuterSiteMiddleware(
+        const middleware = createMixtSiteMiddleware(
             {
                 domain: 'localhost',
                 static_hosting_domain: 'site.localhost',

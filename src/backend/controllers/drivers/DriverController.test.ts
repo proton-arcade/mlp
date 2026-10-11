@@ -30,21 +30,21 @@ import { v4 as uuidv4 } from 'uuid';
 import { actorUid, type Actor } from '../../core/actor.js';
 import type { DriverMethodLifecycleEvent } from '../../clients/event/types.js';
 import { runWithContext } from '../../core/context.js';
-import { PuterServer } from '../../server.js';
+import { MixtServer } from '../../server.js';
 import { setupTestServer } from '../../testUtil.js';
 import type { DriverController } from './DriverController.js';
 
 // ── Test harness ────────────────────────────────────────────────────
 //
-// Boots one PuterServer (in-memory sqlite + dynamo + s3 + mock redis).
+// Boots one MixtServer (in-memory sqlite + dynamo + s3 + mock redis).
 // The DriverController under test is the same instance the live request
 // pipeline uses, so its iface→driver registry is populated from real
-// drivers (puter-kvstore, puter-apps, puter-subdomains, …). The HTTP
+// drivers (mixt-kvstore, mixt-apps, mixt-subdomains, …). The HTTP
 // handlers (`#handleCall`, `#handleListInterfaces`) are
 // private — we exercise the public lookup API (`resolve` / list / get
 // default) which the handlers themselves delegate to.
 
-let server: PuterServer;
+let server: MixtServer;
 let controller: DriverController;
 
 beforeAll(async () => {
@@ -65,10 +65,10 @@ describe('DriverController.listInterfaces', () => {
         // than the exact set so adding a driver doesn't break this.
         expect(interfaces).toEqual(
             expect.arrayContaining([
-                'puter-kvstore',
-                'puter-apps',
-                'puter-subdomains',
-                'puter-notifications',
+                'mixt-kvstore',
+                'mixt-apps',
+                'mixt-subdomains',
+                'mixt-notifications',
             ]),
         );
     });
@@ -76,8 +76,8 @@ describe('DriverController.listInterfaces', () => {
 
 describe('DriverController.listDrivers', () => {
     it('returns every name registered for an interface', () => {
-        const drivers = controller.listDrivers('puter-kvstore');
-        expect(drivers).toContain('puter-kvstore');
+        const drivers = controller.listDrivers('mixt-kvstore');
+        expect(drivers).toContain('mixt-kvstore');
     });
 
     it('returns [] for an unknown interface', () => {
@@ -88,7 +88,7 @@ describe('DriverController.listDrivers', () => {
 describe('DriverController.getDefault', () => {
     it('returns the registered default driver name', () => {
         // KVStoreDriver declares `isDefault = true`.
-        expect(controller.getDefault('puter-kvstore')).toBe('puter-kvstore');
+        expect(controller.getDefault('mixt-kvstore')).toBe('mixt-kvstore');
     });
 
     it('returns undefined for an unknown interface', () => {
@@ -98,7 +98,7 @@ describe('DriverController.getDefault', () => {
 
 describe('DriverController.resolve', () => {
     it('returns the default-driver instance when no name is given', () => {
-        const driver = controller.resolve('puter-kvstore');
+        const driver = controller.resolve('mixt-kvstore');
         expect(driver).not.toBeNull();
         // The KV driver exposes a `set` method per its interface.
         expect(typeof (driver as Record<string, unknown>)?.set).toBe(
@@ -107,8 +107,8 @@ describe('DriverController.resolve', () => {
     });
 
     it('finds the same instance by explicit driver name', () => {
-        const byDefault = controller.resolve('puter-kvstore');
-        const byName = controller.resolve('puter-kvstore', 'puter-kvstore');
+        const byDefault = controller.resolve('mixt-kvstore');
+        const byName = controller.resolve('mixt-kvstore', 'mixt-kvstore');
         expect(byName).toBe(byDefault);
     });
 
@@ -118,7 +118,7 @@ describe('DriverController.resolve', () => {
 
     it('returns null for a known interface but unknown driver name', () => {
         expect(
-            controller.resolve('puter-kvstore', 'no-such-driver'),
+            controller.resolve('mixt-kvstore', 'no-such-driver'),
         ).toBeNull();
     });
 });
@@ -289,7 +289,7 @@ describe('DriverController.#handleCall (via captured router)', () => {
 
     it('rejects missing/invalid `method` with 400', async () => {
         const actor = await makeUserActor();
-        const req = makeReq({ interface: 'puter-kvstore' }, actor);
+        const req = makeReq({ interface: 'mixt-kvstore' }, actor);
         await expect(
             runWithContext({ actor }, () =>
                 routes['POST /call'](
@@ -321,7 +321,7 @@ describe('DriverController.#handleCall (via captured router)', () => {
     it('rejects a method that does not exist on the resolved driver with 404', async () => {
         const actor = await makeUserActor();
         const req = makeReq(
-            { interface: 'puter-kvstore', method: 'no_such_method' },
+            { interface: 'mixt-kvstore', method: 'no_such_method' },
             actor,
         );
         await expect(
@@ -335,7 +335,7 @@ describe('DriverController.#handleCall (via captured router)', () => {
         ).rejects.toMatchObject({ statusCode: 404 });
     });
 
-    // A lifecycle hook *exists* on every driver (inherited from PuterDriver),
+    // A lifecycle hook *exists* on every driver (inherited from MixtDriver),
     // so the old `typeof driver[method] === 'function'` dispatch would have
     // invoked it. It must not be reachable over /drivers/call.
     it.each([
@@ -347,7 +347,7 @@ describe('DriverController.#handleCall (via captured router)', () => {
         'toString',
     ])('rejects the framework method %s with 404', async (method) => {
         const actor = await makeUserActor();
-        const req = makeReq({ interface: 'puter-kvstore', method }, actor);
+        const req = makeReq({ interface: 'mixt-kvstore', method }, actor);
         await expect(
             runWithContext({ actor }, () =>
                 routes['POST /call'](
@@ -366,7 +366,7 @@ describe('DriverController.#handleCall (via captured router)', () => {
         const actor = await makeUserActor();
         const req = makeReq(
             {
-                interface: 'puter-chat-completion',
+                interface: 'mixt-chat-completion',
                 method: 'complete',
                 args: { messages: [] },
             },
@@ -392,7 +392,7 @@ describe('DriverController.#handleCall (via captured router)', () => {
         for (const actor of delegatedActors) {
             const req = makeReq(
                 {
-                    interface: 'puter-chat-completion',
+                    interface: 'mixt-chat-completion',
                     method: 'complete',
                     args: { messages: [] },
                 },
@@ -414,7 +414,7 @@ describe('DriverController.#handleCall (via captured router)', () => {
         };
         const req = makeReq(
             {
-                interface: 'puter-chat-completion',
+                interface: 'mixt-chat-completion',
                 method: 'complete',
                 args: { messages: [] },
             },
@@ -425,12 +425,12 @@ describe('DriverController.#handleCall (via captured router)', () => {
     });
 
     it('still allows bare session actors on drivers without the noUserSession flag', async () => {
-        // puter-kvstore doesn't set the flag, so the session actor must get
+        // mixt-kvstore doesn't set the flag, so the session actor must get
         // past the credential-shape gate.
         const actor = await makeUserActor();
         const req = makeReq(
             {
-                interface: 'puter-kvstore',
+                interface: 'mixt-kvstore',
                 method: 'set',
                 args: { key: 'x', value: 'y' },
             },
@@ -456,7 +456,7 @@ describe('DriverController.#handleCall (via captured router)', () => {
         };
         const req = makeReq(
             {
-                interface: 'puter-kvstore',
+                interface: 'mixt-kvstore',
                 method: 'set',
                 args: { key: 'x', value: 'y' },
             },
@@ -468,13 +468,13 @@ describe('DriverController.#handleCall (via captured router)', () => {
 
     it('returns the wrapped {success, result, service} envelope on a successful call', async () => {
         const actor = await makeUserActor();
-        // Grant the service permission for puter-kvstore so the call
+        // Grant the service permission for mixt-kvstore so the call
         // makes it past the gate.
         await server.stores.permission.setFlatUserPerm(
             actor.user!.id!,
-            'service:puter-kvstore:ii:puter-kvstore',
+            'service:mixt-kvstore:ii:mixt-kvstore',
             {
-                permission: 'service:puter-kvstore:ii:puter-kvstore',
+                permission: 'service:mixt-kvstore:ii:mixt-kvstore',
                 deleted: false,
                 issuer_user_id: actor.user!.id!,
             } as never,
@@ -483,7 +483,7 @@ describe('DriverController.#handleCall (via captured router)', () => {
         const res = makeRes();
         const req = makeReq(
             {
-                interface: 'puter-kvstore',
+                interface: 'mixt-kvstore',
                 method: 'set',
                 args: { key: `k-${uuidv4()}`, value: 'v' },
             },
@@ -498,7 +498,7 @@ describe('DriverController.#handleCall (via captured router)', () => {
             service: { name: string };
         };
         expect(body.success).toBe(true);
-        expect(body.service.name).toBe('puter-kvstore');
+        expect(body.service.name).toBe('mixt-kvstore');
     });
 
     it('pipes a stream-shaped result instead of JSON', async () => {
@@ -543,9 +543,9 @@ describe('DriverController.#handleCall (via captured router)', () => {
         const actor = await makeUserActor();
         await server.stores.permission.setFlatUserPerm(
             actor.user!.id!,
-            'service:puter-kvstore:ii:puter-kvstore',
+            'service:mixt-kvstore:ii:mixt-kvstore',
             {
-                permission: 'service:puter-kvstore:ii:puter-kvstore',
+                permission: 'service:mixt-kvstore:ii:mixt-kvstore',
                 deleted: false,
                 issuer_user_id: actor.user!.id!,
             } as never,
@@ -553,7 +553,7 @@ describe('DriverController.#handleCall (via captured router)', () => {
 
         // Stub the driver's method to set Context.driverMetadata before
         // returning. The controller reads it after `await` returns.
-        const kv = controller.resolve('puter-kvstore') as Record<
+        const kv = controller.resolve('mixt-kvstore') as Record<
             string,
             unknown
         >;
@@ -570,7 +570,7 @@ describe('DriverController.#handleCall (via captured router)', () => {
             const res = makeRes();
             const req = makeReq(
                 {
-                    interface: 'puter-kvstore',
+                    interface: 'mixt-kvstore',
                     method: 'set',
                     args: { key: `mk-${uuidv4()}`, value: 'v' },
                 },
@@ -595,7 +595,7 @@ describe('DriverController.#handleCall (via captured router)', () => {
         // own validation error — but NOT a 403 from the permission gate.
         const req = makeReq(
             {
-                interface: 'puter-kvstore',
+                interface: 'mixt-kvstore',
                 method: 'set',
                 args: { key: `na-${uuidv4()}`, value: 'v' },
             },
@@ -624,9 +624,9 @@ describe('DriverController driver-method lifecycle events', () => {
     const grantKvPerm = async (actor: Actor) => {
         await server.stores.permission.setFlatUserPerm(
             actor.user!.id!,
-            'service:puter-kvstore:ii:puter-kvstore',
+            'service:mixt-kvstore:ii:mixt-kvstore',
             {
-                permission: 'service:puter-kvstore:ii:puter-kvstore',
+                permission: 'service:mixt-kvstore:ii:mixt-kvstore',
                 deleted: false,
                 issuer_user_id: actor.user!.id!,
             } as never,
@@ -643,13 +643,13 @@ describe('DriverController driver-method lifecycle events', () => {
         const before: DriverMethodLifecycleEvent[] = [];
         const after: DriverMethodLifecycleEvent[] = [];
         server.clients.event.on(
-            'driver.puter-kvstore.set.before',
+            'driver.mixt-kvstore.set.before',
             (_k, data) => {
                 if (data.actorUid === who) before.push(data);
             },
         );
         server.clients.event.on(
-            'driver.puter-kvstore.set.after',
+            'driver.mixt-kvstore.set.after',
             (_k, data) => {
                 if (data.actorUid === who) after.push(data);
             },
@@ -658,7 +658,7 @@ describe('DriverController driver-method lifecycle events', () => {
         const key = `lc-${uuidv4()}`;
         const req = makeReq(
             {
-                interface: 'puter-kvstore',
+                interface: 'mixt-kvstore',
                 method: 'set',
                 args: { key, value: 'v' },
             },
@@ -675,7 +675,7 @@ describe('DriverController driver-method lifecycle events', () => {
         expect(before).toHaveLength(1);
         expect(before[0]).toMatchObject({
             phase: 'before',
-            iface: 'puter-kvstore',
+            iface: 'mixt-kvstore',
             method: 'set',
             actor,
             actorUid: who,
@@ -695,7 +695,7 @@ describe('DriverController driver-method lifecycle events', () => {
         const key = `veto-${uuidv4()}`;
         const reject: DriverMethodLifecycleEvent[] = [];
         server.clients.event.on(
-            'driver.puter-kvstore.set.before',
+            'driver.mixt-kvstore.set.before',
             (_k, data) => {
                 if ((data.args as { key?: string })?.key === key) {
                     data.allow = false;
@@ -704,7 +704,7 @@ describe('DriverController driver-method lifecycle events', () => {
             },
         );
         server.clients.event.on(
-            'driver.puter-kvstore.set.reject',
+            'driver.mixt-kvstore.set.reject',
             (_k, data) => {
                 if (data.rejectReason === 'blocked in test') reject.push(data);
             },
@@ -712,7 +712,7 @@ describe('DriverController driver-method lifecycle events', () => {
 
         const req = makeReq(
             {
-                interface: 'puter-kvstore',
+                interface: 'mixt-kvstore',
                 method: 'set',
                 args: { key, value: 'v' },
             },
@@ -755,9 +755,9 @@ describe('DriverController.#handleListInterfaces', () => {
             string,
             { drivers: string[]; default: string | undefined }
         >;
-        expect(body['puter-kvstore']).toBeDefined();
-        expect(body['puter-kvstore'].drivers).toContain('puter-kvstore');
-        expect(body['puter-kvstore'].default).toBe('puter-kvstore');
+        expect(body['mixt-kvstore']).toBeDefined();
+        expect(body['mixt-kvstore'].drivers).toContain('mixt-kvstore');
+        expect(body['mixt-kvstore'].default).toBe('mixt-kvstore');
     });
 });
 
@@ -790,9 +790,9 @@ describe('DriverController.#handleCall tracing', () => {
         const actor = await makeUserActor();
         await server.stores.permission.setFlatUserPerm(
             actor.user!.id!,
-            'service:puter-kvstore:ii:puter-kvstore',
+            'service:mixt-kvstore:ii:mixt-kvstore',
             {
-                permission: 'service:puter-kvstore:ii:puter-kvstore',
+                permission: 'service:mixt-kvstore:ii:mixt-kvstore',
                 deleted: false,
                 issuer_user_id: actor.user!.id!,
             } as never,
@@ -802,7 +802,7 @@ describe('DriverController.#handleCall tracing', () => {
         const res = makeRes();
         const req = makeReq(
             {
-                interface: 'puter-kvstore',
+                interface: 'mixt-kvstore',
                 method: 'set',
                 args: { key: `k-${uuidv4()}`, value: 'v' },
             },
@@ -816,12 +816,12 @@ describe('DriverController.#handleCall tracing', () => {
         const names = exporter.getFinishedSpans().map((s) => s.name);
         const driverSpan = exporter
             .getFinishedSpans()
-            .find((s) => s.name === 'driver.puter-kvstore.set');
+            .find((s) => s.name === 'driver.mixt-kvstore.set');
         expect(driverSpan).toBeDefined();
         expect(driverSpan!.attributes).toMatchObject({
-            driver: 'puter-kvstore',
+            driver: 'mixt-kvstore',
             'driver.method': 'set',
-            'driver.name': 'puter-kvstore',
+            'driver.name': 'mixt-kvstore',
         });
         // The call path exercises the permission gate and the KV store's
         // dynamo writes — both should have produced spans of their own.
