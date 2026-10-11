@@ -261,3 +261,16 @@ body {
     width: 100%;
     margin: 0;
 }
+
+/* The administration content is always a light panel with dark text, so it
+   reads the same whatever the surrounding window's theme is. */
+.admin-content {
+    background: #ffffff;
+    color: #1f1f1f;
+    border-radius: 8px;
+    padding: 12px;
+}
+
+.admin-content .admin-card {
+    background: #f7f7f8;
+}

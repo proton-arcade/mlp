@@ -63,28 +63,6 @@ const TabUsage = {
                     <div id="storage-bar"></div>
                     <div id="storage-bar-host"></div>
                 </div>
-                <div class="driver-usage-container" style="margin-top: 30px;">
-                    <div class="driver-usage-header">
-                        <h3 style="margin:0; font-size: 14px; flex-grow: 1; font-weight: 500;">${i18n('Resources')}</h3>
-                        <div style="font-size: 13px; margin-bottom: 3px; opacity:0.85;">
-                            <span class="usage-progbar-percent"></span>
-                            <span> &middot; </span>
-                            <span id="total-usage"></span>
-                            <span> used of </span>
-                            <span id="total-capacity"></span>
-                        </div>
-                    </div>
-                    <div class="usage-progbar-wrapper">
-                        <div class="usage-progbar" style="width: 0;"></div>
-                    </div>
-                    <p class="usage-addon-credits" style="display: none;">
-                        <span class="usage-addon-left"></span>
-                        <span class="usage-addon-note">&middot; ${i18n('addon_credits_note')}</span>
-                    </p>
-                    <h3 style="margin:15px 0 10px 0; font-size: 14px; font-weight: 500;">Usage Details</h3>
-                    <div class="driver-usage-details-content visible">
-                    </div>
-                </div>
             </div>`;
     },
     init: ($el_window) => {
