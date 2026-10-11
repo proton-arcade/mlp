@@ -117,17 +117,6 @@
             }
         ]
     },
-    "email": {
-        "from": "\"Mixt\" <no-reply@localhost>",
-        "host": "",
-        "port": 587,
-        "secure": false,
-        "service": "",
-        "auth": {
-            "user": "",
-            "pass": ""
-        }
-    },
     "teams_enabled": false,
     "max_teams_per_user": 1,
     "max_seats_per_team_free": 3,
@@ -207,7 +196,6 @@
         "example_flag": false
     },
     "blockedEmailDomains": [],
-    "support_email": "support@localhost",
     "reserved_words": [],
     "max_subdomains_per_user": 10,
     "server_health": {

@@ -156,71 +156,6 @@ export default suite('system', {
         );
     },
 
-    // -- Email --
-
-    // Two unrelated surfaces that happen to live on the same module.
-    // `sendTransactional` is an app sending through the
-    // `puter-transactional-email` driver; `send` is a user sending their own
-    // mail, composed to RFC822 client-side and posted to `/email/send`.
-    // Neither ships with this deployment, so what these pin is how each one
-    // reports that — and that the two no longer share a path.
-
-    'email.sendTransactional passes a driver error through unchanged': async (
-        t,
-    ) => {
-        const error = (await t.assert.rejects(() =>
-            t.puter.email.sendTransactional(
-                'nobody@example.com',
-                'subject',
-                'body',
-            ),
-        )) as { code?: string; message?: string };
-        t.assert.equal(error.code, 'not_found');
-        t.assert.equal(
-            error.message,
-            'Driver not found: puter-transactional-email:(no default)',
-        );
-    },
-
-    // `send` hands back the endpoint's answer as-is rather than rejecting,
-    // so an absent endpoint reads as the 404 body it replied with.
-    'email.send resolves the send endpoint\'s answer': async (t) => {
-        const result = (await t.puter.email.send({
-            to: 'nobody@example.com',
-            subject: 'subject',
-            text: 'body',
-        })) as { code?: string };
-        t.assert.equal(result.code, 'not_found');
-    },
-
-    // Composition runs client-side, so a message that can't be built is
-    // refused before anything reaches the network.
-    'email.send rejects a message with no recipient': async (t) => {
-        const error = (await t.assert.rejects(() =>
-            t.puter.email.send({ subject: 'subject', text: 'body' }),
-        )) as Error;
-        t.assert.equal(
-            error.message,
-            'Cannot compose email without recipient!',
-        );
-    },
-
-    // `send` takes options only — the positional form is `sendTransactional`'s
-    // alone, and lands here as a message with nothing to address it to.
-    'email.send does not accept the positional form': async (t) => {
-        const error = (await t.assert.rejects(() =>
-            (t.puter.email.send as (...args: unknown[]) => Promise<unknown>)(
-                'nobody@example.com',
-                'subject',
-                'body',
-            ),
-        )) as Error;
-        t.assert.equal(
-            error.message,
-            'Cannot compose email without recipient!',
-        );
-    },
-
     // -- Transport failures --
 
     // Reads are retried on a fixed backoff before giving up, and a transport
@@ -278,7 +213,7 @@ export default suite('system', {
             // The module-level driver helpers reject with the failed request
             // itself, which carries no HTTP status.
             const callError = (await t.assert.rejects(() =>
-                t.puter.email.sendTransactional('nobody@example.com', 's', 'b'),
+                t.puter.kv.get('system-suite-dead-origin'),
             )) as { status?: number };
             t.assert.equal(callError.status, 0);
         } finally {

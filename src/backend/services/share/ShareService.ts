@@ -457,16 +457,14 @@ export class ShareService extends MixtService {
         // the provider's word for the address, and the change-email flow
         // confirms the new one before it lands. Missing any of them strands the
         // invite forever — there is no later event to catch.
-        const claimFor = (user_id?: number, email?: string) => {
+        const claimFor = (
+            user_id?: number,
+            email?: string,
+        ): Promise<void> | undefined => {
             if (!user_id || !email) return;
             return this.claimPendingShares(user_id, email)
-                .then((claimed) =>
-                    this.services.shareNotification.notifyClaimed(
-                        user_id,
-                        claimed,
-                    ),
-                )
-                .catch((err) => {
+                .then((): void => undefined)
+                .catch((err: unknown): void => {
                     console.warn(
                         '[ShareService] failed to claim pending shares for',
                         user_id,

@@ -1159,7 +1159,7 @@ export class MixtServer {
         }
 
         // 2a. Email verification. Keyed off `strict_email_verification_required`
-        // so self-hosted boxes without SMTP don't break every fs route.
+        // so self-hosted boxes without outbound mail don't break every fs route.
         if (opts.requireVerified) {
             mwChain.push(
                 requireVerifiedGate(

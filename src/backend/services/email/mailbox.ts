@@ -27,7 +27,7 @@ import * as uuid from 'uuid';
 
 /**
  * The user mailbox, shared by everything that fills one: external ingress,
- * user-to-user sends and transactional sends.
+ * and user-to-user sends.
  *
  * `<username>@<mixt domain>` names an account, and that account's mail lives
  * under `/<username>/.mail` as `message/rfc822` objects - one folder per UTC

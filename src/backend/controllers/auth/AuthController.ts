@@ -1327,43 +1327,9 @@ export class AuthController extends MixtController {
             console.warn('[signup] generateDefaultFsentries failed:', e);
         }
 
-        // -- Send email confirmation -----------------------------
-        if (
-            !is_temp &&
-            user!.requires_email_confirmation &&
-            this.clients.email
-        ) {
-            const sendCode = body.send_confirmation_code ?? true;
-            try {
-                let sent;
-                if (sendCode) {
-                    sent = await this.clients.email.send(
-                        user!.email!,
-                        'email_verification_code',
-                        {
-                            code: email_confirm_code,
-                        },
-                    );
-                } else {
-                    const link = `${this.config.origin ?? ''}/confirm-email-by-token?token=${email_confirm_token}&user_uuid=${user!.uuid}`;
-                    sent = await this.clients.email.send(
-                        user!.email!,
-                        'email_verification_link',
-                        { link },
-                    );
-                }
-                // `null` = dropped for want of a transport; silent otherwise.
-                if (sent === null) {
-                    this.#confirmationEmailFailed('signup', user!, null);
-                }
-            } catch (e) {
-                this.#confirmationEmailFailed('signup', user!, e);
-            }
-        }
-
         // Fire signup events (best-effort). `user.save_account` is fired
         // for every non-temp signup (fresh or pseudo-claim) — downstream
-        // consumers (mailchimp sync, welcome email, etc.) key off it.
+        // consumers (sync jobs, welcome flows, etc.) key off it.
         try {
             this.clients.event?.emit(
                 'mixt.signup.success' as never,
@@ -1539,20 +1505,6 @@ export class AuthController extends MixtController {
             email_confirm_code: code,
         });
 
-        if (this.clients.email) {
-            try {
-                const sent = await this.clients.email.send(
-                    user.email,
-                    'email_verification_code',
-                    { code },
-                );
-                if (sent === null) {
-                    this.#confirmationEmailFailed('resend', user, null);
-                }
-            } catch (e) {
-                this.#confirmationEmailFailed('resend', user, e);
-            }
-        }
         res.json({});
     }
 
@@ -1659,64 +1611,6 @@ export class AuthController extends MixtController {
         }
 
         res.json({ email_confirmed: true, original_client_socket_id });
-    }
-
-    /**
-     * Alarm on a confirmation email that did not reach the recipient. A
-     * `requires_email_confirmation` account is refused by
-     * `requireVerifiedAccount` everywhere, so a lost code leaves an account
-     * that cannot be used. `cause === null` is the silent case: `sendRaw` drops
-     * the message rather than throwing when no transport is configured.
-     *
-     * `sole_gate` reports that no phone/card gate is outstanding either, so
-     * this user is stuck on the email alone. `dedup` because one broken mail
-     * path fails once per signup and is still one thing to fix.
-     */
-    #confirmationEmailFailed(
-        stage: 'signup' | 'resend',
-        user: {
-            uuid?: string | null;
-            username?: string | null;
-            email?: string | null;
-            requires_phone_verification?: unknown;
-            requires_card_verification?: unknown;
-        },
-        cause: unknown,
-    ): void {
-        const email = user.email ?? null;
-        const detail =
-            cause instanceof Error
-                ? cause.message
-                : cause === null
-                  ? 'no transport configured (message dropped)'
-                  : String(cause);
-        console.warn(
-            `[${stage === 'signup' ? 'signup' : 'send-confirm-email'}] ` +
-                `confirmation email not delivered: ${detail}`,
-        );
-        // Best-effort: failing to alarm must not fail the signup.
-        try {
-            this.clients.alarm?.create(
-                `auth:confirmation-email-send-failed:${stage}`,
-                'Confirmation email could not be sent — gated accounts cannot be used until it arrives',
-                {
-                    stage,
-                    user_uid: user.uuid ?? null,
-                    username: user.username ?? null,
-                    email,
-                    email_domain: email?.split('@')[1] ?? null,
-                    sole_gate:
-                        !user.requires_phone_verification &&
-                        !user.requires_card_verification,
-                    detail,
-                    ...(cause instanceof Error ? { error: cause } : {}),
-                },
-                'warning',
-                { dedup: true },
-            );
-        } catch (e) {
-            console.warn(`[${stage}] confirmation-email alarm failed:`, e);
-        }
     }
 
     // -- Phone verification (SMS via Prelude) ------------------------
@@ -2614,18 +2508,6 @@ export class AuthController extends MixtController {
         const origin = this.config.origin ?? '';
         const link = `${origin}/action/set-new-password?token=${encodeURIComponent(jwt)}`;
 
-        if (this.clients.email) {
-            try {
-                await this.clients.email.send(
-                    user.email,
-                    'email_password_recovery',
-                    { link },
-                );
-            } catch (e) {
-                console.warn('[send-pass-recovery-email] send failed:', e);
-            }
-        }
-
         res.json({ message: genericMessage });
     }
 
@@ -2872,20 +2754,6 @@ export class AuthController extends MixtController {
         // rows); only the session that changed the password survives.
         await this.services.auth.revokeAllSessions(req.actor!);
 
-        if (this.clients.email && user.email) {
-            try {
-                await this.clients.email.send(
-                    user.email,
-                    'password_change_notification',
-                    {
-                        username: user.username,
-                    },
-                );
-            } catch (e) {
-                console.warn('[change-password] notification send failed:', e);
-            }
-        }
-
         res.send('Password successfully updated.');
     }
 
@@ -3059,46 +2927,6 @@ export class AuthController extends MixtController {
             },
             { expiresIn: '1h' },
         );
-
-        if (this.clients.email) {
-            const origin = this.config.origin ?? '';
-            const link = `${origin}/change_email/confirm?token=${encodeURIComponent(linkJwt)}`;
-            try {
-                await this.clients.email.send(
-                    new_email,
-                    'email_verification_link',
-                    { link },
-                );
-            } catch (e) {
-                console.warn('[change-email] new-address email failed:', e);
-            }
-            // Notify the old address too
-            const user = await this.stores.user.getById(req.actor!.user.id!, {
-                force: true,
-            });
-            if (user?.email) {
-                try {
-                    await (
-                        this.clients.email as unknown as {
-                            sendRaw: (opts: {
-                                to: string;
-                                subject: string;
-                                text: string;
-                            }) => Promise<unknown>;
-                        }
-                    ).sendRaw({
-                        to: user.email,
-                        subject: 'Your Mixt email change was requested',
-                        text: `A change to ${new_email} was requested on your account. If this wasn't you, please contact support.`,
-                    });
-                } catch (e) {
-                    console.warn(
-                        '[change-email] old-address notice failed:',
-                        e,
-                    );
-                }
-            }
-        }
 
         res.json({});
     }
@@ -3401,19 +3229,6 @@ export class AuthController extends MixtController {
                 );
             } catch (e) {
                 console.warn('[save-account] group add failed:', e);
-            }
-        }
-
-        // Send confirmation email
-        if (this.clients.email) {
-            try {
-                await this.clients.email.send(
-                    email,
-                    'email_verification_code',
-                    { code: email_confirm_code },
-                );
-            } catch (e) {
-                console.warn('[save-account] confirmation email failed:', e);
             }
         }
 
@@ -4754,16 +4569,6 @@ export class AuthController extends MixtController {
             );
             await this.stores.user.invalidateById(user.id);
 
-            if (this.clients.email && user.email) {
-                try {
-                    await this.clients.email.send(user.email, 'enabled_2fa', {
-                        username: user.username,
-                    });
-                } catch (e) {
-                    console.warn('[configure-2fa] email send failed:', e);
-                }
-            }
-
             res.json({});
             return;
         }
@@ -4798,16 +4603,6 @@ export class AuthController extends MixtController {
             [this.clients.db.booleanValue(false), user.uuid],
         );
         await this.stores.user.invalidateById(user.id);
-
-        if (this.clients.email && user.email) {
-            try {
-                await this.clients.email.send(user.email, 'disabled_2fa', {
-                    username: user.username,
-                });
-            } catch (e) {
-                console.warn('[disable-2fa] email send failed:', e);
-            }
-        }
 
         res.json({ success: true });
     }

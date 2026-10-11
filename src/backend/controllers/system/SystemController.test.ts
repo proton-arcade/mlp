@@ -527,69 +527,7 @@ describe('SystemController POST /contactUs — attachments', () => {
         ]);
     });
 
-    it('emails the files to support with sanitized names and a manifest', async () => {
-        const sendRaw = vi
-            .spyOn(server.clients.email, 'sendRaw')
-            .mockResolvedValue(null);
-        try {
-            const message = `attached ${Math.random().toString(36).slice(2)}`;
-            const { call } = await submitMultipart([
-                { field: 'message', value: message },
-                // Declares .html, but the bytes are a PNG: the stored and
-                // emailed extension must follow the bytes.
-                {
-                    field: 'attachments',
-                    filename: 'payload.html',
-                    data: pngBytes(64),
-                },
-            ]);
-            await call;
 
-            expect(sendRaw).toHaveBeenCalledTimes(1);
-            const sent = sendRaw.mock.calls[0][0] as {
-                text: string;
-                attachments: Array<{
-                    filename: string;
-                    content: Buffer;
-                    contentType: string;
-                    contentDisposition: string;
-                }>;
-            };
-            expect(sent.attachments).toHaveLength(1);
-            expect(sent.attachments[0].filename).toBe('payload.png');
-            expect(sent.attachments[0].contentType).toBe('image/png');
-            expect(sent.attachments[0].contentDisposition).toBe('attachment');
-            expect(sent.attachments[0].content.equals(pngBytes(64))).toBe(true);
-            // The body records what should have arrived, in case a gateway
-            // strips the files on the way.
-            expect(sent.text).toContain(message);
-            expect(sent.text).toContain('payload.png');
-        } finally {
-            sendRaw.mockRestore();
-        }
-    });
-
-    it('accepts a multipart submission with no files', async () => {
-        const sendRaw = vi
-            .spyOn(server.clients.email, 'sendRaw')
-            .mockResolvedValue(null);
-        try {
-            const message = `plain ${Math.random().toString(36).slice(2)}`;
-            const { call, captured } = await submitMultipart([
-                { field: 'message', value: message },
-            ]);
-            await call;
-            expect(captured.body).toEqual({});
-            const sent = sendRaw.mock.calls[0][0] as {
-                text: string;
-                attachments: unknown[];
-            };
-            expect(sent.attachments).toEqual([]);
-            expect(sent.text).toBe(message);
-        } finally {
-            sendRaw.mockRestore();
-        }
-    });
 
     it('rejects base64 attachments in a JSON body', async () => {
         const { actor } = await makeUser();

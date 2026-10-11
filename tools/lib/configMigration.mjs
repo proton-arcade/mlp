@@ -134,7 +134,6 @@ export const transformToV2 = (source) => {
     copyIfSet(source, 'default_temp_group', out);
     copyIfSet(source, 'api_base_url', out);
     copyIfSet(source, 'origin', out);
-    copyIfSet(source, 'contact_email', out, 'support_email');
 
     // `extensions` in v1 was overloaded — array form = scan dirs, object form
     // = per-extension config bag. JSON.parse keeps only the last declaration
@@ -222,19 +221,6 @@ export const transformToV2 = (source) => {
     // Dynamo (services.dynamo → top-level)
     if ( svc.dynamo ) out.dynamo = svc.dynamo;
 
-    // Email (services.email → email; drop `engine` adapter switch). Fallback
-    // to old flat smtp_* fields.
-    if ( svc.email ) {
-        const { engine: _engine, ...rest } = svc.email;
-        out.email = rest;
-    } else if ( source.smtp_server || source.smtp_host ) {
-        out.email = {
-            host:   source.smtp_server ?? source.smtp_host,
-            port:   source.smtp_port   ?? source.smpt_port,
-            secure: true,
-            auth:   { user: source.smtp_username, pass: source.smtp_password },
-        };
-    }
 
     // Pager: routing_key → routingKey.
     if ( source.pager?.pagerduty ) {
@@ -398,7 +384,6 @@ export const transformToV2 = (source) => {
         'db_queueLimit', 'db_read_replica_wait', 'read_replica_db',
         's3_access_key', 's3_secret_key', 's3_bucket', 's3_region', 's3_endpoint',
         'mailchimp', 'cloudwatch', 'monitor',
-        'smtp_server', 'smtp_host', 'smtp_port', 'smpt_port', 'smtp_username', 'smtp_password',
         'max_subdomains_per_user',
         'storage_capacity',
         'static_hosting_domain', 'static_hosting_domain_alt',

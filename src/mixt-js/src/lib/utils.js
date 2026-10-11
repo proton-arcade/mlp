@@ -255,7 +255,7 @@ function setupXhrEventHandlers (xhr, success_cb, error_cb, resolve_func, reject_
  *   upgradePrompt?: import('./types.js').UpgradePromptContext,
  * }} spec `iface`/`driver`/`method`/`testMode` address the driver call itself
  *   (see `driverCall`); the rest configures this wrapper. `upgradePrompt`
- *   names the public method (`mixt.email.sendTransactional`) in the upgrade
+ *   names the public method (`mixt.fs.write`) in the upgrade
  *   prompt a refusal raises, and says why the method needs a plan.
  * @returns {(...args: unknown[]) => Promise<unknown>}
  */

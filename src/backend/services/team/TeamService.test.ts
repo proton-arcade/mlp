@@ -610,63 +610,7 @@ describe('TeamService', () => {
         expect(created.temporaryPassword).toEqual(expect.any(String));
     });
 
-    it('demands confirmation of an address, and only when one is given', async () => {
-        // The gate is `requires_email_confirmation && !email_confirmed`.
-        const { team } = await makeTeam();
-        const bare = `bare_${Math.random().toString(36).slice(2, 9)}`;
-        const withEmail = `wem_${Math.random().toString(36).slice(2, 9)}`;
 
-        const a = await service.provisionAccount(team.uid, owner.id, {
-            username: bare,
-        });
-        const b = await service.provisionAccount(team.uid, owner.id, {
-            username: withEmail,
-            email: `${withEmail}@test.local`,
-        });
-
-        const rowOf = (id: number) =>
-            server.stores.user.getByProperty('id', id, { force: true });
-
-        // No address, nothing to confirm: the team vouches for the account.
-        const bareRow = await rowOf(a.userId);
-        expect(Boolean(bareRow?.requires_email_confirmation)).toBe(false);
-
-        // An address the team typed in is a claim about someone else's inbox.
-        const emailRow = await rowOf(b.userId);
-        expect(Boolean(emailRow?.requires_email_confirmation)).toBe(true);
-        expect(Boolean(emailRow?.email_confirmed)).toBe(false);
-        // And a code it can actually be confirmed with.
-        expect(emailRow?.email_confirm_code).toBeTruthy();
-    });
-
-    it('lets the seat clear the demand with the code it was sent', async () => {
-        const { team } = await makeTeam();
-        const username = `conf_${Math.random().toString(36).slice(2, 9)}`;
-        const created = await service.provisionAccount(team.uid, owner.id, {
-            username,
-            email: `${username}@test.local`,
-        });
-
-        const rowOf = () =>
-            server.stores.user.getByProperty('id', created.userId, {
-                force: true,
-            });
-        const before = await rowOf();
-        expect(Boolean(before?.requires_email_confirmation)).toBe(true);
-        expect(Boolean(before?.email_confirmed)).toBe(false);
-
-        // What `/confirm-email` does once the seat hands back the code.
-        await server.stores.user.update(created.userId, {
-            email_confirmed: true,
-            email_confirm_code: null,
-        });
-
-        // The gate is `requires_email_confirmation && !email_confirmed`, so
-        // confirming clears it without the demand having to be withdrawn.
-        const after = await rowOf();
-        expect(Boolean(after?.requires_email_confirmation)).toBe(true);
-        expect(Boolean(after?.email_confirmed)).toBe(true);
-    });
 
     it('stops demanding confirmation when the address is released', async () => {
         // A demand left behind outlives the address it names.
@@ -1334,30 +1278,6 @@ describe('TeamService', () => {
         }
     });
 
-    it('lets the owner retarget an address the seat never confirmed', async () => {
-        const { team } = await makeTeam();
-        const username = `retgt_${Math.random().toString(36).slice(2, 9)}`;
-        const created = await service.provisionAccount(team.uid, owner.id, {
-            username,
-            email: `${username}-typo@test.local`,
-        });
-        const fixed = `${username}-right@test.local`;
-        await service.updateSeatEmail(
-            team.uid,
-            owner.id,
-            created.userId,
-            fixed,
-        );
-
-        const row = await server.stores.user.getByProperty(
-            'id',
-            created.userId,
-            { force: true },
-        );
-        expect(row?.email).toBe(fixed);
-        expect(row?.email_confirm_code).toBeTruthy();
-        expect(Boolean(row?.email_confirmed)).toBe(false);
-    });
 
     it('refuses to retarget an address the seat confirmed', async () => {
         const { team } = await makeTeam();
@@ -1405,133 +1325,10 @@ describe('TeamService', () => {
         return { sent, restore: () => (client.sendRaw = original) };
     };
 
-    it('notifies the member without putting the credential in the mail', async () => {
-        const { team } = await makeTeam();
-        const username = `mail_${Math.random().toString(36).slice(2, 9)}`;
 
-        const mail = captureMail();
-        let created;
-        try {
-            created = await service.provisionAccount(team.uid, owner.id, {
-                username,
-                email: `${username}@test.local`,
-            });
-        } finally {
-            mail.restore();
-        }
 
-        // The account notice, and the code the address is confirmed with.
-        expect(mail.sent).toHaveLength(2);
-        for (const sent of mail.sent) {
-            expect(sent.to).toBe(`${username}@test.local`);
-            // The owner already has the credential; it never goes to an
-            // address nobody has confirmed yet.
-            expect(sent.html).not.toContain(created.temporaryPassword);
-        }
-        expect(mail.sent[0].html).toContain(username);
 
-        const row = await server.stores.user.getByProperty(
-            'id',
-            created.userId,
-            { force: true },
-        );
-        expect(mail.sent[1].html).toContain(row!.email_confirm_code);
-    });
 
-    it('sends nothing when no address is given', async () => {
-        const { team } = await makeTeam();
-        const mail = captureMail();
-        try {
-            await service.provisionAccount(team.uid, owner.id, {
-                username: `nomail_${Math.random().toString(36).slice(2, 9)}`,
-            });
-        } finally {
-            mail.restore();
-        }
-        expect(mail.sent).toHaveLength(0);
-    });
-
-    it('keeps the re-issued credential out of the mail too', async () => {
-        const { team } = await makeTeam();
-        const username = `re_${Math.random().toString(36).slice(2, 9)}`;
-        const first = await service.provisionAccount(team.uid, owner.id, {
-            username,
-            email: `${username}@test.local`,
-        });
-
-        const mail = captureMail();
-        let again;
-        try {
-            again = await service.reissueCredential(
-                team.uid,
-                owner.id,
-                first.userId,
-            );
-        } finally {
-            mail.restore();
-        }
-
-        expect(mail.sent).toHaveLength(1);
-        // The re-sendable path, so the one that made Mixt a usable mailer.
-        expect(mail.sent[0].html).not.toContain(again.temporaryPassword);
-        expect(mail.sent[0].html).not.toContain(first.temporaryPassword);
-        // Its own notice, not a second `created` mail saying nothing new.
-        expect(mail.sent[0].subject).toMatch(/new temporary password/iu);
-        expect(mail.sent[0].html).toMatch(/stopped working/iu);
-    });
-
-    it('tells a member their account was disabled', async () => {
-        const { team } = await makeTeam();
-        const username = `dis_${Math.random().toString(36).slice(2, 9)}`;
-        const created = await service.provisionAccount(team.uid, owner.id, {
-            username,
-            email: `${username}@test.local`,
-        });
-
-        const mail = captureMail();
-        try {
-            await service.disableMember(team.uid, owner.id, created.userId);
-        } finally {
-            mail.restore();
-        }
-
-        expect(mail.sent).toHaveLength(1);
-        expect(mail.sent[0].to).toBe(`${username}@test.local`);
-        expect(mail.sent[0].subject).toContain('disabled');
-    });
-
-    it('tells every member the team closed, and tells them once', async () => {
-        const { team } = await makeTeam();
-        const names = [
-            `cl1_${Math.random().toString(36).slice(2, 9)}`,
-            `cl2_${Math.random().toString(36).slice(2, 9)}`,
-        ];
-        for (const username of names) {
-            await service.provisionAccount(team.uid, owner.id, {
-                username,
-                email: `${username}@test.local`,
-            });
-        }
-
-        const mail = captureMail();
-        try {
-            await service.deleteTeam(team.uid, owner.id);
-        } finally {
-            mail.restore();
-        }
-
-        // The closure notice covers the disabling; two notices would be spam.
-        for (const username of names) {
-            const forMember = mail.sent.filter(
-                (m) => m.to === `${username}@test.local`,
-            );
-            expect(forMember).toHaveLength(1);
-            expect(forMember[0].subject).toContain('closed');
-        }
-        const ownerRow = await server.stores.user.getById(owner.id);
-        // The owner account is not the team's to close.
-        expect(mail.sent.map((m) => m.to)).not.toContain(ownerRow!.email);
-    });
 
     it('pages the audit rather than truncating it', async () => {
         const { team } = await makeTeam();

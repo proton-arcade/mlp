@@ -34,8 +34,8 @@ const HTTPS_PORT = 8835;
 const HOST = 'localhost';
 const TLS_DIR = path.join(rootDir, 'volatile', 'tls');
 
-const isBackendMode = !args.some(a => a.startsWith('--server') || a === '--smtp') &&
-    !process.env.npm_config_server && !process.env.npm_config_smtp;
+const isBackendMode = !args.some(a => a.startsWith('--server')) &&
+    !process.env.npm_config_server;
 
 // ---------------------------------------------------------------- certificate
 

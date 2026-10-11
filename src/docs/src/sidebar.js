@@ -532,14 +532,6 @@ let sidebar = [
         path: '/Email',
         children: [
             {
-                title: '<code>sendTransactional()</code>',
-                page_title: '<code>mixt.email.sendTransactional()</code>',
-                title_tag: 'mixt.email.sendTransactional()',
-                icon: '/assets/img/function.svg',
-                source: '/Email/sendTransactional.md',
-                path: '/Email/sendTransactional',
-            },
-            {
                 title: '<code>list()</code>',
                 page_title: '<code>mixt.email.list()</code>',
                 title_tag: 'mixt.email.list()',

@@ -60,12 +60,12 @@ describe('promptIfUpgradeRequired', () => {
         it('hands the desktop what was refused and why', () => {
             promptIfUpgradeRequired(
                 { code: 'subscription_required', status: 402 },
-                { method: 'mixt.email.sendTransactional', subscriptionMessage: 'Sending email requires a subscription.' },
+                { method: 'mixt.fs.write', subscriptionMessage: 'Writing files requires a subscription.' },
             );
             expect(globalThis.mixt.ui.requestUpgrade).toHaveBeenCalledWith({
                 reason: 'subscription',
-                method: 'mixt.email.sendTransactional',
-                message: 'Sending email requires a subscription.',
+                method: 'mixt.fs.write',
+                message: 'Writing files requires a subscription.',
             });
             expect(showUsageLimitDialog).not.toHaveBeenCalled();
         });
@@ -111,22 +111,22 @@ describe('promptIfUpgradeRequired', () => {
         it("prefers the SDK method's own wording for a plan gate", () => {
             promptIfUpgradeRequired(
                 { code: 'subscription_required', message: 'A subscription is required for this action' },
-                { method: 'mixt.email.sendTransactional', subscriptionMessage: 'Sending email requires a subscription.' },
+                { method: 'mixt.fs.write', subscriptionMessage: 'Writing files requires a subscription.' },
             );
             expect(showUsageLimitDialog).toHaveBeenCalledWith(
-                'Sending email requires a subscription.',
-                { title: 'Subscription Required', method: 'mixt.email.sendTransactional' },
+                'Writing files requires a subscription.',
+                { title: 'Subscription Required', method: 'mixt.fs.write' },
             );
         });
 
         it("falls back to the backend's message, punctuated", () => {
             promptIfUpgradeRequired(
-                { code: 'subscription_required', message: 'External email requires a subscription' },
-                { method: 'mixt.email.send' },
+                { code: 'subscription_required', message: 'Writing files requires a subscription' },
+                { method: 'mixt.fs.write' },
             );
             expect(showUsageLimitDialog).toHaveBeenCalledWith(
-                'External email requires a subscription.',
-                { title: 'Subscription Required', method: 'mixt.email.send' },
+                'Writing files requires a subscription.',
+                { title: 'Subscription Required', method: 'mixt.fs.write' },
             );
         });
 

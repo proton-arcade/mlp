@@ -819,7 +819,7 @@ export class OIDCService extends MixtService {
         const resolved = user ?? created;
 
         // Fire signup events — keys match the password-based signup path so
-        // downstream listeners (welcome email, mailchimp sync, etc.) treat
+        // downstream listeners (welcome flows, sync jobs, etc.) treat
         // both signup routes identically.
         //
         // That includes `user.email-confirmed`: the provider's attestation IS

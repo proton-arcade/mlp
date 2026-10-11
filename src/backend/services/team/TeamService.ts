@@ -25,7 +25,6 @@ import {
     USERNAME_REGEX,
 } from '../../controllers/auth/AuthController.js';
 import { isReservedUsername } from '../../util/reservedUsernames.js';
-import type { EmailTemplateName } from '../../clients/email/templates.js';
 import {
     ORG_SEAT_FREE_SUBSCRIPTION,
     ORG_SEAT_RESOLVER_PRIORITY,
@@ -736,11 +735,6 @@ export class TeamService extends MixtService {
                 });
 
                 // The team notice covers the disabling, so a member is told once.
-                await this.#notifyUser(
-                    rows.get(member.user_id),
-                    'team_closed',
-                    team,
-                );
             },
         );
 
@@ -1021,24 +1015,14 @@ export class TeamService extends MixtService {
         }
 
         // Gated only when a code can reach the address the team claimed.
-        const confirmCode =
-            email && this.clients.email
-                ? String(crypto.randomInt(100000, 1000000))
-                : null;
         const user = await this.stores.user.create({
             username: input.username,
             uuid: uuidv4(),
             password: null,
             email: email || null,
             clean_email: email ? cleanEmail(email) : null,
-            requires_email_confirmation: Boolean(confirmCode),
+            requires_email_confirmation: false,
             email_confirmed: false,
-            ...(confirmCode
-                ? {
-                      email_confirm_code: confirmCode,
-                      email_confirm_token: uuidv4(),
-                  }
-                : {}),
         });
 
         await generateDefaultFsentries(this.clients.db, this.stores.user, user);
@@ -1063,13 +1047,7 @@ export class TeamService extends MixtService {
 
         // Not mailed: nobody confirmed the address the owner typed in.
         const temporaryPassword = await this.#issueTemporaryPassword(user.id);
-        await this.#notifyUser(user, 'team_account_created', team);
         // The seat cannot confirm a code it was never sent.
-        if (confirmCode) {
-            await this.#notifyUser(user, 'email_verification_code', team, {
-                code: confirmCode,
-            });
-        }
 
         // Last: the seat is only chargeable once it exists and can be used.
         this.#emitBilling('team.account.created', {
@@ -1124,7 +1102,6 @@ export class TeamService extends MixtService {
         const temporaryPassword =
             await this.#issueTemporaryPassword(targetUserId);
         // Its own notice; the created one omits the password just invalidated.
-        await this.#notifyUser(user, 'team_account_reissued', team);
         return { temporaryPassword };
     }
 
@@ -1151,7 +1128,6 @@ export class TeamService extends MixtService {
             await this.#issueTemporaryPassword(targetUserId);
         // 2FA is deliberately untouched: a reset alone is not takeover.
         await this.#dropSessions(targetUserId);
-        await this.#notifyUser(user, 'team_password_reset', team);
         return { temporaryPassword };
     }
 
@@ -1182,17 +1158,11 @@ export class TeamService extends MixtService {
             });
         }
 
-        const confirmCode =
-            email && this.clients.email
-                ? String(crypto.randomInt(100000, 1000000))
-                : null;
         await this.stores.user.update(targetUserId, {
             email: email || null,
             clean_email: email ? cleanEmail(email) : null,
-            requires_email_confirmation: Boolean(confirmCode),
+            requires_email_confirmation: false,
             email_confirmed: false,
-            email_confirm_code: confirmCode,
-            email_confirm_token: confirmCode ? uuidv4() : null,
         });
         await this.stores.team.appendAudit({
             teamId: team.id,
@@ -1200,14 +1170,6 @@ export class TeamService extends MixtService {
             actorUserId,
             action: AUDIT_UPDATE_SEAT_EMAIL,
         });
-        if (confirmCode) {
-            await this.#notifyUser(
-                { ...user, email } as UserRow,
-                'email_verification_code',
-                team,
-                { code: confirmCode },
-            );
-        }
     }
 
     /**
@@ -1248,7 +1210,6 @@ export class TeamService extends MixtService {
         );
         await this.stores.user.invalidateById(targetUserId);
         await this.#dropSessions(targetUserId);
-        await this.#notifyUser(user, 'team_2fa_reset', team);
     }
 
     /**
@@ -1299,42 +1260,6 @@ export class TeamService extends MixtService {
         return temporaryPassword;
     }
 
-    /** Best effort: the admin also gets the credential in the API response. */
-    async #notifyUser(
-        user: UserRow | null | undefined,
-        template: EmailTemplateName,
-        team: TeamRow,
-        vars: Record<string, string> = {},
-    ): Promise<void> {
-        if (!this.clients.email || !user?.email) return;
-        try {
-            const sent = await this.clients.email.send(user.email, template, {
-                username: user.username,
-                team_name: team.name ?? 'Your team',
-                ...vars,
-            });
-            // `sendRaw` returns null with no transport rather than throwing.
-            if (sent === null) {
-                console.warn(`[team] no email transport for ${template}`);
-            }
-        } catch (e) {
-            console.warn(`[team] ${template} notice failed:`, e);
-        }
-    }
-
-    /** The same notice, for a caller holding only the member's id. */
-    async #notifyMember(
-        userId: number,
-        template: EmailTemplateName,
-        team: TeamRow,
-    ): Promise<void> {
-        await this.#notifyUser(
-            await this.stores.user.getById(userId),
-            template,
-            team,
-        );
-    }
-
     // -- Disable and re-enable ---- the whole of offboarding ------------
 
     /** Rejects the account's next request; its files are untouched. */
@@ -1377,7 +1302,6 @@ export class TeamService extends MixtService {
         });
 
         // Their sessions are gone, so email is the only channel left.
-        await this.#notifyMember(targetUserId, 'team_account_disabled', team);
     }
 
     /** Nothing was destroyed, so the account returns as it was. */

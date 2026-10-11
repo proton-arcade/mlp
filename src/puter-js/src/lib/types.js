@@ -34,10 +34,10 @@
  * How an SDK method describes itself to the upgrade prompt a refusal raises.
  *
  * @typedef {Object} UpgradePromptContext
- * @property {string} [method] The SDK method that was refused, e.g. `puter.email.sendTransactional`.
+ * @property {string} [method] The SDK method that was refused, e.g. `puter.fs.write`.
  * Shown in the prompt so the user and the developer know which action it was.
  * @property {string} [subscriptionMessage] Why this method needs a paid plan, as one sentence
- * ("Sending email requires a subscription."). Wins over the backend's message; without either the
+ * ("Writing files requires a subscription."). Wins over the backend's message; without either the
  * prompt says "This action requires a subscription."
  */
 

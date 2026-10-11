@@ -3,10 +3,10 @@
  *
  * Mixt runs fully local. Nothing the backend does may reach an address outside
  * this machine or its private network: no outbound HTTP(S) to the internet, no
- * SMTP relay on the internet, no OAuth discovery, no SMS API, no Cloudflare API.
+ * OAuth discovery, no SMS API, no Cloudflare API.
  *
  * The guard enforces that at the two points every outbound connection passes
- * through, so it also covers code that we do not control (fetch, nodemailer,
+ * through, so it also covers code that we do not control (fetch,
  * pg, mysql, ioredis, the AWS SDK):
  *
  *   - `dns.lookup`: every resolved address must be loopback or private. A name

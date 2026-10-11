@@ -21,7 +21,6 @@ import { HttpError } from '../../core/http/HttpError.js';
 import {
     MAX_TOTAL_ATTACHMENT_BYTES,
     attachmentMetadata,
-    attachmentSummary,
     readContactSubmission,
 } from '../../util/contactAttachments.js';
 import { MixtController } from '../types.js';
@@ -276,8 +275,8 @@ export class SystemController extends MixtController {
                     );
                 }
 
-                // Persist to feedback table for durability. Attachments are
-                // recorded by name and size only; the mail carries the bytes.
+                // Persist to feedback table. Attachments are recorded by name
+                // and size only; the bytes are not kept.
                 try {
                     await this.clients.db.write(
                         'INSERT INTO `feedback` (`user_id`, `message`, `attachments`) VALUES (?, ?, ?)',
@@ -293,31 +292,6 @@ export class SystemController extends MixtController {
                     );
                 } catch (e) {
                     console.warn('[contactUs] feedback insert failed:', e);
-                }
-
-                // Send to support email
-                const supportEmail =
-                    this.config.support_email ?? 'support@mixt.mpl';
-                if (this.clients.email && req.actor.user?.email) {
-                    try {
-                        await this.clients.email.sendRaw({
-                            to: supportEmail,
-                            replyTo: req.actor.user.email,
-                            subject: `Contact from ${req.actor.user.username}`,
-                            text: attachments.length
-                                ? `${message}\n\n${attachmentSummary(attachments)}`
-                                : message,
-                            // Never rendered inline by the mail client.
-                            attachments: attachments.map((a) => ({
-                                filename: a.filename,
-                                content: a.content,
-                                contentType: a.contentType,
-                                contentDisposition: 'attachment',
-                            })),
-                        });
-                    } catch (e) {
-                        console.warn('[contactUs] email send failed:', e);
-                    }
                 }
 
                 res.json({});

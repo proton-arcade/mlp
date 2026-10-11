@@ -27,8 +27,9 @@ import { MixtService } from '../types.js';
  * enabled. The Dev Center enables it when it creates an app (its "User
  * Feedback" settings toggle turns it off); apps created through
  * `mixt.apps.create`/`update` default to off and opt in via `feedbackEnabled`
- * in mixt.js. Submissions are stored in `app_feedback` and a copy is emailed
- * to the app owner's confirmed email, subject to the caps below.
+ * in mixt.js. Submissions are stored in `app_feedback`. Nothing is sent to
+ * the app owner: external email is removed, and the stored rows have no other
+ * read path, so `acceptsFeedback` reports the feature as unavailable.
  *
  * Trust model: the submit endpoint only accepts user actors (never app tokens),
  * so an app cannot submit feedback programmatically — every message passes
@@ -45,9 +46,6 @@ import { MixtService } from '../types.js';
  * 2. Durable DB-count caps (here) — per (user, app) and per user per day. These
  *    read the `app_feedback` table itself, so they hold across restarts and
  *    nodes, and fail closed with the insert.
- * 3. Per-app daily email cap — bounds how much mail one app can generate to its
- *    owner regardless of how many distinct users submit. Feedback past the cap
- *    is still stored, just not emailed.
  */
 export class AppFeedbackService extends MixtService {
     /** Max feedback message length, in characters (after normalization). */
@@ -56,8 +54,6 @@ export class AppFeedbackService extends MixtService {
     static readonly PER_USER_APP_DAILY_LIMIT = 3;
     /** Max feedback rows one user may create across all apps per day. */
     static readonly PER_USER_DAILY_LIMIT = 10;
-    /** Max owner emails one app may generate per day; rest is store-only. */
-    static readonly PER_APP_DAILY_EMAIL_LIMIT = 20;
 
     /**
      * Normalize a raw feedback message: unify newlines, strip control
@@ -113,20 +109,14 @@ export class AppFeedbackService extends MixtService {
     }
 
     /**
-     * Whether `app` (a row from AppStore) currently accepts user feedback: the
-     * developer opted in, the app has an owner to deliver to, and this
-     * deployment can deliver at all (email transport configured). Without a
-     * transport every submission would be stored-and-lost — the rows have no
-     * other read path — while the sender is told it was sent, so the feature
-     * reports itself unavailable instead.
+     * Whether `app` (a row from AppStore) currently accepts user feedback.
+     * Feedback was delivered to the developer by email, and external email is
+     * removed from this deployment. The stored rows have no other read path,
+     * so the feature reports itself unavailable instead of storing messages
+     * nobody can read.
      */
-    acceptsFeedback(app: Record<string, unknown> | null): boolean {
-        return Boolean(
-            this.config.email &&
-            app &&
-            app.feedback_enabled &&
-            app.owner_user_id,
-        );
+    acceptsFeedback(_app: Record<string, unknown> | null): boolean {
+        return false;
     }
 
     /**
@@ -150,7 +140,7 @@ export class AppFeedbackService extends MixtService {
     }
 
     /**
-     * Store one feedback message and email it to the app's owner (best effort).
+     * Store one feedback message.
      * Caller (controller) has already authenticated the user and validated the
      * message's type and raw length; this method owns the business rules.
      *
@@ -247,113 +237,6 @@ export class AppFeedbackService extends MixtService {
             throw tooManyError;
         }
 
-        // Email delivery is best-effort: any failure past this point must
-        // not fail the request — the feedback is already stored.
-        try {
-            await this.#emailOwner({
-                app: targetApp!,
-                appId,
-                feedbackId: row.id,
-                message: normalized,
-                senderUserId: userId,
-                since,
-            });
-        } catch (e) {
-            console.warn('[app-feedback] owner email failed:', e);
-        }
-
         return { uid: row.uid };
-    }
-
-    /**
-     * Deliver one feedback email to the app owner if every delivery
-     * precondition holds; otherwise silently skip (the row stays stored with
-     * `email_sent = 0`). Preconditions: transport configured, owner exists with
-     * a confirmed non-blocklisted email, owner not suspended and not
-     * unsubscribed, per-app daily email cap not reached.
-     */
-    async #emailOwner({
-        app,
-        appId,
-        feedbackId,
-        message,
-        senderUserId,
-        since,
-    }: {
-        app: Record<string, unknown>;
-        appId: number;
-        feedbackId: number;
-        message: string;
-        senderUserId: number;
-        since: number;
-    }): Promise<void> {
-        if (!this.config.email) return;
-
-        const owner = await this.stores.user.getById(Number(app.owner_user_id));
-        if (
-            !owner ||
-            !owner.email ||
-            !owner.email_confirmed ||
-            owner.suspended ||
-            Boolean(owner.unsubscribed)
-        ) {
-            return;
-        }
-        if (!(await this.clients.email.validate(owner.email))) return;
-
-        // Claim an email-cap slot *before* sending: flip email_sent, recount
-        // with the claim included, and release the slot if a concurrent
-        // burst pushed past the cap. Counting before sending would fail
-        // open — parallel submissions could each read an under-cap count and
-        // all send. The cost is that a crash mid-send burns a slot without
-        // delivering; the cap is an upper bound, not a quota owed.
-        await this.stores.appFeedback.markEmailSent(feedbackId);
-        const emailedToday =
-            await this.stores.appFeedback.countEmailedByAppSince(appId, since);
-        if (emailedToday > AppFeedbackService.PER_APP_DAILY_EMAIL_LIMIT) {
-            await this.stores.appFeedback.unmarkEmailSent(feedbackId);
-            return;
-        }
-
-        const sender = await this.stores.user.getById(senderUserId);
-        // Share the sender's email so the developer can respond — but only
-        // when it's verified. An unverified address can be anyone's (typed at
-        // signup, never proven), so using it as Reply-To would let a sender
-        // point the developer's reply at a stranger's inbox. Unverified
-        // senders still get their feedback delivered, just without a
-        // reply path. The dialog's privacy note mirrors this split (see
-        // app_feedback_privacy_note / app_feedback_privacy_note_no_email).
-        const senderEmail =
-            sender?.email && sender.email_confirmed ? sender.email : null;
-
-        try {
-            await this.clients.email.send(
-                owner.email,
-                'app-user-feedback',
-                {
-                    owner_username: owner.username,
-                    sender_username: sender?.username ?? 'A Mixt user',
-                    sender_email: senderEmail,
-                    // Collapse whitespace so a crafted title can't break the
-                    // subject header or spoof extra lines in the body.
-                    app_title: String(app.title ?? app.name).replace(
-                        /\s+/g,
-                        ' ',
-                    ),
-                    app_name: String(app.name),
-                    app_link: `${this.config.origin}/app/${encodeURIComponent(String(app.name))}`,
-                    // The footer's "manage it" pointer — built from
-                    // config.origin like app_link so it holds on self-hosted
-                    // deployments.
-                    dev_center_link: `${this.config.origin}/app/dev-center`,
-                    message,
-                },
-                senderEmail ? { replyTo: senderEmail } : {},
-            );
-        } catch (e) {
-            // Release the claimed slot — the mail never went out.
-            await this.stores.appFeedback.unmarkEmailSent(feedbackId);
-            throw e;
-        }
     }
 }

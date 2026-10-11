@@ -60,12 +60,12 @@ describe('promptIfUpgradeRequired', () => {
         it('hands the desktop what was refused and why', () => {
             promptIfUpgradeRequired(
                 { code: 'subscription_required', status: 402 },
-                { method: 'puter.email.sendTransactional', subscriptionMessage: 'Sending email requires a subscription.' },
+                { method: 'puter.fs.write', subscriptionMessage: 'Writing files requires a subscription.' },
             );
             expect(globalThis.puter.ui.requestUpgrade).toHaveBeenCalledWith({
                 reason: 'subscription',
-                method: 'puter.email.sendTransactional',
-                message: 'Sending email requires a subscription.',
+                method: 'puter.fs.write',
+                message: 'Writing files requires a subscription.',
             });
             expect(showUsageLimitDialog).not.toHaveBeenCalled();
         });
@@ -111,22 +111,22 @@ describe('promptIfUpgradeRequired', () => {
         it("prefers the SDK method's own wording for a plan gate", () => {
             promptIfUpgradeRequired(
                 { code: 'subscription_required', message: 'A subscription is required for this action' },
-                { method: 'puter.email.sendTransactional', subscriptionMessage: 'Sending email requires a subscription.' },
+                { method: 'puter.fs.write', subscriptionMessage: 'Writing files requires a subscription.' },
             );
             expect(showUsageLimitDialog).toHaveBeenCalledWith(
-                'Sending email requires a subscription.',
-                { title: 'Subscription Required', method: 'puter.email.sendTransactional' },
+                'Writing files requires a subscription.',
+                { title: 'Subscription Required', method: 'puter.fs.write' },
             );
         });
 
         it("falls back to the backend's message, punctuated", () => {
             promptIfUpgradeRequired(
-                { code: 'subscription_required', message: 'External email requires a subscription' },
-                { method: 'puter.email.send' },
+                { code: 'subscription_required', message: 'Writing files requires a subscription' },
+                { method: 'puter.fs.write' },
             );
             expect(showUsageLimitDialog).toHaveBeenCalledWith(
-                'External email requires a subscription.',
-                { title: 'Subscription Required', method: 'puter.email.send' },
+                'Writing files requires a subscription.',
+                { title: 'Subscription Required', method: 'puter.fs.write' },
             );
         });
 

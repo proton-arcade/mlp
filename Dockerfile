@@ -79,8 +79,6 @@ ENV MIXT_CONFIG_PATH=/etc/mixt/config.json
 ENV NODE_OPTIONS=--enable-source-maps
 
 EXPOSE 4100
-# The inbound SMTP receiver, when run from this image with the `smtp` profile.
-EXPOSE 2525
 
 USER node
 

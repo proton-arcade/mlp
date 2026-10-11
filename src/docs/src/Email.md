@@ -1,23 +1,18 @@
 ---
 title: Email
-description: Read the user's Mixt OS mailbox and send transactional email from your app with Mixt.js.
+description: Read the user's built-in Mixt OS mailbox with Mixt.js.
 platforms: [websites, apps, nodejs, workers]
 ---
 
-The Email API lets your app read the user's Mixt OS mailbox and send transactional email.
+The Email API lets your app read the user's built-in Mixt OS mailbox. Messages are stored in the user's own cloud drive, so your app can list the inbox and read messages, attachments included, once the user grants access to their mailbox. Mail reaches the mailbox from inside Mixt OS only; this API does not send email.
 
-Every Mixt OS account has an email address, `{username}@mixt.email`. Mail sent to it is stored in the user's own cloud drive, so your app can list the inbox and read messages, attachments included, once the user grants access to their mailbox. Your app can also send transactional email — a signup confirmation, a receipt, an alert — from a Mixt OS-controlled address, with no mail server, sending domain, or DKIM to set up. A recipient with a Mixt OS account can be reached at `{username}@mixt.email`: that copy is filed straight into their Mixt OS mailbox rather than relayed, on any plan, as long as they have set their mailbox up.
-
-With the [User-Pays Model](/user-pays-model/), the account making the call covers its own usage: mail lives in the user's storage, and sends land on the caller's allowance rather than yours.
-
-<div class="info">Transactional email is available to accounts on a paid plan for now. A call from a free account fails with <code>402</code> <code>subscription_required</code>.</div>
+With the [User-Pays Model](/user-pays-model/), the account making the call covers its own usage: mail lives in the user's storage.
 
 ## Features
 
 <div style="overflow:hidden; margin-bottom: 30px;">
     <div class="example-group active" data-section="list"><span>List Messages</span></div>
     <div class="example-group" data-section="get"><span>Read a Message</span></div>
-    <div class="example-group" data-section="sendTransactional"><span>Send Transactional Email</span></div>
 </div>
 
 <div class="example-content" data-section="list" style="display:block;">
@@ -67,27 +62,7 @@ With the [User-Pays Model](/user-pays-model/), the account making the call cover
 
 </div>
 
-<div class="example-content" data-section="sendTransactional">
-
-#### Send a transactional email from a worker
-
-```js
-// In a worker: the worker authorizes the send, the calling user pays for it.
-router.post('/notify', async ({ request, user }) => {
-    const { to, subject, text } = await request.json();
-    return await user.mixt.email.sendTransactional({
-        to,
-        subject,
-        text,
-        emailAccessToken: me.mixt.authToken,
-    });
-});
-```
-
-</div>
-
 ## Functions
 
 - **[`mixt.email.list()`](/Email/list/)** - List the messages in the user's mailbox, newest first
 - **[`mixt.email.get()`](/Email/get/)** - Fetch and parse one message, attachments included
-- **[`mixt.email.sendTransactional()`](/Email/sendTransactional/)** - Send a transactional email from your app

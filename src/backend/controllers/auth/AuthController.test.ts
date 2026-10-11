@@ -4272,36 +4272,6 @@ describe('AuthController.handleSendConfirmEmail', () => {
 
     // The resend is the recovery path for a lost code, so it must not fail
     // silently either.
-    it('alarms — and still returns {} — when the resend send throws', async () => {
-        const { actor } = await makeUserAndActor();
-        const alarm = vi
-            .spyOn(server.clients.alarm, 'create')
-            .mockImplementation(() => undefined);
-        const send = vi
-            .spyOn(server.clients.email, 'send')
-            .mockRejectedValue(new Error('smtp down'));
-        try {
-            const res = makeRes();
-            await controller.handleSendConfirmEmail(
-                makeReq({}, { actor }),
-                res,
-            );
-            // Not the caller's fault; still a 200.
-            expect(res.body).toEqual({});
-
-            const raised = alarm.mock.calls.find(
-                (c) => c[0] === 'auth:confirmation-email-send-failed:resend',
-            );
-            expect(raised).toBeTruthy();
-            const fields = raised![2] as Record<string, unknown>;
-            expect(fields.stage).toBe('resend');
-            expect(fields.detail).toBe('smtp down');
-            expect(fields.error).toBeInstanceOf(Error);
-        } finally {
-            send.mockRestore();
-            alarm.mockRestore();
-        }
-    });
 });
 
 // The per-account / per-number SMS send caps used to live here as a hardcoded
@@ -6146,62 +6116,7 @@ describe('AuthController password recovery', () => {
         expect(after!.pass_recovery_token).toBeTruthy();
     });
 
-    it('send-pass-recovery-email: a second send keeps the outstanding token', async () => {
-        const { user } = await makeUserAndActor();
-        const send = vi
-            .spyOn(server.clients.email, 'send')
-            .mockResolvedValue(undefined as never);
-        try {
-            await controller.handleSendPassRecoveryEmail(
-                makeReq({ email: user.email! }),
-                makeRes(),
-            );
-            const first = await server.stores.user.getById(user.id, {
-                force: true,
-            });
-            await controller.handleSendPassRecoveryEmail(
-                makeReq({ email: user.email! }),
-                makeRes(),
-            );
-            const second = await server.stores.user.getById(user.id, {
-                force: true,
-            });
-            expect(first!.pass_recovery_token).toBeTruthy();
-            expect(second!.pass_recovery_token).toBe(
-                first!.pass_recovery_token,
-            );
-            expect(send).toHaveBeenCalledTimes(2);
-        } finally {
-            send.mockRestore();
-        }
-    });
 
-    it('send-pass-recovery-email: stops mailing one account after five sends, with the same answer', async () => {
-        const { user } = await makeUserAndActor();
-        const send = vi
-            .spyOn(server.clients.email, 'send')
-            .mockResolvedValue(undefined as never);
-        try {
-            for (let i = 0; i < 6; i++) {
-                const res = makeRes();
-                await controller.handleSendPassRecoveryEmail(
-                    makeReq(
-                        { username: user.username },
-                        { ip: `10.77.${i}.${Math.floor(Math.random() * 200)}` },
-                    ),
-                    res,
-                );
-                expect((res.body as { message: string }).message).toMatch(
-                    /If that account exists/i,
-                );
-            }
-            expect(
-                send.mock.calls.filter((c) => c[0] === user.email),
-            ).toHaveLength(5);
-        } finally {
-            send.mockRestore();
-        }
-    });
 
     it('send-pass-recovery-email: refuses a team seat, and writes no token', async () => {
         // The seat's address is admin-supplied and unverified; recovery there
@@ -6250,49 +6165,6 @@ describe('AuthController password recovery', () => {
         return (await server.stores.user.getById(row.id, { force: true }))!;
     };
 
-    it('send-pass-recovery-email: sends nothing for a built-in admin account and alarms with the requester IP', async () => {
-        const ip = '203.0.113.7';
-        const send = vi
-            .spyOn(server.clients.email, 'send')
-            .mockResolvedValue(undefined as never);
-        const alarm = vi
-            .spyOn(server.clients.alarm, 'create')
-            .mockImplementation(() => undefined);
-        try {
-            for (const name of ['admin', 'system'] as const) {
-                const admin = await builtInAdmin(name);
-                for (const body of [
-                    { username: name },
-                    { email: admin.email },
-                ]) {
-                    const res = makeRes();
-                    await controller.handleSendPassRecoveryEmail(
-                        makeReq(body, { ip }),
-                        res,
-                    );
-                    expect((res.body as { message: string }).message).toMatch(
-                        /If that account exists/i,
-                    );
-                }
-                const after = await server.stores.user.getById(admin.id, {
-                    force: true,
-                });
-                expect(after!.pass_recovery_token).toBeFalsy();
-                expect(alarm).toHaveBeenCalledWith(
-                    `auth:admin-pass-recovery-attempt:${ip}`,
-                    expect.any(String),
-                    expect.objectContaining({ target: name, ip }),
-                    'critical',
-                    { dedup: true },
-                );
-            }
-            expect(send).not.toHaveBeenCalled();
-            expect(alarm).toHaveBeenCalledTimes(4);
-        } finally {
-            send.mockRestore();
-            alarm.mockRestore();
-        }
-    });
 
     it('set-pass-using-token: refuses a recovery token for a built-in admin account', async () => {
         const admin = await builtInAdmin('admin');
@@ -8867,43 +8739,6 @@ describe('AuthController.handleSignup additional branches', () => {
 
     // No mail transport in the test server, so `send` returns null — the
     // silent-drop case.
-    it('alarms when the signup confirmation email is not delivered', async () => {
-        const alarm = vi
-            .spyOn(server.clients.alarm, 'create')
-            .mockImplementation(() => undefined);
-        try {
-            await withSignupValidateOverride(
-                (event) => {
-                    event.requires_email_confirmation = true;
-                },
-                async () => {
-                    const username = `cefail_${uniq()}`;
-                    await controller.handleSignup(
-                        makeReq({
-                            username,
-                            email: `${username}@test.local`,
-                            password: 'correct-horse-battery',
-                        }),
-                        makeRes(),
-                    );
-                },
-            );
-
-            const raised = alarm.mock.calls.find(
-                (c) => c[0] === 'auth:confirmation-email-send-failed:signup',
-            );
-            expect(raised).toBeTruthy();
-            const fields = raised![2] as Record<string, unknown>;
-            expect(fields.stage).toBe('signup');
-            // No phone/card gate outstanding: stuck on the email alone.
-            expect(fields.sole_gate).toBe(true);
-            expect(fields.email_domain).toBe('test.local');
-            expect(raised![3]).toBe('warning');
-            expect(raised![4]).toEqual({ dedup: true });
-        } finally {
-            alarm.mockRestore();
-        }
-    });
 });
 
 describe('AuthController.handleSendPassRecoveryEmail additional branches', () => {

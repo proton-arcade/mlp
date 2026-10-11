@@ -10,7 +10,6 @@
 //
 //     npm start --server=mixt.mpl              serve the GUI against a remote backend (no local server)
 //     npm start -- --extensions=<dir>           bundle out-of-tree GUI extensions (with --server)
-//     npm start -- --smtp                       run the inbound SMTP receiver instead
 
 import { spawn, spawnSync } from 'node:child_process';
 import { createHash, randomBytes } from 'node:crypto';
@@ -268,20 +267,10 @@ const startServer = () => run(process.execPath, [
 
 const server = getFlag('server');
 const extensions = getFlag('extensions');
-const smtp =
-    process.argv.slice(2).includes('--smtp') ||
-    Boolean(process.env.npm_config_smtp);
 
 try {
     checkNodeVersion();
-    if ( smtp ) {
-        await runNpm(['run', 'build:ts']);
-        await run(process.execPath, [
-            '--enable-source-maps',
-            '-r', './dist/src/backend/telemetry.js',
-            './dist/src/backend/smtp/index.js',
-        ]);
-    } else if ( server ) {
+    if ( server ) {
         const args = ['dev-server.js', `--server=${server}`];
         if ( extensions ) args.push(`--extensions=${resolveExtensionPaths(extensions)}`);
         await run(process.execPath, args, {

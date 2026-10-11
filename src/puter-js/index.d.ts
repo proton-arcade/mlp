@@ -63,11 +63,6 @@ export type { Driver } from './types/modules/Drivers.js';
 
 // -- puter.email --
 export type {
-    EmailAttachment,
-    EmailSendOptions,
-    EmailSendResult,
-} from './types/modules/Email/Email.js';
-export type {
     EmailAddress,
     EmailFolder,
     EmailGetOptions,

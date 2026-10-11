@@ -68,7 +68,7 @@ const UNSAFE_NAME_CHARS_REGEX =
 const mb = (bytes: number): number => Math.round(bytes / (1024 * 1024));
 const TOO_LARGE_CLAUSE = `is too large (max ${mb(MAX_ATTACHMENT_BYTES)} MB per file)`;
 
-/** One validated attachment, in the shape nodemailer takes. */
+/** One validated attachment: name, type and bytes. */
 export interface ValidatedAttachment {
     /** Safe display name; extension always matches `contentType`. */
     filename: string;

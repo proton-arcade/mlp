@@ -128,7 +128,7 @@ The share shows in [`getShares()`](/FS/getShares/) with `anyone: true` and a `nu
 
 ## Sharing with someone who has no account
 
-A **well-formed** email address with no confirmed Mixt OS account is **invited** rather than refused. The share is recorded and the recipient is emailed, but it grants nothing yet — the returned share carries `pending: true` and a `null` `holder`. An address that could never receive that invite is rejected with `email_not_allowed` instead of becoming an invite nobody can claim.
+A **well-formed** email address with no confirmed Mixt OS account is **invited** rather than refused. The share is recorded and waits for that address to sign up, but it grants nothing yet — the returned share carries `pending: true` and a `null` `holder`. An address that could never receive that invite is rejected with `email_not_allowed` instead of becoming an invite nobody can claim.
 
 Access is written when they create an account with that address **and confirm it**. Signing up alone is not enough: until the address is confirmed it is a claim rather than an identity, and honouring it would hand the share to whoever registered it first.
 

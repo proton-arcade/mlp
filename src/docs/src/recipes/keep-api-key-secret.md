@@ -111,8 +111,6 @@ Anyone who knows the worker's URL can call it, and each call spends your key.
 You can limit calls per visitor or per signed-in user.
 
 To limit each visitor without asking them to sign in, count calls by IP address.
-[Add a contact form](/recipes/add-contact-form/#limit-how-often-a-visitor-can-send)
-shows a complete worker that does this.
 
 To limit each user, have your users sign in with their Mixt OS account. Call the
 worker with [`mixt.workers.exec()`](/Workers/exec/) instead of `fetch()`. If the

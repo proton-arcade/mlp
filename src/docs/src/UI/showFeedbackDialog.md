@@ -4,7 +4,7 @@ description: Opens a dialog the user can use to send feedback to your app.
 platforms: [ websites, apps]
 ---
 
-Opens a dialog the user can use to send you — the app's developer — feedback about your app. The message is delivered by Mixt OS: it is stored and emailed to the email address on your Mixt OS account. The feedback never passes through your app's code, and the dialog tells the user what is shared with you: their username, plus their email address (as the email's reply-to, so you can respond) when their email is verified.
+Opens a dialog the user can use to send feedback about your app. Feedback is not delivered to developers in this deployment: external email is removed, so the dialog reports that feedback is unavailable. The feedback never passes through your app's code.
 
 Inside Mixt OS, the dialog is rendered by the desktop environment. On a website, a mixt.mpl popup hosts the dialog (signing the user in first if needed).
 

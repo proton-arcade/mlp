@@ -1031,7 +1031,7 @@ export class WorkerDriver extends MixtDriver {
     /**
      * Mirror of the HTTP-layer `requireVerifiedGate` on /delete-site — only
      * active when `strict_email_verification_required` is truthy, so self-
-     * hosted installs without SMTP aren't bricked. Applied at the driver level
+     * hosted installs without outbound mail aren't bricked. Applied at the driver level
      * so /drivers/call can't bypass the gate the HTTP route enforces.
      */
     #requireVerified(actor: Actor): void {

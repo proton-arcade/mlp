@@ -286,32 +286,6 @@ services:
       retries: 3
       start_period: 30s
 
-  # Inbound mail. Behind the `smtp` profile, so it only starts when asked for:
-  #   docker compose --profile smtp up -d
-  # Accepts SMTP from other mail servers and hands each message to the ingress
-  # endpoint, which files it into the recipient's mailbox. Needs `userEmail`
-  # configured — see doc/self-hosting.md#optional-receiving-mail-over-smtp.
-  mixt-smtp:
-    profiles: ["smtp"]
-    image: ghcr.io/mixt/mixt:main
-    pull_policy: always
-    container_name: mixt-smtp
-    restart: unless-stopped
-    command: ["node", "-r", "./dist/src/backend/telemetry.js", "./dist/src/backend/smtp/index.js"]
-    depends_on:
-      mixt:
-        condition: service_healthy
-    ports:
-      # The container runs unprivileged and binds 2525; 25 is what an MX record
-      # means, and many providers block it.
-      - "${SMTP_PORT:-25}:2525"
-    environment:
-      PUID: 1000
-      PGID: 1000
-    volumes:
-      # The same config.json the backend reads; only `userEmail` applies here.
-      - ./mixt/config:/etc/mixt:z
-
   caddy:
     image: caddy:2.11-alpine
     container_name: mixt-caddy

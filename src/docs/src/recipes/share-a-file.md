@@ -30,8 +30,9 @@ await mixt.fs.share('report.txt', { username: 'alice' });
 await mixt.fs.share('report.txt', { email: 'alice@example.com' });
 ```
 
-Sharing with an email address that has no Mixt OS account yet sends an
-invitation instead, which grants access once that address is confirmed.
+Sharing with an email address that has no Mixt OS account yet creates a
+pending invitation instead, which grants access once that address signs up
+with it. Nothing is sent to that address.
 
 ## Choose how much access
 

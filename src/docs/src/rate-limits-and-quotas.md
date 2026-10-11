@@ -209,17 +209,6 @@ An app's `name` and `title` may be up to 100 characters and its `description` up
 
 Another user's profile is readable only while that user is on a paid plan. Owners can always read and write their own.
 
-### Email
-
-[`mixt.email.sendTransactional()`](/Email/sendTransactional/) requires a paid plan.
-
-| Limit                                | Value |
-| ------------------------------------ | ----- |
-| Sends                                | 600/min |
-| Concurrent sends                     | 20 |
-| Recipients per send (to + cc + bcc)  | 10 |
-| Attachments per send                 | 10, up to 25 MB in total |
-
 ### Sharing
 
 | Limit                                                           | Value | Scope |
@@ -243,7 +232,7 @@ The notification and email that tell a recipient about a share have their own li
 
 Over these, **the share still succeeds**; only the announcement is skipped. The recipient's notification still updates and groups senders ("alice and bob shared 5 items with you"). Emails triggered for one recipient within 5 seconds are sent as one digest.
 
-Recipients can opt out of share email with the link in the email, and a deployment can turn it off with `share_email_notifications: false`. Recipients can also block shares from one sender or from everyone (**Settings → Security → Blocked people**); the sender's `share` then fails with `recipient_not_accepting_shares`.
+Recipients are notified in-app only; share notifications are not sent by email. Recipients can block shares from one sender or from everyone (**Settings → Security → Blocked people**); the sender's `share` then fails with `recipient_not_accepting_shares`.
 
 ### Teams
 
@@ -265,7 +254,7 @@ The mutation and read budgets are per user, per app, not per team: administering
 - **Changing the seat limit.** The limit follows the owner's plan, so upgrading raises it immediately. Lowering it never disables anyone; a team over the new limit just can't add seats until it's back under.
 - **Deployment config.** `max_seats_per_team_free` and `max_seats_per_team_paid` set the two seat limits; a plan registered with `teamSeatCap` uses its own instead. `max_seats_per_team` sets one flat limit that overrides all of them. `max_teams_per_user` sets the team limit. These apply to every team on the deployment.
 - **Password resets.** A reset returns a temporary password once, valid for 24 hours. Until the member sets their own password, every request except signing in fails with `password_change_required`.
-- **Required 2FA.** A team can require two-factor authentication for the accounts it created (not for members who joined with their own accounts). Until a seat sets it up, every request except signing in and setting up 2FA fails with `two_factor_required`. The owner needs 2FA to turn this on, and can clear a member's second factor if they lose their device; the reset is logged and the member is emailed.
+- **Required 2FA.** A team can require two-factor authentication for the accounts it created (not for members who joined with their own accounts). Until a seat sets it up, every request except signing in and setting up 2FA fails with `two_factor_required`. The owner needs 2FA to turn this on, and can clear a member's second factor if they lose their device; the reset is logged, and the member sees the new state the next time they sign in.
 - **Deleting a team** frees the owner's team slot but not the seats. Its accounts are disabled, not removed, and keep their files and usernames.
 - **Deleting a seat** requires disabling it first (`account_must_be_disabled_first` otherwise). Deletion is permanent, with no restore window: files, username and credentials are all removed. Disabled accounts are never deleted automatically.
 - **No sharing policy.** A team is configured only by its name, its handle, and whether its directory is open to apps. Members share like any other account.
