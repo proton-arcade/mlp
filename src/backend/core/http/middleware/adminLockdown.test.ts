@@ -64,6 +64,13 @@ describe('admin lockdown', () => {
         expect((await run(users, { method: 'POST', path: '/login', anonymous: true })).passed).toBe(true);
     });
 
+    it('lets anonymous visitors load app icons on the api subdomain', async () => {
+        const icon = await run(fakeUsers(), { method: 'GET', path: '/app-icon/app-0b37f054/256', anonymous: true, subdomain: 'api' });
+        expect(icon.passed).toBe(true);
+        const post = await run(fakeUsers(), { method: 'POST', path: '/app-icon/app-0b37f054', anonymous: true, subdomain: 'api' });
+        expect(post.passed).toBe(false);
+    });
+
     it('answers 401 to an anonymous request for anything else', async () => {
         const out = await run(fakeUsers(), { method: 'GET', path: '/whoami', anonymous: true });
         expect(out).toEqual({ passed: false, status: 401, legacyCode: 'token_missing' });

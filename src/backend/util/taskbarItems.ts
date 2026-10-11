@@ -59,8 +59,6 @@ const DEFAULT_TASKBAR_ITEMS: TaskbarEntry[] = [
     { name: 'dev-center', type: 'app' },
     { name: 'editor', type: 'app' },
     { name: 'code', type: 'app' },
-    { name: 'camera', type: 'app' },
-    { name: 'recorder', type: 'app' },
     { name: 'browser', type: 'app' },
 ];
 

@@ -63,6 +63,15 @@ const isGuiRequest = (req: Request): boolean => {
     );
 };
 
+// App icons are <img> targets on the api subdomain. Browsers do not send the
+// session token with image requests, so they must be readable without one.
+// Icons are public app artwork; the route keeps its own rate limit and headers.
+const isPublicIconRequest = (req: Request): boolean => {
+    if (req.method !== 'GET' && req.method !== 'HEAD') return false;
+    const sub = req.subdomains?.[req.subdomains.length - 1] ?? '';
+    return sub === 'api' && req.path.startsWith('/app-icon/');
+};
+
 const isSignInRequest = (req: Request): boolean =>
     req.method === 'POST' && SIGN_IN_PATHS.has(req.path);
 
@@ -72,7 +81,7 @@ const isSignOutRequest = (req: Request): boolean =>
 export const createAdminLockdown = (users: UserStore): RequestHandler => {
     return async (req, _res, next) => {
         try {
-            if (isGuiRequest(req) || isSignInRequest(req)) {
+            if (isGuiRequest(req) || isSignInRequest(req) || isPublicIconRequest(req)) {
                 next();
                 return;
             }

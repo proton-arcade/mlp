@@ -124,6 +124,7 @@ const AVAILABLE_MIGRATIONS: [number, string[]][] = [
     [86, ['0091_icloud-dot-significance.sql']],
     [87, ['0092_share-entry-owner.sql']],
     [88, ['0093_browser-app.sql']],
+    [89, ['0094_remove-camera-recorder.sql']],
 ];
 
 export class SqliteDatabaseClient extends AbstractDatabaseClient {
