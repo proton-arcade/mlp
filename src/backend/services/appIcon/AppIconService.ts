@@ -297,48 +297,30 @@ export class AppIconService extends MixtService {
 
         // Write the original alongside the sized variants so the CDN-backed
         // subdomain serves everything through the same path.
-        const writes: Array<Promise<unknown>> = [];
-
-        const originalPng = await this.#sharp(inputBuffer).png().toBuffer();
-        writes.push(
-            this.#writeIcon(ORIGINAL_ICON_FILENAME(appUid), originalPng),
-        );
-
+        // Render every image first, then start all writes together. Starting a
+        // write and then awaiting more work left a failed write unobserved.
+        const rendered: Array<{ filename: string; png: Buffer }> = [];
+        rendered.push({
+            filename: ORIGINAL_ICON_FILENAME(appUid),
+            png: await this.#sharp(inputBuffer).png().toBuffer(),
+        });
         for (const size of APP_ICON_SIZES) {
-            const sizedPng = await this.#sharp(inputBuffer)
-                .resize(size)
-                .png()
-                .toBuffer();
-            writes.push(
-                this.#writeIcon(SIZED_ICON_FILENAME(appUid, size), sizedPng),
-            );
+            rendered.push({
+                filename: SIZED_ICON_FILENAME(appUid, size),
+                png: await this.#sharp(inputBuffer)
+                    .resize(size)
+                    .png()
+                    .toBuffer(),
+            });
         }
-        await Promise.all(writes);
-
-        // Rewrite the DB icon column from data URL to canonical endpoint URL.
-        // The endpoint URL is `/app-icon/<uid>` — the AppController route
-        // that falls back to the data URL if S3/CDN lookups miss. Using it
-        // here keeps the icon column small and makes clients go through
-        // the cached path.
-        const apiBase = String(this.config.api_base_url ?? '').replace(
-            /\/+$/,
-            '',
+        await Promise.all(
+            rendered.map(({ filename, png }) => this.#writeIcon(filename, png)),
         );
-        if (apiBase) {
-            await this.clients.db.write(
-                "UPDATE `apps` SET `icon` = ? WHERE `uid` = ? AND `icon` LIKE 'data:%'",
-                [`${apiBase}/app-icon/${appUid}`, appUid],
-            );
-            await this.stores.app.invalidateByUid(appUid);
-            this.clients.event.emit(
-                'app.changed',
-                {
-                    app_uid: appUid,
-                    action: 'icon-migrated',
-                },
-                {},
-            );
-        }
+
+        // The icon column keeps its data URL. Rewriting it to `/app-icon/<uid>`
+        // made every icon point back at an endpoint that redirects to the
+        // icon host, which needs a signed-in session, so the images broke.
+        // The data URL is served inline by `/app-icon/<uid>` and always works.
     }
 
     async #writeIcon(filename: string, buffer: Buffer): Promise<void> {

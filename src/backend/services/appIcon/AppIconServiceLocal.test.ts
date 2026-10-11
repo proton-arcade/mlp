@@ -194,7 +194,7 @@ describe('AppIconService', () => {
     });
 
     describe('icon pipeline', () => {
-        it('writes the original plus every standard size and rewrites the icon column', async () => {
+        it('writes the original plus every standard size and keeps the icon column', async () => {
             const app = await makeApp(PNG_DATA_URL);
             const migrated: unknown[] = [];
             const onChanged = (_k: string, data: unknown) => {
@@ -223,16 +223,16 @@ describe('AppIconService', () => {
                 ),
             ).toBeTruthy();
 
-            // The DB icon column no longer carries the base64 payload.
+            // The DB icon column keeps the data URL, so the icon always loads inline.
             const fresh = await server.stores.app.getByUid(app.uid);
             expect(fresh?.icon).toBe(
-                `http://api.localhost:4100/app-icon/${app.uid}`,
+                `${PNG_DATA_URL}`,
             );
-            await vi.waitFor(() => expect(migrated).toHaveLength(1));
+            expect(migrated).toHaveLength(0);
             server.clients.event.off('app.changed', onChanged);
         });
 
-        it('lazily migrates an app whose icon was written as a data URL elsewhere', async () => {
+        it('keeps an app icon written as a data URL', async () => {
             const app = await makeApp(PNG_DATA_URL);
             await server.clients.event.emitAndWait(
                 'app.changed',
@@ -241,7 +241,7 @@ describe('AppIconService', () => {
             );
             const fresh = await server.stores.app.getByUid(app.uid);
             expect(fresh?.icon).toBe(
-                `http://api.localhost:4100/app-icon/${app.uid}`,
+                `${PNG_DATA_URL}`,
             );
         });
 
@@ -295,10 +295,14 @@ describe('AppIconService', () => {
 
         // The pipeline's own icon-column rewrite, once per run; other writes
         // (file entries, a direct store update of the icon) don't match.
-        const isIconMigration = (sql: unknown) =>
-            String(sql).includes("`icon` LIKE 'data:%'");
+        // One run writes the original file `app-<uid>.png` once. Sized copies
+        // (`app-<uid>-64.png`) do not match, so this counts runs.
+        const isOriginalIconWrite = (args: unknown[]) => {
+            const body = args[1] as { fileMetadata?: { path?: string } } | undefined;
+            return /\/app-[0-9a-f-]{36}\.png$/.test(body?.fileMetadata?.path ?? '');
+        };
         const iconWriteCount = (calls: unknown[][]) =>
-            calls.filter(([sql]) => isIconMigration(sql)).length;
+            calls.filter(isOriginalIconWrite).length;
 
         const readIconFile = async (filename: string) => {
             const entry = await server.stores.fsEntry.getEntryByPath(
@@ -313,7 +317,7 @@ describe('AppIconService', () => {
 
         it('runs a burst of concurrent new-icon reads for one app once', async () => {
             const app = await makeApp();
-            const writeSpy = vi.spyOn(server.clients.db, 'write');
+            const writeSpy = vi.spyOn(server.services.fs, 'write');
             try {
                 await Promise.all(
                     Array.from({ length: 5 }, () =>
@@ -367,16 +371,16 @@ describe('AppIconService', () => {
                 reached = resolve;
             });
             let gated = false;
-            const realWrite = server.clients.db.write.bind(server.clients.db);
+            const realWrite = server.services.fs.write.bind(server.services.fs);
             const writeSpy = vi
-                .spyOn(server.clients.db, 'write')
-                .mockImplementation(async (sql: string, params?: unknown[]) => {
-                    if (isIconMigration(sql) && !gated) {
+                .spyOn(server.services.fs, 'write')
+                .mockImplementation(async (...args: Parameters<typeof realWrite>) => {
+                    if (isOriginalIconWrite(args) && !gated) {
                         gated = true;
                         reached();
                         await gate;
                     }
-                    return realWrite(sql, params);
+                    return realWrite(...args);
                 });
             const getByUid = vi.spyOn(server.stores.app, 'getByUid');
             try {
@@ -407,9 +411,6 @@ describe('AppIconService', () => {
                 await readRun;
 
                 expect(iconWriteCount(writeSpy.mock.calls)).toBe(2);
-                expect((await server.stores.app.getByUid(app.uid))?.icon).toBe(
-                    `http://api.localhost:4100/app-icon/${app.uid}`,
-                );
                 expect(await readIconFile(`${app.uid}.png`)).toEqual(
                     await sharp(newest).png().toBuffer(),
                 );
@@ -425,7 +426,7 @@ describe('AppIconService', () => {
 
         it('skips a second new-icon run for the same app inside the cooldown window', async () => {
             const app = await makeApp();
-            const writeSpy = vi.spyOn(server.clients.db, 'write');
+            const writeSpy = vi.spyOn(server.services.fs, 'write');
             try {
                 await server.clients.event.emitAndWait(
                     'app.new-icon',
@@ -482,7 +483,7 @@ describe('AppIconService', () => {
                 { app_uid: app.uid, data_url: PNG_DATA_URL },
                 {},
             );
-            const endpointUrl = `http://api.localhost:4100/app-icon/${app.uid}`;
+            const endpointUrl = PNG_DATA_URL;
             expect((await server.stores.app.getByUid(app.uid))?.icon).toBe(
                 endpointUrl,
             );
@@ -505,14 +506,14 @@ describe('AppIconService', () => {
         it('logs and swallows a failure inside the pipeline', async () => {
             const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
             const app = await makeApp();
-            const realWrite = server.clients.db.write.bind(server.clients.db);
+            const realWrite = server.services.fs.write.bind(server.services.fs);
             const writeSpy = vi
-                .spyOn(server.clients.db, 'write')
-                .mockImplementation(async (sql: string, params?: unknown[]) => {
-                    if (String(sql).includes('UPDATE `apps` SET `icon`')) {
-                        throw new Error('db unavailable');
+                .spyOn(server.services.fs, 'write')
+                .mockImplementation(async (...args: Parameters<typeof realWrite>) => {
+                    if (isOriginalIconWrite(args)) {
+                        throw new Error('storage unavailable');
                     }
-                    return realWrite(sql, params);
+                    return realWrite(...args);
                 });
             try {
                 await expect(
