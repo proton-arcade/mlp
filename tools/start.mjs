@@ -138,7 +138,11 @@ const restoreVendoredModules = () => {
         throw new Error('The vendored dependency archive failed its checksum. Re-clone the repository.');
     }
 
-    const extracted = spawnSync('tar', ['-xzf', archive, '-C', rootDir], { stdio: 'inherit' });
+    const extracted = spawnSync(
+        'tar',
+        ['-xzf', archive, '-C', rootDir, '--no-same-owner'],
+        { stdio: 'inherit' },
+    );
     rmSync(archive, { force: true });
     if ( extracted.status !== 0 ) {
         throw new Error('Could not extract the vendored dependencies (is `tar` installed?).');
