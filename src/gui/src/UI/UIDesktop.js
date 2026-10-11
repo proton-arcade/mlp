@@ -46,6 +46,28 @@ import { SHARED_PATH_PARAM, clear_shared_param } from '../helpers/parseSharedPat
 import resolve_shared_item from '../helpers/resolveSharedItem.js';
 import { applyToastMark, createNotificationFeed } from '../helpers/notificationFeed.js';
 import { notificationTarget } from './Dashboard/notificationCenter.js';
+
+// Administrator-only desktop shortcut to the Administration tab, where the
+// whitelist is managed. Rendered only for the `admin` account (see the
+// desktop markup below). Opens the dashboard in a new tab on the admin tab's
+// route.
+const ADMIN_DESKTOP_SHORTCUT_HTML =
+    '<div class="desktop-admin-shortcut" role="button" tabindex="0" title="Open the whitelist and administration">' +
+    '<span class="desktop-admin-shortcut-icon" aria-hidden="true">&#9733;</span>' +
+    '<span class="desktop-admin-shortcut-label">Whitelist</span>' +
+    '</div>';
+
+const openAdminShortcut = (e) => {
+    const shortcut = e.target instanceof Element ? e.target.closest('.desktop-admin-shortcut') : null;
+    if ( ! shortcut ) return;
+    // Open on double-click or Enter, like a desktop icon.
+    if ( e.type === 'keydown' && e.key !== 'Enter' ) return;
+    if ( e.type === 'click' ) return;
+    e.preventDefault();
+    window.open('/dashboard#admin', '_blank', 'noopener');
+};
+document.addEventListener('dblclick', openAdminShortcut);
+document.addEventListener('keydown', openAdminShortcut);
 import apply_item_added_to_containers from '../helpers/applyItemAddedToContainers.js';
 import parse_item_metadata from '../helpers/parseItemMetadata.js';
 import UIWindowSearch from './UIWindowSearch.js';
@@ -703,7 +725,7 @@ async function UIDesktop (options) {
                 data-sort_by="${!options.desktop_fsentry?.sort_by ? 'name' : options.desktop_fsentry.sort_by}"
                 data-sort_order="${!options.desktop_fsentry?.sort_order ? 'asc' : options.desktop_fsentry.sort_order}"
                 data-path="${html_encode(window.desktop_path)}"
-            >`;
+            >${window.user?.username === 'admin' ? ADMIN_DESKTOP_SHORTCUT_HTML : ''}`;
 
     // Get window sidebar width
     mixt.kv.get('window_sidebar_width').catch(() => null).then(async (val) => {

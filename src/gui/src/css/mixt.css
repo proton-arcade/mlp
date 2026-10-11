@@ -274,3 +274,69 @@ body {
 .admin-content .admin-card {
     background: #f7f7f8;
 }
+
+/* ------------------------- Mint polish (batch 1) --------------------------- */
+
+/* Title-bar buttons: small rounded hover target; close turns red, as in Mint-Y. */
+.window-action-btn {
+    border-radius: 4px;
+    transition: background-color 120ms ease;
+}
+
+.window-action-btn:hover {
+    background-color: rgba(0, 0, 0, 0.10);
+}
+
+.window-action-btn.window-close-btn:hover {
+    background-color: #d64541;
+}
+
+.window-action-btn.window-close-btn:hover > img {
+    filter: brightness(0) invert(1);
+}
+
+.window-head-title {
+    font-weight: 500;
+}
+
+/* Panel labels read at the same size as Cinnamon's panel text. */
+.taskbar .taskbar-item {
+    font-size: 13px;
+}
+
+/* ----------------------- Administrator desktop shortcut -------------------- */
+
+.desktop-admin-shortcut {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 2;
+    width: 84px;
+    padding: 8px 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    border-radius: 6px;
+    color: #ffffff;
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+.desktop-admin-shortcut:hover,
+.desktop-admin-shortcut:focus-visible {
+    background-color: rgba(255, 255, 255, 0.12);
+    outline: none;
+}
+
+.desktop-admin-shortcut-icon {
+    font-size: 28px;
+    line-height: 1;
+    color: var(--mixt-accent);
+}
+
+.desktop-admin-shortcut-label {
+    font-size: 12px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+}
