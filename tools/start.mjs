@@ -115,7 +115,7 @@ const restoreVendoredModules = () => {
     if ( !matches || !existsSync(path.join(VENDOR_DIR, 'SHA256SUMS')) ) return false;
 
     const parts = readdirSync(VENDOR_DIR)
-        .filter((f) => f.startsWith(`${VENDOR_ARCHIVE}.part-`))
+        .filter((f) => f.startsWith('node_modules.tar.gz.part-'))
         .sort();
     if ( parts.length === 0 ) return false;
 
