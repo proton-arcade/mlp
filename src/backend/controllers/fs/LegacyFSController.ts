@@ -66,6 +66,7 @@ import { listClientShares } from '../share/clientShare.js';
 import { SHARE_LIST_LIMIT } from '../share/limits.js';
 import { consumeRouteRateLimit } from '../../core/http/middleware/rateLimit.js';
 import { MixtController } from '../types.js';
+import { isAppVisibleTo } from '../../util/adminOnlyApps.js';
 import {
     FS_BATCH_CONCURRENT,
     FS_BATCH_LIMIT,
@@ -350,9 +351,17 @@ export class LegacyFSController extends MixtController {
                     .recommendedApps as unknown as
                     | { getRecommendedApps?: () => Promise<unknown[]> }
                     | undefined;
-                const recommended = recommendedSvc?.getRecommendedApps
-                    ? await recommendedSvc.getRecommendedApps()
-                    : [];
+                // Admin-only built-ins (Dev Center) are hidden from other accounts.
+                const recommended = (
+                    recommendedSvc?.getRecommendedApps
+                        ? await recommendedSvc.getRecommendedApps()
+                        : []
+                ).filter((app) =>
+                    isAppVisibleTo(
+                        (app as { name?: string }).name,
+                        req.actor?.user,
+                    ),
+                );
 
                 // The direct icon URL names a size; honour the one the
                 // caller asked for so the client isn't handed a 256px PNG for

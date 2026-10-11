@@ -30,6 +30,7 @@ import {
     isTrustedIconHost,
 } from '../../util/appIcon.js';
 import { resolvePrivateLaunchAccess } from '../../util/privateLaunchAccess.js';
+import { isAppVisibleTo } from '../../util/adminOnlyApps.js';
 import { MixtController } from '../types.js';
 import DEFAULT_APP_ICON from './default-app-icon.js';
 
@@ -159,6 +160,38 @@ export class AppController extends MixtController {
                 const apps = await this.appDriver.select({
                     predicate: ['user-can-edit'],
                 });
+                res.json(apps);
+            },
+        );
+
+        // GET /apps/catalog
+        // Apps the App Center offers: listed, not private, and visible to
+        // this account (admin-only built-ins are hidden from other accounts).
+        // Narrow shape on purpose: no owner ids, no index_url.
+        router.get(
+            '/apps/catalog',
+            {
+                subdomain: 'api',
+                requireUserActor: true,
+                allowFullAccessToken: true,
+                rateLimit: APP_READ_LIMIT,
+            },
+            async (req, res) => {
+                const user = req.actor?.user;
+                const rows = await this.stores.app.list({});
+                const apps = rows
+                    .filter((app) =>
+                        app.approved_for_listing &&
+                        !app.is_private &&
+                        isAppVisibleTo(app.name, user),
+                    )
+                    .map((app) => ({
+                        uid: app.uid,
+                        name: app.name,
+                        title: app.title,
+                        description: app.description ?? '',
+                        icon: app.icon ?? null,
+                    }));
                 res.json(apps);
             },
         );

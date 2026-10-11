@@ -1,0 +1,55 @@
+/* App Center: a plain Mint-style list of the apps this account can use. */
+:root { color-scheme: light dark; }
+body {
+    margin: 0;
+    font-family: 'Noto Sans', Ubuntu, system-ui, sans-serif;
+    background: #f2f2f1;
+    color: #2e3436;
+}
+.toolbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: linear-gradient(#f6f6f5, #e1e1df);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+}
+.toolbar h1 { font-size: 16px; font-weight: 600; margin: 0 auto 0 0; }
+.toolbar input { padding: 5px 8px; min-width: 180px; border: 1px solid #bbb; border-radius: 4px; }
+.btn {
+    padding: 5px 12px;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    background: #fff;
+    cursor: pointer;
+}
+.btn:hover { background: #f0f0ef; }
+.btn.primary { background: #68b723; border-color: #4e8f17; color: #fff; }
+.btn.danger { color: #a40000; }
+main { padding: 12px 14px; }
+.status { color: #555; min-height: 1.2em; }
+.apps { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.app {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    background: #fff;
+    border: 1px solid #d6d6d4;
+    border-radius: 6px;
+}
+.app img, .app .fallback {
+    width: 40px; height: 40px; border-radius: 8px; flex: none;
+}
+.app .fallback { background: #d6d6d4; }
+.app .text { flex: 1; min-width: 0; }
+.app .title { font-weight: 600; }
+.app .desc { color: #555; font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.app .actions { display: flex; gap: 6px; }
+@media (prefers-color-scheme: dark) {
+    body { background: #2d2f31; color: #eeeeec; }
+    .toolbar { background: linear-gradient(#3a3d40, #303336); border-color: #111; }
+    .toolbar input, .btn { background: #3a3d40; color: #eeeeec; border-color: #555; }
+    .app { background: #3a3d40; border-color: #4a4d50; }
+    .app .desc, .status { color: #bbbbb7; }
+}

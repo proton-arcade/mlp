@@ -19,6 +19,7 @@
 
 import type { AppIconHostConfig } from './appIcon.js';
 import { getAppIconCdnUrl, getAppIconUrl } from './appIcon.js';
+import { isAppVisibleTo } from './adminOnlyApps.js';
 
 interface TaskbarEntry {
     name?: string;
@@ -92,6 +93,7 @@ export async function getTaskbarItems(
     for (const entry of raw) {
         if (entry.type !== 'app') continue;
         if (entry.name === 'explorer') continue;
+        if (!isAppVisibleTo(entry.name, user as { username?: string })) continue;
 
         let app: Record<string, unknown> | null = null;
         if (entry.name) app = await deps.stores.app.getByName(entry.name);

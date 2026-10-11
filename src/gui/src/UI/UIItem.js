@@ -34,6 +34,7 @@ import mime from '../lib/mime.js';
 import { isWeblinkName, weblinkChangeIconMenuItem } from '../helpers/weblink.js';
 import { is_owned_by_me } from '../helpers/pathOwner.js';
 import { can_rename, can_restructure, invalidate_shared_roots, shared_mode_for } from '../helpers/sharedAccess.js';
+import { DESKTOP_GRID, snapToDesktopGrid } from '../helpers/desktopGrid.js';
 
 async function UIItem (options) {
     const matching_appendto_count = $(options.appendTo).length;
@@ -287,6 +288,7 @@ async function UIItem (options) {
         distance: 5,
         revertDuration: 100,
         start: function (event, ui) {
+            $('.desktop').addClass('desktop-grid-visible');
             // select this item and its helper
             $(el_item).addClass('item-selected');
             $('.ui-draggable-dragging').addClass('item-selected');
@@ -409,17 +411,25 @@ async function UIItem (options) {
             }
         },
         stop: function (event, ui) {
+            $('.desktop').removeClass('desktop-grid-visible');
             // Allow rearranging only if item is on desktop, not trash container, auto arrange is disabled and item is not dropped into another item
             if ( $(el_item).closest('.item-container').attr('data-path') === window.desktop_path &&
                 !window.is_auto_arrange_enabled && $(el_item).attr('data-path') !== window.trash_path && !ui.helper.data('dropped') &&
                 // Item must be dropped on the Desktop and not on the taskbar
                 window.mouseover_window === undefined && ui.position.top <= window.desktop_height - window.taskbar_height - 15 ) {
 
+                // Snap to the desktop grid: nearest free cell wins.
+                const grid_bounds = {
+                    cols: Math.max(1, Math.floor(window.desktop_width / DESKTOP_GRID.cell)),
+                    rows: Math.max(1, Math.floor((window.desktop_height - window.taskbar_height - 15) / DESKTOP_GRID.cell)),
+                };
+                const uid = $(el_item).attr('data-uid');
+                const snapped = snapToDesktopGrid(ui.position, window.desktop_item_positions, uid, grid_bounds);
                 el_item.style.position = 'absolute';
-                el_item.style.left = `${ui.position.left }px`;
-                el_item.style.top = `${ui.position.top }px`;
+                el_item.style.left = `${snapped.left }px`;
+                el_item.style.top = `${snapped.top }px`;
                 $('.ui-draggable-dragging').remove();
-                window.desktop_item_positions[$(el_item).attr('data-uid')] = ui.position;
+                window.desktop_item_positions[uid] = snapped;
                 window.save_desktop_item_positions();
             }
 

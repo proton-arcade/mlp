@@ -158,6 +158,7 @@
     "builtin_apps": {
         "dev-center": "./src/dev-center",
         "browser": "./src/browser-app",
+        "app-center": "./src/app-center",
         "internet": "./internet"
     },
     "use_bundled_gui": false,
