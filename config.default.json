@@ -162,6 +162,7 @@
         "admin-vault": "./src/apps/admin-vault",
         "notes": "./src/apps/notes",
         "calendar": "./src/apps/calendar",
+        "spreadsheet": "./src/apps/spreadsheet",
         "mail": "./src/apps/mail",
         "contacts": "./src/apps/contacts",
         "chess": "./src/apps/chess",

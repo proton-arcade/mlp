@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spreadsheet</title>
+<link rel="stylesheet" href="/builtin/shared/apps.css">
+<style>
+    html, body { height: 100%; }
+    body { display: flex; flex-direction: column; }
+    .fxbar { display: flex; align-items: center; gap: 8px; padding: 6px 10px; background: #fff; border-bottom: 1px solid #d6d6d4; }
+    .fxbar .ref { min-width: 64px; text-align: center; font-family: ui-monospace, monospace; font-size: 13px; padding: 4px 6px; border: 1px solid #ccc; border-radius: 4px; background: #f6f6f4; }
+    .fxbar .fx-label { font-style: italic; color: #6b7174; font-size: 14px; }
+    .fxbar input { flex: 1; min-width: 0; padding: 5px 8px; border: 1px solid #bbb; border-radius: 4px; font: inherit; font-size: 14px; }
+    .toolbar .save { font-size: 12px; color: #6b7174; margin-left: auto; }
+    .toolbar select { padding: 5px 6px; border-radius: 4px; border: 1px solid #bbb; font: inherit; max-width: 220px; }
+    .grid { flex: 1; overflow: auto; background: #fff; min-height: 0; }
+    table { border-collapse: collapse; table-layout: fixed; font-size: 13px; }
+    th, td { border: 1px solid #e1e1df; height: 22px; padding: 0 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    thead th { position: sticky; top: 0; background: #f3f3f1; font-weight: 600; color: #50575a; z-index: 2; }
+    tbody th { position: sticky; left: 0; background: #f3f3f1; font-weight: 400; color: #50575a; text-align: center; z-index: 1; width: 46px; min-width: 46px; }
+    td { width: 100px; min-width: 100px; max-width: 100px; cursor: cell; }
+    td.num { text-align: right; }
+    td.err { color: #b3261e; }
+    td.sel { outline: 2px solid #4a8f2e; outline-offset: -2px; background: #f1f8ea; }
+    @media (prefers-color-scheme: dark) {
+        .fxbar { background: #2d2f31; border-color: #111; }
+        .fxbar input, .fxbar .ref { background: #232527; border-color: #555; color: #eeeeec; }
+        .grid { background: #232527; }
+        th, td { border-color: #3a3d40; }
+        thead th, tbody th { background: #2d2f31; color: #cfd2d4; }
+        td.sel { background: #2f4a25; }
+        .toolbar select { background: #232527; color: #eee; border-color: #555; }
+    }
+</style>
+</head>
+<body>
+<header class="toolbar">
+    <h1>Spreadsheet</h1>
+    <select id="book" aria-label="Workbook"></select>
+    <button id="new" class="btn" type="button">New</button>
+    <button id="rename" class="btn" type="button">Rename</button>
+    <button id="delete" class="btn" type="button">Delete</button>
+    <button id="csv" class="btn" type="button">Export CSV</button>
+    <span id="saved" class="save"></span>
+</header>
+<div class="fxbar">
+    <span id="ref" class="ref">A1</span>
+    <span class="fx-label">fx</span>
+    <input id="fx" type="text" spellcheck="false" autocomplete="off" aria-label="Cell content. Start with = for a formula.">
+</div>
+<div id="grid" class="grid" tabindex="0">
+    <table id="table"></table>
+</div>
+<script src="/builtin/shared/localdb.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
