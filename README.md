@@ -12,7 +12,7 @@ Mixt is a browser desktop styled after Linux Mint and Cinnamon: a dark bottom pa
 
 ## Quick start
 
-You need **Node.js 18.19 or newer** (Node 20, 22, and 24 also work). The SQLite driver ships as a prebuilt binary that is downloaded on install. If no prebuilt binary is available for your platform, the install compiles it instead, which needs Python 3, `make`, and a C++ compiler (Xcode Command Line Tools on macOS, `build-essential` on Debian/Ubuntu, Visual Studio Build Tools on Windows).
+You need **Node.js 18.19 or newer**. Tested on Node 18.20 and Node 24.21. The SQLite driver ships as a prebuilt binary that is downloaded on install. If no prebuilt binary is available for your platform, the install compiles it instead, which needs Python 3, `make`, and a C++ compiler (Xcode Command Line Tools on macOS, `build-essential` on Debian/Ubuntu, Visual Studio Build Tools on Windows).
 
 Run the project only with this command (`npm start` runs the same thing):
 

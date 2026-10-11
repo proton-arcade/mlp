@@ -15,6 +15,7 @@
  * This module must be the first import of the backend entry point.
  */
 import { createRequire, register } from 'node:module';
+import { pathToFileURL } from 'node:url';
 import { File as UndiciFile } from 'undici';
 
 const g = globalThis as Record<string, unknown>;
@@ -48,9 +49,14 @@ if (!hasNodeSqlite) {
         `const require = createRequire(${JSON.stringify(__filename)});`,
         `export const DatabaseSync = require(${JSON.stringify(sqliteOld)});`,
     ].join('\n');
+    // The backend's `await import('better-sqlite3')` is a native dynamic import
+    // (ESM loader), so the ESM hook must redirect it as well.
+    const sqliteOldUrl = pathToFileURL(sqliteOld).href;
     const hooks = `
+import { pathToFileURL } from "node:url";
 export async function resolve(specifier, context, next) {
     if (specifier === 'node:sqlite') return { url: 'node-sqlite-shim:', shortCircuit: true };
+    if (specifier === 'better-sqlite3') return { url: ${JSON.stringify(sqliteOldUrl)}, shortCircuit: true };
     return next(specifier, context);
 }
 export async function load(url, context, next) {
