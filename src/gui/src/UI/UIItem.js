@@ -412,6 +412,16 @@ async function UIItem (options) {
         },
         stop: function (event, ui) {
             $('.desktop').removeClass('desktop-grid-visible');
+            // Dragging an icon on the desktop turns auto-arrange off, so the icon
+            // stays where it is dropped, the same as turning it off in the menu.
+            if ( window.is_auto_arrange_enabled &&
+                $(el_item).closest('.item-container').attr('data-path') === window.desktop_path &&
+                $(el_item).attr('data-path') !== window.trash_path && !ui.helper.data('dropped') &&
+                window.mouseover_window === undefined && ui.position.top <= window.desktop_height - window.taskbar_height - 15 ) {
+                window.is_auto_arrange_enabled = false;
+                window.store_auto_arrange_preference(false);
+                window.set_desktop_item_positions(document.querySelector('.desktop'));
+            }
             // Allow rearranging only if item is on desktop, not trash container, auto arrange is disabled and item is not dropped into another item
             if ( $(el_item).closest('.item-container').attr('data-path') === window.desktop_path &&
                 !window.is_auto_arrange_enabled && $(el_item).attr('data-path') !== window.trash_path && !ui.helper.data('dropped') &&
