@@ -3168,8 +3168,8 @@ export class ShareService extends MixtService {
         // address arrives in whatever form the signup normalized to, and an
         // exact match against what the sharer happened to type loses the
         // invite to a capital letter. The typed form still matters — it is
-        // where the invite email goes, and what the sharer recognizes in the
-        // dialog — so it rides along in the row's data.
+        // the address the invite is held against, and what the sharer
+        // recognizes in the dialog — so it rides along in the row's data.
         const canonical = cleanEmail(email);
         const existing = await this.stores.share.listPendingByEmail(canonical);
         const already = existing.some(

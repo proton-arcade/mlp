@@ -72,8 +72,9 @@ export class AppFeedbackStore extends MixtStore {
     }
 
     /**
-     * Feedback rows for this app that were emailed to the owner since
-     * `sinceUnixSeconds`. Backs the per-app daily email cap.
+     * Feedback rows for this app with the legacy `email_sent` flag set since
+     * `sinceUnixSeconds`. Nothing sets the flag any more; the column is kept
+     * for existing rows.
      */
     async countEmailedByAppSince(
         appId: number,
@@ -89,10 +90,8 @@ export class AppFeedbackStore extends MixtStore {
     // -- Writes -------------------------------------------------------
 
     /**
-     * Insert one feedback row. `email_sent` starts false; the service claims it
-     * with {@link markEmailSent} before sending and releases it with
-     * {@link unmarkEmailSent} if the cap was breached or the send failed, so the
-     * email cap fails closed under concurrent submissions.
+     * Insert one feedback row. `email_sent` starts false and is never set by
+     * the current code path (feedback is disabled; see AppFeedbackService).
      */
     async create(fields: {
         appId: number;
@@ -128,7 +127,7 @@ export class AppFeedbackStore extends MixtStore {
         return { id: Number(insertId), uid };
     }
 
-    /** Record that the owner email for this row was sent (claim a cap slot). */
+    /** Set the legacy `email_sent` flag on a row. */
     async markEmailSent(id: number): Promise<void> {
         await this.#setEmailSent(id, true);
     }

@@ -592,7 +592,7 @@ export class OIDCService extends MixtService {
         // Email validation — mirrors AuthController#validateEmail, and runs
         // BEFORE the signup harness for the same reason it does there: the
         // address verdict is an input to the reputation decision. The abuse
-        // extension's `email.validate` handler caches its Kickbox verdict and
+        // extension's `email.validate` handler caches its verdict and
         // its `emailQuality` check reads that cache under
         // `mixt.signup.validate`, so emitting these two in the other order
         // silently drops the email signal from every OIDC signup.

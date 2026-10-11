@@ -77,7 +77,7 @@ function UIWindowRecoverPassword (options) {
             return false;
         });
 
-        // Send recovery email
+        // Submit recovery request
         $(el_window).find('.send-recovery-email').on('click', function (e) {
             let email, username;
             let input = $(el_window).find('.pass-recovery-username-or-email').val();

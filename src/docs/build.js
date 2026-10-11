@@ -472,8 +472,6 @@ function generateDocsHTML (filePath, rootDir, page, isIndex = false) {
     html += '<a href="https://mixt.mpl" target="_blank">Mixt.mpl</a>';
     html += '<span class="bull">&bull;</span>';
 
-    html += '<a href="mailto:hey@mixt.mpl" target="_blank">hey@mixt.mpl</a>';
-    html += '<span class="bull">&bull;</span>';
 
     html += '<a href="https://twitter.com/mixt" target="_blank">X (Twitter)</a>';
     html += '<span class="bull">&bull;</span>';

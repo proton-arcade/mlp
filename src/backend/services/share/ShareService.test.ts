@@ -5509,7 +5509,7 @@ describe('ShareService', () => {
             const owner = await makeUser();
             const file = await makeFile(owner.user);
 
-            // `a,b@x.com` is two recipients to nodemailer; the rest just fail.
+            // `a,b@x.com` is two recipients to the address parser; the rest just fail.
             for (const email of [
                 'a,b@x.com',
                 'a;b@x.com',

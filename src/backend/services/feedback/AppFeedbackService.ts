@@ -110,8 +110,8 @@ export class AppFeedbackService extends MixtService {
 
     /**
      * Whether `app` (a row from AppStore) currently accepts user feedback.
-     * Feedback was delivered to the developer by email, and external email is
-     * removed from this deployment. The stored rows have no other read path,
+     * Feedback used to be delivered to the developer by email. External email
+     * is removed from this deployment, and the stored rows have no read path,
      * so the feature reports itself unavailable instead of storing messages
      * nobody can read.
      */

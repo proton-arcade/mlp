@@ -718,7 +718,7 @@ export class TeamService extends MixtService {
             })),
         );
 
-        // Bounded: what is left per seat is a write and a mail send.
+        // Bounded: what is left per seat is a write.
         const outcomes = await runWithConcurrencyLimitSettled(
             todo,
             TEARDOWN_CONCURRENCY,

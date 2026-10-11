@@ -293,7 +293,7 @@ const BUILT_IN_ADMIN_USERNAMES: ReadonlySet<string> = new Set(
     DEFAULT_ADMIN_USERNAMES,
 );
 
-/** Built-in admin accounts have no email password recovery. */
+/** Built-in admin accounts have no password recovery flow. */
 const isBuiltInAdmin = (username: unknown): boolean =>
     typeof username === 'string' &&
     BUILT_IN_ADMIN_USERNAMES.has(username.toLowerCase());
@@ -2442,7 +2442,7 @@ export class AuthController extends MixtController {
         }
 
         const genericMessage =
-            'If that account exists, a password recovery email was sent.';
+            'If that account exists, the password recovery request has been recorded.';
 
         let user;
         if (username) {

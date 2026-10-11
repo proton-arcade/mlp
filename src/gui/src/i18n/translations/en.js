@@ -46,7 +46,7 @@ const en = {
         app_feedback_error: 'Something went wrong. Please try again.',
         app_feedback_not_available: 'This app is not accepting feedback right now.',
         app_feedback_placeholder: 'What is working well? What could be better?',
-        app_feedback_privacy_note: 'Your username and email address will be shared with the developer so they can respond.',
+        app_feedback_privacy_note: 'Your username will be shared with the developer.',
         app_feedback_privacy_note_no_email: 'Your username will be shared with the developer.',
         app_feedback_rate_limited: "You've sent a lot of feedback recently. Please try again later.",
         app_feedback_sent: 'Feedback sent. Thank you!',
@@ -179,7 +179,7 @@ const en = {
         drag_to_reposition: 'Drag to reposition',
         error_download_failed: 'Failed to download file',
         email: 'Email',
-        email_change_confirmation_sent: 'A confirmation email has been sent to your new email address. Please check your inbox and follow the instructions to complete the process.',
+        email_change_confirmation_sent: 'Your new email address has been saved.',
         email_invalid: 'Email is invalid.',
         email_or_username: 'Email or Username',
         email_required: 'Email is required.',
@@ -400,7 +400,7 @@ const en = {
         select_color: 'Select color…',
         sessions: 'Sessions',
         send: 'Send',
-        send_password_recovery_email: 'Send Password Recovery Email',
+        send_password_recovery_email: 'Request Password Recovery',
         server_information: 'Server Information',
         session_saved: 'Thank you for creating an account. This session has been saved.',
         settings: 'Settings',
@@ -648,7 +648,7 @@ const en = {
         teams_credential_once:
             'This is the only time it’s shown. Pass it on yourself — they’ll have to change it when they sign in.',
         teams_confirm_reissue:
-            'Give {{username}} a new one-time password? Their old one stops working, they’ll be emailed about it, and it goes in this team’s record. It only works before they’ve ever signed in — after that they reset it themselves.',
+            'Give {{username}} a new one-time password? Their old one stops working, and it goes in this team’s record. It only works before they’ve ever signed in — after that they reset it themselves.',
         teams_confirm_disable:
             'Suspend {{username}}? They’re signed out and can’t sign back in. Their files are untouched, and you can restore them at any time.',
         teams_audit: 'Record',

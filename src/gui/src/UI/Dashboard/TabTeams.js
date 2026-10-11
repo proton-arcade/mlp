@@ -618,7 +618,7 @@ const copyCredential = async ($button) => {
 const addAccount = async ($el_window) => {
     const username = $el_window.find(`${SECTION} .teams-new-username`).val().trim();
     if ( ! username ) return;
-    // With an address the credential is emailed too; without it, only shown here.
+    // The credential is only shown here, once; the address is stored on the account.
     const email = $el_window.find(`${SECTION} .teams-new-email`).val().trim();
 
     const $button = $el_window.find(`${SECTION} .teams-add-btn`);

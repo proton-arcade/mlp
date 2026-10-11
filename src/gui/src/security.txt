@@ -1,9 +1,0 @@
-Contact: mailto:security@mixt.mpl
-
-Expires: 2026-01-01T20:00:00.000Z
-
-Acknowledgments: https://github.com/proton-arcade/mlp/blob/master/SECURITY-ACKNOWLEDGEMENTS.md
-
-Canonical: https://github.com/proton-arcade/mlp/blob/main/src/gui/src/security.txt
-
-Policy: https://github.com/proton-arcade/mlp/blob/master/SECURITY.md

@@ -59,10 +59,9 @@ async function UIWindowAppFeedback (options) {
             ? { app: options.app }
             : { origin: options.origin };
 
-        // Mirror what AppFeedbackService actually shares: the username
-        // always, the sender's email only when it exists and is verified
-        // (unverified addresses get no Reply-To, so the developer cannot
-        // respond). The note must not promise either more or less.
+        // Mirror what AppFeedbackService stores: the username always, the
+        // sender's email only when it exists and is verified. The note must
+        // not promise either more or less.
         const shares_email = Boolean(window.user?.email && window.user?.email_confirmed);
         const privacy_note_key = shares_email
             ? 'app_feedback_privacy_note'

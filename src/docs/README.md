@@ -46,8 +46,6 @@ Connect with the maintainers and community through these channels:
 
 - Bug report or feature request? Please [open an issue](https://github.com/proton-arcade/docs/issues/new).
 - X (Twitter): [x.com/proton-arcade](https://x.com/proton-arcade)
-- Security issues? [security@mixt.mpl](mailto:security@mixt.mpl)
-- Email maintainers at [hi@mixt.mpl](mailto:hi@mixt.mpl)
 
 We are always happy to help you with any questions you may have. Don't hesitate to ask!
 

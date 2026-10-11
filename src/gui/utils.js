@@ -175,7 +175,6 @@ async function build (options) {
         'browserconfig.xml',
         'manifest.json',
         'favicon.ico',
-        'security.txt',
     ];
 
     const recursive_copy = (src, dest) => {
