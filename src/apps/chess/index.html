@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chess</title>
+<link rel="stylesheet" href="/builtin/shared/apps.css">
+<style>
+    .wrap { display: flex; flex-wrap: wrap; gap: 16px; padding: 12px; justify-content: center; }
+    .board { display: grid; grid-template-columns: repeat(8, 52px); grid-template-rows: repeat(8, 52px); border: 2px solid #4e4e4e; }
+    .sq { display: flex; align-items: center; justify-content: center; font-size: 36px; cursor: pointer; user-select: none; }
+    .sq.light { background: #eeeed2; }
+    .sq.dark { background: #769656; }
+    .sq.sel { box-shadow: inset 0 0 0 4px #f6f669; }
+    .sq.hint::after { content: ''; width: 14px; height: 14px; border-radius: 50%; background: rgba(0, 0, 0, 0.25); position: absolute; }
+    .sq.hint { position: relative; }
+    .sq.last { background-image: linear-gradient(rgba(255, 230, 0, 0.35), rgba(255, 230, 0, 0.35)); }
+    .side { min-width: 180px; }
+    .moves { font-family: monospace; font-size: 13px; line-height: 1.6; max-height: 360px; overflow: auto; }
+    .moves li { list-style: none; }
+</style>
+</head>
+<body>
+<header class="toolbar">
+    <h1>Chess</h1>
+    <button id="new" class="btn primary" type="button">New game</button>
+    <button id="undo" class="btn" type="button">Undo</button>
+</header>
+<p id="status" class="status" role="status"></p>
+<div class="wrap">
+    <div id="board" class="board" aria-label="Chess board"></div>
+    <div class="side">
+        <p>Click a piece, then a highlighted square. Pawns promote to queens.</p>
+        <ol id="moves" class="moves"></ol>
+    </div>
+</div>
+<script type="module" src="app.js"></script>
+</body>
+</html>

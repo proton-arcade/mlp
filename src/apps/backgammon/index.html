@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Backgammon</title>
+<link rel="stylesheet" href="/builtin/shared/apps.css">
+<style>
+    #board { width: min(760px, 96vw); margin: 12px auto; border: 2px solid #5a3a1a; background: #d9b26f; padding: 8px; }
+    .half { display: flex; gap: 2px; height: 180px; }
+    .half:first-child { align-items: flex-start; }
+    .half:last-child { align-items: flex-end; }
+    .point { flex: 1; display: flex; flex-direction: column; position: relative; cursor: pointer; border-radius: 3px; }
+    .point.a { background: linear-gradient(#7a3b12 0 100%); clip-path: polygon(0 0, 100% 0, 50% 100%); }
+    .point.b { background: linear-gradient(#efe0bf 0 100%); clip-path: polygon(0 0, 100% 0, 50% 100%); }
+    .half:last-child .point { clip-path: polygon(50% 0, 0 100%, 100% 100%); }
+    .point.sel { outline: 3px solid #f6e05e; }
+    .point.hint::after { content: ''; position: absolute; inset: 40% 30%; border-radius: 50%; background: rgba(0, 200, 0, 0.55); }
+    .chip { width: 22px; height: 22px; border-radius: 50%; margin: 1px auto; border: 1px solid #333; }
+    .chip.white { background: #fafafa; }
+    .chip.black { background: #222; }
+    .more { color: #fff; text-align: center; font-size: 12px; }
+    .bar { text-align: center; padding: 8px; margin: 6px 0; background: #8b6b3d; color: #fff; border-radius: 4px; cursor: pointer; }
+    .bar.sel { outline: 3px solid #f6e05e; }
+    .info { display: flex; gap: 16px; justify-content: center; align-items: center; flex-wrap: wrap; }
+    .dice { font-size: 22px; font-weight: 700; min-width: 80px; text-align: center; }
+</style>
+</head>
+<body>
+<header class="toolbar">
+    <h1>Backgammon</h1>
+    <button id="roll" class="btn primary" type="button">Roll</button>
+    <button id="new" class="btn" type="button">New game</button>
+</header>
+<p id="status" class="status" role="status"></p>
+<div class="info">
+    <span id="dice" class="dice" aria-live="polite"></span>
+    <span id="off"></span>
+</div>
+<div id="board" aria-label="Backgammon board"></div>
+<script type="module" src="app.js"></script>
+</body>
+</html>

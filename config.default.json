@@ -159,6 +159,12 @@
         "dev-center": "./src/dev-center",
         "browser": "./src/browser-app",
         "app-center": "./src/app-center",
+        "chess": "./src/apps/chess",
+        "checkers": "./src/apps/checkers",
+        "sudoku": "./src/apps/sudoku",
+        "klondike": "./src/apps/klondike",
+        "backgammon": "./src/apps/backgammon",
+        "shared": "./src/apps/shared",
         "internet": "./internet"
     },
     "use_bundled_gui": false,
