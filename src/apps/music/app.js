@@ -305,12 +305,15 @@
             return;
         }
         const row = e.target.closest('tr.row');
-        if ( row ) rowClick(e, row.dataset.id);
-    });
-
-    rowsEl.addEventListener('dblclick', (e) => {
-        const row = e.target.closest('tr.row');
-        if ( row && !e.target.closest('[data-remove]') ) play(row.dataset.id);
+        if ( !row ) return;
+        // Handle the double-click here rather than with a 'dblclick' listener:
+        // the first click re-renders the row, so the second click no longer
+        // lands on the element a 'dblclick' event would be dispatched to.
+        if ( e.detail === 2 ) {
+            play(row.dataset.id);
+            return;
+        }
+        rowClick(e, row.dataset.id);
     });
 
     $('add').addEventListener('click', () => $('file').click());
