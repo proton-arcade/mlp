@@ -215,7 +215,7 @@ const renderOverview = (data) => {
             <button type="submit" class="button">Add user</button>
             <p class="admin-whitelist-msg admin-error"></p>
         </form>
-        <p class="admin-generated">Whitelisted users can sign in and use the server. An existing account is added as it is. A new name creates an account with a one-time password, shown once.</p>
+        <p class="admin-generated">Whitelisted users can sign in and use the server. An existing account is added as it is. A new name creates an account with a one-time password, which is also kept in the admin vault until the account changes it.</p>
         ${table(
             ['Username', 'Account', 'Password', 'Added by', 'Added', 'Last activity', ''],
             data.whitelist.map((w) => [
@@ -230,7 +230,7 @@ const renderOverview = (data) => {
         )}`);
 
     const setPasswordSection = section('Set a password', '', `
-        <p class="admin-generated">Sets the password the account signs in with. The new password is stored in the encrypted admin vault and shown in the Accounts table.</p>
+        <p class="admin-generated">Sets the password the account signs in with. The new password is stored in the encrypted admin vault and shown in the Accounts table. The administrator's own password is not set here: change it with admin/set-password.mjs.</p>
         <form class="admin-set-password">
             <input type="text" name="username" placeholder="Username" required autocomplete="off">
             <input type="text" name="password" placeholder="New password (8+ characters)" required autocomplete="off">
@@ -396,7 +396,7 @@ const TabAdmin = {
                 return;
             }
             pendingNotice = data.created_account
-                ? `Account "${data.username}" created. One-time password: ${data.temporary_password} (shown once; they must change it at first sign-in).`
+                ? `Account "${data.username}" created. One-time password: ${data.temporary_password} (they must change it at first sign-in; it is also kept in the admin vault).`
                 : `"${data.username}" is now whitelisted.`;
             loadOverview($el_window);
         });

@@ -5,8 +5,10 @@
 // Only the `admin` account reaches this (see adminOnly + the server-wide
 // lockdown). Secrets are never returned: password hashes, OTP secrets and
 // recovery codes, session and access-token identifiers, reset and confirmation
-// tokens, and card fingerprints are all left out. Mail is listed by subject and
-// time only; message bodies are not read.
+// tokens, and card fingerprints are all left out. The one exception is account
+// passwords the administrator set or created, which are returned only from the
+// encrypted admin vault. Mail is listed by subject and time only; message
+// bodies are not read.
 
 import bcrypt from 'bcrypt';
 import {
@@ -456,8 +458,9 @@ function whitelistView(entries: WhitelistEntry[], userRows: Row[]) {
 
 /**
  * Whitelist a user. An existing account is just added to the list. For a new
- * name, an account is created with a one-time password, shown once in the
- * response for the administrator to pass on.
+ * name, an account is created with a one-time password. It is returned in the
+ * response for the administrator to pass on, and kept in the admin vault until
+ * the account changes it.
  */
 const addToWhitelist = async (req: Request, res: Response): Promise<void> => {
     const body = (req.body ?? {}) as Record<string, unknown>;
@@ -627,6 +630,16 @@ extension.post(
         const account = await stores.user.getByUsername(username);
         if (!account) {
             res.status(404).json({ message: 'No account has that username.' });
+            return;
+        }
+        // The administrator's password is owned by admin/admin.json and is
+        // re-applied on every start, so a change made here would be undone.
+        if (String(account.username).toLowerCase() === 'admin') {
+            res.status(409).json({
+                message:
+                    'The administrator password is set in admin/admin.json. Run node admin/set-password.mjs and restart the server.',
+                code: 'admin_password_in_file',
+            });
             return;
         }
         await stores.user.update(account.id, {

@@ -12,6 +12,9 @@ src/mixt-js/dist
 # Local runtime data
 volatile
 config.json
+admin/admin.json
+admin/vault/
+admin/vault.key
 config.dev.json
 /mixt
 

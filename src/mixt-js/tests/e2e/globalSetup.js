@@ -79,7 +79,7 @@ export default async function globalSetup () {
     if ( ! ADMIN_PASSWORD ) {
         throw new Error(
             'MIXT_ADMIN_PASSWORD is not set.\n' +
-            'Your local Mixt prints the admin password at startup (look for "Password: <hex>" in the monorepo\'s npm start output).\n' +
+            'The admin password is the "password" value in admin/admin.json at the repo root.\n' +
             'Set it in tests/e2e/.env (gitignored):\n' +
             '  cp tests/e2e/.env.example tests/e2e/.env\n' +
             '  # then edit tests/e2e/.env and set MIXT_ADMIN_PASSWORD\n' +

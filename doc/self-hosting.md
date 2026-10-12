@@ -36,10 +36,10 @@ Only `admin` can use the server. Other accounts can sign in only after the admin
 
 Use the **Admin** tab in the dashboard:
 
-- **Add**: enter a username. An existing account is whitelisted and keeps its password. A new account is created with a one-time temporary password, which is shown once and expires after 24 hours. Share it with the user out of band; they should change it at first sign-in.
+- **Add**: enter a username. An existing account is whitelisted and keeps its password. A new account is created with a one-time temporary password, which expires after 24 hours. It is shown in the Admin tab and kept in the admin vault until the user changes it. Share it with the user out of band; they should change it at first sign-in.
 - **Remove**: revokes access at once. The user's current sessions stop working, and they cannot sign in again until they are re-added.
 
-The Admin tab also shows the server's state: the live user count, every account (creation time, username, email, the built-in mailbox, and whether a password is set), app counts, and other server data. Password hashes are never displayed. Passwords the administrator sets are kept in the admin-only vault, encrypted with a key on the administrator's device, and are decrypted only when an admin page is viewed.
+The Admin tab also shows the server's state: the live user count, every account (creation time, username, email, the built-in mailbox, and whether a password is set), app counts, and other server data. Password hashes are never displayed. Passwords the administrator sets or creates are kept in the admin-only vault (`admin/vault/`). Each is encrypted with the key in `admin/vault.key` on the server, so anyone who can read that folder can read the passwords. They are decrypted only when an admin page is viewed. The `admin` account's own password is not in the vault; change it with `admin/set-password.mjs`.
 
 ## Configuration
 

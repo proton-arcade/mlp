@@ -13,7 +13,7 @@
 #   2. Creates ./mixt-selfhosted/ (override with $env:MIXT_DIR).
 #   3. Downloads docker-compose.yml + caddy/Caddyfile from the OSS repo.
 #   4. Generates fresh secrets and writes .env + mixt/config/config.json.
-#   5. Runs `docker compose up -d` and prints how to find the admin password.
+#   5. Runs `docker compose up -d` and prints where the admin password is kept.
 #
 # Re-running in an already-initialised directory is a no-op for config
 # (it won't clobber existing .env / config.json) and just refreshes the
@@ -207,5 +207,5 @@ Write-Log 'follow mixt logs:'
 Write-Log "    cd $MixtDir; docker compose logs -f mixt"
 Write-Log ''
 Write-Log "open http://${MixtDomain}:${MixtPort} once the mixt container is healthy."
-Write-Log 'first-boot admin password is logged once — grab it with:'
-Write-Log "    cd $MixtDir; docker compose logs mixt | Select-String password"
+Write-Log 'the admin password is the "password" value in admin/admin.json inside the mixt container:'
+Write-Log "    cd $MixtDir; docker compose exec mixt cat /opt/mixt/admin/admin.json"

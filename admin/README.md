@@ -23,3 +23,9 @@ password, then restart. Or edit `admin.json` by hand. On every start the
 `admin` account is set to the password in this file.
 
 The file is readable only by its owner. Keep it out of version control.
+
+The administrator password cannot be changed from the Admin tab. The server
+re-applies `admin.json` on every start, so a change made there would be undone.
+
+Passwords for other accounts are kept in `admin/vault/`, encrypted with the key
+in `admin/vault.key`. Both are git-ignored and must stay private.
