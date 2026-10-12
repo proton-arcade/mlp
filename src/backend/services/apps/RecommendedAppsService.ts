@@ -30,7 +30,7 @@ export const RECOMMENDED_APP_NAMES = [
     'contacts',
     'calendar',
     'meetings',
-    'teamchat',
+    'team-chat',
     'email',
     'whiteboard',
     'spreadsheet',
