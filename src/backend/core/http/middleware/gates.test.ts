@@ -493,13 +493,23 @@ describe('assertNotUserSession', () => {
 // ── adminOnlyGate ───────────────────────────────────────────────────
 
 describe('adminOnlyGate', () => {
-    it("admits the built-in 'admin' and 'system' users by default", () => {
-        for (const username of DEFAULT_ADMIN_USERNAMES) {
-            const got = runGate(adminOnlyGate(), {
-                actor: { user: { uuid: 'u-1', username } },
-            });
-            expect(got).toBeUndefined();
-        }
+    it("admits only the built-in 'admin' user by default", () => {
+        const got = runGate(adminOnlyGate(), {
+            actor: { user: { uuid: 'u-1', username: 'admin' } },
+        });
+        expect(got).toBeUndefined();
+    });
+
+    it("refuses the 'system' user unless it is listed as an extra", () => {
+        const got = runGate(adminOnlyGate(), {
+            actor: { user: { uuid: 'u-1', username: 'system' } },
+        });
+        expect(got).toBeDefined();
+        expect(
+            runGate(adminOnlyGate(['system']), {
+                actor: { user: { uuid: 'u-1', username: 'system' } },
+            }),
+        ).toBeUndefined();
     });
 
     it('admits extras IN ADDITION to the built-ins (not as a replacement)', () => {
@@ -548,12 +558,16 @@ describe('adminOnlyGate', () => {
         // On a SQLite self-host with case-sensitive (BINARY) collation, a
         // user row could exist with `Admin`/`SYSTEM` capitalization. The
         // gate must still admit those — case is normalized on both sides.
-        for (const username of ['Admin', 'ADMIN', 'sYsTeM']) {
+        for (const username of ['Admin', 'ADMIN']) {
             const got = runGate(adminOnlyGate(), {
                 actor: { user: { uuid: 'u-1', username } },
             });
             expect(got).toBeUndefined();
         }
+        const system = runGate(adminOnlyGate(), {
+            actor: { user: { uuid: 'u-1', username: 'sYsTeM' } },
+        });
+        expect(system).toBeDefined();
     });
 
     it('admits case-mismatched extras (allowlist lowercased on construction)', () => {

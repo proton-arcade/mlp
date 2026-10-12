@@ -279,6 +279,9 @@ services:
       - ./mixt/config:/etc/mixt:z
       # Persistent runtime data (anything your config points at /var/mixt).
       - ./mixt/data/mixt:/var/mixt:z
+      # The administrator password file (admin.json) and the encrypted admin
+      # vault. A named volume keeps them when the container is recreated.
+      - mixt-admin:/opt/mixt/admin
     healthcheck:
       test: wget --no-verbose --tries=1 --spider http://localhost:4100/ || exit 1
       interval: 30s
@@ -316,3 +319,6 @@ services:
       timeout: 3s
       retries: 5
       start_period: 5s
+
+volumes:
+  mixt-admin:

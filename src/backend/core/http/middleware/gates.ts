@@ -208,11 +208,18 @@ export const requireNonAccessTokenGate = (): RequestHandler => {
     };
 };
 
-/** Built-in admin usernames that always pass `adminOnly`. */
+/** Built-in admin usernames (used for reservation and the admin account). */
 export const DEFAULT_ADMIN_USERNAMES = ['admin', 'system'] as const;
 
 /**
- * Reject unless the username is `admin`, `system`, or one of `extras`, and the
+ * Accounts that pass `adminOnly` without being listed as extras. Only the
+ * `admin` account signs in to this server, and the `system` account has no
+ * sign-in path, so it is not admitted over HTTP.
+ */
+export const ADMIN_ONLY_BUILTIN_USERNAMES = ['admin'] as const;
+
+/**
+ * Reject unless the username is `admin`, or one of `extras`, and the
  * actor carries no app anywhere in its token chain (`effectiveApp`). With
  * `appGated` a direct app-under-user actor is deferred to `allowedAppIdsGate`
  * instead; app-issued access tokens are rejected even then, since that gate
@@ -224,7 +231,7 @@ export const adminOnlyGate = (
 ): RequestHandler => {
     // Match the username column's case-insensitive collation.
     const allowList = new Set<string>(
-        [...DEFAULT_ADMIN_USERNAMES, ...extras].map((u) => u.toLowerCase()),
+        [...ADMIN_ONLY_BUILTIN_USERNAMES, ...extras].map((u) => u.toLowerCase()),
     );
     // Admin follows the name, so a name that grants it must never be claimable.
     reserveUsernames(allowList);
