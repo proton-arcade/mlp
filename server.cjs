@@ -193,7 +193,10 @@ if ( isBackendMode ) {
     startHttpsFront().then((server) => {
         front = server;
         console.log(`\nHTTPS is listening. Open https://${HOST}:${HTTPS_PORT}/ once the desktop has booted.`);
-        console.log('The browser will warn about the self-signed certificate; accept it for this local address.\n');
+        console.log('The browser will warn about the self-signed certificate. Accept it for BOTH of these addresses,');
+        console.log('or the API and live connections (chat, notifications) fail in Firefox:');
+        console.log(`  https://${HOST}:${HTTPS_PORT}/`);
+        console.log(`  https://api.${HOST}:${HTTPS_PORT}/\n`);
         launchBackend();
     }).catch((err) => {
         console.error(err.message);

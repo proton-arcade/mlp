@@ -21,10 +21,11 @@
         statusEl.textContent = text || '';
     }
 
-    // Inside the desktop, mixt provides the API origin and token. Opened on its
-    // own, the page uses the same token and the api. host beside the page.
+    // Built-in apps are served by this server, so the API lives on the `api.`
+    // host of the page's own origin. The SDK's APIOrigin default is a public
+    // host that does not serve this installation, so it is not used here.
     function apiOrigin () {
-        return (window.mixt && mixt.APIOrigin) || location.origin.replace('//', '//api.');
+        return location.origin.replace('//', '//api.');
     }
     function authToken () {
         return (window.mixt && mixt.authToken) || localStorage.getItem('auth_token_v2') || '';

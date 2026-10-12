@@ -1213,7 +1213,9 @@ window.available_templates = () => {
             return result;
 
         } catch ( err ) {
-            console.log(err);
+            // A missing templates folder just means there are no templates;
+            // accounts are not all provisioned with one.
+            if ( err?.code !== 'subject_does_not_exist' ) console.log(err);
             window.file_templates = [];
         }
     };
