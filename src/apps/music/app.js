@@ -65,7 +65,7 @@
     function render () {
         const shown = visible();
         const n = tracks.length;
-        countEl.textContent = n === 0 ? 'Library' : `Library · ${n} song${n === 1 ? '' : 's'}`;
+        countEl.textContent = `Music folder · ${n} song${n === 1 ? '' : 's'}`;
         emptyEl.classList.toggle('hidden', n > 0);
         tableEl.classList.toggle('hidden', n === 0);
         if ( n > 0 && shown.length === 0 ) {
