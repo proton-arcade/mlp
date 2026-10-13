@@ -72,6 +72,15 @@ describe('admin lockdown', () => {
         expect((await run(users, { method: 'GET', path: '/get-gui-token', anonymous: true })).passed).toBe(false);
     });
 
+    it('lets anonymous visitors read the login screen settings and provider list', async () => {
+        const users = fakeUsers();
+        expect((await run(users, { method: 'GET', path: '/whoarewe', anonymous: true })).passed).toBe(true);
+        expect((await run(users, { method: 'GET', path: '/auth/oidc/providers', anonymous: true, subdomain: 'api' })).passed).toBe(true);
+        // Only on the api subdomain, and only for reads.
+        expect((await run(users, { method: 'GET', path: '/auth/oidc/providers', anonymous: true })).passed).toBe(false);
+        expect((await run(users, { method: 'POST', path: '/whoarewe', anonymous: true })).passed).toBe(false);
+    });
+
     it('lets anonymous visitors load the desktop static libraries', async () => {
         const users = fakeUsers();
         const css = await run(users, { method: 'GET', path: '/lib/jquery-ui-1.13.2/jquery-ui.min.css', anonymous: true });

@@ -76,15 +76,22 @@ const isPublicIconRequest = (req: Request): boolean => {
 };
 
 /**
- * Read-only endpoints the desktop calls before anyone has signed in. They
- * reveal nothing private: the server version, and a change timestamp that is 0
- * for an anonymous caller. Everything else stays behind the lockdown.
+ * Read-only endpoints the login screen calls before anyone has signed in. They
+ * reveal nothing private: the server version and sign-up switch (`/whoarewe`),
+ * and the list of enabled identity providers, which every login form shows.
+ * Everything else stays behind the lockdown.
  */
-const ANON_READ_PATHS = new Set(['/version']);
+const ANON_READ_PATHS = new Set(['/version', '/whoarewe']);
 
-const isAnonymousReadRequest = (req: Request): boolean =>
-    (req.method === 'GET' || req.method === 'HEAD') &&
-    ANON_READ_PATHS.has(req.path);
+/** Provider list for the login form, read on the api subdomain. */
+const ANON_READ_API_PATHS = new Set(['/auth/oidc/providers']);
+
+const isAnonymousReadRequest = (req: Request): boolean => {
+    if (req.method !== 'GET' && req.method !== 'HEAD') return false;
+    if (ANON_READ_PATHS.has(req.path)) return true;
+    const sub = req.subdomains?.[req.subdomains.length - 1] ?? '';
+    return sub === 'api' && ANON_READ_API_PATHS.has(req.path);
+};
 
 const isSignInRequest = (req: Request): boolean =>
     req.method === 'POST' && SIGN_IN_PATHS.has(req.path);
