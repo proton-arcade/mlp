@@ -374,7 +374,7 @@ const bg = {
         setup2fa_1_instructions: `
     Можете да използвате всяко приложение за удостоверяване, което поддържа протокола Time-based One-Time Password (TOTP).
     Има много варианти, но ако не сте сигурни,
-    <a target="_blank" href="https://authy.com/download">Authy</a>
+    Authy
     е отлично решение за Android и iOS.
 `,
         setup2fa_2_step_heading: 'Сканирайте QR кода',

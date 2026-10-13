@@ -334,7 +334,7 @@ const sl = {
         setup2fa_1_step_heading: 'Odprite aplikacijo za preverjanje pristnosti',
         setup2fa_1_instructions: `
             Uporabite lahko katero koli aplikacijo za preverjanje pristnosti, ki podpira protokol enkratnega gesla na podlagi časa (TOTP).
-Na voljo jih je veliko, če pa niste prepričani, je <a target="_blank" href="https://authy.com/download">Authy</a>
+Na voljo jih je veliko, če pa niste prepričani, je Authy
 odlična izbira za Android in iOS.
         `,
         setup2fa_2_step_heading: 'Skenirajte QR kodo',

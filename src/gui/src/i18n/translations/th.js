@@ -311,7 +311,7 @@ const th = {
         setup2fa_1_instructions: `
             คุณสามารถใช้ authenticator แอฟ ที่รองรับ Time-based One-Time Password (TOTP)
             มีหลายๆแอฟให้เลือกใช้งาน, แต่ถ้าคุณไม่แน่ใจ
-            <a target="_blank" href="https://authy.com/download">Authy</a>
+            Authy
             เป็นตัวเลือกที่ดีสำหรับ Android and iOS.
         `,
         setup2fa_2_step_heading: 'แสกนคิวอาร์โค้ด',

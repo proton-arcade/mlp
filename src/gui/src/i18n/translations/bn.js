@@ -317,7 +317,7 @@ const bn = {
         setup2fa_1_instructions: `
     আপনি যেকোনো প্রামাণিকতা অ্যাপ ব্যবহার করতে পারেন যা Time-based One-Time Password (TOTP) প্রোটোকল সমর্থন করে।
     অনেক বিকল্প রয়েছে, তবে যদি আপনি নিশ্চিত না হন
-    <a target="_blank" href="https://authy.com/download">Authy</a>
+    Authy
     একটি ভালো পছন্দ Android এবং iOS এর জন্য।
   `,
         setup2fa_2_step_heading: 'QR কোড স্ক্যান করুন',

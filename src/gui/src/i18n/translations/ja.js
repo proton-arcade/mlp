@@ -314,7 +314,7 @@ const ja = {
         setup2fa_1_instructions: `
             Time-based One-Time Password (TOTP) プロトコルをサポートする任意の認証アプリを使用できます。
             多くの選択肢がありますが、迷った場合は
-            <a target="_blank" href="https://authy.com/download">Authy</a>
+            Authy
             がAndroidとiOSのおすすめの選択肢です。
         `,
         setup2fa_2_step_heading: 'QRコードをスキャンする',

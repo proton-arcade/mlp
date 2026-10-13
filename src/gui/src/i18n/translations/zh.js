@@ -314,7 +314,7 @@ const zh = {
         setup2fa_1_instructions: `
             你可以使用任何一种支持TOTP（基于时间的一次性密码生成）协议的应用.
             有很多应用可以选择，如果您不确定用哪一个可以使用
-            <a target="_blank" href="https://authy.com/download">Authy</a>
+            Authy
             支持安卓和IOS设备
         `,
         setup2fa_2_step_heading: '扫描二维码',

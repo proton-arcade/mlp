@@ -141,7 +141,6 @@ export class StaticPagesController extends MixtController {
     ${docsOrigin ? `<a href="${docsOrigin}">Docs</a>` : ''}
     <a href="${origin}/terms">Terms</a>
     <a href="${origin}/privacy">Privacy</a>
-    <a href="https://github.com/proton-arcade/mlp">GitHub</a>
   </div>
 </body>
 </html>`;

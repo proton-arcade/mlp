@@ -323,7 +323,7 @@ const ur = {
         setup2fa_1_instructions: `
        آپ کوئی بھی مستند ایپ استعمال کر سکتے ہیں جو ٹائم بیسڈ ون ٹائم پاس ورڈ (TOTP) پروٹوکول کو سپورٹ کرتی ہو۔
         منتخب کرنے کے لیے بہت سے ہیں، لیکن اگر آپ کو یقین نہیں ہے۔
-        <a target="_blank" href="https://authy.com/download">Authy</a>
+        Authy
         Android اور iOS کے لیے ایک ٹھوس انتخاب ہے۔
     `,
         setup2fa_2_step_heading: 'QR کوڈ اسکین کریں۔',

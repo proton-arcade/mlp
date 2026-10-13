@@ -332,7 +332,7 @@ const nn = {
         setup2fa_1_instructions: `
                 Du kan bruke ein autentikatorapp som støttar Time-based One-Time Password (TOTP)-protokollen.
                 Det finst mange å velje mellom, men om du er usikker,
-                er <a target="_blank" href="https://authy.com/download">Authy</a>
+                er Authy
                 eit godt valg for Android og iOS.
                 `,
         setup2fa_2_step_heading: 'Skann QR-koden',

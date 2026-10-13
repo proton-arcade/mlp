@@ -352,7 +352,7 @@ const my = {
         setup2fa_1_instructions: `
         Anda boleh menggunakan sebarang aplikasi authenticator yang menyokong protokol Kata Laluan Sekali Guna Berasaskan Masa (TOTP).
         Terdapat banyak untuk dipilih, tetapi jika anda tidak pasti
-        <a target="_blank" href="https://authy.com/download">Authy</a>
+        Authy
         adalah pilihan yang kukuh untuk Android dan iOS.
     `,
         setup2fa_2_step_heading: 'Imbas kod QR',

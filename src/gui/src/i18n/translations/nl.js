@@ -315,7 +315,7 @@ const nl = {
         setup2fa_1_instructions: `
             Je kunt elke authenticator-app gebruiken die het Time-based One-Time Password (TOTP) protocol ondersteunt.
             Er zijn veel opties om uit te kiezen, maar als je twijfelt,
-            <a target="_blank" href="https://authy.com/download">Authy</a>
+            Authy
             is een goede keuze voor Android en iOS.
         `,
         setup2fa_2_step_heading: 'Scan de QR-code',

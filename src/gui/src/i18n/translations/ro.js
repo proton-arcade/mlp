@@ -314,7 +314,7 @@ const ro = {
         setup2fa_1_instructions: `
            Puteți folosi orice aplicație de autentificare care folosește protocolul Time-based One-Time Password (TOTP).
            Sunt multe astfel de aplicații, dar dacă sunteți nesiguri
-           <a target="_blank" href="https://authy.com/download">Authy</a>
+           Authy
            este o opțiune serioasă pentru Android si iOS.
            `,
         setup2fa_2_step_heading: 'Scanați codul QR',

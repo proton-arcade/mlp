@@ -334,7 +334,7 @@ const id = {
         setup2fa_1_instructions: `
         Anda dapat menggunakan aplikasi autentikator apa pun yang mendukung protokol Time-based One-Time Password (TOTP).
         Ada banyak pilihan, tetapi jika Anda tidak yakin
-        <a target="_blank" href="https://authy.com/download">Authy</a>
+        Authy
         adalah pilihan yang solid untuk Android dan iOS.
     `,
         setup2fa_2_step_heading: 'Pindai kode QR',

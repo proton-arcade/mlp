@@ -334,7 +334,7 @@ const nb = {
         setup2fa_1_instructions: `
             Du kan bruke hvilken som helst autentiseringsapp som støtter TOTP (Time-based One-Time Password)-protokollen.
             Det finnes mange alternativer, men hvis du er usikker, er
-            <a target="_blank" href="https://authy.com/download">Authy</a>
+            Authy
             et godt valg for Android og iOS.`,
         setup2fa_2_step_heading: 'Skann QR-koden',
         setup2fa_3_step_heading: 'Skriv inn den 6-sifrede koden',

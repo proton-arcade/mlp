@@ -334,7 +334,7 @@ const ar = {
 
         // === 2FA Setup ===
         setup2fa_1_step_heading: 'افتح تطبيق المصادقة الخاص بك',
-        setup2fa_1_instructions: '.هو خيار موثوق به لنظام Android و iOS ولكن إذا كنت غير متأكد،<a target="_blank" href="https://authy.com/download">Authy</a> :هناك العديد للاختيار من بينها .(TOTP) يمكنك استخدام أي تطبيق مصادقة يدعم بروتوكول كلمة المرور لمرة واحدة المعتمدة على الوقت ',
+        setup2fa_1_instructions: '.هو خيار موثوق به لنظام Android و iOS ولكن إذا كنت غير متأكد،Authy :هناك العديد للاختيار من بينها .(TOTP) يمكنك استخدام أي تطبيق مصادقة يدعم بروتوكول كلمة المرور لمرة واحدة المعتمدة على الوقت ',
         setup2fa_2_step_heading: ' (QR code)مسح رمز الاستجابة السريعة',
         setup2fa_3_step_heading: 'أدخل الرمز المكون من 6 أرقام',
         setup2fa_4_step_heading: 'انسخ رموز الاسترداد الخاصة بك',

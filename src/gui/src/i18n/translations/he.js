@@ -331,7 +331,7 @@ const he = {
         setup2fa_1_instructions: `
             אתה יכול להשתמש בכל אפליקציית אימות התומכת בפרוטוקול סיסמה חד פעמית מבוססת זמן (TOTP).
  יש הרבה לבחירה, אבל אם אתה לא בטוח
-            <a target="_blank" href="https://authy.com/download">Authy</a>
+            Authy
             היא בחירה סולידית עבור אנדרואיד ו- iOS.
         `,
         setup2fa_2_step_heading: 'סרוק את קוד ה- QR',

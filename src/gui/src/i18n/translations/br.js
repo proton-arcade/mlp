@@ -314,7 +314,7 @@ const br = {
         'setup2fa_1_instructions': `
         Você pode usar qualquer aplicativo autenticador que suporte o protocolo de Senha de Uso Único com Base em Tempo (TOTP).
         Existem muitas opções, mas se você não tiver certeza 
-        <a target='_blank' href='https://authy.com/download'>Authy</a>
+        Authy
         é uma escolha sólida para Android e iOS.
         `,
         'setup2fa_2_step_heading': 'Escaneie o código QR',

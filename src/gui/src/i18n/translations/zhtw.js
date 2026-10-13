@@ -331,7 +331,7 @@ const zhtw = {
         setup2fa_1_instructions: `
 	        您可以使用任何支援基於時間的一次性密碼（TOTP）協議的驗證器應用程式。
 	        有許多選擇，但如果您不確定，
-	        <a target="_blank" href="https://authy.com/download">Authy</a>
+	        Authy
 	        是 Android 和 iOS 的一個不錯的選擇。
 	    `,
         setup2fa_2_step_heading: '掃描 QR 碼',

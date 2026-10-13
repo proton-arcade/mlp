@@ -337,7 +337,7 @@ const ig = {
         setup2fa_1_instructions: `
             Ị nwere ike iji ngwa nyocha ọ bụla na-akwado protocol Paswọdu Otu oge (TOTP) dabere na Oge.
             Enwere ọtụtụ nhọrọ, mana ọ bụrụ na ị maghị
-            <a target="_blank" href="https://authy.com/download">Authy</a>
+            Authy
             bụ nhọrọ siri ike maka android na iOS.
         `,
         setup2fa_2_step_heading: 'Nyochaa QR koodu',

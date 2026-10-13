@@ -364,7 +364,7 @@ const fr = {
         setup2fa_1_instructions: `
             Vous pouvez utiliser n'importe quelle application d'authentification prenant en charge le protocole TOTP (Time-based One-Time Password).
             Il y a beaucoup de choix, mais si vous n'êtes pas sûr
-            <a target="_blank" href="https://authy.com/download">Authy</a>
+            Authy
             est un choix solide pour Android et iOS.
         `,
         setup2fa_2_step_heading: 'Scannez le code QR',

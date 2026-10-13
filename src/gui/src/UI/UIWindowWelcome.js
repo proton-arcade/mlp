@@ -38,7 +38,6 @@ async function UIWindowWelcome (options) {
     h += `<a href="/terms" target="_blank">${i18n('welcome_terms')}</a>`;
     h += `<a href="/privacy" style="margin-left: 20px;" target="_blank">${i18n('welcome_privacy')}</a>`;
     h += `<a href="https://developer.mixt.mpl" style="margin-left: 20px;" target="_blank">${i18n('welcome_developers')}</a>`;
-    h += `<a href="https://github.com/mixt/mixt" style="margin-left: 20px;" target="_blank">${i18n('welcome_open_source')}</a>`;
     h += '</div>';
     h += '</div>';
     h += '</div>';

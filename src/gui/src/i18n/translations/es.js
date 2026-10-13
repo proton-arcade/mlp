@@ -352,7 +352,7 @@ const es = {
         setup2fa_1_instructions: `
             Puedes usar cualquier aplicación de autenticación que soporte el protocolo de Time-based One-time (TOTP).
             Hay muchos para elegir, pero si no estas seguro
-            <a target="_blank" href="https://authy.com/download">Authy</a>
+            Authy
             es una opción segura para Android y iOS.
         `,
         setup2fa_2_step_heading: 'Escanea el código QR',

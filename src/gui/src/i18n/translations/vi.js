@@ -314,7 +314,7 @@ const vi = {
         setup2fa_1_instructions: `
             Bạn có thể sử dụng bất kỳ ứng dụng xác thực nào hỗ trợ giao thức Mật khẩu một lần dựa trên thời gian (TOTP).
             Có nhiều lựa chọn, nhưng nếu bạn không chắc chắn
-            <a target="_blank" href="https://authy.com/download">Authy</a>
+            Authy
             là một lựa chọn tốt cho Android và iOS.
         `,
         setup2fa_2_step_heading: 'Quét mã QR',

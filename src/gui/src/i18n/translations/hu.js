@@ -311,7 +311,7 @@ const hu = {
 
         // === 2FA Setup ===
         setup2fa_1_step_heading: 'Nyisd meg a hitelesítő alkalmazásod',
-        setup2fa_1_instructions: "Bármely hitelesítő alkalmazást használhatod, amely támogatja az időalapú egyszeri jelszó (TOTP) protokollt. Sok választási lehetőség van, de ha nem vagy biztos benne, az <a target='_blank' href='https://authy.com/download'>Authy</a> jó választás Android és iOS rendszeren.",
+        setup2fa_1_instructions: "Bármely hitelesítő alkalmazást használhatod, amely támogatja az időalapú egyszeri jelszó (TOTP) protokollt. Sok választási lehetőség van, de ha nem vagy biztos benne, az Authy jó választás Android és iOS rendszeren.",
         setup2fa_2_step_heading: 'Olvasd be a QR-kódot',
         setup2fa_3_step_heading: 'Add meg a 6-jegyű kódot',
         setup2fa_4_step_heading: 'Másold le a helyreállítási kódjaidat',

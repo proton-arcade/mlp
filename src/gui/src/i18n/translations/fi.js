@@ -402,7 +402,7 @@ const fi = {
         setup2fa_1_instructions: `
             Voit käyttää mitä tahansa todennussovellusta, joka tukee aikaperusteista kertakirjautumissalasanaa (TOTP-protokollaa). 
             Valittavanasi on monia sovelluksia, mutta jos et ole varma, 
-            <a target="_blank" href="https://authy.com/download">Authy</a> on hyvä valinta Androidille ja iOS:lle.
+            Authy on hyvä valinta Androidille ja iOS:lle.
         `,
         setup2fa_2_step_heading: 'Skannaa QR-koodi',
         setup2fa_3_step_heading: 'Syötä kuusinumeroinen koodi',

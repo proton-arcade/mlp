@@ -313,7 +313,7 @@ const de = {
         setup2fa_1_instructions: `
             Sie können jede Authentifizierungs-App verwenden, die das Time-based One-Time Password (TOTP) Protokoll unterstützt.
             Es gibt viele zur Auswahl, aber wenn Sie unsicher sind, ist 
-            <a target="_blank" href="https://authy.com/download">Authy</a> 
+            Authy 
             eine solide Wahl für Android und iOS.
         `,
         setup2fa_2_step_heading: 'Scannen Sie den QR-Code',

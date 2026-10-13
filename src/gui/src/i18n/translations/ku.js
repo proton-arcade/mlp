@@ -339,7 +339,7 @@ const ku = {
               دەتوانیت هەر ئەپێکی پشتڕاستکردنی دووجۆرا بەکاربهێنیت کە پشتگیری
               Time-based One-Time Password (TOTP) protocol بیکات. هەندێکە زۆرن بۆ 
               هەڵبژاردن، بەڵام گەر دڵنیایت
-              <a target="_blank" href="https://authy.com/download">Authy</a>
+              Authy
               هەڵبژاردنێکی باشە بۆ ئەندرۆید و iOS.
           `,
         setup2fa_2_step_heading: 'پشکنینی کۆدی QR',

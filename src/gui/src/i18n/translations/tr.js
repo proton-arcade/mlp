@@ -314,7 +314,7 @@ const tr = {
             Zaman tabanlı tek seferlik parola (TOTP) protokolünü
             destekleyen herhangi bir kimlik doğrulayıcı uygulamasını
             kullanabilirsiniz. Aralarından seçim yapabileceğiniz çok 
-            sayıda uygulama var, ancak emin değilseniz <a target="_blank" href="https://authy.com/download">Authy</a>
+            sayıda uygulama var, ancak emin değilseniz Authy
             Android ve IOS için sağlam bir seçimdir.
         `,
         setup2fa_2_step_heading: 'Karekodu okut',

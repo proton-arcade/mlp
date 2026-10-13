@@ -315,7 +315,7 @@ const ua = {
         zipping_file: 'Архівування %strong%',
         sequencing: 'Порядок %strong%',
         setup2fa_1_step_heading: 'Відкрийте ваш додаток для аутентифікації',
-        setup2fa_1_instructions: 'Ви можете використовувати будь-який додаток, який підтримує Одноразовий Пароль на основі часу. Їх багато, але якщо ви не впевнені у виборі <a target="_blank" href="https://authy.com/download">Authy</a> є чудовим варіантом для Android і iOS.',
+        setup2fa_1_instructions: 'Ви можете використовувати будь-який додаток, який підтримує Одноразовий Пароль на основі часу. Їх багато, але якщо ви не впевнені у виборі Authy є чудовим варіантом для Android і iOS.',
         setup2fa_2_step_heading: 'Скануйте QR код',
         setup2fa_3_step_heading: 'Введіть шестизначний код',
         setup2fa_4_step_heading: 'Скопіюйте ваші коди відновлення',

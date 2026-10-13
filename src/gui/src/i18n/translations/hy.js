@@ -347,7 +347,7 @@ const hy = {
         setup2fa_1_instructions: `
         Դուք կարող եք օգտագործել ցանկացած իսկորոշիչ հավելված, որն աջակցում է ժամանակի վրա հիմնված միանգամյա գաղտնաբառ (TOTP) պրոտոկոլը:
         Կան բազմաթիվ տարբերակներ, բայց եթե վստահ չեք,
-        <a target="_blank" href="https://authy.com/download">Authy</a>
+        Authy
         լավ ընտրություն է Android-ի և iOS-ի համար:
     `,
         setup2fa_2_step_heading: 'Սկանավորեք QR-կոդը',

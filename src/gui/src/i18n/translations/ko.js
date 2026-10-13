@@ -354,7 +354,7 @@ const ko = {
         setup2fa_1_instructions: `
         시간 기반 일회용 비밀번호(TOTP) 프로토콜을 지원하는 모든 인증 앱을 사용할 수 있습니다.
         선택할 수 있는 앱은 많지만, 잘 모르겠다면 안드로이드 및 iOS용
-        <a target="_blank" href="https://authy.com/download">Authy</a>
+        Authy
         가 좋은 선택입니다.
     `,
         setup2fa_2_step_heading: 'QR 코드 스캔',

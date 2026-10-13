@@ -352,7 +352,7 @@ const ta = {
         setup2fa_1_instructions: `
             Time-based One-Time Password (TOTP) நெறிமுறையை ஆதரிக்கும் எந்த அங்கீகார பயன்பாட்டையும் நீங்கள் பயன்படுத்தலாம்.
  தேர்வு செய்ய பல உள்ளன, ஆனால் நீங்கள் உறுதியாக தெரியவில்லை என்றால்
- <a target="_blank" href="https://authy.com/download">Authy</a>
+ Authy
  ஆண்ட்ராய்டு மற்றும் iOSக்கு ஒரு திடமான தேர்வாகும்.
         `,
         setup2fa_2_step_heading: 'QR குறியீட்டை ஸ்கேன் செய்யவும்',
