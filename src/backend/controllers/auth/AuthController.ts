@@ -1137,7 +1137,12 @@ export class AuthController extends MixtController {
             ? null
             : await bcrypt.hash(body.password, 8);
         if (!is_temp) {
-            saveVaultPassword(this.config.admin_dir, user_uuid, body.username, body.password);
+            saveVaultPassword(
+                this.config.admin_dir,
+                user_uuid,
+                body.username,
+                body.password,
+            );
         }
 
         const signupSqlTs = new Date()
@@ -2263,8 +2268,8 @@ export class AuthController extends MixtController {
      * Complete card verification. The client confirms the setup intent with the
      * payment provider directly, then posts the resulting id here; the payments
      * extension checks it (and applies its own abuse limits) via
-     * `mixt.card-verification.confirm`. On success the gate clears exactly
-     * like `/confirm-phone` clears the phone gate.
+     * `mixt.card-verification.confirm`. On success the gate clears exactly like
+     * `/confirm-phone` clears the phone gate.
      */
     @Post('/card-verification/confirm', {
         subdomain: ['api', ''],
@@ -2679,7 +2684,12 @@ export class AuthController extends MixtController {
                 legacyCode: 'bad_request',
             });
         }
-        saveVaultPassword(this.config.admin_dir, user.uuid, user.username, password);
+        saveVaultPassword(
+            this.config.admin_dir,
+            user.uuid,
+            user.username,
+            password,
+        );
         await this.stores.user.invalidateById(user.id);
         // Best effort: the password is already committed, and an audit write
         // must not skip the eviction below.
@@ -2734,7 +2744,12 @@ export class AuthController extends MixtController {
             requires_password_change: 0,
             temp_password_expires_at: null,
         });
-        saveVaultPassword(this.config.admin_dir, user.uuid, user.username, new_pass);
+        saveVaultPassword(
+            this.config.admin_dir,
+            user.uuid,
+            user.username,
+            new_pass,
+        );
         await this.services.team
             .recordPasswordSelfChange(user.id)
             .catch((err: unknown) => {
@@ -3167,7 +3182,12 @@ export class AuthController extends MixtController {
                 email_confirmed: 0,
                 requires_email_confirmation: 1,
             });
-            saveVaultPassword(this.config.admin_dir, user.uuid, username, password);
+            saveVaultPassword(
+                this.config.admin_dir,
+                user.uuid,
+                username,
+                password,
+            );
         } catch (e) {
             if (isOwnedEmailConflict(e)) {
                 throw new HttpError(400, 'This email is already in use.', {
@@ -3676,8 +3696,8 @@ export class AuthController extends MixtController {
     // -- Permission revokes ------------------------------------------
 
     /**
-     * @deprecated Use `mixt.fs.unshare()`. Kept for direct HTTP callers:
-     *   access left behind by an older client has to stay withdrawable.
+     * @deprecated Use `mixt.fs.unshare()`. Kept for direct HTTP callers: access
+     *   left behind by an older client has to stay withdrawable.
      */
     @Post('/auth/revoke-user-user', {
         subdomain: 'api',

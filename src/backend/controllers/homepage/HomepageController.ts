@@ -57,9 +57,9 @@ export function appMetaDescription(text: string): string {
 }
 
 /**
- * Routes that render the Mixt GUI shell, plus a catch-all static fallback
- * under `<gui_assets_root>/src` for non-dist/src paths (images, fonts, lib
- * files referenced from the shell).
+ * Routes that render the Mixt GUI shell, plus a catch-all static fallback under
+ * `<gui_assets_root>/src` for non-dist/src paths (images, fonts, lib files
+ * referenced from the shell).
  *
  * All root-subdomain-only. Registered last in the controller list so the static
  * catch-all doesn't shadow specific API routes.

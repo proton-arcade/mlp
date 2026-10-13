@@ -83,7 +83,11 @@ const isSignOutRequest = (req: Request): boolean =>
 export const createAdminLockdown = (users: UserStore): RequestHandler => {
     return async (req, _res, next) => {
         try {
-            if (isGuiRequest(req) || isSignInRequest(req) || isPublicIconRequest(req)) {
+            if (
+                isGuiRequest(req) ||
+                isSignInRequest(req) ||
+                isPublicIconRequest(req)
+            ) {
                 next();
                 return;
             }
