@@ -48,10 +48,16 @@ describe('app visibility by account type', () => {
         expect(isAppVisibleTo('admin-vault', { username: 'a', account_type: 'administrator' })).toBe(true);
         expect(isAppVisibleTo('admin-vault', { username: 'd', account_type: 'developer' })).toBe(false);
     });
-    it('hides games from guests', () => {
-        expect(isAppVisibleTo('chess', { username: 'g', account_type: 'guest' })).toBe(false);
+    it('shows guests only the browser, G-Talk, Team Chat, Meetings and Settings', () => {
+        const guest = { username: 'g', account_type: 'guest' };
+        for (const app of ['browser', 'g-talk', 'team-chat', 'meetings', 'settings']) {
+            expect(isAppVisibleTo(app, guest)).toBe(true);
+        }
+        for (const app of ['explorer', 'chess', 'notes', 'terminal', 'dev-center']) {
+            expect(isAppVisibleTo(app, guest)).toBe(false);
+        }
+        expect(isAppVisibleTo('explorer', { username: 's', account_type: 'standard' })).toBe(true);
         expect(isAppVisibleTo('chess', { username: 's', account_type: 'standard' })).toBe(true);
-        expect(isAppVisibleTo('notes', { username: 'g', account_type: 'guest' })).toBe(true);
     });
 });
 

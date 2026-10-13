@@ -33,13 +33,17 @@ export const ADMIN_ONLY_APP_NAMES: ReadonlySet<string> = new Set([
     'admin-vault',
 ]);
 
-/** Games are not offered to guests. */
-export const GAME_APP_NAMES: ReadonlySet<string> = new Set([
-    'chess',
-    'checkers',
-    'backgammon',
-    'sudoku',
-    'klondike',
+/**
+ * The only apps a guest can see or launch: the browser, G-Talk, Team Chat,
+ * Meetings and Settings. The file system app (`explorer`) and everything else
+ * are hidden from guests.
+ */
+export const GUEST_APP_NAMES: ReadonlySet<string> = new Set([
+    'browser',
+    'g-talk',
+    'team-chat',
+    'meetings',
+    'settings',
 ]);
 
 export const ADMIN_USERNAME = 'admin';
@@ -49,7 +53,8 @@ export const ADMIN_USERNAME = 'admin';
  *
  * - Admin-vault: owner and administrator.
  * - Dev-center: owner, administrator and developer.
- * - Games: not for guests. Everything else is visible to every account type.
+ * - Guests: only the apps in GUEST_APP_NAMES. Everything else is visible to every
+ *   other account type.
  */
 export function isAppVisibleTo(
     appName: string | null | undefined,
@@ -60,6 +65,6 @@ export function isAppVisibleTo(
     const type = effectiveAccountType(user);
     if (appName === 'admin-vault') return canAdministerAccounts(type);
     if (appName === 'dev-center') return canUseDevCenter(type);
-    if (GAME_APP_NAMES.has(appName)) return type !== 'guest';
+    if (type === 'guest') return GUEST_APP_NAMES.has(appName);
     return true;
 }
