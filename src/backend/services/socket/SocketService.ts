@@ -46,6 +46,13 @@ import {
 } from '../metering/consts.js';
 import type { AuthResult, AuthService } from '../auth/AuthService.js';
 import { MixtService } from '../types.js';
+import {
+    appendChatMessage,
+    deleteChatMessage,
+    editChatMessage,
+    normaliseChatText,
+    type TeamChatMessage,
+} from './teamChatHistory.js';
 import { isServerUserAllowed } from '../../util/serverWhitelist';
 
 export type SocketReauthError = Error & { data: Record<string, unknown> };
@@ -297,13 +304,9 @@ function meetingLabel(requested: unknown, username: unknown): string {
 }
 
 /** Team chat channels in this process: channel name -> recent messages. */
-const chatHistory = new Map<
-    string,
-    Array<{ id: string; from: string; text: string; at: number }>
->();
-const CHAT_HISTORY_LIMIT = 200;
-const CHAT_MAX_CHARS = 2000;
+const chatHistory = new Map<string, TeamChatMessage[]>();
 const CHAT_SEND_LIMIT = 120;
+const CHAT_TYPING_LIMIT = 60;
 const CHAT_ROOM_PREFIX = 'teamchat:';
 
 /** Channel names are lowercase letters, digits and hyphens, 2 to 40 long. */
@@ -993,13 +996,10 @@ export class SocketService extends MixtService {
                     const room = chatRoomOf(socket);
                     if (!room)
                         return ackOf(ack, { ok: false, error: 'not_joined' });
-                    const text =
-                        typeof (msg as { text?: unknown })?.text === 'string'
-                            ? (msg as { text: string }).text
-                                  .replace(/\r/g, '')
-                                  .trim()
-                            : '';
-                    if (!text || text.length > CHAT_MAX_CHARS) {
+                    const text = normaliseChatText(
+                        (msg as { text?: unknown })?.text,
+                    );
+                    if (!text) {
                         return ackOf(ack, { ok: false, error: 'bad_text' });
                     }
                     void checkRateLimit(
@@ -1020,15 +1020,75 @@ export class SocketService extends MixtService {
                             at: Date.now(),
                         };
                         const list = chatHistory.get(channel) ?? [];
-                        list.push(entry);
-                        if (list.length > CHAT_HISTORY_LIMIT)
-                            list.splice(0, list.length - CHAT_HISTORY_LIMIT);
+                        appendChatMessage(list, entry);
                         chatHistory.set(channel, list);
                         io.to(room).emit('chat.message', {
                             channel,
                             message: entry,
                         });
                         ackOf(ack, { ok: true, id: entry.id });
+                    });
+                });
+                // Edit and delete: only the author of a message may change it.
+                const myChatMessages = (): TeamChatMessage[] | undefined => {
+                    const room = chatRoomOf(socket);
+                    if (!room) return undefined;
+                    return chatHistory.get(room.slice(CHAT_ROOM_PREFIX.length));
+                };
+                socket.on('chat.edit', (msg: unknown, ack?: unknown) => {
+                    const room = chatRoomOf(socket);
+                    if (!room)
+                        return ackOf(ack, { ok: false, error: 'not_joined' });
+                    const id = (msg as { id?: unknown })?.id;
+                    if (typeof id !== 'string')
+                        return ackOf(ack, { ok: false, error: 'not_found' });
+                    const list = myChatMessages() ?? [];
+                    const from = String(actor.user?.username ?? '');
+                    const result = editChatMessage(
+                        list,
+                        id,
+                        from,
+                        (msg as { text?: unknown })?.text,
+                    );
+                    if (!result.ok) return ackOf(ack, result);
+                    const channel = room.slice(CHAT_ROOM_PREFIX.length);
+                    io.to(room).emit('chat.updated', {
+                        channel,
+                        message: result.message,
+                    });
+                    ackOf(ack, { ok: true });
+                });
+                socket.on('chat.delete', (msg: unknown, ack?: unknown) => {
+                    const room = chatRoomOf(socket);
+                    if (!room)
+                        return ackOf(ack, { ok: false, error: 'not_joined' });
+                    const id = (msg as { id?: unknown })?.id;
+                    if (typeof id !== 'string')
+                        return ackOf(ack, { ok: false, error: 'not_found' });
+                    const list = myChatMessages() ?? [];
+                    const from = String(actor.user?.username ?? '');
+                    const result = deleteChatMessage(list, id, from);
+                    if (!result.ok) return ackOf(ack, result);
+                    const channel = room.slice(CHAT_ROOM_PREFIX.length);
+                    io.to(room).emit('chat.deleted', { channel, id });
+                    ackOf(ack, { ok: true });
+                });
+                // Typing indicator: relayed to everyone else in the channel.
+                socket.on('chat.typing', (msg: unknown) => {
+                    const room = chatRoomOf(socket);
+                    if (!room) return;
+                    const typing = Boolean((msg as { typing?: unknown })?.typing);
+                    void checkRateLimit(
+                        `socket:chat.typing:${socket.id}`,
+                        CHAT_TYPING_LIMIT,
+                        SocketService.SOCKET_EVENT_WINDOW_MS,
+                    ).then((ok) => {
+                        if (!ok) return;
+                        socket.to(room).emit('chat.typing', {
+                            channel: room.slice(CHAT_ROOM_PREFIX.length),
+                            from: String(actor.user?.username ?? ''),
+                            typing,
+                        });
                     });
                 });
                 socket.on('disconnect', () => leaveChat(socket));

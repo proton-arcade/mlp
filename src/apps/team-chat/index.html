@@ -48,6 +48,13 @@
     .msg.mine .who { color: #00a8fc; }
     .msg .when { color: #949ba4; font-size: 12px; margin-left: 8px; }
     .msg p { margin: 2px 0 0; white-space: pre-wrap; word-wrap: break-word; color: #dbdee1; }
+    .msg .edited { color: #949ba4; font-size: 11px; margin-left: 6px; }
+    .msg .actions { float: right; display: none; gap: 6px; }
+    .msg:hover .actions { display: inline-flex; }
+    .msg .actions button { background: #383a40; color: #dbdee1; border: 0; border-radius: 4px; padding: 2px 8px; font-size: 12px; cursor: pointer; }
+    .msg .actions button.danger { color: #fa777c; }
+    .msg .edit-box { width: 100%; margin-top: 4px; padding: 8px 10px; background: #383a40; color: #dbdee1; border: 0; border-radius: 6px; font: inherit; }
+    .typing { color: #949ba4; font-size: 12px; padding: 0 16px 2px; min-height: 1.2em; flex: none; }
     .empty { color: #949ba4; padding: 16px; }
     form.send { padding: 0 16px 20px; flex: none; }
     form.send input { width: 100%; padding: 11px 14px; background: #383a40; border-radius: 8px; font-size: 15px; }
@@ -77,6 +84,7 @@
     <main>
         <div id="title"></div>
         <div id="log"></div>
+        <div class="typing" id="typing"></div>
         <div class="err" id="err"></div>
         <form class="send" id="sendForm">
             <input id="text" maxlength="2000" placeholder="Message this channel" autocomplete="off">
