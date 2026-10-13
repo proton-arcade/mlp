@@ -1,13 +1,15 @@
 /*
- * Music: a song library kept on this device (IndexedDB). Songs are added from
- * audio files on your computer, with the Add button or by dropping them on the
- * list. Remove one song with its ×, or select several and press Remove or Delete.
+ * Music: a Spotify-style player for the Music folder in your Mixt files
+ * (~/Music). Songs are streamed from the server, so they are kept with your
+ * files rather than in this browser. Only MP3 files are listed or added.
  */
 (function () {
     'use strict';
 
     const $ = (id) => document.getElementById(id);
-    const db = window.LocalDB('mixt-music', ['tracks']);
+    const MUSIC_DIR = '~/Music';
+    const MP3 = /\.mp3$/i;
+    const REPEAT_LABELS = ['off', 'all', 'one'];
 
     const audio = $('audio');
     const dropEl = $('drop');
@@ -29,23 +31,20 @@
     const nowTitleEl = $('nowTitle');
     const nowSubEl = $('nowSub');
 
-    const AUDIO_EXT = /\.mp3$/i; // MP3 only
-    const REPEAT_LABELS = ['off', 'all', 'one'];
-
-    let tracks = [];          // { id, name, title, size, added, duration, blob }
-    let selected = new Set(); // ids
-    let anchorId = null;      // last clicked row, for shift-click ranges
-    let playingId = null;
-    let objectUrl = null;
+    let tracks = [];          // { path, uid, title, size }
+    let selected = new Set(); // paths
+    let anchorPath = null;    // last clicked row, for shift-click ranges
+    let playingPath = null;
     let shuffle = false;
     let repeat = 0;           // 0 off, 1 all, 2 one
+    const urlCache = new Map(); // path -> streaming URL for this session
 
     const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({
         '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
     }[c]));
 
     function fmt (sec) {
-        if ( !Number.isFinite(sec) || sec < 0 ) sec = 0;
+        if (!Number.isFinite(sec) || sec < 0) sec = 0;
         const s = Math.floor(sec);
         const h = Math.floor(s / 3600);
         const m = Math.floor((s % 3600) / 60);
@@ -53,315 +52,252 @@
         return h ? `${h}:${String(m).padStart(2, '0')}:${r}` : `${m}:${r}`;
     }
 
+    function setMessage (text, isError) {
+        nowSubEl.textContent = text || '';
+        nowSubEl.style.color = isError ? '#b42318' : '';
+    }
+
+    function sdk () {
+        if (!window.mixt || !mixt.fs) {
+            throw new Error('Sign in to Mixt to use your Music folder.');
+        }
+        return mixt.fs;
+    }
+
+    function titleOf (name) {
+        return name.replace(/\.mp3$/i, '');
+    }
+
     function visible () {
         const q = searchEl.value.trim().toLowerCase();
         return q ? tracks.filter((t) => t.title.toLowerCase().includes(q)) : tracks;
     }
 
-    function byId (id) {
-        return tracks.find((t) => t.id === id) || null;
+    async function ensureFolder () {
+        try {
+            await sdk().mkdir(MUSIC_DIR);
+        } catch (_) {
+            // Already exists, or the folder is not writable; listing will report it.
+        }
+    }
+
+    async function refresh () {
+        try {
+            const entries = await sdk().readdir(MUSIC_DIR);
+            tracks = (entries || [])
+                .filter((e) => !(e.is_dir ?? e.fsentry_is_dir) && MP3.test(e.name))
+                .map((e) => ({
+                    path: e.path,
+                    uid: e.uid,
+                    title: titleOf(e.name),
+                    size: e.size ?? e.fsentry_size ?? 0,
+                }))
+                .sort((a, b) => a.title.localeCompare(b.title));
+            selected = new Set([...selected].filter((p) => tracks.some((t) => t.path === p)));
+            setMessage(tracks.length ? '' : 'Add MP3 files to start your library.');
+        } catch (err) {
+            tracks = [];
+            setMessage(err.message || 'Could not read your Music folder.', true);
+        }
+        render();
     }
 
     function render () {
-        const shown = visible();
-        const n = tracks.length;
-        countEl.textContent = `Music folder · ${n} song${n === 1 ? '' : 's'}`;
-        emptyEl.classList.toggle('hidden', n > 0);
-        tableEl.classList.toggle('hidden', n === 0);
-        if ( n > 0 && shown.length === 0 ) {
-            rowsEl.innerHTML = '<tr><td colspan="4" class="empty">No songs match your search.</td></tr>';
-        } else {
-            rowsEl.innerHTML = shown.map((t) => {
-                const idx = tracks.indexOf(t) + 1;
-                const classes = ['row'];
-                if ( selected.has(t.id) ) classes.push('selected');
-                if ( t.id === playingId ) classes.push('playing');
-                return `
-                <tr class="${classes.join(' ')}" data-id="${esc(t.id)}">
-                    <td class="n">${t.id === playingId ? '&#9835;' : idx}</td>
-                    <td class="t" title="${esc(t.name)}">${esc(t.title)}</td>
-                    <td class="d">${t.duration ? fmt(t.duration) : ''}</td>
-                    <td class="x"><button class="remove" type="button" data-remove="${esc(t.id)}" title="Remove from library" aria-label="Remove ${esc(t.title)}">&times;</button></td>
-                </tr>`;
-            }).join('');
+        const list = visible();
+        countEl.textContent = `Music folder · ${tracks.length} song${tracks.length === 1 ? '' : 's'}`;
+        emptyEl.hidden = tracks.length > 0;
+        tableEl.classList.toggle('hidden', tracks.length === 0);
+        rowsEl.innerHTML = '';
+        for (const t of list) {
+            const tr = document.createElement('tr');
+            tr.dataset.path = t.path;
+            tr.classList.toggle('selected', selected.has(t.path));
+            tr.classList.toggle('playing', t.path === playingPath);
+            tr.innerHTML = `<td>${esc(t.title)}</td><td class="num">${esc((t.size / 1048576).toFixed(1))} MB</td>`;
+            tr.addEventListener('click', (e) => onRowClick(e, t));
+            tr.addEventListener('dblclick', () => playTrack(t));
+            rowsEl.appendChild(tr);
         }
         removeBtn.disabled = selected.size === 0;
         playBtn.disabled = tracks.length === 0;
-        nextBtn.disabled = prevBtn.disabled = tracks.length === 0;
-        updateNowPlaying();
-    }
-
-    function updateNowPlaying () {
-        const t = byId(playingId);
-        if ( !t ) {
-            nowTitleEl.textContent = 'Nothing playing';
-            nowSubEl.textContent = tracks.length ? 'Double-click a song to play it' : 'Add a song to start';
-            seekEl.disabled = true;
-            seekEl.max = 0;
-            seekEl.value = 0;
-            curEl.textContent = '0:00';
-            durEl.textContent = '0:00';
-        } else {
-            nowTitleEl.textContent = t.title;
-            nowSubEl.textContent = `${fmt(audio.currentTime)} of ${t.duration ? fmt(t.duration) : '…'}`;
-        }
-        playBtn.textContent = !audio.paused && t ? '\u275A\u275A' : '\u25B6';
-        const label = !audio.paused && t ? 'Pause' : 'Play';
-        playBtn.title = label;
-        playBtn.setAttribute('aria-label', label);
-        shuffleBtn.classList.toggle('on', shuffle);
+        prevBtn.disabled = nextBtn.disabled = tracks.length === 0;
         shuffleBtn.setAttribute('aria-pressed', String(shuffle));
-        repeatBtn.classList.toggle('on', repeat !== 0);
-        repeatBtn.textContent = repeat === 2 ? 'Repeat 1' : 'Repeat';
-        repeatBtn.title = `Repeat: ${REPEAT_LABELS[repeat]}`;
-        repeatBtn.setAttribute('aria-label', `Repeat ${REPEAT_LABELS[repeat]}`);
+        shuffleBtn.classList.toggle('on', shuffle);
+        repeatBtn.textContent = 'Repeat: ' + REPEAT_LABELS[repeat];
+        repeatBtn.setAttribute('aria-label', 'Repeat ' + REPEAT_LABELS[repeat]);
+        repeatBtn.classList.toggle('on', repeat > 0);
     }
 
-    async function load () {
-        const rows = await db.all('tracks');
-        tracks = rows.sort((a, b) => a.added - b.added);
-        selected = new Set([...selected].filter((id) => byId(id)));
+    function onRowClick (e, t) {
+        const list = visible();
+        if (e.shiftKey && anchorPath) {
+            const from = list.findIndex((x) => x.path === anchorPath);
+            const to = list.findIndex((x) => x.path === t.path);
+            const [a, b] = from < to ? [from, to] : [to, from];
+            selected = new Set(list.slice(a, b + 1).map((x) => x.path));
+        } else if (e.metaKey || e.ctrlKey) {
+            if (selected.has(t.path)) selected.delete(t.path);
+            else selected.add(t.path);
+            anchorPath = t.path;
+        } else {
+            selected = new Set([t.path]);
+            anchorPath = t.path;
+        }
         render();
     }
 
-    // -- Adding and removing ------------------------------------------------
-
-    function isAudio (file) {
-        return file.type === 'audio/mpeg' || AUDIO_EXT.test(file.name);
+    async function trackUrl (track) {
+        if (urlCache.has(track.path)) return urlCache.get(track.path);
+        const result = await sdk().getReadURL(track.path);
+        urlCache.set(track.path, result);
+        return result;
     }
 
-    async function addFiles (fileList) {
-        const files = [...fileList];
-        const accepted = files.filter(isAudio);
-        const skipped = files.length - accepted.length;
-        let base = Date.now();
-        for ( const file of accepted ) {
-            const record = {
-                id: crypto.randomUUID(),
-                name: file.name,
-                title: file.name.replace(/\.[^.]+$/, '') || file.name,
-                size: file.size,
-                added: base++,
-                duration: 0,
-                blob: file,
-            };
-            await db.put('tracks', record);
-        }
-        await load();
-        if ( skipped ) {
-            nowSubEl.textContent = `${skipped} file${skipped === 1 ? ' was' : 's were'} not audio and ${skipped === 1 ? 'was' : 'were'} skipped.`;
-        }
-    }
-
-    async function removeIds (ids) {
-        if ( !ids.length ) return;
-        const gone = new Set(ids);
-        for ( const id of ids ) {
-            await db.remove('tracks', id);
-        }
-        if ( playingId && gone.has(playingId) ) stop();
-        selected = new Set([...selected].filter((id) => !gone.has(id)));
-        await load();
-    }
-
-    function stop () {
-        audio.pause();
-        audio.removeAttribute('src');
-        audio.load();
-        if ( objectUrl ) URL.revokeObjectURL(objectUrl);
-        objectUrl = null;
-        playingId = null;
-    }
-
-    // -- Playback ----------------------------------------------------------
-
-    async function play (id) {
-        const t = byId(id);
-        if ( !t ) return;
-        if ( objectUrl ) URL.revokeObjectURL(objectUrl);
-        objectUrl = URL.createObjectURL(t.blob);
-        playingId = id;
-        audio.src = objectUrl;
-        seekEl.disabled = false;
+    async function playTrack (track) {
+        if (!track) return;
         try {
+            const url = await trackUrl(track);
+            playingPath = track.path;
+            nowTitleEl.textContent = track.title;
+            nowSubEl.textContent = '';
+            audio.src = url;
             await audio.play();
+            playBtn.innerHTML = '&#10074;&#10074;';
+            playBtn.setAttribute('aria-label', 'Pause');
+            render();
         } catch (err) {
-            nowSubEl.textContent = `Could not play "${t.title}".`;
+            setMessage(err.message || 'Could not play that song.', true);
         }
-        render();
+    }
+
+    function currentIndex () {
+        return tracks.findIndex((t) => t.path === playingPath);
+    }
+
+    function nextTrack (dir) {
+        if (!tracks.length) return null;
+        if (shuffle && tracks.length > 1) {
+            let i;
+            do { i = Math.floor(Math.random() * tracks.length); } while (i === currentIndex());
+            return tracks[i];
+        }
+        const i = currentIndex();
+        const j = i + dir;
+        if (j >= 0 && j < tracks.length) return tracks[j];
+        if (repeat === 1) return tracks[(j + tracks.length) % tracks.length];
+        return null;
     }
 
     function togglePlay () {
-        if ( !playingId ) {
-            const first = visible()[0] || tracks[0];
-            if ( first ) play(first.id);
-            return;
-        }
-        if ( audio.paused ) audio.play().catch(() => {});
-        else audio.pause();
-    }
-
-    function pickNext (step) {
-        if ( !tracks.length ) return null;
-        if ( shuffle && tracks.length > 1 ) {
-            let pick;
-            do {
-                pick = tracks[Math.floor(Math.random() * tracks.length)];
-            } while ( pick.id === playingId );
-            return pick.id;
-        }
-        const i = tracks.findIndex((t) => t.id === playingId);
-        let j = i + step;
-        if ( j < 0 || j >= tracks.length ) {
-            if ( repeat !== 1 ) return null;
-            j = (j + tracks.length) % tracks.length;
-        }
-        return tracks[j].id;
-    }
-
-    function next () {
-        const id = pickNext(1);
-        if ( id ) {
-            play(id);
-        } else {
-            stop();
-            render();
-        }
-    }
-
-    function previous () {
-        if ( audio.currentTime > 3 ) {
-            audio.currentTime = 0;
-            return;
-        }
-        const id = pickNext(-1);
-        if ( id ) play(id);
-        else {
-            audio.currentTime = 0;
-        }
-    }
-
-    audio.addEventListener('timeupdate', () => {
-        curEl.textContent = fmt(audio.currentTime);
-        if ( !seekEl.matches(':active') ) seekEl.value = audio.currentTime;
-        updateNowPlaying();
-    });
-
-    audio.addEventListener('loadedmetadata', async () => {
-        const t = byId(playingId);
-        if ( !t ) return;
-        seekEl.max = audio.duration || 0;
-        durEl.textContent = fmt(audio.duration);
-        if ( Number.isFinite(audio.duration) && t.duration !== audio.duration ) {
-            t.duration = audio.duration;
-            const { blob, ...meta } = t;
-            await db.put('tracks', { ...meta, blob });
-            render();
-        }
-    });
-
-    audio.addEventListener('play', () => { render(); });
-    audio.addEventListener('pause', () => { render(); });
-    audio.addEventListener('ended', () => {
-        if ( repeat === 2 ) {
-            audio.currentTime = 0;
+        if (!playingPath) {
+            playTrack(tracks[0]);
+        } else if (audio.paused) {
             audio.play().catch(() => {});
-            return;
+        } else {
+            audio.pause();
         }
-        const id = pickNext(1);
-        if ( id ) play(id);
-        else { playingId = null; render(); }
+    }
+
+    audio.addEventListener('play', () => {
+        playBtn.innerHTML = '&#10074;&#10074;';
+        playBtn.setAttribute('aria-label', 'Pause');
+    });
+    audio.addEventListener('pause', () => {
+        playBtn.innerHTML = '&#9654;';
+        playBtn.setAttribute('aria-label', 'Play');
+    });
+    audio.addEventListener('loadedmetadata', () => {
+        seekEl.max = String(audio.duration || 0);
+        seekEl.disabled = false;
+        durEl.textContent = fmt(audio.duration);
+    });
+    audio.addEventListener('timeupdate', () => {
+        seekEl.value = String(audio.currentTime);
+        curEl.textContent = fmt(audio.currentTime);
+    });
+    audio.addEventListener('ended', () => {
+        if (repeat === 2) { audio.currentTime = 0; audio.play().catch(() => {}); return; }
+        const next = nextTrack(1);
+        if (next) playTrack(next);
+        else setMessage('End of the Music folder.');
     });
     audio.addEventListener('error', () => {
-        const t = byId(playingId);
-        nowSubEl.textContent = t ? `Could not play "${t.title}".` : 'Could not play this song.';
+        setMessage('Could not stream that song. Check your connection and try again.', true);
     });
 
-    // -- Selection and events ---------------------------------------------
-
-    function rowClick (e, id) {
-        if ( e.shiftKey && anchorId ) {
-            const list = visible();
-            const a = list.findIndex((t) => t.id === anchorId);
-            const b = list.findIndex((t) => t.id === id);
-            const [lo, hi] = a < b ? [a, b] : [b, a];
-            selected = new Set(list.slice(lo, hi + 1).map((t) => t.id));
-        } else if ( e.ctrlKey || e.metaKey ) {
-            if ( selected.has(id) ) selected.delete(id);
-            else selected.add(id);
-            anchorId = id;
-        } else {
-            selected = new Set([id]);
-            anchorId = id;
-        }
-        render();
-    }
-
-    rowsEl.addEventListener('click', (e) => {
-        const del = e.target.closest('[data-remove]');
-        if ( del ) {
-            e.stopPropagation();
-            removeIds([del.dataset.remove]);
-            return;
-        }
-        const row = e.target.closest('tr.row');
-        if ( !row ) return;
-        // Handle the double-click here rather than with a 'dblclick' listener:
-        // the first click re-renders the row, so the second click no longer
-        // lands on the element a 'dblclick' event would be dispatched to.
-        if ( e.detail === 2 ) {
-            play(row.dataset.id);
-            return;
-        }
-        rowClick(e, row.dataset.id);
-    });
-
-    $('add').addEventListener('click', () => $('file').click());
-    $('file').addEventListener('change', async (e) => {
-        await addFiles(e.target.files);
-        e.target.value = '';
-    });
-
-    removeBtn.addEventListener('click', () => removeIds([...selected]));
     playBtn.addEventListener('click', togglePlay);
-    nextBtn.addEventListener('click', next);
-    prevBtn.addEventListener('click', previous);
+    prevBtn.addEventListener('click', () => {
+        if (audio.currentTime > 3) { audio.currentTime = 0; return; }
+        const prev = nextTrack(-1);
+        if (prev) playTrack(prev);
+    });
+    nextBtn.addEventListener('click', () => {
+        const next = nextTrack(1);
+        if (next) playTrack(next);
+    });
     shuffleBtn.addEventListener('click', () => { shuffle = !shuffle; render(); });
     repeatBtn.addEventListener('click', () => { repeat = (repeat + 1) % 3; render(); });
-
     seekEl.addEventListener('input', () => { audio.currentTime = Number(seekEl.value); });
     volumeEl.addEventListener('input', () => { audio.volume = Number(volumeEl.value); });
     audio.volume = Number(volumeEl.value);
-
     searchEl.addEventListener('input', render);
 
-    dropEl.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        dropEl.classList.add('over');
+    removeBtn.addEventListener('click', async () => {
+        const paths = [...selected];
+        if (!paths.length || !window.confirm(`Remove ${paths.length} song${paths.length === 1 ? '' : 's'} from your Music folder?`)) return;
+        try {
+            await sdk().delete(paths);
+            paths.forEach((p) => urlCache.delete(p));
+            if (paths.includes(playingPath)) { audio.pause(); audio.removeAttribute('src'); playingPath = null; nowTitleEl.textContent = 'Nothing playing'; }
+            selected.clear();
+            await refresh();
+        } catch (err) {
+            setMessage(err.message || 'Could not remove those songs.', true);
+        }
     });
+
+    async function addFiles (files) {
+        const list = Array.from(files || []);
+        const mp3s = list.filter((f) => MP3.test(f.name) || f.type === 'audio/mpeg');
+        const skipped = list.length - mp3s.length;
+        let added = 0;
+        for (const file of mp3s) {
+            try {
+                await sdk().write(`${MUSIC_DIR}/${file.name}`, file, { overwrite: false, dedupeName: true });
+                added++;
+            } catch (err) {
+                setMessage(err.message || `Could not add ${file.name}.`, true);
+            }
+        }
+        await refresh();
+        if (skipped) setMessage(`Skipped ${skipped} file${skipped === 1 ? '' : 's'}: only MP3 is supported.`, true);
+        else if (added) setMessage(`Added ${added} song${added === 1 ? '' : 's'}.`);
+    }
+
+    $('add').addEventListener('click', () => $('file').click());
+    $('file').addEventListener('change', (e) => {
+        addFiles(e.target.files);
+        e.target.value = '';
+    });
+    dropEl.addEventListener('dragover', (e) => { e.preventDefault(); dropEl.classList.add('over'); });
     dropEl.addEventListener('dragleave', () => dropEl.classList.remove('over'));
     dropEl.addEventListener('drop', (e) => {
         e.preventDefault();
         dropEl.classList.remove('over');
-        if ( e.dataTransfer?.files?.length ) addFiles(e.dataTransfer.files);
-    });
-
-    dropEl.addEventListener('keydown', (e) => {
-        if ( e.key === 'Delete' || e.key === 'Backspace' ) {
-            if ( selected.size ) {
-                e.preventDefault();
-                removeIds([...selected]);
-            }
-        }
+        addFiles(e.dataTransfer.files);
     });
 
     document.addEventListener('keydown', (e) => {
-        if ( e.target.closest('input, textarea') ) return;
-        if ( e.code === 'Space' ) {
-            e.preventDefault();
-            togglePlay();
-        }
+        if (e.target.matches('input, textarea')) return;
+        if (e.code === 'Space') { e.preventDefault(); togglePlay(); }
+        if (e.key === 'Delete' || e.key === 'Backspace') removeBtn.click();
     });
 
-    load();
+    async function boot () {
+        setMessage('Loading your Music folder…');
+        await ensureFolder();
+        await refresh();
+    }
+
+    boot();
 })();

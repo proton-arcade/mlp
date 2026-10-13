@@ -71,7 +71,7 @@
     <h1>Music</h1>
     <button id="add" class="btn primary" type="button">Add songs</button>
     <button id="remove" class="btn" type="button" disabled>Remove</button>
-    <input id="file" type="file" accept="audio/*" multiple class="hidden">
+    <input id="file" type="file" accept=".mp3,audio/mpeg" multiple class="hidden">
 </header>
 <section class="main">
     <div class="library-head">
@@ -85,7 +85,7 @@
         </table>
         <div id="empty" class="empty">
             <strong>The Music folder is empty</strong>
-            Click <em>Add songs</em> or drop audio files here. Songs are kept in this browser.
+            Click <em>Add songs</em> or drop audio files here. Songs are kept in your Music folder (~/Music) and streamed from the server.
         </div>
     </div>
     <footer class="player">
@@ -114,7 +114,7 @@
     </footer>
 </section>
 <audio id="audio" preload="metadata"></audio>
-<script src="/builtin/shared/localdb.js"></script>
+<script src="/sdk/mixt.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
