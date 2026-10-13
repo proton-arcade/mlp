@@ -72,6 +72,13 @@ describe('admin lockdown', () => {
         expect((await run(users, { method: 'GET', path: '/get-gui-token', anonymous: true })).passed).toBe(false);
     });
 
+    it('lets anonymous visitors sign into the shared guest account', async () => {
+        const users = fakeUsers();
+        expect((await run(users, { method: 'POST', path: '/guest-login', anonymous: true })).passed).toBe(true);
+        // Only the POST is open; reading it stays closed.
+        expect((await run(users, { method: 'GET', path: '/guest-login', anonymous: true })).passed).toBe(false);
+    });
+
     it('lets anonymous visitors read the login screen settings and provider list', async () => {
         const users = fakeUsers();
         expect((await run(users, { method: 'GET', path: '/whoarewe', anonymous: true })).passed).toBe(true);

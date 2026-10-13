@@ -300,10 +300,10 @@ describe('MixtHomepageService — gui() parameters', () => {
         ).toBe(true);
     });
 
-    it('always disables temp users, since the lockdown rejects them', async () => {
+    it('disables temp users when signup is off or the operator asked for it', async () => {
         expect(
             guiParamsOf(await render(makeService())).disable_temp_users,
-        ).toBe(true);
+        ).toBe(false);
         expect(
             guiParamsOf(
                 await render(makeService({ disable_user_signup: true })),

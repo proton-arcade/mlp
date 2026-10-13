@@ -126,7 +126,15 @@ import type { ReauthReason } from '../../services/auth/AuthService';
 import { normalizeAbsolutePath } from '../../services/fs/resolveNode.js';
 import type { FSEntry } from '../../stores/fs/FSEntry.js';
 import { MixtController } from '../types.js';
-import { isServerUserAllowed } from '../../util/serverWhitelist';
+import {
+    isServerUserAllowed,
+    readWhitelist,
+    withWhitelistLock,
+    writeWhitelist,
+} from '../../util/serverWhitelist';
+
+/** The one account every guest session signs into. */
+const GUEST_USERNAME = 'guest';
 import { effectiveAccountType } from '../../util/accountTypes';
 
 export const USERNAME_REGEX = /^\w{1,}$/;
@@ -436,6 +444,115 @@ export class AuthController extends MixtController {
         );
 
         res.json({ success: true });
+    }
+
+    // -- Guest sign-in -----------------------------------------------
+
+    /**
+     * POST /guest-login: signs the visitor into the one shared guest account.
+     * It takes no credentials. The account is created on first use with an
+     * empty password (stored as a hash, so it is never null and the
+     * temp-account cleanup on logout never deletes it) and is added to the
+     * server whitelist.
+     */
+    @Post('/guest-login', {
+        guiOriginOnly: true,
+        rateLimit: [
+            { scope: 'guest-login', limit: 300, window: 15 * 60_000 },
+            {
+                scope: 'guest-login-ip',
+                limit: 300,
+                window: 15 * 60_000,
+                key: 'ip',
+            },
+        ],
+    })
+    async handleGuestLogin(req: Request, res: Response): Promise<void> {
+        if (this.config.disable_user_signup) {
+            throw new HttpError(403, 'Guest sign-in is disabled.', {
+                legacyCode: 'forbidden',
+            });
+        }
+        const user = await this.#ensureGuestAccount();
+        if (user.suspended) {
+            throw new HttpError(401, 'This account is suspended.', {
+                legacyCode: 'account_suspended',
+            });
+        }
+        await this.#completeLogin(req, res, user);
+    }
+
+    /** Returns the shared guest account, creating and whitelisting it if needed. */
+    async #ensureGuestAccount() {
+        let user = await this.stores.user.getByUsername(GUEST_USERNAME);
+        if (user) {
+            // Only the guest account itself may be signed into without a
+            // password. A real account that took this name must not be.
+            const blank =
+                typeof user.password === 'string' &&
+                (await bcrypt.compare('', user.password));
+            if (!blank) {
+                throw new HttpError(
+                    409,
+                    'The guest account is not available.',
+                    { legacyCode: 'conflict' },
+                );
+            }
+        } else {
+            try {
+                user = await this.stores.user.create({
+                    username: GUEST_USERNAME,
+                    uuid: uuidv4(),
+                    password: await bcrypt.hash('', 8),
+                    email: null,
+                    clean_email: null,
+                    free_storage: this.config.storage_capacity ?? null,
+                    requires_email_confirmation: false,
+                    email_confirm_code: null,
+                    email_confirm_token: null,
+                    audit_metadata: null,
+                    signup_ip: null,
+                });
+            } catch (e) {
+                // Another request created it first.
+                user = await this.stores.user.getByUsername(GUEST_USERNAME);
+                if (!user) throw e;
+            }
+            if (this.config.default_temp_group) {
+                try {
+                    await this.stores.group.addUsers(
+                        this.config.default_temp_group,
+                        [GUEST_USERNAME],
+                    );
+                } catch (e) {
+                    console.warn('[guest] group assignment failed:', e);
+                }
+            }
+            try {
+                await generateDefaultFsentries(
+                    this.clients.db,
+                    this.stores.user,
+                    user!,
+                );
+            } catch (e) {
+                console.warn('[guest] generateDefaultFsentries failed:', e);
+            }
+        }
+        if (!(await isServerUserAllowed(this.stores.user, GUEST_USERNAME))) {
+            await withWhitelistLock(async () => {
+                const entries = await readWhitelist(this.stores.user);
+                if (entries.some((e) => e.username === GUEST_USERNAME)) return;
+                await writeWhitelist(this.stores.user, [
+                    ...entries,
+                    {
+                        username: GUEST_USERNAME,
+                        added_by: 'system',
+                        added_at: new Date().toISOString(),
+                    },
+                ]);
+            });
+        }
+        return user!;
     }
 
     // -- Login -------------------------------------------------------

@@ -9509,3 +9509,64 @@ describe('AuthController — a seat address nobody confirmed', () => {
         expect(await emailOf(seat.id)).toBeNull();
     });
 });
+
+describe('AuthController.handleGuestLogin', () => {
+    it('signs every guest into the same shared account, with no password', async () => {
+        const first = makeRes();
+        await controller.handleGuestLogin(makeReq({}), first);
+        expect(isCompleteLoginResponse(first.body)).toBe(true);
+        const a = (first.body as { user: { username: string; uuid: string; is_temp: boolean } }).user;
+        expect(a.username).toBe('guest');
+        expect(a.is_temp).toBe(false);
+
+        const second = makeRes();
+        await controller.handleGuestLogin(makeReq({}), second);
+        const b = (second.body as { user: { uuid: string } }).user;
+        expect(b.uuid).toBe(a.uuid);
+    });
+
+    it('stores the empty password as a hash, so the account is not treated as temporary', async () => {
+        const res = makeRes();
+        await controller.handleGuestLogin(makeReq({}), res);
+        const row = await server.stores.user.getByUsername('guest');
+        expect(row).not.toBeNull();
+        expect(row!.password).not.toBeNull();
+        expect(row!.email).toBeNull();
+        expect(await bcrypt.compare('', row!.password as string)).toBe(true);
+    });
+
+    it('whitelists the guest account so the lockdown lets it in', async () => {
+        await controller.handleGuestLogin(makeReq({}), makeRes());
+        const { isServerUserAllowed } = await import('../../util/serverWhitelist');
+        expect(await isServerUserAllowed(server.stores.user, 'guest')).toBe(true);
+    });
+
+    it('refuses to sign in when a real account already has the guest name', async () => {
+        const row = await server.stores.user.getByUsername('guest');
+        await server.stores.user.update(row!.id, {
+            password: await bcrypt.hash('a-real-password', 8),
+        });
+        try {
+            await expect(
+                controller.handleGuestLogin(makeReq({}), makeRes()),
+            ).rejects.toMatchObject({ statusCode: 409 });
+        } finally {
+            await server.stores.user.update(row!.id, {
+                password: await bcrypt.hash('', 8),
+            });
+        }
+    });
+
+    it('is refused when registration is disabled', async () => {
+        const authConfig = server.controllers.auth.config as { disable_user_signup?: boolean };
+        const prev = authConfig.disable_user_signup;
+        authConfig.disable_user_signup = true;
+        try {
+            await expect(
+                controller.handleGuestLogin(makeReq({}), makeRes()),
+            ).rejects.toMatchObject({ statusCode: 403 });
+        } finally {
+            authConfig.disable_user_signup = prev;
+        }
+    });
+});

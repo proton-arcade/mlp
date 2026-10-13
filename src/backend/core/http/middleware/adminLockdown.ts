@@ -54,6 +54,7 @@ const SIGN_IN_PATHS = new Set([
     '/login/set',
     '/login/otp',
     '/login/recovery-code',
+    '/guest-login',
 ]);
 
 const isGuiRequest = (req: Request): boolean => {

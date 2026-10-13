@@ -224,11 +224,12 @@ export class MixtHomepageService extends MixtService {
         const guiParams: Record<string, unknown> = {
             ...this.#guiParams,
             ...(this.config.gui_params ?? {}),
-            // Always on. The server lockdown (adminLockdown.ts) rejects every
-            // account that is not the admin or whitelisted, and a temporary
-            // account is never whitelisted. Offering one would only produce
-            // a "Missing authentication token" alert on first visit.
-            disable_temp_users: true,
+            // The config flag wins, but an operator-set
+            // `gui_params.disable_temp_users` must survive the override.
+            disable_temp_users: Boolean(
+                this.config.disable_user_signup ||
+                this.config.gui_params?.disable_temp_users,
+            ),
             // Deployment-wide switch, or per user via the domain allowlist.
             teams_ui: await this.#teamsUiFor(actor),
             domain: this.config.domain,

@@ -1983,63 +1983,27 @@ window.initgui = async function (options) {
      * @returns {Promise<void>} Resolves when the attempt has finished.
      */
     window.startGuestSession = async function () {
-        const createGuest = async (turnstileToken) => {
-            const requestData = {
-                referrer: new URL(window.location.href).pathname,
-                is_temp: true,
-            };
-            if (turnstileToken) {
-                requestData['cf-turnstile-response'] = turnstileToken;
-            }
-            try {
-                const fingerprint = await window.getDeviceFingerprint?.();
-                if (fingerprint) requestData.fingerprint = fingerprint;
-            } catch (e) {
-                // signup must never block or fail because of device signals
-            }
-            let message =
-                'There was an error creating your guest session. Please try again.';
-            try {
-                const resp = await fetch(`${window.gui_origin}/signup`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        ...(window.custom_headers ?? {}),
-                    },
-                    body: JSON.stringify(requestData),
-                });
-                const data = await resp.json().catch(() => ({}));
-                if (resp.ok && data.token) {
-                    await window.update_auth_data(data.token, data.user);
-                    window.location.reload();
-                    return;
-                }
-                message = data.message ?? message;
-            } catch (e) {
-                console.error('Guest session failed:', e);
-            }
-            UIAlert({ message });
+        // Every guest signs into the one shared guest account. It needs no
+        // password or challenge, so there is nothing to show first.
+        const failed = {
+            message:
+                'There was an error signing you in as a guest. Please try again.',
         };
-
-        if (window.gui_params?.turnstileSiteKey) {
-            await new Promise((resolve) => {
-                window.showTurnstileChallenge({
-                    onSuccess: async (token) => {
-                        await createGuest(token);
-                        resolve();
-                    },
-                    onError: (error) => {
-                        console.error('Turnstile verification failed:', error);
-                        UIAlert({
-                            message:
-                                'Security verification failed. Please refresh the page and try again.',
-                        });
-                        resolve();
-                    },
-                });
+        try {
+            const resp = await fetch(`${window.gui_origin}/guest-login`, {
+                method: 'POST',
+                headers: window.custom_headers ?? {},
             });
-        } else {
-            await createGuest();
+            const data = await resp.json().catch(() => ({}));
+            if (resp.ok && data.token) {
+                await window.update_auth_data(data.token, data.user);
+                window.location.reload();
+                return;
+            }
+            UIAlert({ message: data.message ?? failed.message });
+        } catch (e) {
+            console.error('Guest session failed:', e);
+            UIAlert(failed);
         }
     };
 
@@ -2448,7 +2412,7 @@ window.initgui = async function (options) {
             }
 
             $.ajax({
-                url: `${window.gui_origin}/signup`,
+                url: `${window.gui_origin}/guest-login`,
                 type: 'POST',
                 async: true,
                 headers: headers,
@@ -2662,22 +2626,8 @@ window.initgui = async function (options) {
             });
         };
 
-        // Check if Turnstile is enabled and show challenge
-        if (window.gui_params?.turnstileSiteKey) {
-            window.showTurnstileChallenge({
-                onSuccess: createTempUser,
-                onError: (error) => {
-                    console.error('Turnstile verification failed:', error);
-                    UIAlert({
-                        message:
-                            'Security verification failed. Please refresh the page and try again.',
-                    });
-                },
-            });
-        } else {
-            // No Turnstile configured, proceed without challenge
-            createTempUser();
-        }
+        // The shared guest account needs no challenge.
+        createTempUser();
     }
 
     // ask the user to confirm before leaving while an upload is still in flight
