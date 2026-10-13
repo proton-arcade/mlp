@@ -34,16 +34,25 @@ export const ADMIN_ONLY_APP_NAMES: ReadonlySet<string> = new Set([
 ]);
 
 /**
- * The only apps a guest can see or launch: the browser, G-Talk, Team Chat,
- * Meetings and Settings. The file system app (`explorer`) and everything else
- * are hidden from guests.
+ * The only apps a guest can see or launch. Everything not listed here is
+ * hidden from guests.
  */
 export const GUEST_APP_NAMES: ReadonlySet<string> = new Set([
-    'browser',
+    'notes',
+    'whiteboard',
     'g-talk',
-    'team-chat',
     'meetings',
+    'music',
+    'video-player',
+    'chess',
+    'checkers',
+    'sudoku',
+    'klondike',
+    'backgammon',
+    'browser',
     'settings',
+    'shared',
+    'internet',
 ]);
 
 export const ADMIN_USERNAME = 'admin';

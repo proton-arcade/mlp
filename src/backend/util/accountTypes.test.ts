@@ -48,12 +48,12 @@ describe('app visibility by account type', () => {
         expect(isAppVisibleTo('admin-vault', { username: 'a', account_type: 'administrator' })).toBe(true);
         expect(isAppVisibleTo('admin-vault', { username: 'd', account_type: 'developer' })).toBe(false);
     });
-    it('shows guests only the browser, G-Talk, Team Chat, Meetings and Settings', () => {
+    it('shows guests only the approved apps (including games)', () => {
         const guest = { username: 'g', account_type: 'guest' };
-        for (const app of ['browser', 'g-talk', 'team-chat', 'meetings', 'settings']) {
+        for (const app of ['browser', 'g-talk', 'notes', 'whiteboard', 'meetings', 'music', 'video-player', 'chess', 'settings', 'shared', 'internet']) {
             expect(isAppVisibleTo(app, guest)).toBe(true);
         }
-        for (const app of ['explorer', 'chess', 'notes', 'terminal', 'dev-center']) {
+        for (const app of ['explorer', 'team-chat', 'terminal', 'dev-center', 'admin-vault', 'app-center', 'spreadsheet', 'calendar', 'mail', 'contacts', 'presentation', 'pdf-editor', 'signatures']) {
             expect(isAppVisibleTo(app, guest)).toBe(false);
         }
         expect(isAppVisibleTo('explorer', { username: 's', account_type: 'standard' })).toBe(true);
