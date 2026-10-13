@@ -2496,19 +2496,8 @@ export class AuthController extends MixtController {
             await this.stores.user.update(user.id, { pass_recovery_token });
         }
 
-        const jwt = this.services.token.sign(
-            'otp',
-            {
-                token: pass_recovery_token,
-                user_uid: user.uuid,
-                email: user.email,
-                purpose: 'pass-recovery',
-            },
-            { expiresIn: '1h' },
-        );
-
-        const origin = this.config.origin ?? '';
-        const link = `${origin}/action/set-new-password?token=${encodeURIComponent(jwt)}`;
+        // No email is sent (external email was removed), so there is no link to
+        // build. The token above is kept for the reset flow.
 
         res.json({ message: genericMessage });
     }
@@ -2920,15 +2909,8 @@ export class AuthController extends MixtController {
             change_email_confirm_token: confirm_token,
         });
 
-        const linkJwt = this.services.token.sign(
-            'otp',
-            {
-                token: confirm_token,
-                user_id: req.actor!.user.id,
-                purpose: 'change-email',
-            },
-            { expiresIn: '1h' },
-        );
+        // No email is sent (external email was removed), so there is no link to
+        // build. The confirm token above is kept for the confirm step.
 
         res.json({});
     }
