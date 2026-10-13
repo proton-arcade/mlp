@@ -39,7 +39,6 @@ export const RECOMMENDED_APP_NAMES = [
     'pdf-editor',
     'terminal',
     'dev-center',
-    'signatures',
     'chess',
     'checkers',
     'backgammon',

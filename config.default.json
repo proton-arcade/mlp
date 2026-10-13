@@ -153,7 +153,6 @@
         "calendar": "./src/apps/calendar",
         "spreadsheet": "./src/apps/spreadsheet",
         "whiteboard": "./src/apps/whiteboard",
-        "signatures": "./src/apps/signatures",
         "presentation": "./src/apps/presentation",
         "terminal": "./src/apps/terminal",
         "pdf-editor": "./src/apps/pdf-editor",

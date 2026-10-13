@@ -13,7 +13,7 @@
     const history = [];
     let hIndex = 0;
 
-    const APPS = ['signatures', 'presentation', 'spreadsheet', 'whiteboard',
+    const APPS = ['presentation', 'spreadsheet', 'whiteboard',
         'notes', 'calendar', 'mail', 'contacts', 'terminal'];
 
     function print (text, cls) {
