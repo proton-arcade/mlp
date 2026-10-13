@@ -144,6 +144,16 @@ export class AppController extends MixtController {
         return d;
     }
 
+    /**
+     * Whether `user` may see `app` through the App Store lookups. Owners always
+     * can. Everyone else goes through the account-type rules in
+     * `isAppVisibleTo` (guests get only their allowed apps).
+     */
+    #canSeeAppByName(app, user) {
+        if (user && app.owner_user_id === user.id) return true;
+        return isAppVisibleTo(app.name, user);
+    }
+
     registerRoutes(
         /** @type {import('../../core/http/MixtRouter').MixtRouter} */ router,
     ) {
@@ -322,6 +332,9 @@ export class AppController extends MixtController {
                         }
                         const app = await this.appStore.getByName(name);
                         if (!app) return null;
+                        // Guests see only their allowed apps, so the App Store
+                        // cannot fetch the rest by name.
+                        if (!this.#canSeeAppByName(app, req.actor?.user)) return null;
                         let shaped;
                         try {
                             shaped = await this.appDriver.read({
@@ -409,6 +422,7 @@ export class AppController extends MixtController {
                         ? await this.appStore.getByUid(selector)
                         : await this.appStore.getByName(selector);
                     if (!app) continue;
+                    if (!this.#canSeeAppByName(app, req.actor?.user)) continue;
 
                     const isOwner =
                         actorUserId !== null &&
