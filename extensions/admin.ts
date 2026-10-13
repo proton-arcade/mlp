@@ -41,6 +41,21 @@ import {
 
 const clients = extension.import('client');
 const stores = extension.import('store');
+
+// Metadata comes off the database as a JSON string on some drivers and as an
+// object on others.
+const pendingUpgradeRequest = (raw: unknown): unknown => {
+    let meta: unknown = raw;
+    if (typeof raw === 'string') {
+        try {
+            meta = JSON.parse(raw);
+        } catch {
+            return null;
+        }
+    }
+    const req = (meta as { upgrade_request?: unknown } | null)?.upgrade_request;
+    return req && typeof req === 'object' ? req : null;
+};
 const services = extension.import('service');
 
 /** A session is "live" when it was used within this window. */
@@ -134,7 +149,7 @@ extension.get(
                     'referred_by, signup_ip, signup_ip_forwarded, signup_user_agent, signup_origin, ' +
                     'signup_server, free_storage, max_subdomains, dev_first_name, dev_last_name, ' +
                     'dev_approved_for_incentive_program, dev_joined_incentive_program, reputation, ' +
-                    'desktop_bg_url, desktop_bg_color FROM `user` ORDER BY id',
+                    'desktop_bg_url, desktop_bg_color, metadata FROM `user` ORDER BY id',
             ) as Promise<Row[]>,
             db.read(
                 'SELECT id, user_id, kind, label, created_at, last_activity, expires_at, revoked_at, ' +
@@ -288,6 +303,7 @@ extension.get(
                 uuid: u.uuid ?? null,
                 username,
                 account_type: effectiveAccountType(u),
+                upgrade_request: pendingUpgradeRequest(u.metadata),
                 email: u.email ?? null,
                 mixt_email: `${username}@mixt.email`,
                 email_confirmed: Boolean(u.email_confirmed),
@@ -892,6 +908,12 @@ extension.patch(
         if (Object.keys(update).length) {
             await stores.user.update(account.id, update);
             await stores.user.invalidateById(account.id);
+        }
+        // A type change answers any pending upgrade request.
+        if ('account_type' in update && pendingUpgradeRequest(account.metadata)) {
+            await stores.user.updateMetadata(account.id, {
+                upgrade_request: null,
+            });
         }
 
         if (whitelistChange !== null) {

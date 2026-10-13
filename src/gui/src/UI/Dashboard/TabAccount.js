@@ -26,6 +26,102 @@ import UIWindow from '../UIWindow.js';
 import UIProfilePictureCropModal from './UIProfilePictureCropModal.js';
 import { isOrgSeat, orgSeatTeamName } from './orgSeat.js';
 
+// Account type card: shows the current type and lets a guest or standard
+// account ask for a higher one. Talks to /account/upgrade-request.
+const ACCOUNT_TYPE_KEYS = {
+    owner: 'account_type_owner',
+    administrator: 'account_type_administrator',
+    developer: 'account_type_developer',
+    standard: 'account_type_standard',
+    guest: 'account_type_guest',
+};
+
+const accountTypeAuthHeaders = () => ({
+    Authorization: `Bearer ${mixt.authToken}`,
+    'Content-Type': 'application/json',
+});
+
+const renderAccountTypeCard = (state, $card) => {
+    const typeName = i18n(ACCOUNT_TYPE_KEYS[state.account_type] ?? 'account_type_standard');
+    let h = '';
+    h += '<div class="dashboard-settings-card-content">';
+    h += '<div class="dashboard-settings-card-icon">';
+    h += '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/></svg>';
+    h += '</div>';
+    h += '<div class="dashboard-settings-card-info">';
+    h += `<strong>${i18n('account_type_label')}</strong>`;
+    h += `<span class="account-type-name">${html_encode(typeName)}</span>`;
+    h += '</div>';
+    h += '</div>';
+
+    const pending = state.upgrade_request;
+    if (pending) {
+        const pendingName = i18n(ACCOUNT_TYPE_KEYS[pending.requested_type] ?? 'account_type_standard');
+        h += `<span class="dashboard-settings-card-note">${i18n('account_upgrade_pending', { type: pendingName })}</span>`;
+        h += `<button class="button account-upgrade-withdraw">${i18n('account_upgrade_withdraw')}</button>`;
+    } else if ((state.can_request ?? []).length) {
+        h += `<span class="dashboard-settings-card-note">${i18n('account_upgrade_help')}</span>`;
+        h += '<div class="account-upgrade-buttons">';
+        for (const type of state.can_request) {
+            const name = i18n(ACCOUNT_TYPE_KEYS[type]);
+            h += `<button class="button account-upgrade-request" data-type="${html_encode(type)}">${i18n('account_upgrade_request', { type: name })}</button>`;
+        }
+        h += '</div>';
+    } else {
+        h += `<span class="dashboard-settings-card-note">${i18n('account_upgrade_not_available')}</span>`;
+    }
+    h += '<span class="account-upgrade-error" role="alert" style="display:none"></span>';
+    $card.html(h);
+};
+
+const loadAccountTypeCard = async ($el_window) => {
+    const $card = $el_window.find('.dashboard-account-type-card');
+    if (!$card.length) return;
+    const send = async (method, body) => {
+        const resp = await fetch(`${window.api_origin}/account/upgrade-request`, {
+            method,
+            headers: accountTypeAuthHeaders(),
+            body: body ? JSON.stringify(body) : undefined,
+        });
+        const data = await resp.json().catch(() => ({}));
+        if (!resp.ok) throw new Error(data.message || `HTTP ${resp.status}`);
+        return data;
+    };
+    const showError = (message) => {
+        const $err = $card.find('.account-upgrade-error');
+        $err.text(message).show();
+    };
+    const refresh = async () => {
+        try {
+            renderAccountTypeCard(await send('GET'), $card);
+        } catch (e) {
+            $card.html(`<span class="dashboard-settings-card-note">${i18n('account_upgrade_load_failed')}</span>`);
+        }
+    };
+
+    $card.on('click', '.account-upgrade-request', async function () {
+        const type = $(this).attr('data-type');
+        $card.find('button').prop('disabled', true);
+        try {
+            renderAccountTypeCard(await send('POST', { account_type: type }), $card);
+        } catch (e) {
+            await refresh();
+            showError(i18n('account_upgrade_failed'));
+        }
+    });
+    $card.on('click', '.account-upgrade-withdraw', async function () {
+        $card.find('button').prop('disabled', true);
+        try {
+            renderAccountTypeCard(await send('DELETE'), $card);
+        } catch (e) {
+            await refresh();
+            showError(i18n('account_upgrade_failed'));
+        }
+    });
+
+    await refresh();
+};
+
 const TabAccount = {
     id: 'account',
     label: i18n('account'),
@@ -82,6 +178,9 @@ const TabAccount = {
             h += `<button class="button change-username">${i18n('change_username')}</button>`;
         }
         h += '</div>';
+
+        // Account type card (filled in by init)
+        h += '<div class="dashboard-card dashboard-settings-card dashboard-account-type-card"><span class="dashboard-settings-card-note">…</span></div>';
 
         // Password card (only for non-temp users)
         if ( ! window.user.is_temp ) {
@@ -163,6 +262,7 @@ const TabAccount = {
     },
 
     init ($el_window) {
+        loadAccountTypeCard($el_window);
         $el_window.find('.dashboard-section-account .change-password').on('click', function (e) {
             UIWindowChangePassword({
                 window_options: {
