@@ -755,7 +755,7 @@ describe('requireVerifiedAccount', () => {
         expect(got).toBeUndefined();
     });
 
-    it('returns 403 email_confirmation_required for pending-confirmation users', () => {
+    it('does not block pending-confirmation users (email confirmation is not required)', () => {
         const got = runGate(requireVerifiedAccount(), {
             actor: {
                 user: {
@@ -765,7 +765,7 @@ describe('requireVerifiedAccount', () => {
                 },
             },
         });
-        expectHttpError(got, 403, 'email_confirmation_required');
+        expect(got).toBeUndefined();
     });
 
     it('returns 403 phone_verification_required while the phone gate is set', () => {

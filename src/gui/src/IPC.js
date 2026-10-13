@@ -30,7 +30,6 @@ import UIPrompt from './UI/UIPrompt.js';
 import UIWindow from './UI/UIWindow.js';
 import UIWindowAppFeedback from './UI/UIWindowAppFeedback.js';
 import UIWindowColorPicker from './UI/UIWindowColorPicker.js';
-import UIWindowEmailConfirmationRequired from './UI/UIWindowEmailConfirmationRequired.js';
 import UIWindowFontPicker from './UI/UIWindowFontPicker.js';
 import UIPermissionDialog from './UI/UIPermissionDialog.js';
 import UIWindowSaveAccount from './UI/UIWindowSaveAccount.js';
@@ -217,23 +216,10 @@ const ipc_listener = async (event, handled) => {
             }, '*');
             return;
         }
-        else if ( !window.user.email_confirmed && !await UIWindowEmailConfirmationRequired() ) {
-            target_iframe.contentWindow.postMessage({
-                original_msg_id: msg_id,
-                msg: 'requestEmailConfirmationResponded',
-                response: false,
-            }, '*');
-            return;
-        }
-
-        const email_confirm_resp = await UIWindowEmailConfirmationRequired({
-            email: window.user.email,
-        });
-
         target_iframe.contentWindow.postMessage({
             original_msg_id: msg_id,
             msg: 'requestEmailConfirmationResponded',
-            response: email_confirm_resp,
+            response: true,
         }, '*');
     }
     //--------------------------------------------------------
@@ -255,7 +241,6 @@ const ipc_listener = async (event, handled) => {
         // the app replays its request.
         // Mirrors the server's assertVerifiedAccount conditions.
         const gate_flags = {
-            email_confirmation_required: (user) => user?.requires_email_confirmation && !user?.email_confirmed,
             phone_verification_required: (user) => user?.requires_phone_verification,
             card_verification_required: (user) => user?.requires_card_verification,
         };

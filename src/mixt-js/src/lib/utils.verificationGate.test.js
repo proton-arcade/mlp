@@ -79,8 +79,8 @@ describe('verification gate on a filesystem request', () => {
         const emailGate = {
             status: 403,
             body: {
-                code: 'email_confirmation_required',
-                message: 'Please confirm your email to continue',
+                code: 'card_verification_required',
+                message: 'Please verify your card to continue',
             },
         };
         // Two requests, two different gates, in flight together.
@@ -92,7 +92,7 @@ describe('verification gate on a filesystem request', () => {
         );
         expect(new Set(asked)).toEqual(
             new Set([
-                'email_confirmation_required',
+                'card_verification_required',
                 'phone_verification_required',
             ]),
         );

@@ -30,7 +30,7 @@ import {
 // SMS phone verification dialog. Two steps in one window:
 //   1. Enter a phone number → POST /send-confirm-phone (Prelude sends an SMS).
 //   2. Enter the 6-digit code → POST /confirm-phone (Prelude validates it).
-// The 6-digit code UX mirrors UIWindowEmailConfirmationRequired.js. Used as a
+// The 6-digit code UX is the phone verification window's own. Used as a
 // hard gate for low-reputation signups, so by default it has no close button.
 //
 // Once the user is out of SMS send attempts for the window, SMS is not the only

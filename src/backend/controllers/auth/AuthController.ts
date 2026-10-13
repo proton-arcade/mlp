@@ -1195,9 +1195,6 @@ export class AuthController extends MixtController {
                 },
             );
         }
-        const force_email_confirmation = Boolean(
-            validateEvent.requires_email_confirmation,
-        );
         let force_phone_verification =
             Boolean(validateEvent.requires_phone_verification) ||
             // Test/QA switch: force the SMS gate on every signup regardless of
@@ -1283,7 +1280,7 @@ export class AuthController extends MixtController {
                         email_confirm_code,
                         email_confirm_token,
                         email_confirmed: 0,
-                        requires_email_confirmation: 1,
+                        requires_email_confirmation: 0,
                         last_activity_ts: signupSqlTs,
                         ...(validateEvent.reputation != null
                             ? { reputation: validateEvent.reputation }
@@ -1356,8 +1353,7 @@ export class AuthController extends MixtController {
                     account_type: is_temp ? 'guest' : 'standard',
                     clean_email: is_temp ? null : cleanEmail(body.email),
                     free_storage: this.config.storage_capacity ?? null,
-                    requires_email_confirmation:
-                        !is_temp || force_email_confirmation,
+                    requires_email_confirmation: false,
                     email_confirm_code,
                     email_confirm_token,
                     audit_metadata: {
@@ -1575,149 +1571,6 @@ export class AuthController extends MixtController {
         }
 
         res.send('logged out');
-    }
-
-    // -- Email confirmation ------------------------------------------
-
-    @Post('/send-confirm-email', {
-        subdomain: ['api', ''],
-        requireUserActor: true,
-        allowUnconfirmed: true,
-        rateLimit: {
-            scope: 'send-confirm-email',
-            limit: 10,
-            window: 60 * 60_000,
-            key: 'user',
-        },
-    })
-    async handleSendConfirmEmail(req: Request, res: Response): Promise<void> {
-        const user = await this.stores.user.getById(req.actor!.user.id!, {
-            force: true,
-        });
-        if (!user)
-            throw new HttpError(404, 'User not found.', {
-                legacyCode: 'user_not_found' as never,
-            });
-        if (user.suspended)
-            throw new HttpError(403, 'Account suspended.', {
-                legacyCode: 'account_suspended',
-            });
-        if (!user.email)
-            throw new HttpError(400, 'No email on file.', {
-                legacyCode: 'bad_request',
-            });
-
-        const code = String(crypto.randomInt(100000, 1000000));
-        await this.stores.user.update(user.id, {
-            email_confirm_code: code,
-        });
-
-        res.json({});
-    }
-
-    @Post('/confirm-email', {
-        subdomain: ['api', ''],
-        requireUserActor: true,
-        allowUnconfirmed: true,
-        rateLimit: {
-            scope: 'confirm-email',
-            limit: 10,
-            window: 10 * 60_000,
-            key: 'user',
-        },
-    })
-    async handleConfirmEmail(req: Request, res: Response): Promise<void> {
-        const { code, original_client_socket_id } = req.body ?? {};
-        if (!code)
-            throw new HttpError(400, 'Missing `code`.', {
-                legacyCode: 'bad_request',
-            });
-
-        const user = await this.stores.user.getById(req.actor!.user.id!, {
-            force: true,
-        });
-        if (!user)
-            throw new HttpError(404, 'User not found.', {
-                legacyCode: 'not_found',
-            });
-        if (user.email_confirmed) {
-            res.json({
-                email_confirmed: true,
-                original_client_socket_id,
-            });
-            return;
-        }
-        // Reject before comparing when no code is stored: `String(null)` would
-        // otherwise equal a submitted `"null"` and confirm the email without
-        // the real code.
-        if (
-            !user.email_confirm_code ||
-            String(user.email_confirm_code) !== String(code)
-        ) {
-            res.json({
-                email_confirmed: false,
-                original_client_socket_id,
-            });
-            return;
-        }
-
-        // Re-validate the email at confirmation time — the address may
-        // have been added to the blocklist (or flagged by an extension)
-        // after signup but before confirmation.
-        await this.#validateEmail(user.email!);
-
-        // An account that already confirmed this address proved access to the
-        // inbox, and revoking it below would hand the address to whoever
-        // confirmed second. Refuse instead — a duplicate this old is data to
-        // repair, not a race to resolve.
-        const canonical = cleanEmail(user.email!);
-        const confirmedRival = await this.stores.user.findConfirmedOtherByEmail(
-            user.id,
-            user.email!,
-            canonical,
-        );
-        if (confirmedRival) {
-            throw new HttpError(
-                400,
-                'This email was confirmed on a different account.',
-                { legacyCode: 'email_already_in_use' as never },
-            );
-        }
-
-        // Revoke the address from every remaining (unconfirmed) account holding
-        // it, THEN confirm this one. Only one row may own an address, so
-        // confirming first would momentarily create a second owner — which the
-        // unique index rejects, turning a legitimate confirmation into a 500.
-        await this.stores.user.unconfirmOthersByEmail(
-            user.id,
-            user.email!,
-            canonical,
-        );
-
-        await this.stores.user.update(user.id, {
-            email_confirmed: 1,
-            requires_email_confirmation: 0,
-            email_confirm_code: null,
-            email_confirm_token: null,
-        });
-
-        await promoteToVerifiedGroup(this.stores.group, this.config, user);
-
-        try {
-            this.clients.event?.emit(
-                'user.email-confirmed' as never,
-                {
-                    user_id: user.id,
-                    user_uid: user.uuid,
-                    email: user.email,
-                } as never,
-                {},
-            );
-        } catch {
-            // ignore — event is a side-channel signal, not load-bearing
-        }
-
-        res.json({ email_confirmed: true, original_client_socket_id });
     }
 
     // -- Phone verification (SMS via Prelude) ------------------------
@@ -2821,7 +2674,7 @@ export class AuthController extends MixtController {
                 email_confirm_code,
                 email_confirm_token,
                 email_confirmed: 0,
-                requires_email_confirmation: 1,
+                requires_email_confirmation: 0,
             });
             saveVaultPassword(
                 this.config.admin_dir,

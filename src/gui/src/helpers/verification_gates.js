@@ -6,13 +6,11 @@
  * of stacking.
  */
 
-import UIWindowEmailConfirmationRequired from '../UI/UIWindowEmailConfirmationRequired.js';
 import UIWindowPhoneVerificationRequired from '../UI/UIWindowPhoneVerificationRequired.js';
 import UIWindowCardVerificationRequired from '../UI/UIWindowCardVerificationRequired.js';
 
 const gate_windows = {
     phone_verification_required: UIWindowPhoneVerificationRequired,
-    email_confirmation_required: UIWindowEmailConfirmationRequired,
     card_verification_required: UIWindowCardVerificationRequired,
 };
 

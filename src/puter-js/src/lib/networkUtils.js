@@ -17,7 +17,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { showEmailConfirmationDialog } from '../modules/EmailConfirmationDialog.js';
 import { promptIfUpgradeRequired } from './upgradePrompt.js';
 
 /** @typedef {import('./types.js').UpgradePromptContext} UpgradePromptContext */
@@ -560,7 +559,6 @@ const creditHoldRetry = (ctx) => {
 
 // The 403 account-verification gates the hosting GUI can walk a user through.
 const VERIFICATION_GATE_CODES = new Set([
-    'email_confirmation_required',
     'phone_verification_required',
     'card_verification_required',
 ]);
@@ -1096,15 +1094,6 @@ const logCall = (call, fields) => {
     });
 };
 
-function promptEmailConfirmation(puter, error) {
-    if (error?.code !== 'email_must_be_confirmed' || puter.env !== 'web')
-        return;
-    showEmailConfirmationDialog(
-        error.message ||
-            'Email confirmation required. Go to Puter.com to confirm your email address.',
-    );
-}
-
 /**
  * Chunk types with no text to render — a `ReadableStream` reader (or anything
  * else that coerces a line to a string) gets `''` instead of the default
@@ -1128,7 +1117,6 @@ function driverLineStream(lineStream, puter, upgradePrompt) {
     const stream = (async function* () {
         for await (const line of lineStream) {
             promptIfUpgradeRequired(line, upgradePrompt, puter);
-            promptEmailConfirmation(puter, line?.error);
             if (typeof line.text === 'string') {
                 Object.defineProperty(line, 'toString', {
                     enumerable: false,
@@ -1272,7 +1260,6 @@ async function driverCall(call, opts = {}) {
                 promptContext,
                 puter,
             );
-            promptEmailConfirmation(puter, resp?.error);
 
             if (status === 401 || resp?.code === 'token_auth_failed') {
                 return fail({ status: 401, message: 'Unauthorized' });

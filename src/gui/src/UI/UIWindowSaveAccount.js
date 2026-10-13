@@ -18,7 +18,6 @@
  */
 
 import UIWindow from './UIWindow.js';
-import UIWindowEmailConfirmationRequired from './UIWindowEmailConfirmationRequired.js';
 
 async function UIWindowSaveAccount (options) {
     const internal_id = window.uuidv4();
@@ -163,15 +162,7 @@ async function UIWindowSaveAccount (options) {
                     await window.update_auth_data(data.token ?? window.auth_token, data.user);
 
                     //close this window
-                    if ( data.user.requires_email_confirmation && !data.user.email_confirmed ) {
-                        let is_verified = await UIWindowEmailConfirmationRequired({
-                            stay_on_top: true,
-                            has_head: true,
-                        });
-                        resolve(is_verified);
-                    } else {
-                        resolve(true);
-                    }
+                    resolve(true);
 
                     $(el_window).find('.save-account-form').hide(100, () => {
                         $(el_window).find('.save-account-success').show(100);

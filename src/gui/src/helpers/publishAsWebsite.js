@@ -19,7 +19,6 @@
 
 import UIWindowPublishWebsite from '../UI/UIWindowPublishWebsite.js';
 import UIWindowSaveAccount from '../UI/UIWindowSaveAccount.js';
-import UIWindowEmailConfirmationRequired from '../UI/UIWindowEmailConfirmationRequired.js';
 
 /**
  * Opens the "Publish as website" flow for a directory, first walking the user
@@ -44,10 +43,6 @@ const publish_as_website = async function ({ uid, name, path }) {
                     close_on_backdrop_click: false,
                 },
             }) )
-        {
-            return;
-        }
-        else if ( !window.user.email_confirmed && !await UIWindowEmailConfirmationRequired() )
         {
             return;
         }

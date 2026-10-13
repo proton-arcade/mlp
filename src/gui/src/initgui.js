@@ -27,7 +27,6 @@ import UIWindowAppFeedback from './UI/UIWindowAppFeedback.js';
 import UIWindowAuthMe from './UI/UIWindowAuthMe.js';
 import UIWindowChangeUsername from './UI/UIWindowChangeUsername.js';
 import UIWindowCopyToken from './UI/UIWindowCopyToken.js';
-import UIWindowEmailConfirmationRequired from './UI/UIWindowEmailConfirmationRequired.js';
 import UIWindowPasswordChangeRequired from './UI/UIWindowPasswordChangeRequired.js';
 import UIWindowPhoneVerificationRequired from './UI/UIWindowPhoneVerificationRequired.js';
 import UIWindowCardVerificationRequired from './UI/UIWindowCardVerificationRequired.js';
@@ -1845,19 +1844,6 @@ window.initgui = async function (options) {
         if (whoami) {
             // Verification gates run in order: email → phone (SMS) → card,
             // matching the server-side order in assertVerifiedAccount.
-            if (whoami.requires_email_confirmation) {
-                let is_verified;
-                do {
-                    is_verified = await UIWindowEmailConfirmationRequired({
-                        show_close_button: false,
-                        stay_on_top: true,
-                        has_head: false,
-                        window_options: {
-                            is_draggable: false,
-                        },
-                    });
-                } while (!is_verified);
-            }
             // is phone verification required? (hard gate for low-rep signups)
             // A user the SMS path keeps failing may be offered the card
             // fallback instead; that resolves 'card' and clears the card gate
@@ -2157,21 +2143,6 @@ window.initgui = async function (options) {
             reveal_anonymous_markup(false);
             // Verification gates run in order: email → phone (SMS) → card,
             // matching the server-side order in assertVerifiedAccount.
-            if (whoami.requires_email_confirmation) {
-                let is_verified;
-                do {
-                    is_verified = await UIWindowEmailConfirmationRequired({
-                        show_close_button: false,
-                        stay_on_top: true,
-                        has_head: false,
-                        logout_in_footer: true,
-                        window_options: {
-                            is_draggable: false,
-                            cover_page: window.is_embedded,
-                        },
-                    });
-                } while (!is_verified);
-            }
             // is phone verification required? (hard gate for low-rep signups)
             // A user the SMS path keeps failing may be offered the card
             // fallback instead; that resolves 'card' and clears the card gate

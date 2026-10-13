@@ -20,7 +20,6 @@
 import UIWindowItemProperties from './UIWindowItemProperties.js';
 import UIWindowSaveAccount from './UIWindowSaveAccount.js';
 import UIPopover from './UIPopover.js';
-import UIWindowEmailConfirmationRequired from './UIWindowEmailConfirmationRequired.js';
 import UIContextMenu from './UIContextMenu.js';
 import UIAlert from './UIAlert.js';
 import UIWindowPublishWorker from './UIWindowPublishWorker.js';
@@ -1267,10 +1266,6 @@ async function UIItem (options) {
                                     close_on_backdrop_click: false,
                                 },
                             }) )
-                        {
-                            return;
-                        }
-                        else if ( !window.user.email_confirmed && !await UIWindowEmailConfirmationRequired() )
                         {
                             return;
                         }

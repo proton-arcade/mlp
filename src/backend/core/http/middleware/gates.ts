@@ -323,7 +323,7 @@ export const requireTeam2fa = (
 };
 
 /**
- * Reject accounts still pending a signup-time verification (email, phone, card,
+ * Reject accounts still pending a signup-time verification (phone, card,
  * password change). Default-on for authenticated routes; the flows that clear
  * these flags opt out with `allowUnconfirmed: true`.
  */
@@ -347,11 +347,6 @@ export const requireVerifiedAccount = (): RequestHandler => {
 export const assertVerifiedAccount = (
     user: AccountGateUser | undefined,
 ): void => {
-    if (user?.requires_email_confirmation && !user?.email_confirmed) {
-        throw new HttpError(403, 'Please confirm your email to continue', {
-            legacyCode: 'email_confirmation_required',
-        });
-    }
     if (user?.requires_phone_verification) {
         throw new HttpError(
             403,

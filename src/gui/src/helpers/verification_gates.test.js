@@ -4,9 +4,6 @@ const phoneGate = vi.fn();
 vi.mock('../UI/UIWindowPhoneVerificationRequired.js', () => ({
     default: (...args) => phoneGate(...args),
 }));
-vi.mock('../UI/UIWindowEmailConfirmationRequired.js', () => ({
-    default: vi.fn(),
-}));
 vi.mock('../UI/UIWindowCardVerificationRequired.js', () => ({
     default: vi.fn(),
 }));

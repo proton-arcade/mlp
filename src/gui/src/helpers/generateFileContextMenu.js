@@ -21,7 +21,6 @@ import UIAlert from '../UI/UIAlert.js';
 
 import UIWindowItemProperties from '../UI/UIWindowItemProperties.js';
 import UIWindowSaveAccount from '../UI/UIWindowSaveAccount.js';
-import UIWindowEmailConfirmationRequired from '../UI/UIWindowEmailConfirmationRequired.js';
 import UIWindowPublishWorker from '../UI/UIWindowPublishWorker.js';
 import UIWindowShare from '../UI/UIWindowShare.js';
 import publish_as_website from './publishAsWebsite.js';
@@ -154,9 +153,6 @@ const generate_file_context_menu = async function (options) {
                             close_on_backdrop_click: false,
                         },
                     }) ) {
-                    return;
-                }
-                else if ( !window.user.email_confirmed && !await UIWindowEmailConfirmationRequired() ) {
                     return;
                 }
 

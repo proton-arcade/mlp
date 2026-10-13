@@ -19,7 +19,6 @@
 
 import check_password_strength from '../helpers/checkPasswordStrength.js';
 import UIWindow from './UIWindow.js';
-import UIWindowEmailConfirmationRequired from './UIWindowEmailConfirmationRequired.js';
 import UIWindowPhoneVerificationRequired from './UIWindowPhoneVerificationRequired.js';
 import UIWindowCardVerificationRequired from './UIWindowCardVerificationRequired.js';
 import UIWindowLogin from './UIWindowLogin.js';
@@ -579,31 +578,11 @@ function UIWindowSignup(options) {
                     success: async function (data) {
                         await window.update_auth_data(data.token, data.user);
 
-                        let email_verified = true;
-                        const show_email_dialog =
-                            !options.reload_on_success &&
-                            (options.send_confirmation_code ||
-                                data.user?.requires_email_confirmation);
                         if (
                             data.user?.requires_phone_verification ||
-                            data.user?.requires_card_verification ||
-                            show_email_dialog
+                            data.user?.requires_card_verification
                         ) {
                             $(el_window).close();
-                            // Verification gates run in order: email →
-                            // phone (SMS) → card, matching the server-side
-                            // order in assertVerifiedAccount.
-                            if (show_email_dialog) {
-                                email_verified =
-                                    await UIWindowEmailConfirmationRequired({
-                                        stay_on_top: true,
-                                        has_head: true,
-                                        reload_on_success:
-                                            options.reload_on_success,
-                                        window_options:
-                                            options.window_options ?? {},
-                                    });
-                            }
                             // A user the SMS path keeps failing may take the
                             // card fallback instead; that resolves 'card' and
                             // clears the card gate along with the phone gate
@@ -673,7 +652,7 @@ function UIWindowSignup(options) {
                                     : '/');
                             window.location.replace(redirectUrl);
                         } else {
-                            resolve(email_verified);
+                            resolve(true);
                         }
                     },
                     error: function (err) {

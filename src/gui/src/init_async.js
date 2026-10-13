@@ -23,7 +23,6 @@ import './util/TeePromise.js';
 import './util/Component.js';
 import './UI/UIElement.js';
 import './UI/UIWindowSaveAccount.js';
-import './UI/UIWindowEmailConfirmationRequired.js';
 
 logger.info('end -> async initialization');
 globalThis.init_promise.resolve();
