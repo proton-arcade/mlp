@@ -64,6 +64,14 @@ describe('admin lockdown', () => {
         expect((await run(users, { method: 'POST', path: '/login', anonymous: true })).passed).toBe(true);
     });
 
+    it('lets anonymous visitors read the server version', async () => {
+        const users = fakeUsers();
+        expect((await run(users, { method: 'GET', path: '/version', anonymous: true })).passed).toBe(true);
+        // Writes to that path, and the session token route, stay closed.
+        expect((await run(users, { method: 'POST', path: '/version', anonymous: true })).passed).toBe(false);
+        expect((await run(users, { method: 'GET', path: '/get-gui-token', anonymous: true })).passed).toBe(false);
+    });
+
     it('lets anonymous visitors load the desktop static libraries', async () => {
         const users = fakeUsers();
         const css = await run(users, { method: 'GET', path: '/lib/jquery-ui-1.13.2/jquery-ui.min.css', anonymous: true });

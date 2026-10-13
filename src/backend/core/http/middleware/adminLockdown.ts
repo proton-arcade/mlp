@@ -75,6 +75,17 @@ const isPublicIconRequest = (req: Request): boolean => {
     return sub === 'api' && req.path.startsWith('/app-icon/');
 };
 
+/**
+ * Read-only endpoints the desktop calls before anyone has signed in. They
+ * reveal nothing private: the server version, and a change timestamp that is 0
+ * for an anonymous caller. Everything else stays behind the lockdown.
+ */
+const ANON_READ_PATHS = new Set(['/version']);
+
+const isAnonymousReadRequest = (req: Request): boolean =>
+    (req.method === 'GET' || req.method === 'HEAD') &&
+    ANON_READ_PATHS.has(req.path);
+
 const isSignInRequest = (req: Request): boolean =>
     req.method === 'POST' && SIGN_IN_PATHS.has(req.path);
 
@@ -87,7 +98,8 @@ export const createAdminLockdown = (users: UserStore): RequestHandler => {
             if (
                 isGuiRequest(req) ||
                 isSignInRequest(req) ||
-                isPublicIconRequest(req)
+                isPublicIconRequest(req) ||
+                isAnonymousReadRequest(req)
             ) {
                 next();
                 return;
