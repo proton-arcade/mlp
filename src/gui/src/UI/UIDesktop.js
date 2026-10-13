@@ -27,6 +27,17 @@ import UIWindowSaveAccount from './UIWindowSaveAccount.js';
 import UIWindowDesktopBGSettings from './UIWindowDesktopBGSettings.js';
 import UIWindowMyWebsites from './UIWindowMyWebsites.js';
 import UIWindowFeedback from './UIWindowFeedback.js';
+import UIWindowMyAccount from './UIWindowMyAccount.js';
+
+// Settings opens the dashboard for the administrator. Everyone else gets the
+// account window, because the dashboard sends other users back to the desktop.
+const openSettingsPage = () => {
+    if ( window.user?.username === 'admin' ) {
+        window.open('/dashboard/#home', '_blank');
+    } else {
+        UIWindowMyAccount();
+    }
+};
 import UIWindowLogin from './UIWindowLogin.js';
 import UIWindowQR from './UIWindowQR.js';
 
@@ -1347,7 +1358,11 @@ async function UIDesktop (options) {
     // /settings redirects to /dashboard
     //--------------------------------------------------------------------------------------
     else if ( window.url_paths[0]?.toLocaleLowerCase() === 'settings' ) {
-        window.open('/dashboard/#home', '_blank');
+        openSettingsPage();
+    }
+    // /myacc opens the account window for the signed-in user.
+    else if ( window.url_paths[0]?.toLocaleLowerCase() === 'myacc' ) {
+        UIWindowMyAccount();
     }
     // ---------------------------------------------
     // Run apps from insta-login URL
@@ -2273,7 +2288,7 @@ $(document).on('click', '.user-options-menu-btn', async function (e) {
                 html: i18n('settings'),
                 id: 'settings',
                 onClick: async function () {
-                    window.open('/dashboard/#home', '_blank');
+                    openSettingsPage();
                 },
             },
             //--------------------------------------------------

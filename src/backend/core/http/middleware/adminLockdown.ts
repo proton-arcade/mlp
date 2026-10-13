@@ -29,6 +29,8 @@ const GUI_EXACT_PATHS = new Set([
     '/index.html',
     '/favicon.ico',
     '/dashboard',
+    '/myacc',
+    '/myacc/',
 ]);
 const GUI_PATH_PREFIXES = [
     '/sdk/',

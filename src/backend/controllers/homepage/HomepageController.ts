@@ -114,6 +114,10 @@ export class HomepageController extends MixtController {
         router.get('/desktop', {}, (req, res) => sendShell(req, res));
         router.get('/desktop/', {}, (req, res) => sendShell(req, res));
 
+        // The signed-in user's account window on the desktop (see /myacc).
+        router.get('/myacc', {}, (req, res) => sendShell(req, res));
+        router.get('/myacc/', {}, (req, res) => sendShell(req, res));
+
         router.get('/action/*splat', {}, (req, res) => sendShell(req, res));
 
         router.get('/@:username', {}, (req, res) => sendShell(req, res));
