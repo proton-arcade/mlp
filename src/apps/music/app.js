@@ -29,7 +29,7 @@
     const nowTitleEl = $('nowTitle');
     const nowSubEl = $('nowSub');
 
-    const AUDIO_EXT = /\.(mp3|m4a|aac|ogg|oga|opus|wav|flac|webm)$/i;
+    const AUDIO_EXT = /\.mp3$/i; // MP3 only
     const REPEAT_LABELS = ['off', 'all', 'one'];
 
     let tracks = [];          // { id, name, title, size, added, duration, blob }
@@ -127,7 +127,7 @@
     // -- Adding and removing ------------------------------------------------
 
     function isAudio (file) {
-        return file.type.startsWith('audio/') || AUDIO_EXT.test(file.name);
+        return file.type === 'audio/mpeg' || AUDIO_EXT.test(file.name);
     }
 
     async function addFiles (fileList) {

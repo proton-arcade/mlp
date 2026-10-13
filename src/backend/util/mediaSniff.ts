@@ -28,8 +28,6 @@ const BASE64_CHARS_REGEX = /^[A-Za-z0-9+/]*={0,2}$/;
  */
 export const SVG_SNIFF_WINDOW = 8 * 1024;
 
-/** How far into an EBML header to look for the DocType string. */
-const EBML_SNIFF_WINDOW = 64;
 
 /**
  * ISO Base Media brands treated as MP4 video. HEIF, M4A audio and JPEG 2000
@@ -121,8 +119,7 @@ export function sniffImageMime(bytes: Buffer): string | null {
 }
 
 /**
- * Canonical video MIME type for `bytes` (MP4, QuickTime, WebM, Matroska), or
- * null.
+ * Canonical video MIME type for `bytes` (MP4 only), or null. Video is MP4 only.
  */
 export function sniffVideoMime(bytes: Buffer): string | null {
     // ISO Base Media: a `ftyp` box at offset 4, major brand at offset 8.
@@ -131,20 +128,7 @@ export function sniffVideoMime(bytes: Buffer): string | null {
         bytes.subarray(4, 8).toString('latin1') === 'ftyp'
     ) {
         const brand = bytes.subarray(8, 12).toString('latin1');
-        if (brand === 'qt  ') return 'video/quicktime';
         return MP4_BRANDS.has(brand) ? 'video/mp4' : null;
-    }
-    // EBML: Matroska and WebM share the magic; the DocType tells them apart.
-    if (
-        bytes.length >= 4 &&
-        bytes[0] === 0x1a &&
-        bytes[1] === 0x45 &&
-        bytes[2] === 0xdf &&
-        bytes[3] === 0xa3
-    ) {
-        const head = bytes.subarray(0, EBML_SNIFF_WINDOW).toString('latin1');
-        if (head.includes('webm')) return 'video/webm';
-        if (head.includes('matroska')) return 'video/x-matroska';
     }
     return null;
 }

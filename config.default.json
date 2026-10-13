@@ -170,6 +170,7 @@
         "meetings": "./src/apps/meetings",
         "team-chat": "./src/apps/team-chat",
         "music": "./src/apps/music",
+        "video-player": "./src/apps/video-player",
         "mail": "./src/apps/mail",
         "contacts": "./src/apps/contacts",
         "chess": "./src/apps/chess",

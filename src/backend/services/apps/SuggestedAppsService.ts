@@ -133,21 +133,8 @@ const IMAGE_EXTS = new Set([
     'tiff',
     'tif',
 ]);
-const MEDIA_EXTS = new Set([
-    'mp4',
-    'webm',
-    'mpg',
-    'mpeg',
-    'avi',
-    'mov',
-    'mkv',
-    'mp3',
-    'm4a',
-    'ogg',
-    'wav',
-    'flac',
-    'aac',
-]);
+// Video and audio are MP4 and MP3 only.
+const MEDIA_EXTS = new Set(['mp4', 'mp3']);
 
 function suggestionsForExtension(ext: string): {
     names: string[];

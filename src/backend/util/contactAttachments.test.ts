@@ -114,14 +114,16 @@ const accepted = (attachment: ReturnType<typeof validateAttachment>) => {
 };
 
 describe('validateAttachment — the type allow-list', () => {
+    it('rejects WebM and QuickTime video (video is MP4 only)', () => {
+        expect(validateAttachment(pad(WEBM_HEADER, 64), 'capture.webm', 0).ok).toBe(false);
+        expect(validateAttachment(pad(mp4('qt  '), 64), 'capture.mov', 0).ok).toBe(false);
+    });
     it.each([
         ['png', PNG_HEADER, 'image/png', 'png'],
         ['jpeg', JPEG_HEADER, 'image/jpeg', 'jpg'],
         ['gif', GIF_HEADER, 'image/gif', 'gif'],
         ['webp', WEBP_HEADER, 'image/webp', 'webp'],
         ['mp4', mp4('isom'), 'video/mp4', 'mp4'],
-        ['quicktime', mp4('qt  '), 'video/quicktime', 'mov'],
-        ['webm', WEBM_HEADER, 'video/webm', 'webm'],
     ])(
         'accepts %s and reports its sniffed type',
         (_label, header, mime, ext) => {

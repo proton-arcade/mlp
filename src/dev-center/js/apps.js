@@ -769,11 +769,11 @@ async function edit_app_section (cur_app_name, tab = 'deploy') {
             // Images
             '.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff', '.tif', '.svg', '.webp', '.ico', '.psd', '.ai', '.eps', '.raw', '.cr2', '.nef', '.orf', '.sr2', '.heic', '.heif', '.avif', '.jxr', '.hdp', '.wdp', '.jng', '.xcf', '.pgm', '.pbm', '.ppm', '.pnm',
 
-            // Video
-            '.mp4', '.avi', '.mov', '.wmv', '.mkv', '.flv', '.webm', '.m4v', '.mpeg', '.mpg', '.3gp', '.3g2', '.ogv', '.vob', '.drc', '.gifv', '.mng', '.qt', '.yuv', '.rm', '.rmvb', '.asf', '.amv', '.m2v', '.svi',
+            // Video (MP4 only)
+            '.mp4',
 
-            // Audio
-            '.mp3', '.wav', '.aac', '.flac', '.ogg', '.m4a', '.wma', '.aiff', '.alac', '.ape', '.au', '.mid', '.midi', '.mka', '.pcm', '.ra', '.ram', '.snd', '.wv', '.opus',
+            // Audio (MP3 only)
+            '.mp3',
 
             // Code/Development
             '.js', '.ts', '.html', '.css', '.json', '.xml', '.php', '.py', '.java', '.cpp', '.c', '.cs', '.h', '.hpp', '.hxx', '.rs', '.go', '.rb', '.pl', '.swift', '.kt', '.kts', '.scala', '.coffee', '.sass', '.scss', '.less', '.jsx', '.tsx', '.vue', '.sh', '.bash', '.zsh', '.fish', '.ps1', '.bat', '.cmd', '.sql', '.r', '.dart', '.f', '.f90', '.for', '.lua', '.m', '.mm', '.clj', '.erl', '.ex', '.exs', '.elm', '.hs', '.lhs', '.lisp', '.ml', '.mli', '.nim', '.pl', '.rkt', '.v', '.vhd',

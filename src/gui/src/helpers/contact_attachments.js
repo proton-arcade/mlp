@@ -40,8 +40,6 @@ export const ACCEPTED_ATTACHMENT_TYPES = [
     'image/gif',
     'image/webp',
     'video/mp4',
-    'video/quicktime',
-    'video/webm',
 ];
 
 /** `accept` attribute for the file input. */
