@@ -36,6 +36,9 @@
 
     let items = []; // { name, url, kind, duration }
     let current = -1;
+    // The last "Not supported" notice. It is kept so a playback error on a
+    // damaged file reports both problems instead of replacing the notice.
+    let unsupportedNote = '';
     let seeking = false;
     let shuffle = false;
     let repeat = 0; // 0 off, 1 all, 2 one
@@ -74,7 +77,8 @@
         renderList();
         if (added && current < 0) play(firstNew);
         if (rejected.length) {
-            setStatus(`Not supported (only MP4 and MP3): ${rejected.join(', ')}`, true);
+            unsupportedNote = `Not supported (only MP4 and MP3): ${rejected.join(', ')}`;
+            setStatus(unsupportedNote, true);
         } else if (added) {
             setStatus(`Added ${added} file${added === 1 ? '' : 's'}.`);
         }
@@ -128,6 +132,7 @@
         if (index < 0 || index >= items.length) return;
         current = index;
         const item = items[index];
+        unsupportedNote = '';
         const isVideo = item.kind === 'video';
         video.classList.toggle('hidden', !isVideo);
         art.classList.toggle('show', !isVideo);
@@ -239,7 +244,8 @@
     });
     video.addEventListener('error', () => {
         if (current < 0) return;
-        setStatus(`Could not play ${items[current].name}. The file may be damaged.`, true);
+        const failed = `Could not play ${items[current].name}. The file may be damaged.`;
+        setStatus(unsupportedNote ? `${failed} ${unsupportedNote}` : failed, true);
     });
 
     // Controls
