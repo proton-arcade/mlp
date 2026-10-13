@@ -546,6 +546,7 @@ export class UserStore extends MixtStore {
         phone?: string | null;
         requires_phone_verification?: boolean;
         requires_card_verification?: boolean;
+        account_type?: string | null;
     }): Promise<UserRow> {
         assertLatin1Writable(fields as Record<string, unknown>);
         const result = await this.clients.db.write(
@@ -571,8 +572,9 @@ export class UserStore extends MixtStore {
              reputation,
              phone,
              requires_phone_verification,
-             requires_card_verification)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)${this.clients.db.returningIdClause()}`,
+             requires_card_verification,
+             account_type)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)${this.clients.db.returningIdClause()}`,
             [
                 fields.username,
                 fields.email,
@@ -605,6 +607,7 @@ export class UserStore extends MixtStore {
                 this.clients.db.booleanValue(
                     Boolean(fields.requires_card_verification),
                 ),
+                fields.account_type ?? 'standard',
             ],
         );
 

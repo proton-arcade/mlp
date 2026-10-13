@@ -150,6 +150,7 @@ export class DefaultUserService extends MixtService {
             email: null,
             free_storage: ADMIN_STORAGE_BYTES,
             requires_email_confirmation: false,
+            account_type: 'owner',
         });
 
         try {

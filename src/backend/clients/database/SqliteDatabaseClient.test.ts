@@ -27,7 +27,7 @@ import { DatabaseClientFactory } from './index.js';
 import { SqliteDatabaseClient } from './SqliteDatabaseClient.js';
 
 /** Highest schema version the migration table can reach. */
-const CURRENT_SCHEMA_VERSION = 102;
+const CURRENT_SCHEMA_VERSION = 103;
 
 /**
  * These suites migrate real files on disk. Idle they finish in well under a

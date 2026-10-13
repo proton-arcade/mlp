@@ -1247,6 +1247,8 @@ export class AuthController extends MixtController {
                     uuid: user_uuid,
                     password: password_hash,
                     email: is_temp ? null : body.email,
+                    account_type: is_temp ? 'guest' : 'standard',
+                    account_type: is_temp ? 'guest' : 'standard',
                     clean_email: is_temp ? null : cleanEmail(body.email),
                     free_storage: this.config.storage_capacity ?? null,
                     requires_email_confirmation:
