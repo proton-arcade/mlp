@@ -956,3 +956,28 @@ extension.patch(
         });
     },
 );
+
+/**
+ * Dismisses an account's pending upgrade request without changing its type.
+ * Approving a request does not need this: changing the type through the
+ * account's PATCH clears the request.
+ */
+extension.delete(
+    '/admin/accounts/:username/upgrade-request',
+    { subdomain: 'api', adminOnly: true },
+    async (req: Request, res: Response) => {
+        const username = String(req.params.username ?? '');
+        const account = await stores.user.getByUsername(username);
+        if (!account) {
+            res.status(404).json({ message: 'No account has that username.' });
+            return;
+        }
+        if (!pendingUpgradeRequest(account.metadata)) {
+            res.status(404).json({ message: 'That account has no pending upgrade request.' });
+            return;
+        }
+        await stores.user.updateMetadata(account.id, { upgrade_request: null });
+        await stores.user.invalidateById(account.id);
+        res.json({ username: account.username, upgrade_request: null });
+    },
+);

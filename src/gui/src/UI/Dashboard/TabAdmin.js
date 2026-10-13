@@ -69,6 +69,19 @@ const accountTypeField = (u, viewerIsOwner) => {
     return `<label class="admin-field"><span>Account type</span><select name="account_type" ${locked ? 'disabled' : ''}>${options}</select></label>`;
 };
 
+const renderUpgradePanel = (u) => {
+    const req = u.upgrade_request;
+    if (!req) return '';
+    const label = ACCOUNT_TYPE_LABELS[req.requested_type] ?? req.requested_type;
+    const since = req.requested_at ? ` on ${fmtDate(req.requested_at)}` : '';
+    return `
+        <div class="admin-upgrade-request">
+            <p>${esc(u.username)} asked to be upgraded to <strong>${esc(label)}</strong>${esc(since)}.</p>
+            <button type="button" class="button admin-upgrade-approve" data-username="${esc(u.username)}" data-type="${esc(req.requested_type)}">Approve as ${esc(label)}</button>
+            <button type="button" class="button admin-upgrade-dismiss" data-username="${esc(u.username)}">Dismiss request</button>
+        </div>`;
+};
+
 const renderAccountEditor = (u) => {
     const stored = u.stored_password != null
         ? 'Stored in the admin vault'
@@ -84,6 +97,7 @@ const renderAccountEditor = (u) => {
     return `
         <form class="admin-account-form" data-username="${esc(u.username)}">
             <h3>Edit account: ${esc(u.username)}</h3>
+            ${renderUpgradePanel(u)}
             <p class="admin-readonly">
                 Created ${esc(fmtDate(u.created_at))} · Last activity ${esc(fmtDate(u.last_activity))} ·
                 ${u.is_live ? '<span class="admin-live">Online now</span>' : 'Offline'} ·
@@ -135,10 +149,13 @@ const renderOverview = (data) => {
     ].join('');
 
     const users = section('Accounts', data.users.length, table(
-        ['Username', 'Type', 'Mixt email', 'Email', 'Created', 'Last activity', 'Live', 'Whitelisted', 'Password', 'Email confirmed', '2FA', 'Suspended', 'Storage', 'Files', 'Apps', 'Subdomains', 'Mail (in/sent/out)', 'Signup IP', 'Signup user agent', 'Signup origin', 'Phone', 'Referral', 'Edit'],
+        ['Username', 'Type', 'Requested', 'Mixt email', 'Email', 'Created', 'Last activity', 'Live', 'Whitelisted', 'Password', 'Email confirmed', '2FA', 'Suspended', 'Storage', 'Files', 'Apps', 'Subdomains', 'Mail (in/sent/out)', 'Signup IP', 'Signup user agent', 'Signup origin', 'Phone', 'Referral', 'Edit'],
         data.users.map((u) => [
             `<strong>${esc(u.username)}</strong>`,
             esc(ACCOUNT_TYPE_LABELS[accountTypeOf(u)] ?? accountTypeOf(u)),
+            u.upgrade_request
+                ? `<span class="admin-upgrade-flag">${esc(ACCOUNT_TYPE_LABELS[u.upgrade_request.requested_type] ?? u.upgrade_request.requested_type)}</span>`
+                : '—',
             esc(u.mixt_email),
             esc(u.email ?? '—'),
             esc(fmtDate(u.created_at)),
@@ -463,6 +480,32 @@ const TabAdmin = {
             const $editor = $window.find('.admin-account-editor');
             $editor.html(renderAccountEditor(u));
             $editor.get(0)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+        $window.on('click', '.admin-upgrade-approve', async (e) => {
+            const username = $(e.currentTarget).data('username');
+            const type = $(e.currentTarget).data('type');
+            const { resp, data } = await adminRequest('PATCH', `/admin/accounts/${encodeURIComponent(username)}`, { account_type: type });
+            if ( data.code === 'elevation_required' ) {
+                showElevationForm($el_window, 'Confirm your password, then approve the request again.');
+                return;
+            }
+            pendingNotice = resp.ok
+                ? `${username} was upgraded to ${ACCOUNT_TYPE_LABELS[type] ?? type}. The request is closed.`
+                : (data.message || 'Could not approve the request.');
+            loadOverview($el_window);
+        });
+        $window.on('click', '.admin-upgrade-dismiss', async (e) => {
+            const username = $(e.currentTarget).data('username');
+            if ( !window.confirm(`Dismiss the upgrade request from ${username}? Their type stays the same.`) ) return;
+            const { resp, data } = await adminRequest('DELETE', `/admin/accounts/${encodeURIComponent(username)}/upgrade-request`);
+            if ( data.code === 'elevation_required' ) {
+                showElevationForm($el_window, 'Confirm your password, then dismiss the request again.');
+                return;
+            }
+            pendingNotice = resp.ok
+                ? `The upgrade request from ${username} was dismissed.`
+                : (data.message || 'Could not dismiss the request.');
+            loadOverview($el_window);
         });
         $window.on('submit', '.admin-account-form', async (e) => {
             e.preventDefault();
