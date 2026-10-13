@@ -34,8 +34,8 @@ export const ADMIN_ONLY_APP_NAMES: ReadonlySet<string> = new Set([
 ]);
 
 /**
- * The only apps a guest can see or launch. Everything not listed here is
- * hidden from guests.
+ * The only apps a guest can see or launch. Everything not listed here is hidden
+ * from guests.
  */
 export const GUEST_APP_NAMES: ReadonlySet<string> = new Set([
     'notes',

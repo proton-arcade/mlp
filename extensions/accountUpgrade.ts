@@ -26,9 +26,7 @@ type ActorUser = {
 const currentRequest = (user: ActorUser) => {
     const meta = (user.metadata ?? {}) as Record<string, unknown>;
     const req = meta.upgrade_request as
-        | { requested_type?: unknown; requested_at?: unknown }
-        | null
-        | undefined;
+        { requested_type?: unknown; requested_at?: unknown } | null | undefined;
     if (!req || typeof req !== 'object') return null;
     return {
         requested_type: req.requested_type ?? null,

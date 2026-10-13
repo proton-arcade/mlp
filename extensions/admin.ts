@@ -910,7 +910,10 @@ extension.patch(
             await stores.user.invalidateById(account.id);
         }
         // A type change answers any pending upgrade request.
-        if ('account_type' in update && pendingUpgradeRequest(account.metadata)) {
+        if (
+            'account_type' in update &&
+            pendingUpgradeRequest(account.metadata)
+        ) {
             await stores.user.updateMetadata(account.id, {
                 upgrade_request: null,
             });
@@ -973,7 +976,9 @@ extension.delete(
             return;
         }
         if (!pendingUpgradeRequest(account.metadata)) {
-            res.status(404).json({ message: 'That account has no pending upgrade request.' });
+            res.status(404).json({
+                message: 'That account has no pending upgrade request.',
+            });
             return;
         }
         await stores.user.updateMetadata(account.id, { upgrade_request: null });
