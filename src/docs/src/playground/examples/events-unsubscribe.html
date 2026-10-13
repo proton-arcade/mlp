@@ -1,0 +1,24 @@
+<html>
+<body>
+    <script src="/mixt.js/v2"></script>
+    <script>
+        (async () => {
+            const dir = mixt.randName();
+            await mixt.fs.mkdir(dir);
+
+            const sub = await mixt.events.onPersistent({ subject: `fs:${dir}` });
+            mixt.print(`watching as ${sub.subId}<br>`);
+
+            await mixt.events.unsubscribe(sub.subId);
+            mixt.print('stopped<br>');
+
+            // Ending it twice is refused the same way an unknown id is.
+            try {
+                await mixt.events.unsubscribe(sub.subId);
+            } catch (error) {
+                mixt.print(`second attempt: ${error.code}<br>`);
+            }
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+<html>
+<body>
+    <script src="/mixt.js/v2"></script>
+    <script>
+        (async () => {
+            // Get a worker's information
+            const workerInfo = await mixt.workers.get('my-api');
+            if (workerInfo) {
+                mixt.print(`Worker information: ${JSON.stringify(workerInfo, null, 2)}`);
+            } else {
+                mixt.print('Worker not found!');
+            }
+        })();
+    </script>
+</body>
+</html>

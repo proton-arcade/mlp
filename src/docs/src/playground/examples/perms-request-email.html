@@ -1,0 +1,21 @@
+<html>
+<body>
+    <script src="/mixt.js/v2"></script>
+    <button id="request-email">Request Email Access</button>
+    <script>
+        document.getElementById('request-email').addEventListener('click', async () => {
+            const email = await mixt.perms.request('email');
+            if (email !== undefined) {
+                if (email === null) {
+                    mixt.print('User does not have an email address');
+                } else {
+                    mixt.print(`Email: ${email}`);
+                }
+            } else {
+                mixt.print('Email access denied');
+            }
+        });
+    </script>
+</body>
+</html>
+

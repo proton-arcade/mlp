@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Browser</title>
+<link rel="stylesheet" href="browser.css">
+</head>
+<body>
+<header class="toolbar">
+    <button id="back" class="nav-btn" title="Back" aria-label="Back" disabled>&#8592;</button>
+    <button id="forward" class="nav-btn" title="Forward" aria-label="Forward" disabled>&#8594;</button>
+    <button id="reload" class="nav-btn" title="Reload" aria-label="Reload">&#8635;</button>
+    <button id="home" class="nav-btn" title="MPLmit home" aria-label="Home">&#8962;</button>
+    <form id="address-form" class="address-form" autocomplete="off">
+        <input id="address" type="text" spellcheck="false" placeholder="Search MPLmit or type a site name" aria-label="Address">
+    </form>
+</header>
+<main id="view" class="view" aria-live="polite"></main>
+<script src="browser.js"></script>
+</body>
+</html>

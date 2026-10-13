@@ -1,0 +1,11 @@
+<html>
+<body>
+    <script src="/mixt.js/v2"></script>
+    <script>
+        // Create a new file called "hello.txt" containing "Hello, world!"
+        mixt.fs.write('hello.txt', 'Hello, world!').then(() => {
+            mixt.print('File written successfully');
+        })
+    </script>
+</body>
+</html>

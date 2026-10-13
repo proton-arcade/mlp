@@ -1,0 +1,17 @@
+<html>
+<body>
+    <script src="/mixt.js/v2"></script>
+    <script>
+        (async () => {
+            // (1) Create a random directory
+            let dirname = mixt.randName();
+            await mixt.fs.mkdir(dirname);
+            mixt.print('Directory created successfully<br>');
+
+            // (2) Delete the directory
+            await mixt.fs.delete(dirname);
+            mixt.print('Directory deleted successfully');
+        })();
+    </script>
+</body>
+</html>

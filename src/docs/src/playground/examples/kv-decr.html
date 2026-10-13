@@ -1,0 +1,10 @@
+<html>
+<body>
+    <script src="/mixt.js/v2"></script>
+    <script>
+        mixt.kv.decr('testDecrKey').then((newValue) => {
+            mixt.print(`New value: ${newValue}`);
+        });
+    </script>
+</body>
+</html>

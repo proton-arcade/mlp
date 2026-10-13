@@ -1,0 +1,18 @@
+<html>
+<body>
+    <script src="/mixt.js/v2"></script>
+    <button id="request-subdomains">Request Subdomains Write Access</button>
+    <script>
+        document.getElementById('request-subdomains').addEventListener('click', async () => {
+            const granted = await mixt.perms.request('subdomains', { access: 'write' });
+            if (granted) {
+                mixt.print('Subdomains write access granted');
+                const sites = await mixt.hosting.list();
+                mixt.print(`User has ${sites.length} site(s)`);
+            } else {
+                mixt.print('Subdomains write access denied');
+            }
+        });
+    </script>
+</body>
+</html>

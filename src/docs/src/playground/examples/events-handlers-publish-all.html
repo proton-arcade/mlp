@@ -1,0 +1,26 @@
+<html>
+<body>
+    <script src="/mixt.js/v2"></script>
+    <script>
+        (async () => {
+            const name = `pipeline-${mixt.randName()}`;
+            const app = await mixt.apps.create(name, `https://example.com/${name}`);
+
+            const published = await mixt.events.handlers.publishAll([
+                {
+                    name: 'ingestUpload',
+                    handler: ({ event, ctx }) => fetch(ctx.ingest, { body: event.path }),
+                },
+                {
+                    name: 'indexDocument',
+                    handler: ({ event, ctx }) => fetch(ctx.index, { body: event.uid }),
+                },
+            ], { appUid: app.uid });
+
+            for (const handler of published) {
+                mixt.print(`${handler.name} → ${handler.outcome}<br>`);
+            }
+        })();
+    </script>
+</body>
+</html>

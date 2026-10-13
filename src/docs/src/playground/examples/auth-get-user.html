@@ -1,0 +1,10 @@
+<html>
+<body>
+    <script src="/mixt.js/v2"></script>
+    <script>
+        mixt.auth.getUser().then(function(user) {
+            mixt.print(JSON.stringify(user));
+        });
+    </script>
+</body>
+</html>

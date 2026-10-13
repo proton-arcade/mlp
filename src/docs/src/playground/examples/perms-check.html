@@ -1,0 +1,23 @@
+<html>
+<body>
+    <script src="/mixt.js/v2"></script>
+    <button id="save">Save to Documents</button>
+    <script>
+        document.getElementById('save').addEventListener('click', async () => {
+            const details = { name: 'Documents', access: 'write' };
+
+            // check() never prompts, so it can run before deciding whether to.
+            if (await mixt.perms.check('folder', details)) {
+                mixt.print('Already granted, no prompt needed');
+            } else if (!await mixt.perms.request('folder', details)) {
+                mixt.print('Documents write access denied');
+                return;
+            }
+
+            const user = await mixt.auth.getUser();
+            await mixt.fs.write(`/${user.username}/Documents/notes.txt`, 'Saved!');
+            mixt.print('Saved to Documents');
+        });
+    </script>
+</body>
+</html>

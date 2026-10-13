@@ -1,0 +1,34 @@
+---
+title: mixt.ui.onWindowClose()
+description: Executes a function when the window is about to close.
+platforms: [apps]
+---
+
+Specify a function to execute when the window is about to close. For example the provided function will run right after  the 'X' button of the window has been pressed.
+
+**Note** `onWindowClose` is not called when app is closed using `mixt.exit()`.
+
+## Syntax
+```js
+mixt.ui.onWindowClose(handler)
+```
+
+## Parameters
+#### `handler` (Function)
+A function to execute when the window is going to close.
+
+
+## Examples
+```html
+<html>
+<body>
+    <script src="/mixt.js/v2"></script>
+    <script>
+        mixt.ui.onWindowClose(function(){
+            alert('Window is about to close!')
+            mixt.exit();
+        })
+    </script>
+</body>
+</html>
+```

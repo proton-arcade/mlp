@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mail</title>
+<link rel="stylesheet" href="/builtin/shared/apps.css">
+<style>
+    html, body { height: 100%; }
+    body { display: flex; flex-direction: column; }
+    .mail { flex: 1; display: grid; grid-template-columns: 260px 300px 1fr; min-height: 0; }
+    .sidebar, .list, .pane { min-height: 0; display: flex; flex-direction: column; }
+    .sidebar { background: #2d2f31; color: #eeeeec; padding: 12px; gap: 10px; }
+    .sidebar .me { font-size: 13px; opacity: 0.85; word-break: break-all; }
+    .sidebar .brand { font-size: 16px; font-weight: 600; }
+    .sidebar .btn { background: #68b723; border-color: #4e8f17; color: #fff; }
+    .sidebar small { opacity: 0.6; font-size: 12px; line-height: 1.4; }
+    .list { background: #fff; border-right: 1px solid #d6d6d4; }
+    .list header { padding: 12px; border-bottom: 1px solid #e3e3e1; display: flex; gap: 6px; }
+    .list input { flex: 1; padding: 6px 8px; border: 1px solid #bbb; border-radius: 4px; font: inherit; min-width: 0; }
+    .threads { overflow-y: auto; flex: 1; }
+    .thread { padding: 10px 12px; border-bottom: 1px solid #efefed; cursor: pointer; }
+    .thread:hover { background: #f4f4f2; }
+    .thread.active { background: #e6f1d9; }
+    .thread .who { display: flex; justify-content: space-between; font-weight: 600; font-size: 14px; }
+    .thread .last { font-size: 13px; color: #6b7174; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
+    .thread .unread { background: #3d7fca; color: #fff; border-radius: 9px; padding: 0 6px; font-size: 11px; }
+    .thread .when { font-size: 11px; color: #888a85; }
+    .pane { background: #f6f6f5; }
+    .pane header { padding: 12px 16px; border-bottom: 1px solid #d6d6d4; background: #fff; }
+    .pane header h2 { margin: 0; font-size: 16px; }
+    .messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+    .bubble { max-width: 70%; padding: 8px 12px; border-radius: 16px; background: #fff; border: 1px solid #dcdcda; white-space: pre-wrap; word-wrap: break-word; font-size: 14px; }
+    .bubble.mine { align-self: flex-end; background: #3d7fca; color: #fff; border-color: #3d7fca; }
+    .bubble time { display: block; font-size: 10px; opacity: 0.7; margin-top: 3px; }
+    .empty { margin: auto; color: #888a85; text-align: center; padding: 24px; }
+    .composer { display: flex; gap: 8px; padding: 12px; background: #fff; border-top: 1px solid #d6d6d4; }
+    .composer textarea { flex: 1; resize: none; height: 60px; padding: 8px; font: inherit; border: 1px solid #bbb; border-radius: 6px; }
+    .notice { padding: 6px 12px; font-size: 13px; color: #a40000; min-height: 1.2em; }
+    .new-to { display: none; padding: 10px; border-bottom: 1px solid #e3e3e1; gap: 6px; }
+    .new-to.show { display: flex; }
+    .new-to input { flex: 1; padding: 6px 8px; border: 1px solid #bbb; border-radius: 4px; font: inherit; }
+    @media (max-width: 760px) {
+        .mail { grid-template-columns: 1fr; }
+        .sidebar { display: none; }
+    }
+    @media (prefers-color-scheme: dark) {
+        .list { background: #2d2f31; border-color: #111; }
+        .list header, .thread { border-color: #3a3d40; }
+        .thread:hover { background: #36393c; }
+        .thread.active { background: #2f4a25; }
+        .thread .last { color: #aaa; }
+        .pane { background: #232527; }
+        .pane header, .composer { background: #2d2f31; border-color: #111; }
+        .bubble { background: #3a3d40; border-color: #4a4d50; color: #eeeeec; }
+        .bubble.mine { background: #3d7fca; color: #fff; }
+        .composer textarea, .list input, .new-to input { background: #232527; color: #eeeeec; border-color: #555; }
+    }
+</style>
+</head>
+<body>
+<header class="toolbar">
+    <h1>Mail</h1>
+    <span id="me" class="status" style="padding:0"></span>
+</header>
+<div class="mail">
+    <aside class="sidebar">
+        <div class="brand">Mail</div>
+        <div class="me" id="sidebar-me"></div>
+        <button id="compose" class="btn" type="button">New message</button>
+        <small>Messages go only to accounts on this server, addressed as name@mixt.mpl.</small>
+    </aside>
+    <section class="list">
+        <header>
+            <input id="search" type="search" placeholder="Search conversations" aria-label="Search conversations">
+        </header>
+        <div class="new-to" id="new-to">
+            <input id="to" type="text" placeholder="name@mixt.mpl" aria-label="Recipient address">
+            <button id="to-go" class="btn" type="button">Open</button>
+        </div>
+        <div id="threads" class="threads" role="list"></div>
+    </section>
+    <section class="pane">
+        <header><h2 id="title">Select a conversation</h2></header>
+        <div id="messages" class="messages"><div class="empty">Pick a conversation, or start a new message.</div></div>
+        <div id="notice" class="notice" role="alert"></div>
+        <form id="composer" class="composer" hidden>
+            <textarea id="body" maxlength="5000" placeholder="Write a message" aria-label="Message"></textarea>
+            <button id="send" class="btn primary" type="submit">Send</button>
+        </form>
+    </section>
+</div>
+<script src="app.js"></script>
+</body>
+</html>

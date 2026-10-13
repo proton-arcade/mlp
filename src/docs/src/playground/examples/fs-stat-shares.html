@@ -1,0 +1,17 @@
+<html>
+<body>
+    <script src="/mixt.js/v2"></script>
+    <script>
+        (async () => {
+            await mixt.fs.write('report.txt', 'Quarterly numbers');
+            await mixt.fs.share('report.txt', 'friend@example.com', 'read');
+
+            const file = await mixt.fs.stat('report.txt', { returnShares: true });
+            mixt.print(`shared: ${file.is_shared}<br>`);
+            for (const share of file.shares) {
+                mixt.print(`${share.holder ?? share.recipientEmail}: ${share.mode}<br>`);
+            }
+        })()
+    </script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+<html>
+<body>
+    <script src="/mixt.js/v2"></script>
+    <script>
+        mixt.ui.notify({
+            title: 'Build finished',
+            text: 'Your export is ready.',
+            icon: 'bell.svg',
+        }).then((uid) => {
+            mixt.print('Notification UID: ' + uid);
+        });
+    </script>
+</body>
+</html>

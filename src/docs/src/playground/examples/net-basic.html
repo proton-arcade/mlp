@@ -1,0 +1,21 @@
+<html>
+<body>
+    <script src="/mixt.js/v2"></script>
+    <script>
+    const socket = new mixt.net.Socket("example.com", 80);
+    socket.on("open", () => {
+        socket.write("GET / HTTP/1.1\r\nHost: example.com\r\n\r\n");
+    })
+    const decoder = new TextDecoder();
+    socket.on("data", (data) => {
+        mixt.print(decoder.decode(data), { code: true });
+    })
+    socket.on("error", (reason) => {
+        mixt.print("Socket errored with the following reason: ", reason);
+    })
+    socket.on("close", (hadError)=> {
+        mixt.print("Socket closed. Was there an error? ", hadError);
+    })
+    </script>
+</body>
+</html>

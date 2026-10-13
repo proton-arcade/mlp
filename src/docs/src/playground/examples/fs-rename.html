@@ -1,0 +1,16 @@
+<html>
+<body>
+    <script src="/mixt.js/v2"></script>
+    <script>
+        (async () => {
+            // Create hello.txt
+            await mixt.fs.write('hello.txt', 'Hello, world!');
+            mixt.print(`"hello.txt" created<br>`);
+
+            // Rename hello.txt to hello-world.txt
+            await mixt.fs.rename('hello.txt', 'hello-world.txt')
+            mixt.print(`"hello.txt" renamed to "hello-world.txt"<br>`);
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sudoku</title>
+<link rel="stylesheet" href="/builtin/shared/apps.css">
+<style>
+    .toolbar select { font: inherit; padding: 4px; }
+    .grid { display: grid; grid-template-columns: repeat(9, 42px); grid-template-rows: repeat(9, 42px); margin: 12px auto; width: max-content; border: 2px solid #333; }
+    .cell { border: 1px solid #aaa; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+    .cell.box-r { border-bottom: 2px solid #333; }
+    .cell.box-c { border-right: 2px solid #333; }
+    .cell input { width: 100%; height: 100%; border: 0; background: transparent; color: inherit; font: inherit; text-align: center; outline: none; }
+    .cell input.given { font-weight: 700; }
+    .cell input.bad { color: #c0392b; }
+    .cell input:focus { background: rgba(104, 183, 35, 0.25); }
+    .pad { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; }
+</style>
+</head>
+<body>
+<header class="toolbar">
+    <h1>Sudoku</h1>
+    <select id="difficulty" aria-label="Difficulty">
+        <option value="easy">Easy</option>
+        <option value="medium" selected>Medium</option>
+        <option value="hard">Hard</option>
+    </select>
+    <button id="new" class="btn primary" type="button">New puzzle</button>
+    <button id="check" class="btn" type="button">Check</button>
+</header>
+<p id="status" class="status" role="status"></p>
+<div id="grid" class="grid" aria-label="Sudoku grid"></div>
+<div class="pad" aria-label="Number pad">
+    <button class="btn" data-n="1" type="button">1</button><button class="btn" data-n="2" type="button">2</button><button class="btn" data-n="3" type="button">3</button>
+    <button class="btn" data-n="4" type="button">4</button><button class="btn" data-n="5" type="button">5</button><button class="btn" data-n="6" type="button">6</button>
+    <button class="btn" data-n="7" type="button">7</button><button class="btn" data-n="8" type="button">8</button><button class="btn" data-n="9" type="button">9</button>
+    <button class="btn" data-n="0" type="button">Clear</button>
+</div>
+<script type="module" src="app.js"></script>
+</body>
+</html>

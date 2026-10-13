@@ -1,0 +1,28 @@
+<html>
+<body>
+    <script src="/mixt.js/v2"></script>
+    <script>
+        (async () => {
+            // (1) A directory to work in. `inbox/` below it does not exist yet.
+            const dir = mixt.randName();
+            await mixt.fs.mkdir(dir);
+
+            // (2) Subscribe anyway — the subscription anchors on `dir` and
+            //     matches the rest of the path as it appears.
+            const sub = await mixt.events.onLocal(
+                `fs:${dir}/inbox/trigger.json:add`,
+                ({ event }) => mixt.print(`appeared: ${event.path}<br>`),
+                { onError: (error) => mixt.print(`subscription ended: ${error.code}<br>`) },
+            );
+            mixt.print(`anchored on ${sub.anchor.path}, matching ${sub.match}<br>`);
+
+            // (3) Create it, several directories deep
+            await mixt.fs.write(`${dir}/inbox/trigger.json`, '{}', {
+                createMissingParents: true,
+            });
+
+            setTimeout(() => sub.off(), 2000);
+        })();
+    </script>
+</body>
+</html>

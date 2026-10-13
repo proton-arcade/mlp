@@ -1,0 +1,16 @@
+<html>
+<body>
+    <script src="/mixt.js/v2"></script>
+    <script>
+        (async () => {
+            const [team] = await mixt.teams.list();
+
+            if (team?.isOwner) {
+                mixt.print(`You own ${team.name ?? team.handle}. Showing the admin page.`);
+            } else {
+                mixt.print('You are not a team owner. The admin page stays hidden.');
+            }
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+<html>
+<body>
+    <script src="/mixt.js/v2"></script>
+    <script>
+        // Create a directory with random name
+        let dirName = mixt.randName();
+        mixt.fs.mkdir(dirName).then((directory) => {
+            mixt.print(`"${dirName}" created at ${directory.path}`);
+        }).catch((error) => {
+            mixt.print('Error creating directory:', error);
+        });
+    </script>
+</body>
+</html>

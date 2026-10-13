@@ -1,0 +1,293 @@
+#!/usr/bin/env node
+// Entry point for `npm start`. One command takes a fresh checkout to a running desktop:
+//
+//   1. installs dependencies if they are missing
+//   2. writes a git-ignored config.json with random secrets if there is none
+//   3. builds the desktop (GUI) and SDK bundles when they are missing or older than their sources
+//   4. builds the backend and runs it on http://localhost:4100
+//
+// Other modes, all optional:
+//
+//     npm start --server=mixt.mpl              serve the GUI against a remote backend (no local server)
+//     npm start -- --extensions=<dir>           bundle out-of-tree GUI extensions (with --server)
+
+import { spawn, spawnSync } from 'node:child_process';
+import { createHash, randomBytes } from 'node:crypto';
+import {
+    appendFileSync,
+    existsSync,
+    mkdirSync,
+    readFileSync,
+    readdirSync,
+    rmSync,
+    statSync,
+    writeFileSync,
+} from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+import { npmSpawnArgs } from './npmSpawn.mjs';
+
+const rootDir = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
+
+// Node 18.19+ (module.register for the node:sqlite shim; see
+// src/backend/util/nodeCompat.ts). Newer majors are supported as-is.
+const MIN_NODE = [18, 19];
+const SECRET_KEYS = ['jwt_secret_v2', 'url_signature_secret'];
+const SHIPPED_PLACEHOLDER = /change-me/;
+
+const GUI_BUNDLE = path.join(rootDir, 'src', 'gui', 'dist', 'bundle.min.js');
+const SDK_BUNDLE = path.join(rootDir, 'src', 'mixt-js', 'dist', 'mixt.js');
+const GUI_SOURCES = [path.join(rootDir, 'src', 'gui')];
+const SDK_SOURCES = [
+    path.join(rootDir, 'src', 'mixt-js', 'src'),
+    path.join(rootDir, 'src', 'mixt-js', 'webpack.config.js'),
+];
+// Worker runtime preambles, loaded by the backend's worker drivers.
+const WORKER_BUNDLES = [
+    path.join(rootDir, 'src', 'worker', 'dist', 'workerPreamble.js'),
+    path.join(rootDir, 'src', 'worker', 'dist', 'eventsWorkerPreamble.js'),
+];
+const WORKER_SOURCES = [
+    path.join(rootDir, 'src', 'worker', 'src'),
+    path.join(rootDir, 'src', 'worker', 'scripts'),
+    path.join(rootDir, 'src', 'worker', 'template'),
+    path.join(rootDir, 'src', 'worker', 'webpack.config.cjs'),
+];
+
+// `npm start --flag=x` arrives as the npm_config_<flag> env var;
+// `npm start -- --flag=x` arrives as a regular argument.
+const getFlag = (name) => {
+    for ( const arg of process.argv.slice(2) ) {
+        if ( arg.startsWith(`--${name}=`) ) return arg.slice(name.length + 3);
+    }
+    return process.env[`npm_config_${name}`] || null;
+};
+
+// Relative paths resolve against where `npm start` was invoked (INIT_CWD),
+// not the repo root npm runs scripts from.
+const resolveExtensionPaths = (value) => value
+    .split(';')
+    .filter(Boolean)
+    .map(p => path.resolve(process.env.INIT_CWD ?? process.cwd(), p))
+    .join(';');
+
+const run = (cmd, args, opts = {}) => new Promise((resolve, reject) => {
+    const child = spawn(cmd, args, { stdio: 'inherit', cwd: rootDir, ...opts });
+    child.on('error', reject);
+    child.on('exit', (code, signal) => {
+        if ( code === 0 || signal ) resolve();
+        else reject(new Error(`\`${[cmd, ...args].join(' ')}\` exited with code ${code}`));
+    });
+});
+
+const runNpm = (args, opts) => run(...npmSpawnArgs(args, opts));
+
+const checkNodeVersion = () => {
+    const [major, minor] = process.versions.node.split('.').map(Number);
+    const tooOld = major < MIN_NODE[0] || (major === MIN_NODE[0] && minor < MIN_NODE[1]);
+    if ( tooOld ) {
+        throw new Error(
+            `Mixt needs Node.js ${MIN_NODE[0]}.${MIN_NODE[1]} or newer (this is ${process.version}). ` +
+            'Install a current Node.js from https://nodejs.org and run `npm start` again.',
+        );
+    }
+};
+
+// better-sqlite3 13.x is the SQLite driver on Node 22.5+ (it segfaults on 18,
+// and 12.x crashes on 24). It is not in package.json, because npm would try to
+// compile it on Node 18 and fail the whole install there. Node 18 uses the
+// 12.x alias instead. Here it is added on Node 22.5+ with --no-save, and
+// checked on every start so a later plain `npm install` cannot drop it.
+// The dependency tree is shipped in vendor/node-modules as split gzip parts so
+// a fresh checkout needs no network access. It is built for Linux x64 on the
+// Node 18 ABI (module version 108); on any other platform or Node version the
+// normal npm install is used instead.
+const VENDOR_DIR = path.join(rootDir, 'vendor', 'node-modules');
+const VENDOR_ARCHIVE = 'node_modules-linux-x64-node18.tar.gz';
+
+const isVendorPlatform = () => process.platform === 'linux' && process.arch === 'x64';
+
+const expectedVendorHash = (archiveName) => readFileSync(path.join(VENDOR_DIR, 'SHA256SUMS'), 'utf8')
+    .split('\n')
+    .find((line) => line.trim().endsWith(archiveName))
+    ?.split(/\s+/)[0];
+
+const restoreVendoredModules = () => {
+    if ( !isVendorPlatform() || !existsSync(path.join(VENDOR_DIR, 'SHA256SUMS')) ) return false;
+
+    const parts = readdirSync(VENDOR_DIR)
+        .filter((f) => f.startsWith('node_modules.tar.gz.part-'))
+        .sort();
+    if ( parts.length === 0 ) return false;
+
+    console.log('Restoring dependencies from vendor/node-modules...');
+    const volatileDir = path.join(rootDir, 'volatile');
+    mkdirSync(volatileDir, { recursive: true });
+    const archive = path.join(volatileDir, VENDOR_ARCHIVE);
+    rmSync(archive, { force: true });
+    for ( const part of parts ) {
+        appendFileSync(archive, readFileSync(path.join(VENDOR_DIR, part)));
+    }
+
+    const expected = expectedVendorHash(VENDOR_ARCHIVE);
+    const actual = createHash('sha256').update(readFileSync(archive)).digest('hex');
+    if ( !expected || actual !== expected ) {
+        rmSync(archive, { force: true });
+        throw new Error('The vendored dependency archive failed its checksum. Re-clone the repository.');
+    }
+
+    const extracted = spawnSync(
+        'tar',
+        ['-xzf', archive, '-C', rootDir, '--no-same-owner'],
+        { stdio: 'inherit' },
+    );
+    rmSync(archive, { force: true });
+    if ( extracted.status !== 0 ) {
+        throw new Error('Could not extract the vendored dependencies (is `tar` installed?).');
+    }
+    return existsSync(path.join(rootDir, 'node_modules', '.package-lock.json'));
+};
+
+// Restores one archive from vendor/node-modules into the repo. Returns false
+// when the archive is absent. Throws on a checksum or extraction failure.
+const restoreVendoredArchive = (archiveName) => {
+    const archive = path.join(VENDOR_DIR, archiveName);
+    if ( !existsSync(archive) ) return false;
+    const expected = expectedVendorHash(archiveName);
+    const actual = createHash('sha256').update(readFileSync(archive)).digest('hex');
+    if ( !expected || actual !== expected ) {
+        throw new Error(`The vendored archive ${archiveName} failed its checksum. Re-clone the repository.`);
+    }
+    const extracted = spawnSync(
+        'tar',
+        ['-xzf', archive, '-C', rootDir, '--no-same-owner'],
+        { stdio: 'inherit' },
+    );
+    if ( extracted.status !== 0 ) {
+        throw new Error(`Could not extract ${archiveName} (is \`tar\` installed?).`);
+    }
+    return true;
+};
+
+// sql.js: SQLite as WebAssembly. The database fallback on any Node version whose
+// native SQLite binary cannot load. Pure JS and WASM, so it is restored on every
+// platform.
+const SQLJS_ARCHIVE = 'sql.js-1.14.2.tar.gz';
+
+// better-sqlite3 13.0.3 (prebuilt linux-x64 binary) for Node 22.5+. Optional:
+// if it cannot be restored or loaded, the sql.js fallback is used.
+const SQLITE_ARCHIVE = 'better-sqlite3-13.0.3-linux-x64.tar.gz';
+
+const ensureDependencies = async () => {
+    const [major, minor] = process.versions.node.split('.').map(Number);
+    const hasNodeSqlite = major > 22 || (major === 22 && minor >= 5);
+    if ( !existsSync(path.join(rootDir, 'node_modules', '.package-lock.json')) ) {
+        if ( !restoreVendoredModules() ) {
+            throw new Error(OFFLINE_INSTALL_HELP);
+        }
+    }
+    if ( !existsSync(path.join(rootDir, 'node_modules', 'sql.js', 'package.json')) ) {
+        if ( !restoreVendoredArchive(SQLJS_ARCHIVE) ) {
+            throw new Error(OFFLINE_INSTALL_HELP);
+        }
+    }
+    if ( hasNodeSqlite && isVendorPlatform() && !existsSync(path.join(rootDir, 'node_modules', 'better-sqlite3', 'package.json')) ) {
+        restoreVendoredArchive(SQLITE_ARCHIVE);
+    }
+};
+
+// Secrets are generated once and kept in config.json, which is git-ignored, so
+// every checkout gets its own and no shipped placeholder ever reaches a server.
+const ensureLocalConfig = () => {
+    const configPath = path.join(rootDir, 'config.json');
+    let config = {};
+    if ( existsSync(configPath) ) {
+        config = JSON.parse(readFileSync(configPath, 'utf8'));
+    }
+    let changed = !existsSync(configPath);
+    for ( const key of SECRET_KEYS ) {
+        if ( !config[key] || SHIPPED_PLACEHOLDER.test(config[key]) ) {
+            config[key] = randomBytes(32).toString('hex');
+            changed = true;
+        }
+    }
+    if ( changed ) {
+        writeFileSync(configPath, JSON.stringify(config, null, 4) + '\n');
+        console.log('Wrote config.json with fresh local secrets.');
+    }
+};
+
+// Newest modification time under the given paths, skipping build output.
+const newestMtime = (targets) => {
+    let newest = 0;
+    const visit = (entry) => {
+        const stat = statSync(entry, { throwIfNoEntry: false });
+        if ( !stat ) return;
+        if ( stat.isDirectory() ) {
+            const name = path.basename(entry);
+            if ( name === 'node_modules' || name === 'dist' || name.startsWith('.') ) return;
+            for ( const child of readdirSync(entry) ) visit(path.join(entry, child));
+        } else {
+            newest = Math.max(newest, stat.mtimeMs);
+        }
+    };
+    targets.forEach(visit);
+    return newest;
+};
+
+const isStale = (bundle, sources) => {
+    if ( !existsSync(bundle) ) return true;
+    return newestMtime(sources) > statSync(bundle).mtimeMs;
+};
+
+const ensureBundles = async () => {
+    // MPLmit's index follows the internet folder, so it is rebuilt on every start.
+    // Adding or removing a site only needs a restart.
+    await run(process.execPath, [path.join(rootDir, 'tools', 'buildInternet.mjs')], { cwd: rootDir });
+    if ( isStale(GUI_BUNDLE, GUI_SOURCES) ) {
+        console.log('Building the desktop...');
+        await run(process.execPath, ['build.js'], { cwd: path.join(rootDir, 'src', 'gui') });
+    }
+    if ( isStale(SDK_BUNDLE, SDK_SOURCES) ) {
+        console.log('Building the SDK...');
+        await runNpm(['run', 'build'], { cwd: path.join(rootDir, 'src', 'mixt-js') });
+    }
+    if ( WORKER_BUNDLES.some((bundle) => isStale(bundle, WORKER_SOURCES)) ) {
+        console.log('Building the worker runtimes...');
+        await runNpm(['run', 'build'], { cwd: path.join(rootDir, 'src', 'worker') });
+    }
+};
+
+const startServer = () => run(process.execPath, [
+    '--enable-source-maps',
+    '-r', './dist/src/backend/telemetry.js',
+    './dist/src/backend/index.js',
+]);
+
+const server = getFlag('server');
+const extensions = getFlag('extensions');
+
+try {
+    checkNodeVersion();
+    if ( server ) {
+        const args = ['dev-server.js', `--server=${server}`];
+        if ( extensions ) args.push(`--extensions=${resolveExtensionPaths(extensions)}`);
+        await run(process.execPath, args, {
+            cwd: path.join(rootDir, 'src', 'gui'),
+        });
+    } else {
+        if ( extensions ) {
+            console.warn('--extensions only applies to --server (GUI-only) mode; ignoring.');
+        }
+        await ensureDependencies();
+        ensureLocalConfig();
+        await runNpm(['run', 'setupExtensions']);
+        await runNpm(['run', 'build:ts']);
+        await ensureBundles();
+        await startServer();
+    }
+} catch (err) {
+    console.error(err.message);
+    process.exit(1);
+}

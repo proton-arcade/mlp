@@ -1,0 +1,26 @@
+<html>
+<body>
+    <script src="/mixt.js/v2"></script>
+    <script>
+        (async () => {
+            const dir = mixt.randName();
+            await mixt.fs.mkdir(dir);
+
+            const sub = await mixt.events.onLocal(`fs:${dir}`, ({ event }) => {
+                mixt.print(`${event.op}: ${event.path}<br>`);
+            });
+
+            await mixt.fs.write(`${dir}/first.txt`, 'delivered');
+
+            // Give the first change time to arrive, then stop listening
+            setTimeout(async () => {
+                await sub.off();
+                mixt.print('stopped listening<br>');
+
+                // Nothing below is delivered
+                await mixt.fs.write(`${dir}/second.txt`, 'not delivered');
+            }, 2000);
+        })();
+    </script>
+</body>
+</html>

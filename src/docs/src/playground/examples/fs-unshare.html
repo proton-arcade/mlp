@@ -1,0 +1,14 @@
+<html>
+<body>
+    <script src="/mixt.js/v2"></script>
+    <script>
+        (async () => {
+            await mixt.fs.write('report.txt', 'Quarterly numbers');
+            await mixt.fs.share('report.txt', 'friend@example.com');
+
+            const result = await mixt.fs.unshare('report.txt', 'friend@example.com');
+            mixt.print(`Removed ${result.revoked} share(s)<br>`);
+        })()
+    </script>
+</body>
+</html>

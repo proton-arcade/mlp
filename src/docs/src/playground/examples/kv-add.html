@@ -1,0 +1,13 @@
+<html>
+<body>
+    <script src="/mixt.js/v2"></script>
+    <script>
+        (async () => {
+            await mixt.kv.set('profile', { tags: ['alpha'] });
+
+            const updated = await mixt.kv.add('profile', { 'tags': ['beta', 'gamma'] });
+            mixt.print(`Updated profile: ${JSON.stringify(updated)}`);
+        })();
+    </script>
+</body>
+</html>

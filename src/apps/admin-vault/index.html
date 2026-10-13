@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin Vault</title>
+<link rel="stylesheet" href="/builtin/shared/apps.css">
+<style>
+    main { padding: 16px 20px; max-width: 880px; }
+    section { background: #fff; border: 1px solid #d6d6d4; border-radius: 6px; padding: 16px; margin-bottom: 16px; }
+    section h2 { margin: 0 0 6px; font-size: 15px; }
+    p.hint { margin: 4px 0 12px; font-size: 13px; color: #6b7174; line-height: 1.45; }
+    label { display: block; font-size: 12px; color: #6b7174; margin: 8px 0 3px; }
+    input, textarea { width: 100%; padding: 7px 9px; border: 1px solid #bbb; border-radius: 4px; font: inherit; background: #fff; color: inherit; }
+    textarea { min-height: 80px; resize: vertical; }
+    .row { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+    .btn.danger { color: #a40000; }
+    .record { border-top: 1px solid #e3e3e1; padding: 10px 0; }
+    .record:first-child { border-top: 0; }
+    .record .label { font-weight: 600; }
+    .record .meta { font-size: 12px; color: #6b7174; }
+    .record pre { white-space: pre-wrap; word-break: break-word; background: #f6f6f5; padding: 8px; border-radius: 4px; font-size: 13px; margin: 6px 0; }
+    .msg { font-size: 13px; min-height: 1.3em; margin: 8px 20px 0; }
+    .msg.bad { color: #a40000; }
+    .msg.good { color: #2f6f1b; }
+    .hidden { display: none !important; }
+    @media (prefers-color-scheme: dark) {
+        section { background: #2d2f31; border-color: #111; }
+        input, textarea { background: #232527; border-color: #555; color: #eeeeec; }
+        .record, section h2 { border-color: #3a3d40; }
+        .record pre { background: #232527; }
+        p.hint, label, .record .meta { color: #aaa; }
+    }
+</style>
+</head>
+<body>
+<header class="toolbar">
+    <h1>Admin Vault</h1>
+    <span id="state" class="status" style="padding:0"></span>
+    <button id="lock" class="btn hidden" type="button">Lock</button>
+</header>
+<div id="msg" class="msg" role="status"></div>
+<main>
+    <p id="denied" class="hidden">Only the administrator can open the vault.</p>
+
+    <section id="setup" class="hidden">
+        <h2>Set up the vault</h2>
+        <p class="hint">This makes a key pair on this device. The server keeps only the public key, so it can store records but cannot read them. The private key is saved to a file protected by a passphrase. <strong>Keep that file safe.</strong> It is the only way to read the vault from another device, and it cannot be exported again later.</p>
+        <label for="setup-pass">Passphrase for the key file (at least 12 characters)</label>
+        <input id="setup-pass" type="password" autocomplete="new-password">
+        <label for="setup-pass2">Repeat passphrase</label>
+        <input id="setup-pass2" type="password" autocomplete="new-password">
+        <div class="row"><button id="setup-go" class="btn primary" type="button">Create key and set up</button></div>
+    </section>
+
+    <section id="import" class="hidden">
+        <h2>Unlock with your key file</h2>
+        <p class="hint">Choose the key file you saved when the vault was set up, then enter its passphrase. The key is kept on this device only, so you won't need to do this again here.</p>
+        <label for="import-file">Key file</label>
+        <input id="import-file" type="file" accept=".json,application/json">
+        <label for="import-pass">Passphrase</label>
+        <input id="import-pass" type="password" autocomplete="current-password">
+        <div class="row"><button id="import-go" class="btn primary" type="button">Unlock</button></div>
+    </section>
+
+    <section id="records-wrap" class="hidden">
+        <h2>Add a record</h2>
+        <label for="rec-label">Label</label>
+        <input id="rec-label" maxlength="200">
+        <label for="rec-text">Text</label>
+        <textarea id="rec-text" maxlength="20000"></textarea>
+        <div class="row"><button id="rec-add" class="btn primary" type="button">Encrypt and save</button></div>
+    </section>
+
+    <section id="list-wrap" class="hidden">
+        <h2>Records</h2>
+        <div id="records"></div>
+    </section>
+
+    <section id="reset-wrap" class="hidden">
+        <h2>Reset the vault</h2>
+        <p class="hint">Deletes every record and the public key. Any key file you already have stops working, and you will set up a new key. Type RESET to confirm.</p>
+        <input id="reset-confirm" placeholder="RESET" autocomplete="off">
+        <div class="row"><button id="reset-go" class="btn danger" type="button">Reset vault</button></div>
+    </section>
+</main>
+<script src="app.js"></script>
+</body>
+</html>

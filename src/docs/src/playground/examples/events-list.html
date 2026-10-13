@@ -1,0 +1,22 @@
+<html>
+<body>
+    <script src="/mixt.js/v2"></script>
+    <script>
+        (async () => {
+            const dir = mixt.randName();
+            await mixt.fs.mkdir(dir);
+            const sub = await mixt.events.onPersistent({
+                subject: `fs:${dir}`,
+                context: { label: 'inbox' },
+            });
+
+            for (const row of await mixt.events.list()) {
+                mixt.print(`${row.subject} — ${row.delivery}`);
+                mixt.print(` (context: ${row.contextKeys?.join(', ') ?? 'none'})<br>`);
+            }
+
+            await mixt.events.unsubscribe(sub.subId);
+        })();
+    </script>
+</body>
+</html>

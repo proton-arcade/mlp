@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Team Chat</title>
+<style>
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body { font: 15px/1.375 "gg sans", "Noto Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: #dbdee1; background: #313338; display: flex; flex-direction: column; }
+    button, input { font: inherit; }
+    button { padding: 6px 12px; border: 0; border-radius: 4px; background: #5865f2; color: #fff; cursor: pointer; }
+    button:hover { background: #4752c4; }
+    button:disabled { opacity: .45; cursor: default; }
+    button.on { background: #5865f2; color: #fff; }
+    input { padding: 9px 10px; border: 0; border-radius: 4px; background: #1e1f22; color: #dbdee1; min-width: 0; }
+    input::placeholder { color: #80848e; }
+    input:focus { outline: 2px solid #5865f2; }
+
+    /* Top bar: shows the room and connection state. */
+    header { height: 48px; padding: 0 16px; background: #313338; border-bottom: 1px solid #1f2023; font-weight: 600; color: #f2f3f5; display: flex; justify-content: space-between; align-items: center; gap: 8px; flex: none; }
+    .status { font-weight: 400; color: #949ba4; font-size: 13px; }
+
+    .wrap { flex: 1; display: flex; min-height: 0; }
+
+    /* Server rail: one shared server, so one icon. */
+    nav.rail { width: 72px; background: #1e1f22; display: flex; flex-direction: column; align-items: center; padding: 12px 0; gap: 8px; flex: none; }
+    .server-icon { width: 48px; height: 48px; border-radius: 50%; background: #5865f2; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 17px; user-select: none; }
+
+    /* Channel sidebar. */
+    aside { width: 240px; background: #2b2d31; display: flex; flex-direction: column; min-height: 0; flex: none; }
+    .server-name { height: 48px; padding: 0 16px; display: flex; align-items: center; font-weight: 600; color: #f2f3f5; border-bottom: 1px solid #1f2023; box-shadow: 0 1px 0 rgba(0,0,0,.2); }
+    aside h3 { font-size: 12px; text-transform: uppercase; color: #949ba4; margin: 16px 8px 4px 16px; letter-spacing: .02em; font-weight: 700; }
+    #channels { list-style: none; margin: 0; padding: 0 8px; overflow: auto; flex: 1; }
+    #channels li button { width: 100%; text-align: left; border: 0; background: transparent; padding: 6px 8px; border-radius: 4px; color: #949ba4; font-size: 16px; }
+    #channels li button:hover:not(.active) { background: #35373c; color: #dbdee1; }
+    #channels li button.active { background: #404249; color: #f2f3f5; }
+    .addch { display: flex; gap: 6px; padding: 8px; border-top: 1px solid #1f2023; }
+    .addch input { flex: 1; }
+
+    /* Message pane. */
+    main { flex: 1; display: flex; flex-direction: column; min-width: 0; background: #313338; }
+    #title { height: 48px; padding: 0 16px; border-bottom: 1px solid #26272b; font-weight: 600; color: #f2f3f5; display: flex; align-items: center; box-shadow: 0 1px 0 rgba(0,0,0,.1); flex: none; }
+    #log { flex: 1; overflow: auto; padding: 16px 0 8px; display: flex; flex-direction: column; }
+    .msg { padding: 4px 16px; margin-top: 12px; }
+    .msg:hover { background: #2e3035; }
+    .msg .who { font-weight: 500; font-size: 15px; color: #f2f3f5; }
+    .msg.mine .who { color: #00a8fc; }
+    .msg .when { color: #949ba4; font-size: 12px; margin-left: 8px; }
+    .msg p { margin: 2px 0 0; white-space: pre-wrap; word-wrap: break-word; color: #dbdee1; }
+    .msg .edited { color: #949ba4; font-size: 11px; margin-left: 6px; }
+    .msg .actions { float: right; display: none; gap: 6px; }
+    .msg:hover .actions { display: inline-flex; }
+    .msg .actions button { background: #383a40; color: #dbdee1; border: 0; border-radius: 4px; padding: 2px 8px; font-size: 12px; cursor: pointer; }
+    .msg .actions button.danger { color: #fa777c; }
+    .msg .edit-box { width: 100%; margin-top: 4px; padding: 8px 10px; background: #383a40; color: #dbdee1; border: 0; border-radius: 6px; font: inherit; }
+    .typing { color: #949ba4; font-size: 12px; padding: 0 16px 2px; min-height: 1.2em; flex: none; }
+    .empty { color: #949ba4; padding: 16px; }
+    form.send { padding: 0 16px 20px; flex: none; }
+    form.send input { width: 100%; padding: 11px 14px; background: #383a40; border-radius: 8px; font-size: 15px; }
+    form.send button { display: none; }
+    .err { color: #fa777c; padding: 0 16px 6px; min-height: 1.2em; font-size: 13px; flex: none; }
+    @media (max-width: 640px) { nav.rail { display: none; } aside { width: 160px; } }
+</style>
+</head>
+<body>
+<header>
+    <span>Team Chat</span>
+    <span class="status" id="status">Connecting…</span>
+</header>
+<div class="wrap">
+    <nav class="rail" aria-label="Servers">
+        <div class="server-icon" title="Team Chat">TC</div>
+    </nav>
+    <aside>
+        <div class="server-name">Team Chat</div>
+        <h3>Text channels</h3>
+        <ul id="channels"></ul>
+        <form class="addch" id="addForm">
+            <input id="newChannel" maxlength="40" placeholder="new-channel" autocomplete="off">
+            <button type="submit">Add</button>
+        </form>
+    </aside>
+    <main>
+        <div id="title"></div>
+        <div id="log"></div>
+        <div class="typing" id="typing"></div>
+        <div class="err" id="err"></div>
+        <form class="send" id="sendForm">
+            <input id="text" maxlength="2000" placeholder="Message this channel" autocomplete="off">
+            <button type="submit" id="send" class="on">Send</button>
+        </form>
+    </main>
+</div>
+<script src="vendor/socket.io.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

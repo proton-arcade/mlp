@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Checkers</title>
+<link rel="stylesheet" href="/builtin/shared/apps.css">
+<style>
+    .board { display: grid; grid-template-columns: repeat(8, 56px); grid-template-rows: repeat(8, 56px); margin: 12px auto; width: max-content; border: 2px solid #4e4e4e; }
+    .sq { display: flex; align-items: center; justify-content: center; position: relative; }
+    .sq.light { background: #eeeed2; }
+    .sq.dark { background: #8b5a2b; cursor: pointer; }
+    .sq.sel { box-shadow: inset 0 0 0 4px #f6f669; }
+    .sq.hint::after { content: ''; position: absolute; width: 16px; height: 16px; border-radius: 50%; background: rgba(0, 200, 0, 0.6); }
+    .piece { font-size: 38px; line-height: 1; }
+    .piece.red { color: #c0392b; }
+    .piece.black { color: #111; }
+</style>
+</head>
+<body>
+<header class="toolbar">
+    <h1>Checkers</h1>
+    <button id="new" class="btn primary" type="button">New game</button>
+    <button id="undo" class="btn" type="button">Undo</button>
+</header>
+<p id="status" class="status" role="status"></p>
+<div id="board" class="board" aria-label="Checkers board"></div>
+<script type="module" src="app.js"></script>
+</body>
+</html>

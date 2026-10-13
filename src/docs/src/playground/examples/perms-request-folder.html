@@ -1,0 +1,19 @@
+<html>
+<body>
+    <script src="/mixt.js/v2"></script>
+    <button id="request-documents">Request Documents Write Access</button>
+    <script>
+        document.getElementById('request-documents').addEventListener('click', async () => {
+            const documentsPath = await mixt.perms.request('folder', { name: 'Documents', access: 'write' });
+            if (documentsPath) {
+                mixt.print(`Documents path: ${documentsPath}`);
+                // Now you can write files to the Documents folder
+                await mixt.fs.write(`${documentsPath}/my-document.txt`, 'Hello from Documents!');
+                mixt.print('File written to Documents folder');
+            } else {
+                mixt.print('Documents write access denied');
+            }
+        });
+    </script>
+</body>
+</html>

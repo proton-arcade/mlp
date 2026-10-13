@@ -1,0 +1,18 @@
+<html>
+<body>
+    <script src="/mixt.js/v2"></script>
+    <script>
+        (async () => {
+            // (1) Create a random text file
+            let filename = mixt.randName() + ".txt";
+            await mixt.fs.write(filename, "Hello world! I'm a file!");
+            mixt.print(`"${filename}" created<br>`);
+
+            // (2) Read the file and print its contents
+            let blob = await mixt.fs.read(filename);
+            let content = await blob.text();
+            mixt.print(`"${filename}" read (content: "${content}")<br>`);
+        })();
+    </script>
+</body>
+</html>

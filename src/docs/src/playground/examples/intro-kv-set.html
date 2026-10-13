@@ -1,0 +1,14 @@
+<html>
+<body>
+    <script src="/mixt.js/v2"></script>
+    <script>
+        // (1) Save user preference
+        mixt.kv.set('userPreference', 'darkMode').then(() => {
+            // (2) Get user preference
+            mixt.kv.get('userPreference').then(value => {
+                mixt.print(`User preference: ${value}`);
+            });
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Klondike</title>
+<link rel="stylesheet" href="/builtin/shared/apps.css">
+<style>
+    #board { padding: 12px; }
+    .row { display: flex; gap: 10px; align-items: flex-start; }
+    .row.top { margin-bottom: 14px; }
+    .gap { width: 60px; }
+    .slot { width: 72px; height: 100px; border: 2px dashed rgba(127, 127, 127, 0.6); border-radius: 8px; position: relative; display: flex; align-items: center; justify-content: center; font-size: 26px; color: rgba(127, 127, 127, 0.8); cursor: pointer; }
+    .tableau { justify-content: center; }
+    .column { width: 72px; position: relative; border-radius: 8px; cursor: pointer; }
+    .column.empty { border: 2px dashed rgba(127, 127, 127, 0.6); min-height: 100px; }
+    .card { position: absolute; left: 0; width: 72px; height: 100px; border-radius: 8px; background: #fff; border: 1px solid #888; font-size: 20px; padding: 4px; box-sizing: border-box; color: #000; }
+    /* Every card is absolutely placed inside its pile, so tableau cards
+       overlap down the column instead of stacking in normal flow. */
+    .slot .card, .column .card { position: absolute; top: 0; left: 0; }
+    .card.down { background: repeating-linear-gradient(45deg, #2a6cb0, #2a6cb0 6px, #1d4f86 6px, #1d4f86 12px); }
+    .card.red { color: #c0392b; }
+    .card.black { color: #111; }
+    .card.sel { outline: 3px solid #f6e05e; }
+    .column .card:first-child { top: 0; }
+</style>
+</head>
+<body>
+<header class="toolbar">
+    <h1>Klondike</h1>
+    <button id="new" class="btn primary" type="button">New game</button>
+    <button id="undo" class="btn" type="button" disabled>Undo</button>
+</header>
+<p id="status" class="status" role="status"></p>
+<div id="board" aria-label="Klondike table"></div>
+<script type="module" src="app.js"></script>
+</body>
+</html>

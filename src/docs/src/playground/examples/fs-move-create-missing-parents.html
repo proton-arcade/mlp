@@ -1,0 +1,22 @@
+<html>
+<body>
+    <script src="/mixt.js/v2"></script>
+    <script>
+    (async () => {
+        // (1) Create a random file
+        let filename = mixt.randName() + '.txt';
+        await mixt.fs.write(filename, 'Hello, world!');
+        mixt.print('Created file: ' + filename + '<br>');
+
+        // (2) Move the file into a non-existent directory
+        let dirname = mixt.randName();
+        await mixt.fs.move(filename, dirname + '/' + filename, { createMissingParents: true });
+        mixt.print(`Moved ${filename} to ${dirname}<br>`);
+
+        // (3) Delete the file and directory (cleanup)
+        await mixt.fs.delete('non-existent-directory/' + filename);
+        await mixt.fs.delete('non-existent-directory');
+    })();
+    </script>
+</body>
+</html>

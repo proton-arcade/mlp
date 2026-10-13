@@ -1,0 +1,40 @@
+/* Shared look for the built-in apps: a Mint-style toolbar and buttons. */
+:root { color-scheme: light dark; }
+* { box-sizing: border-box; }
+body {
+    margin: 0;
+    font-family: 'Noto Sans', Ubuntu, system-ui, sans-serif;
+    background: #f2f2f1;
+    color: #2e3436;
+    min-height: 100vh;
+}
+.toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: linear-gradient(#f6f6f5, #e1e1df);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+}
+.toolbar h1 { font-size: 15px; font-weight: 600; margin: 0 auto 0 0; }
+.btn {
+    padding: 5px 12px;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    background: #fff;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+}
+.btn:hover:not(:disabled) { background: #f0f0ef; }
+.btn:disabled { opacity: 0.5; cursor: default; }
+.btn.primary { background: #68b723; border-color: #4e8f17; color: #fff; }
+.btn.primary:hover:not(:disabled) { background: #5ea21d; }
+.status { padding: 8px 12px; min-height: 1.4em; font-size: 14px; }
+@media (prefers-color-scheme: dark) {
+    body { background: #2d2f31; color: #eeeeec; }
+    .toolbar { background: linear-gradient(#3a3d40, #303336); border-color: #111; }
+    .btn { background: #3a3d40; border-color: #555; color: #eeeeec; }
+    .btn:hover:not(:disabled) { background: #46494c; }
+}

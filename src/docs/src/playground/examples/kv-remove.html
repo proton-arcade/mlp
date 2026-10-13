@@ -1,0 +1,13 @@
+<html>
+<body>
+    <script src="/mixt.js/v2"></script>
+    <script>
+        (async () => {
+            await mixt.kv.set('profile', { name: 'Mixt OS', stats: { score: 10, level: 2 } });
+
+            const updated = await mixt.kv.remove('profile', 'stats.score');
+            mixt.print(`Updated profile: ${JSON.stringify(updated)}`);
+        })();
+    </script>
+</body>
+</html>

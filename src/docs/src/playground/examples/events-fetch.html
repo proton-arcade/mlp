@@ -1,0 +1,24 @@
+<html>
+<body>
+    <script src="/mixt.js/v2"></script>
+    <script>
+        (async () => {
+            let cursor;
+            let seen = 0;
+            do {
+                const page = await mixt.events.fetch({
+                    subject: 'notif:account',
+                    cursor,
+                });
+                for (const event of page.items) {
+                    mixt.print(`${event.type}: ${event.notification.title}<br>`);
+                    seen++;
+                }
+                cursor = page.cursor;
+            } while (cursor);
+
+            if (!seen) mixt.print('nothing missed<br>');
+        })();
+    </script>
+</body>
+</html>

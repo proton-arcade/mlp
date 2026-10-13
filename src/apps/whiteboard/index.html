@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Whiteboard</title>
+<link rel="stylesheet" href="/builtin/shared/apps.css">
+<style>
+    html, body { height: 100%; }
+    body { display: flex; flex-direction: column; }
+    .tools { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 6px 10px; background: #fff; border-bottom: 1px solid #d6d6d4; }
+    .tools button { min-width: 34px; padding: 4px 8px; border: 1px solid #bbb; border-radius: 4px; background: #fff; font: inherit; cursor: pointer; color: inherit; }
+    .tools button:hover { background: #f0f0ef; }
+    .tools button[aria-pressed="true"] { background: #e6f1d9; border-color: #4a8f2e; }
+    .tools button:disabled { opacity: 0.45; cursor: default; }
+    .tools .sep { width: 1px; align-self: stretch; background: #ccc; margin: 0 4px; }
+    .tools select { padding: 4px 6px; border: 1px solid #bbb; border-radius: 4px; font: inherit; max-width: 180px; }
+    .tools input[type=color] { width: 34px; height: 30px; border: 1px solid #bbb; border-radius: 4px; padding: 0; background: #fff; }
+    .tools input[type=range] { width: 110px; }
+    .tools .status { margin-left: auto; font-size: 12px; color: #6b7174; }
+    .stage { flex: 1; min-height: 0; position: relative; background: #e9e9e7; overflow: hidden; }
+    canvas { position: absolute; inset: 0; width: 100%; height: 100%; background: #fff; touch-action: none; cursor: crosshair; }
+    .text-input { position: absolute; font: 18px system-ui, sans-serif; padding: 2px 4px; border: 1px dashed #4a8f2e; background: rgba(255,255,255,0.9); color: #111; min-width: 120px; outline: none; }
+    @media (prefers-color-scheme: dark) {
+        .tools { background: #2d2f31; border-color: #111; }
+        .tools button, .tools select { background: #232527; border-color: #555; color: #eeeeec; }
+        .tools button[aria-pressed="true"] { background: #2f4a25; }
+        .tools .status { color: #aaa; }
+    }
+</style>
+</head>
+<body>
+<header class="toolbar">
+    <h1>Whiteboard</h1>
+    <select id="board" aria-label="Board"></select>
+    <button id="new" class="btn" type="button">New</button>
+    <button id="rename" class="btn" type="button">Rename</button>
+    <button id="delete" class="btn" type="button">Delete</button>
+    <button id="png" class="btn" type="button">Export PNG</button>
+</header>
+<div class="tools" role="toolbar" aria-label="Drawing tools">
+    <button type="button" data-tool="pen" aria-pressed="true" title="Pen">Pen</button>
+    <button type="button" data-tool="line" aria-pressed="false" title="Line">Line</button>
+    <button type="button" data-tool="rect" aria-pressed="false" title="Rectangle">Rect</button>
+    <button type="button" data-tool="ellipse" aria-pressed="false" title="Ellipse">Ellipse</button>
+    <button type="button" data-tool="text" aria-pressed="false" title="Text">Text</button>
+    <button type="button" data-tool="eraser" aria-pressed="false" title="Eraser">Eraser</button>
+    <span class="sep"></span>
+    <input id="color" type="color" value="#1d4f91" aria-label="Colour">
+    <label>Width <input id="width" type="range" min="1" max="24" value="3" aria-label="Line width"></label>
+    <span class="sep"></span>
+    <button id="undo" type="button" disabled title="Undo (Ctrl+Z)">Undo</button>
+    <button id="redo" type="button" disabled title="Redo (Ctrl+Y)">Redo</button>
+    <button id="clear" type="button">Clear</button>
+    <span id="saved" class="status"></span>
+</div>
+<div id="stage" class="stage">
+    <canvas id="canvas"></canvas>
+</div>
+<script src="/builtin/shared/localdb.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

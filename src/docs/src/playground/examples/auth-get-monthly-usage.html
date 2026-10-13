@@ -1,0 +1,10 @@
+<html>
+  <body>
+    <script src="/mixt.js/v2"></script>
+    <script>
+      mixt.auth.getMonthlyUsage().then(function (usage) {
+        mixt.print(`<pre>${JSON.stringify(usage, null, 2)}</pre>`);
+      });
+    </script>
+  </body>
+</html>

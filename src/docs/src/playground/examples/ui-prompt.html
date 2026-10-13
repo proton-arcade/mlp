@@ -1,0 +1,14 @@
+<html>
+<body>
+    <script src="/mixt.js/v2"></script>
+    <script>
+        mixt.ui.prompt('Please enter your name:', 'John Doe').then((resp) => {
+            if (resp === null) {
+                mixt.print('You cancelled the prompt.');
+            } else {
+                mixt.print('Hello, ' + resp + '!');
+            }
+        });
+    </script>
+</body>
+</html>

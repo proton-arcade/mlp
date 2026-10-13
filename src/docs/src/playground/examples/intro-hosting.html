@@ -1,0 +1,21 @@
+<html>
+<body>
+    <script src="/mixt.js/v2"></script>
+    <script>
+        (async () => {
+            // (1) Create a random directory
+            let dirName = mixt.randName();
+            await mixt.fs.mkdir(dirName)
+
+            // (2) Create 'index.html' in the directory with the contents "Hello, world!"
+            await mixt.fs.write(`${dirName}/index.html`, '<h1>Hello, world!</h1>');
+
+            // (3) Host the directory under a random subdomain
+            let subdomain = mixt.randName();
+            const site = await mixt.hosting.create(subdomain, dirName)
+
+            mixt.print(`Website hosted at: <a href="https://${site.subdomain}.mixt.site" target="_blank">https://${site.subdomain}.mixt.site</a>`);
+        })();
+    </script>
+</body>
+</html>

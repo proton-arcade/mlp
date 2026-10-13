@@ -1,0 +1,259 @@
+/* Browser app. Light toolbar and content area, Mint-Y green accent. */
+
+:root {
+    --accent: #68b723;
+    --accent-dim: #4e8f17;
+    --text: #2e3436;
+    --muted: #6b7275;
+    --line: rgba(0, 0, 0, 0.12);
+    --toolbar: #f2f2f1;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+    margin: 0;
+    height: 100%;
+    font-family: 'Noto Sans', Ubuntu, system-ui, -apple-system, 'Segoe UI', sans-serif;
+    color: var(--text);
+    background: #ffffff;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+.toolbar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 8px;
+    background: var(--toolbar);
+    border-bottom: 1px solid var(--line);
+}
+
+.nav-btn {
+    width: 30px;
+    height: 30px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--text);
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.nav-btn:hover:not(:disabled) {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+.nav-btn:disabled {
+    opacity: 0.35;
+    cursor: default;
+}
+
+.address-form {
+    flex: 1;
+    margin: 0;
+}
+
+#address {
+    width: 100%;
+    height: 30px;
+    padding: 0 10px;
+    border: 1px solid var(--line);
+    border-radius: 15px;
+    background: #ffffff;
+    color: var(--text);
+    font-size: 13px;
+    outline: none;
+}
+
+#address:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(104, 183, 35, 0.25);
+}
+
+.view {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+    position: relative;
+}
+
+/* ---------------------------- MPLmit home --------------------------------- */
+
+.mplmit-home {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 56px 20px 40px;
+    text-align: center;
+}
+
+.mplmit-logo {
+    font-size: 34px;
+    font-weight: 600;
+    color: var(--accent-dim);
+    margin: 0 0 4px;
+}
+
+.mplmit-tagline {
+    color: var(--muted);
+    margin: 0 0 24px;
+    font-size: 14px;
+}
+
+.mplmit-search {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.mplmit-search input {
+    flex: 1;
+    max-width: 460px;
+    height: 38px;
+    padding: 0 14px;
+    border: 1px solid var(--line);
+    border-radius: 19px;
+    font-size: 14px;
+    outline: none;
+}
+
+.mplmit-search input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(104, 183, 35, 0.25);
+}
+
+.mplmit-search button,
+.button-link {
+    height: 38px;
+    padding: 0 18px;
+    border: none;
+    border-radius: 19px;
+    background: var(--accent);
+    color: #ffffff;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.mplmit-search button:hover,
+.button-link:hover {
+    background: var(--accent-dim);
+}
+
+.site-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+    margin-top: 36px;
+    text-align: left;
+}
+
+.site-card {
+    padding: 14px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #fafaf9;
+    cursor: pointer;
+}
+
+.site-card:hover,
+.site-card:focus-visible {
+    border-color: var(--accent);
+    outline: none;
+}
+
+.site-card h3 {
+    margin: 0 0 6px;
+    font-size: 15px;
+    color: var(--accent-dim);
+}
+
+.site-card p {
+    margin: 0;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.4;
+}
+
+.empty {
+    color: var(--muted);
+    text-align: center;
+    margin-top: 40px;
+}
+
+/* ------------------------------ results ----------------------------------- */
+
+.results {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 24px 20px;
+}
+
+.results h2 {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--muted);
+    margin: 0 0 16px;
+}
+
+.result {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+    cursor: pointer;
+}
+
+.result:hover h3 {
+    text-decoration: underline;
+}
+
+.result h3 {
+    margin: 0 0 4px;
+    font-size: 16px;
+    color: var(--accent-dim);
+}
+
+.result p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.45;
+}
+
+.result .result-url {
+    font-size: 12px;
+    color: #3d8b1f;
+    margin-top: 4px;
+}
+
+/* ------------------------------ site view --------------------------------- */
+
+.site-frame {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: #ffffff;
+}
+
+.notice {
+    max-width: 640px;
+    margin: 56px auto;
+    padding: 20px 24px;
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--accent);
+    border-radius: 6px;
+    background: #fafaf9;
+}
+
+.notice h2 {
+    margin: 0 0 8px;
+    font-size: 18px;
+}
+
+.notice p {
+    margin: 0 0 12px;
+    line-height: 1.5;
+}

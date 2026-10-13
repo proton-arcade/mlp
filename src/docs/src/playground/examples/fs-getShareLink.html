@@ -1,0 +1,15 @@
+<html>
+<body>
+    <script src="/mixt.js/v2"></script>
+    <script>
+        (async () => {
+            await mixt.fs.write('notes.txt', 'Meeting notes');
+            // Anyone signed in who has the link may read it (paid plans).
+            await mixt.fs.share('notes.txt', { anyone: true }, 'read');
+
+            const link = await mixt.fs.getShareLink('notes.txt', 'editor');
+            mixt.print(`Open in Editor: <a href="${link}" target="_blank">${link}</a>`);
+        })()
+    </script>
+</body>
+</html>

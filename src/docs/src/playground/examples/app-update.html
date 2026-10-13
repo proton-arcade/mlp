@@ -1,0 +1,21 @@
+<html>
+<body>
+    <script src="/mixt.js/v2"></script>
+    <script>
+        (async () => {
+            // (1) Create a random app
+            let appName = mixt.randName();
+            await mixt.apps.create(appName, "https://example.com")
+            mixt.print(`"${appName}" created<br>`);
+
+            // (2) Update the app
+            let updated_app = await mixt.apps.update(appName, {title: "My Updated Test App!"})
+            mixt.print(`Changed title to "${updated_app.title}"<br>`);
+
+            // (3) Delete the app (cleanup)
+            await mixt.apps.delete(appName)
+        })();
+    </script>
+</body>
+</html>
+```

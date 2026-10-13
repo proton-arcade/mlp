@@ -1,0 +1,16 @@
+<html>
+<body>
+    <script src="/mixt.js/v2"></script>
+    <script>
+        (async () => {
+            for await (const page of mixt.events.list({ stream: true })) {
+                for (const row of page.items) {
+                    if (!row.suspendedAt) continue;
+                    mixt.print(`${row.subject} stopped: ${row.suspendedReason}<br>`);
+                }
+            }
+            mixt.print('done<br>');
+        })();
+    </script>
+</body>
+</html>

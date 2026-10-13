@@ -1,0 +1,21 @@
+<html>
+<body>
+    <script src="/mixt.js/v2"></script>
+    <button id="request-permission">Request Permission</button>
+    <script>
+        document.getElementById('request-permission').addEventListener('click', async () => {
+            // Get the current user's UUID
+            const user = await mixt.auth.getUser();
+            const permission = `user:${user.uuid}:email:read`;
+            
+            const granted = await mixt.perms.request('permission', { permission });
+            if (granted) {
+                mixt.print('Permission granted');
+            } else {
+                mixt.print('Permission denied');
+            }
+        });
+    </script>
+</body>
+</html>
+

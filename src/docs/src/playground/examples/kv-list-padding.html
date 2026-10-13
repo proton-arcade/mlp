@@ -1,0 +1,32 @@
+<html>
+<body>
+    <script src="/mixt.js/v2"></script>
+    <script>
+        (async () => {
+            // Wrong — will sort as 1, 10, 100, 2, 20
+            await mixt.kv.set('item:1', '...');
+            await mixt.kv.set('item:10', '...');
+            await mixt.kv.set('item:2', '...');
+
+            // Correct — zero-pad to a fixed width
+            await mixt.kv.set('item:001', '...');
+            await mixt.kv.set('item:002', '...');
+            await mixt.kv.set('item:010', '...');
+            await mixt.kv.set('item:100', '...');
+
+            const items = await mixt.kv.list('item:*');
+            mixt.print('Items with zero-padding: <br/>');
+            mixt.print(items.join('<br/>'));
+
+            // Cleanup
+            await mixt.kv.del('item:1');
+            await mixt.kv.del('item:10');
+            await mixt.kv.del('item:2');
+            await mixt.kv.del('item:001');
+            await mixt.kv.del('item:002');
+            await mixt.kv.del('item:010');
+            await mixt.kv.del('item:100');
+        })();
+    </script>
+</body>
+</html>

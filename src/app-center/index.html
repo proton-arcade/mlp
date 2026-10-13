@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>App Manager</title>
+<link rel="stylesheet" href="app-center.css">
+</head>
+<body>
+<header class="toolbar">
+    <h1>App Manager</h1>
+    <input id="filter" type="search" placeholder="Search apps" aria-label="Search apps" autocomplete="off">
+    <button id="refresh" class="btn" type="button">Refresh</button>
+</header>
+<main>
+    <p id="status" class="status" role="status"></p>
+    <ul id="apps" class="apps" aria-live="polite"></ul>
+</main>
+<script src="/mixt.js/v2"></script>
+<script src="app-center.js"></script>
+</body>
+</html>

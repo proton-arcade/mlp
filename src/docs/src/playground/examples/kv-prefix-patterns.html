@@ -1,0 +1,62 @@
+<html>
+<body>
+    <script src="/mixt.js/v2"></script>
+    <script>
+        (async () => {
+            const orders = [
+                { id: '0001', status: 'pending', customer: 'alice', total: 48 },
+                { id: '0002', status: 'shipped', customer: 'alice', total: 72 },
+                { id: '0003', status: 'pending', customer: 'bob', total: 15 },
+            ];
+
+            // In KV, key design is your query plan.
+            // We store the same order under multiple prefixes so each read path
+            // becomes a simple prefix query with mixt.kv.list().
+            for (const order of orders) {
+                await mixt.kv.set(`demo:order:by-id:${order.id}`, order);
+                await mixt.kv.set(`demo:order:by-status:${order.status}:${order.id}`, order);
+                await mixt.kv.set(`demo:order:by-customer:${order.customer}:${order.id}`, order);
+                await mixt.kv.set(`demo:order:by-status-customer:${order.status}:${order.customer}:${order.id}`, order);
+            }
+
+            mixt.print('<b>Stored read paths</b><br>');
+            mixt.print('demo:order:by-status:pending:*<br>');
+            mixt.print('demo:order:by-customer:alice:*<br>');
+            mixt.print('demo:order:by-status-customer:pending:alice:*<br><br>');
+
+            const pendingOrders = await mixt.kv.list('demo:order:by-status:pending:*', true);
+            mixt.print('<b>Query: status = pending</b><br>');
+            pendingOrders.forEach(({ key, value }) => {
+                mixt.print(`${key} => ${value.customer} ($${value.total})<br>`);
+            });
+            mixt.print('<br>');
+
+            const aliceOrders = await mixt.kv.list('demo:order:by-customer:alice:*', true);
+            mixt.print('<b>Query: customer = alice</b><br>');
+            aliceOrders.forEach(({ key, value }) => {
+                mixt.print(`${key} => ${value.status} ($${value.total})<br>`);
+            });
+            mixt.print('<br>');
+
+            const alicePendingOrders = await mixt.kv.list('demo:order:by-status-customer:pending:alice:*', true);
+            mixt.print('<b>Query: status = pending AND customer = alice</b><br>');
+            alicePendingOrders.forEach(({ key, value }) => {
+                mixt.print(`${key} => order ${value.id} ($${value.total})<br>`);
+            });
+            mixt.print('<br>');
+
+            mixt.print('<b>Takeaway</b><br>');
+            mixt.print('With mixt.kv.list(), filtering comes from key prefixes.<br>');
+            mixt.print('If you need another query path, add another prefix-friendly key.<br><br>');
+
+            // Cleanup
+            for (const order of orders) {
+                await mixt.kv.del(`demo:order:by-id:${order.id}`);
+                await mixt.kv.del(`demo:order:by-status:${order.status}:${order.id}`);
+                await mixt.kv.del(`demo:order:by-customer:${order.customer}:${order.id}`);
+                await mixt.kv.del(`demo:order:by-status-customer:${order.status}:${order.customer}:${order.id}`);
+            }
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+<html>
+<body>
+    <script src="/mixt.js/v2"></script>
+    <button id="setup">Set Up</button>
+    <script>
+        document.getElementById('setup').addEventListener('click', async () => {
+            // One prompt for the set; the dialog lists only what is missing.
+            const [documents, apps, email] = await mixt.perms.request([
+                { resource: 'folder', name: 'Documents', access: 'write' },
+                { resource: 'apps' },
+                { resource: 'email' },
+            ]);
+
+            mixt.print(`Documents: ${documents ?? 'denied'}`);
+            mixt.print(`Apps: ${apps ? 'granted' : 'denied'}`);
+            mixt.print(`Email: ${email ?? 'denied'}`);
+        });
+    </script>
+</body>
+</html>

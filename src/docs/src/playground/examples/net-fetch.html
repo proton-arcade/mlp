@@ -1,0 +1,17 @@
+<html>
+<body>
+    <script src="/mixt.js/v2"></script>
+    <script>
+    (async () => { 
+        // Send a GET request to example.com
+        const request = await mixt.net.fetch("https://example.com");        
+
+        // Get the response body as text
+        const body = await request.text();
+
+        // Print the body as a code block
+        mixt.print(body, { code: true });
+    })()
+    </script>
+</body>
+</html>

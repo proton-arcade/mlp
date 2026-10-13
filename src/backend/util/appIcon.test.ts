@@ -1,0 +1,517 @@
+/**
+ * Copyright (C) 2024-present Puter Technologies Inc.
+ *
+ * This file is part of Puter.
+ *
+ * Puter is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published
+ * by the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+import { describe, expect, it } from 'vitest';
+import {
+    DEFAULT_APP_ICON_SIZE,
+    getAppIconCdnUrl,
+    getAppIconsBaseUrl,
+    getAppIconUrl,
+    isAppIconEndpointUrl,
+    isRawBase64ImageString,
+    isTrustedIconHost,
+    normalizeRawBase64ImageString,
+    sniffImageMime,
+    validateIconDataUrl,
+} from './appIcon.ts';
+
+// -- Fixtures ---------------------------------------------------------
+
+const PNG = Buffer.from([
+    0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00, 0x00, 0x00, 0x0d,
+]);
+const JPEG = Buffer.from([0xff, 0xd8, 0xff, 0xe0, 0x00, 0x10, 0x4a, 0x46]);
+const GIF87 = Buffer.from('GIF87a' + '\x01\x00\x01\x00', 'latin1');
+const GIF89 = Buffer.from('GIF89a' + '\x01\x00\x01\x00', 'latin1');
+const WEBP = Buffer.concat([
+    Buffer.from('RIFF', 'latin1'),
+    Buffer.from([0x1a, 0x00, 0x00, 0x00]),
+    Buffer.from('WEBPVP8 ', 'latin1'),
+]);
+const SVG = Buffer.from('<svg xmlns="http://www.w3.org/2000/svg"></svg>');
+
+const b64 = (buf: Buffer) => buf.toString('base64');
+const dataUrl = (mime: string, buf: Buffer) =>
+    `data:${mime};base64,${b64(buf)}`;
+
+const trustedConfig = {
+    static_hosting_domain: 'mixt.site',
+    static_hosting_domain_alt: 'mixt.host',
+    api_base_url: 'https://api.mixt.mpl',
+};
+
+// -- sniffImageMime ---------------------------------------------------
+
+describe('sniffImageMime', () => {
+    it.each([
+        ['png', PNG, 'image/png'],
+        ['jpeg', JPEG, 'image/jpeg'],
+        ['gif87a', GIF87, 'image/gif'],
+        ['gif89a', GIF89, 'image/gif'],
+        ['webp', WEBP, 'image/webp'],
+        ['svg', SVG, 'image/svg+xml'],
+    ])('identifies %s by signature', (_label, bytes, expected) => {
+        expect(sniffImageMime(bytes as Buffer)).toBe(expected);
+    });
+
+    it('returns null for bytes that match nothing', () => {
+        expect(sniffImageMime(Buffer.from('just some plain text'))).toBeNull();
+        expect(sniffImageMime(Buffer.alloc(0))).toBeNull();
+    });
+
+    it.each([
+        ['a truncated PNG signature', PNG.subarray(0, 6)],
+        ['a truncated JPEG signature', JPEG.subarray(0, 2)],
+        ['a truncated GIF header', Buffer.from('GIF8', 'latin1')],
+        [
+            'a RIFF container that is not WEBP',
+            Buffer.concat([
+                Buffer.from('RIFF', 'latin1'),
+                Buffer.from([0x10, 0, 0, 0]),
+                Buffer.from('AVI ', 'latin1'),
+            ]),
+        ],
+    ])('rejects %s', (_label, bytes) => {
+        expect(sniffImageMime(bytes as Buffer)).toBeNull();
+    });
+
+    it('accepts SVG behind a BOM or leading whitespace', () => {
+        expect(sniffImageMime(Buffer.from('﻿<svg />'))).toBe('image/svg+xml');
+        expect(sniffImageMime(Buffer.from('  \n<svg/>'))).toBe('image/svg+xml');
+    });
+
+    it('rejects text that merely mentions <svg without opening as markup', () => {
+        expect(
+            sniffImageMime(Buffer.from('the tag <svg> is used for vectors')),
+        ).toBeNull();
+        // Opens as markup but has no `<svg` root.
+        expect(
+            sniffImageMime(Buffer.from('<html><body></body></html>')),
+        ).toBeNull();
+    });
+
+    it('does not look for the SVG root past the sniff window', () => {
+        const buried = Buffer.from(`<!--${'x'.repeat(9000)}--><svg></svg>`);
+        expect(sniffImageMime(buried)).toBeNull();
+    });
+});
+
+// -- validateIconDataUrl ----------------------------------------------
+
+describe('validateIconDataUrl', () => {
+    it('accepts a well-formed base64 image data URL and returns the canonical form', () => {
+        const verdict = validateIconDataUrl(dataUrl('image/png', PNG));
+        expect(verdict.ok).toBe(true);
+        expect(verdict.mime).toBe('image/png');
+        expect(verdict.normalized).toBe(`data:image/png;base64,${b64(PNG)}`);
+        expect(verdict.reason).toBeUndefined();
+    });
+
+    it('treats image/jpg as image/jpeg', () => {
+        const verdict = validateIconDataUrl(dataUrl('image/jpg', JPEG));
+        expect(verdict.ok).toBe(true);
+        expect(verdict.mime).toBe('image/jpeg');
+        // The declared spelling is preserved in the stored value.
+        expect(verdict.normalized?.startsWith('data:image/jpg;base64,')).toBe(
+            true,
+        );
+    });
+
+    it('strips whitespace from a line-wrapped payload', () => {
+        const wrapped = b64(PNG).replace(/(.{4})/g, '$1\n');
+        const verdict = validateIconDataUrl(
+            `  data:image/png;base64,${wrapped}  `,
+        );
+        expect(verdict.ok).toBe(true);
+        expect(verdict.normalized).toBe(`data:image/png;base64,${b64(PNG)}`);
+    });
+
+    it('rejects a non-string value', () => {
+        expect(validateIconDataUrl(undefined)).toEqual({
+            ok: false,
+            reason: 'must be a string',
+        });
+        expect(validateIconDataUrl(Buffer.from('x'))).toMatchObject({
+            ok: false,
+            reason: 'must be a string',
+        });
+    });
+
+    it.each([
+        'not a data url at all',
+        'data:image/png',
+        'data:;base64,AAAA',
+        'https://example.com/icon.png',
+    ])('rejects %s as malformed', (value) => {
+        expect(validateIconDataUrl(value)).toMatchObject({
+            ok: false,
+            reason: 'is not a well-formed data: URL',
+        });
+    });
+
+    it.each([
+        'data:text/html;base64,PHNjcmlwdD4=',
+        'data:application/javascript;base64,YWxlcnQoMSk=',
+        'data:image/x-icon;base64,AAAA',
+    ])('rejects the non-allow-listed MIME in %s', (value) => {
+        expect(validateIconDataUrl(value)).toMatchObject({
+            ok: false,
+            reason: 'data URL must use an image MIME type',
+        });
+    });
+
+    it('rejects a percent-encoded (non-base64) payload — the shape that can carry raw markup', () => {
+        expect(
+            validateIconDataUrl('data:image/svg+xml,%3Csvg onload=alert(1)%3E'),
+        ).toMatchObject({
+            ok: false,
+            reason: expect.stringContaining('must be base64-encoded'),
+        });
+        expect(
+            validateIconDataUrl(
+                `data:image/png;charset=utf-8;base64,${b64(PNG)}`,
+            ),
+        ).toMatchObject({
+            ok: false,
+            reason: expect.stringContaining('must be base64-encoded'),
+        });
+    });
+
+    it('rejects smuggled bytes that Buffer.from would silently drop', () => {
+        // The classic: valid base64 followed by an attribute-injection tail.
+        const verdict = validateIconDataUrl(
+            `data:image/png;base64,${b64(PNG)}" onerror=alert(1)`,
+        );
+        expect(verdict.ok).toBe(false);
+        expect(verdict.reason).toBe('data URL payload is not valid base64');
+    });
+
+    it('rejects payloads that are not aligned to a base64 quantum', () => {
+        expect(validateIconDataUrl('data:image/png;base64,AAA')).toMatchObject({
+            ok: false,
+            reason: 'data URL payload is not valid base64',
+        });
+        expect(validateIconDataUrl('data:image/png;base64,')).toMatchObject({
+            ok: false,
+            reason: 'data URL payload is not valid base64',
+        });
+    });
+
+    it('rejects valid base64 that does not decode to a recognized image', () => {
+        expect(
+            validateIconDataUrl(
+                `data:image/png;base64,${b64(Buffer.from('hello world!!!!!'))}`,
+            ),
+        ).toMatchObject({
+            ok: false,
+            reason: 'data URL payload is not a recognized image',
+        });
+    });
+
+    it('rejects a payload whose real type contradicts the declaration', () => {
+        expect(validateIconDataUrl(dataUrl('image/png', JPEG))).toMatchObject({
+            ok: false,
+            reason: 'data URL declares image/png but the payload is image/jpeg',
+        });
+    });
+});
+
+// -- raw base64 (v1 compatibility) ------------------------------------
+
+describe('isRawBase64ImageString / normalizeRawBase64ImageString', () => {
+    it('accepts bare base64 that decodes to an image and wraps it in a data URL', () => {
+        const raw = b64(PNG);
+        expect(isRawBase64ImageString(raw)).toBe(true);
+        expect(normalizeRawBase64ImageString(raw)).toBe(
+            `data:image/png;base64,${raw}`,
+        );
+    });
+
+    it('sniffs the wrapped MIME rather than assuming png', () => {
+        expect(normalizeRawBase64ImageString(b64(GIF89))).toBe(
+            `data:image/gif;base64,${b64(GIF89)}`,
+        );
+    });
+
+    it.each([
+        ['a non-string', 42],
+        ['a short string', 'AAAA'],
+        ['text outside the base64 alphabet', 'this is not base64 at all!!!'],
+        ['base64 of non-image bytes', b64(Buffer.from('plain text payload'))],
+    ])('rejects %s', (_label, value) => {
+        expect(isRawBase64ImageString(value)).toBe(false);
+    });
+
+    it('passes non-matching values through unchanged', () => {
+        expect(normalizeRawBase64ImageString('https://example.com/i.png')).toBe(
+            'https://example.com/i.png',
+        );
+    });
+});
+
+// -- host / URL trust -------------------------------------------------
+
+describe('isTrustedIconHost', () => {
+    it('accepts the app-icons subdomain on either hosting domain', () => {
+        expect(
+            isTrustedIconHost(
+                'https://mixt-app-icons.mixt.site/app-x.png',
+                trustedConfig,
+            ),
+        ).toBe(true);
+        expect(
+            isTrustedIconHost(
+                'https://MIXT-APP-ICONS.MIXT.HOST/app-x.png',
+                trustedConfig,
+            ),
+        ).toBe(true);
+    });
+
+    it('accepts the configured API host', () => {
+        expect(
+            isTrustedIconHost(
+                'https://api.mixt.mpl/app-icon/app-1/256',
+                trustedConfig,
+            ),
+        ).toBe(true);
+    });
+
+    it('rejects any other host', () => {
+        expect(
+            isTrustedIconHost('https://evil.example.com/x.png', trustedConfig),
+        ).toBe(false);
+        // Suffix lookalike must not pass.
+        expect(
+            isTrustedIconHost(
+                'https://mixt-app-icons.mixt.site.evil.com/x.png',
+                trustedConfig,
+            ),
+        ).toBe(false);
+    });
+
+    it.each(['javascript:alert(1)', 'data:text/html,x', 'file:///etc/passwd'])(
+        'rejects the non-http(s) scheme in %s',
+        (url) => {
+            expect(isTrustedIconHost(url, trustedConfig)).toBe(false);
+        },
+    );
+
+    it('rejects an unparseable URL', () => {
+        expect(isTrustedIconHost('http://', trustedConfig)).toBe(false);
+        expect(isTrustedIconHost('/relative/path', trustedConfig)).toBe(false);
+    });
+
+    it('trusts nothing when no hosting domains or API base are configured', () => {
+        expect(
+            isTrustedIconHost('https://mixt-app-icons.mixt.site/x.png', {}),
+        ).toBe(false);
+    });
+
+    it('ignores a malformed api_base_url instead of throwing', () => {
+        expect(
+            isTrustedIconHost('https://api.mixt.mpl/x', {
+                api_base_url: 'not a url',
+            }),
+        ).toBe(false);
+    });
+});
+
+describe('isAppIconEndpointUrl', () => {
+    it.each(['/app-icon/app-1', '/app-icon/app-1/256', '/app-icon/app-1/256/'])(
+        'accepts the relative endpoint path %s',
+        (value) => {
+            expect(isAppIconEndpointUrl(value, trustedConfig)).toBe(true);
+        },
+    );
+
+    it('rejects the bare subdomain-file shape when given as a relative path', () => {
+        // Only meaningful paired with a trusted host.
+        expect(isAppIconEndpointUrl('/app-abc-256.png', trustedConfig)).toBe(
+            false,
+        );
+    });
+
+    it('accepts either shape on a trusted absolute host', () => {
+        expect(
+            isAppIconEndpointUrl(
+                'https://api.mixt.mpl/app-icon/app-1/256',
+                trustedConfig,
+            ),
+        ).toBe(true);
+        expect(
+            isAppIconEndpointUrl(
+                'https://mixt-app-icons.mixt.site/app-abc-256.png',
+                trustedConfig,
+            ),
+        ).toBe(true);
+        expect(
+            isAppIconEndpointUrl(
+                'https://mixt-app-icons.mixt.site/app-abc.png',
+                trustedConfig,
+            ),
+        ).toBe(true);
+    });
+
+    it('rejects the same shapes on an untrusted host (no open redirector)', () => {
+        expect(
+            isAppIconEndpointUrl(
+                'https://evil.example.com/app-icon/app-1/256',
+                trustedConfig,
+            ),
+        ).toBe(false);
+        expect(
+            isAppIconEndpointUrl(
+                '//evil.example.com/app-icon/app-1',
+                trustedConfig,
+            ),
+        ).toBe(false);
+    });
+
+    it('rejects paths that are neither shape', () => {
+        expect(isAppIconEndpointUrl('/some/other/path', trustedConfig)).toBe(
+            false,
+        );
+        expect(
+            isAppIconEndpointUrl('/app-icon/app-1/extra/256', trustedConfig),
+        ).toBe(false);
+        expect(isAppIconEndpointUrl('   ', trustedConfig)).toBe(false);
+    });
+
+    it('rejects an input that will not parse as a URL at all', () => {
+        expect(isAppIconEndpointUrl('http://[', trustedConfig)).toBe(false);
+    });
+});
+
+// -- getAppIconUrl ----------------------------------------------------
+
+describe('getAppIconUrl', () => {
+    const deps = { apiBaseUrl: 'https://api.mixt.mpl/' };
+
+    it('builds the endpoint URL from uid + size, trimming trailing slashes', () => {
+        expect(getAppIconUrl({ uid: 'app-1' }, deps, 64)).toBe(
+            'https://api.mixt.mpl/app-icon/app-1/64',
+        );
+    });
+
+    it('falls back to the default size for a missing or unusable size', () => {
+        expect(getAppIconUrl({ uid: 'app-1' }, deps)).toBe(
+            `https://api.mixt.mpl/app-icon/app-1/${DEFAULT_APP_ICON_SIZE}`,
+        );
+        expect(getAppIconUrl({ uid: 'app-1' }, deps, NaN)).toBe(
+            `https://api.mixt.mpl/app-icon/app-1/${DEFAULT_APP_ICON_SIZE}`,
+        );
+    });
+
+    it('normalizes a bare uuid into the `app-` prefixed form', () => {
+        expect(getAppIconUrl({ uuid: 'abc' }, deps, 32)).toBe(
+            'https://api.mixt.mpl/app-icon/app-abc/32',
+        );
+    });
+
+    it('returns null when the app has no identifier', () => {
+        expect(getAppIconUrl({}, deps)).toBeNull();
+    });
+
+    it('falls back to the raw http(s) icon column when no API base is configured', () => {
+        expect(
+            getAppIconUrl(
+                { uid: 'app-1', icon: 'https://cdn.example.com/i.png' },
+                {},
+            ),
+        ).toBe('https://cdn.example.com/i.png');
+    });
+
+    it('returns null when there is no API base and the icon column is unusable', () => {
+        expect(getAppIconUrl({ uid: 'app-1' }, {})).toBeNull();
+        expect(
+            getAppIconUrl(
+                { uid: 'app-1', icon: 'data:image/png;base64,AA' },
+                {},
+            ),
+        ).toBeNull();
+        expect(getAppIconUrl({ uid: 'app-1', icon: 42 }, {})).toBeNull();
+    });
+});
+
+describe('getAppIconsBaseUrl', () => {
+    it('builds the icons subdomain from the hosting domain', () => {
+        expect(
+            getAppIconsBaseUrl({ static_hosting_domain: 'mixt.site' }),
+        ).toBe('https://mixt-app-icons.mixt.site');
+    });
+
+    it('falls back to the alt hosting domain, honours protocol and port', () => {
+        expect(
+            getAppIconsBaseUrl({
+                static_hosting_domain_alt: 'localhost',
+                protocol: 'http',
+                pub_port: 4100,
+            }),
+        ).toBe('http://mixt-app-icons.localhost:4100');
+    });
+
+    it('drops the default ports and returns null without a hosting domain', () => {
+        expect(
+            getAppIconsBaseUrl({
+                static_hosting_domain: 'mixt.site',
+                pub_port: 443,
+            }),
+        ).toBe('https://mixt-app-icons.mixt.site');
+        expect(getAppIconsBaseUrl({})).toBeNull();
+    });
+});
+
+describe('getAppIconCdnUrl', () => {
+    const config = { static_hosting_domain: 'mixt.site' };
+    const app = {
+        uid: 'app-1',
+        icon: 'https://api.mixt.mpl/app-icon/app-1',
+    };
+
+    it('points at the sized PNG on the icons subdomain', () => {
+        expect(getAppIconCdnUrl(app, config, 64)).toBe(
+            'https://mixt-app-icons.mixt.site/app-1-64.png',
+        );
+    });
+
+    it('defaults the size and normalizes a bare uuid', () => {
+        const byUuid = { ...app, uid: undefined, uuid: 'abc' };
+        expect(getAppIconCdnUrl(byUuid, config)).toBe(
+            `https://mixt-app-icons.mixt.site/app-abc-${DEFAULT_APP_ICON_SIZE}.png`,
+        );
+    });
+
+    // A data URL (or empty) column means the resize pipeline hasn't written
+    // anything to the subdomain yet — there is nothing to point a client at.
+    it('returns null unless the icon column is already an http(s) URL', () => {
+        expect(
+            getAppIconCdnUrl(
+                { uid: 'app-1', icon: 'data:image/png;base64,AA' },
+                config,
+            ),
+        ).toBeNull();
+        expect(getAppIconCdnUrl({ uid: 'app-1' }, config)).toBeNull();
+        expect(getAppIconCdnUrl({ uid: 'app-1', icon: 42 }, config)).toBeNull();
+    });
+
+    it('returns null without an app identifier or a hosting domain', () => {
+        expect(getAppIconCdnUrl({ icon: app.icon }, config)).toBeNull();
+        expect(getAppIconCdnUrl(app, {})).toBeNull();
+    });
+});

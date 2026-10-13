@@ -1,0 +1,41 @@
+<html>
+<body>
+    <script src="/mixt.js/v2"></script>
+    <script>
+        (async () => {
+            // Create sample data
+            for (let i = 1; i <= 6; i++) {
+                await mixt.kv.set(`item-${i}`, `value-${i}`);
+            }
+            mixt.print('Created 6 key-value pairs<br><br>');
+
+            // Paginate with cursor (2 items per page)
+            let currentCursor = undefined;
+            let page = 1;
+            do {
+                const result = await mixt.kv.list({
+                    limit: 2,
+                    returnValues: true,
+                    cursor: currentCursor,
+                });
+                const items = result.items;
+                mixt.print(`<b>Page ${page}:</b><br>`);
+                for (const item of items) {
+                    mixt.print(`  ${item.key} => ${item.value}<br>`);
+                }
+                mixt.print('<br>');
+                currentCursor = result.cursor;
+                page++;
+            } while (currentCursor);
+
+            mixt.print('Done paginating.<br><br>');
+
+            // Cleanup
+            for (let i = 1; i <= 6; i++) {
+                await mixt.kv.del(`item-${i}`);
+            }
+            mixt.print('Cleaned up sample data.');
+        })();
+    </script>
+</body>
+</html>

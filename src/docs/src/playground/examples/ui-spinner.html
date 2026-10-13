@@ -1,0 +1,16 @@
+<html>
+<body>
+    <script src="/mixt.js/v2"></script>
+    <script>
+        // show the spinner
+        mixt.ui.showSpinner();
+        mixt.print('Spinner shown. It will hide after 3 seconds...');
+
+        // hide the spinner after 3 seconds
+        setTimeout(() => {
+            mixt.ui.hideSpinner();
+            mixt.print('Spinner hidden!');
+        }, 3000);
+    </script>
+</body>
+</html>

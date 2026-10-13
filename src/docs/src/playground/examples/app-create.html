@@ -1,0 +1,18 @@
+<html>
+<body>
+    <script src="/mixt.js/v2"></script>
+    <script>
+        (async () => {
+            // (1) Generate a random app name
+            let appName = mixt.randName();
+
+            // (2) Create the app and prints its UID to the page
+            let app = await mixt.apps.create(appName, "https://example.com");
+            mixt.print(`Created app "${app.name}". UID: ${app.uid}`);
+
+            // (3) Delete the app (cleanup)
+            await mixt.apps.delete(appName);
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<html>
+<body>
+    <script src="/mixt.js/v2"></script>
+    <script>
+    (async () => {
+        // Create a simple dashboard of all workers
+        const workers = await mixt.workers.list();
+
+        if (Object.keys(workers).length === 0) {
+            mixt.print('No workers found. Create your first worker!<br>');
+        } else {
+            mixt.print(`Found ${Object.keys(workers).length} worker(s):<br>`);
+            
+            Object.entries(workers).forEach(([name, details], index) => {
+                mixt.print(`${index + 1}. ${name}<br>`);
+                mixt.print(`URL: ${details.url}<br>`);
+                mixt.print(`Source: ${details.file_path}<br>`);
+                mixt.print(`Deployed: ${new Date(details.created_at)}<br>`);
+                mixt.print('<br>');
+            });
+        }
+    })();
+    </script>
+</body>
+</html>

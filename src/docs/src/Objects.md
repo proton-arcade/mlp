@@ -1,0 +1,27 @@
+---
+title: Objects
+description: Various object types and classes for different entities in the Mixt OS ecosystem.
+---
+
+Various object types and classes that represent different entities in the Mixt OS ecosystem. These objects encapsulate data and provide methods for interacting with system resources.
+
+## Available Objects
+
+- **[App](/Objects/app/)** - Represents an application
+- **[AppConnection](/Objects/AppConnection/)** - Represents a connection to an application
+- **[DetailedAppUsage](/Objects/detailedappusage/)** - Represents detailed resource usage statistics for a specific application
+- **[EmailListPage](/Objects/emaillistpage/)** - Represents one page of mailbox listing results
+- **[EmailMessage](/Objects/emailmessage/)** - Represents a fully parsed message from the user's mailbox
+- **[EmailMessageAttachment](/Objects/emailmessageattachment/)** - Represents one attachment of a parsed message, bytes included
+- **[EmailSummary](/Objects/emailsummary/)** - Represents one message in a mailbox listing
+- **[FSItem](/Objects/fsitem/)** - Represents a file or directory
+- **[KVPair](/Objects/kvpair/)** - Represents a key-value pair
+- **[MonthlyUsage](/Objects/monthlyusage/)** - Represents user's monthly resource usage information
+- **[MixtPeerConnection](/Objects/mixtpeerconnection/)** - Represents a data-channel connection to a peer
+- **[MixtPeerServer](/Objects/mixtpeerserver/)** - Represents a peer server and its connected clients
+- **[Subdomain](/Objects/subdomain/)** - Represents a subdomain
+- **[Team](/Objects/team/)** - Represents a Mixt OS team
+- **[TeamDirectoryEntry](/Objects/teamdirectoryentry/)** - Represents a member of a team
+- **[User](/Objects/user/)** - Represents a Mixt OS user
+- **[WorkerDeployment](/Objects/workerdeployment/)** - Represents a worker deployment result
+- **[WorkerInfo](/Objects/workerinfo/)** - Represents worker information

@@ -1,0 +1,30 @@
+<html>
+<body>
+    <script src="/mixt.js/v2"></script>
+    <script>
+        (async () => {
+            const name = `pinned-${mixt.randName()}`;
+            const app = await mixt.apps.create(name, `https://example.com/${name}`);
+
+            const handler = ({ event, ctx }) => console.log(ctx.label, event.path);
+            await mixt.events.handlers.publish('onWrite', handler, { appUid: app.uid });
+
+            const dir = mixt.randName();
+            await mixt.fs.mkdir(dir);
+
+            // Passing the function sends its hash: if somebody redeployed
+            // `onWrite` in the meantime, this fails rather than binding you to
+            // code you never saw.
+            const sub = await mixt.events.onPersistent({
+                subject: `fs:${dir}`,
+                handlerName: 'onWrite',
+                handler,
+                context: { label: 'inbox' },
+            });
+
+            mixt.print(`bound to ${sub.handlerName}<br>`);
+            await mixt.events.unsubscribe(sub.subId);
+        })();
+    </script>
+</body>
+</html>

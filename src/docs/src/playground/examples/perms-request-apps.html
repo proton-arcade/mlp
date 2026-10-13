@@ -1,0 +1,18 @@
+<html>
+<body>
+    <script src="/mixt.js/v2"></script>
+    <button id="request-apps">Request Apps Read Access</button>
+    <script>
+        document.getElementById('request-apps').addEventListener('click', async () => {
+            const granted = await mixt.perms.request('apps');
+            if (granted) {
+                mixt.print('Apps read access granted');
+                const apps = await mixt.apps.list();
+                mixt.print(`User has ${apps.length} apps`);
+            } else {
+                mixt.print('Apps read access denied');
+            }
+        });
+    </script>
+</body>
+</html>

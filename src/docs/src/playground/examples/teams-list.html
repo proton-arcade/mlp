@@ -1,0 +1,22 @@
+<html>
+<body>
+    <script src="/mixt.js/v2"></script>
+    <script>
+        (async () => {
+            const teams = await mixt.teams.list();
+
+            if (teams.length === 0) {
+                mixt.print('You are not on a team.');
+                return;
+            }
+
+            for (const team of teams) {
+                mixt.print(`${team.name ?? team.handle ?? 'Unnamed team'}<br>`);
+                mixt.print(`uid: ${team.uid}<br>`);
+                mixt.print(`owner: ${team.isOwner}<br>`);
+                mixt.print(`directory open to apps: ${team.directoryEnabled}<br><br>`);
+            }
+        })();
+    </script>
+</body>
+</html>

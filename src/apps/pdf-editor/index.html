@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PDF Editor</title>
+<link rel="stylesheet" href="/builtin/shared/biz.css">
+<style>
+    .pdf-bar { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; padding: 6px 10px; background: #fff; border-bottom: 1px solid #d6d6d4; }
+    .pdf-bar button[aria-pressed="true"] { background: #e6f1d9; border-color: #4a8f2e; }
+    .pdf-bar .sep { width: 1px; align-self: stretch; background: #ccc; margin: 0 4px; }
+    #viewer { flex: 1; overflow: auto; background: #7c7f82; padding: 16px; min-height: 0; }
+    .page { position: relative; margin: 0 auto 16px; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,.35); width: max-content; }
+    .page canvas { display: block; }
+    .layer { position: absolute; inset: 0; cursor: crosshair; }
+    .ann { position: absolute; box-sizing: border-box; }
+    .ann.hl { background: rgba(255, 235, 59, 0.45); }
+    .ann.wo { background: #fff; }
+    .ann.tx { color: #000; font: 14px/1.2 Helvetica, Arial, sans-serif; white-space: pre; background: rgba(255,255,255,.0); }
+    .ann.sel { outline: 2px dashed #1565c0; outline-offset: 1px; }
+    .ann.draft { border: 1px dashed #1565c0; }
+    #textbox { position: absolute; font: 14px/1.2 Helvetica, Arial, sans-serif; border: 1px dashed #1565c0; background: rgba(255,255,255,.9); padding: 1px 3px; min-width: 60px; outline: none; color: #000; }
+    .empty-pdf { color: #e6e6e6; text-align: center; padding: 60px 20px; }
+    @media (prefers-color-scheme: dark) {
+        .pdf-bar { background: #2d2f31; border-color: #111; }
+        .pdf-bar button { background: #2d2f31; border-color: #555; color: #eee; }
+        .pdf-bar button[aria-pressed="true"] { background: #2f4a25; }
+    }
+</style>
+</head>
+<body>
+<header class="toolbar"><h1>PDF Editor</h1><span id="name" class="muted"></span><span class="grow"></span><span id="status" class="status" role="status"></span></header>
+<div class="pdf-bar" role="toolbar" aria-label="PDF tools">
+    <label class="btn" style="cursor:pointer">Open PDF…<input id="file" type="file" accept="application/pdf" hidden></label>
+    <span class="sep"></span>
+    <button class="btn tool" data-tool="text" aria-pressed="true" type="button">Text</button>
+    <button class="btn tool" data-tool="highlight" aria-pressed="false" type="button">Highlight</button>
+    <button class="btn tool" data-tool="whiteout" aria-pressed="false" type="button">White out</button>
+    <button class="btn" id="delete" type="button" title="Delete the selected mark (Delete key)">Delete mark</button>
+    <button class="btn" id="undo" type="button" disabled>Undo</button>
+    <span class="sep"></span>
+    <button class="btn" id="zoomout" type="button">−</button>
+    <span id="zoom" class="muted">100%</span>
+    <button class="btn" id="zoomin" type="button">+</button>
+    <span class="sep"></span>
+    <button class="btn" id="prev" type="button">‹</button>
+    <span id="pageno" class="muted">–</span>
+    <button class="btn" id="next" type="button">›</button>
+    <span class="grow"></span>
+    <button class="btn primary" id="save" type="button" disabled>Save as PDF</button>
+</div>
+<div id="viewer"><div class="empty-pdf" id="empty">Open a PDF to start. Files stay in this browser; nothing is uploaded.</div></div>
+<script type="module" src="app.js"></script>
+</body>
+</html>

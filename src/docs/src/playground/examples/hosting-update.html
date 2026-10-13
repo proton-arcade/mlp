@@ -1,0 +1,25 @@
+<html>
+<body>
+    <script src="/mixt.js/v2"></script>
+    <script>
+        (async () => {
+            // (1) Create a random website
+            let subdomain = mixt.randName();
+            const site = await mixt.hosting.create(subdomain, '.')
+            mixt.print(`Website hosted at: ${site.subdomain}.mixt.site<br>`);
+
+            // (2) Create a random directory
+            let dirName = mixt.randName();
+            let dir = await mixt.fs.mkdir(dirName)
+            mixt.print(`Created directory "${dir.path}"<br>`);
+
+            // (3) Update the site with the new random directory
+            await mixt.hosting.update(subdomain, dirName)
+            mixt.print(`Changed subdomain's root directory to "${dir.path}"<br>`);
+
+            // (4) Delete the app (cleanup)
+            await mixt.hosting.delete(subdomain)
+        })();
+    </script>
+</body>
+</html>

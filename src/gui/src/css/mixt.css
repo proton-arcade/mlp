@@ -1,0 +1,510 @@
+/* ==========================================================================
+   Mixt look — loaded after style.css and dashboard.css so it wins the cascade.
+   Panel-and-menu desktop: a full-width dark panel along the bottom, flat
+   windows with grey gradient title bars, and Mint-Y green as the accent.
+   ========================================================================== */
+
+:root {
+    /* Mint-Y palette: green accent, light grey window headers, dark panel. */
+    --mixt-accent: #68b723;
+    --mixt-accent-dim: #4e8f17;
+    --mixt-panel: rgba(45, 47, 49, 0.96);
+    --mixt-panel-text: #eeeeec;
+    --mixt-titlebar-a: #f6f6f5;
+    --mixt-titlebar-b: #e1e1df;
+    --mixt-titlebar-text: #2e3436;
+    --mixt-window-bg: #f2f2f1;
+    --mixt-window-border: rgba(0, 0, 0, 0.32);
+
+    /* Mixt's selection and taskbar tokens, retuned to the Mint-Y palette. */
+    --select-hue: 96;
+    --select-saturation: 58%;
+    --select-lightness: 42%;
+    --taskbar-hue: 210;
+    --taskbar-saturation: 3%;
+    --taskbar-lightness: 18%;
+    --taskbar-alpha: 0.96;
+}
+
+body {
+    font-family: 'Noto Sans', Ubuntu, system-ui, -apple-system, 'Segoe UI', sans-serif;
+    background-color: #16181a;
+}
+
+/* ------------------------------ panel ------------------------------------ */
+
+.taskbar {
+    left: 0;
+    right: 0;
+    width: 100%;
+    bottom: 0;
+    height: 40px !important;
+    padding: 0 6px;
+    border-radius: 0;
+    transform: none;
+    background-color: var(--mixt-panel);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    justify-content: flex-start;
+}
+
+/* Puter's floating dock (style.css) centres the bottom bar with left:50%,
+   width:auto and a translate, and its JS sets an inline left. Reset all of
+   them so the bar is a full-width panel along the bottom edge. */
+.taskbar.taskbar-position-bottom {
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    top: auto;
+    width: 100% !important;
+    max-width: none;
+    height: 40px !important;
+    transform: none !important;
+    border-radius: 0 !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+.taskbar .taskbar-sortable {
+    justify-content: flex-start !important;
+    align-items: center;
+    gap: 2px;
+    height: 100%;
+}
+
+.taskbar .taskbar-item {
+    border-radius: 6px;
+    height: 34px;
+    margin: 3px 1px;
+    color: var(--mixt-panel-text);
+}
+
+.taskbar .taskbar-item:hover {
+    background-color: rgba(255, 255, 255, 0.10);
+}
+
+.taskbar .taskbar-item.window-active,
+.taskbar .taskbar-item.taskbar-item-active {
+    background-color: rgba(255, 255, 255, 0.14);
+    box-shadow: inset 0 -2px 0 var(--mixt-accent);
+}
+
+/* The first item is the Start button — it reads as the panel's menu button. */
+.taskbar .taskbar-sortable > .taskbar-item:first-child {
+    font-weight: 600;
+    padding: 0 10px;
+    margin-right: 6px;
+    background-color: rgba(158, 222, 106, 0.16);
+    box-shadow: inset 0 0 0 1px rgba(158, 222, 106, 0.35);
+}
+
+.taskbar .taskbar-sortable > .taskbar-item:first-child:hover {
+    background-color: rgba(158, 222, 106, 0.28);
+}
+
+/* ------------------------------ windows ---------------------------------- */
+
+.window {
+    border-radius: 6px 6px 3px 3px;
+    border: 1px solid var(--mixt-window-border);
+    box-shadow: 0 18px 48px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+.window.window-active {
+    box-shadow: 0 26px 70px rgba(0, 0, 0, 0.62), 0 3px 10px rgba(0, 0, 0, 0.4);
+}
+
+.window-head {
+    background-color: transparent;
+    background-image: linear-gradient(to bottom, var(--mixt-titlebar-a), var(--mixt-titlebar-b));
+    filter: none;
+    box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.35);
+    color: var(--mixt-titlebar-text);
+    border-radius: 6px 6px 0 0;
+}
+
+.window-head .window-head-title {
+    color: var(--mixt-titlebar-text);
+}
+
+.window-head .window-head-icon,
+.window-head img {
+    filter: none;
+}
+
+.window-head-title,
+.window:not(.window-active) .window-head {
+    opacity: 0.92;
+}
+
+/* ------------------------------ menu ------------------------------------- */
+
+.popover-launcher,
+.launch-popover {
+    border-radius: 6px;
+}
+
+.launch-search {
+    border-radius: 6px;
+}
+
+/* ------------------------------ selection -------------------------------- */
+
+::selection {
+    background: var(--mixt-accent);
+    color: #ffffff;
+}
+
+/* ------------------------------ administration tab ----------------------- */
+
+.admin-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+    margin: 12px 0;
+}
+
+.admin-card {
+    background: var(--dashboard-hover);
+    color: var(--dashboard-text);
+    border: 1px solid var(--dashboard-border);
+    border-radius: 8px;
+    padding: 12px;
+}
+
+.admin-card-value {
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.admin-card-label,
+.admin-generated,
+.admin-empty {
+    font-size: 12px;
+    opacity: 0.7;
+}
+
+.admin-section {
+    margin-top: 22px;
+}
+
+.admin-section h3 {
+    font-size: 15px;
+    margin-bottom: 8px;
+}
+
+.admin-count {
+    font-weight: 400;
+    opacity: 0.6;
+}
+
+.admin-table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--dashboard-border);
+    border-radius: 6px;
+}
+
+.admin-table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.admin-table th,
+.admin-table td {
+    text-align: left;
+    padding: 6px 8px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.admin-table th {
+    background: rgba(0, 0, 0, 0.05);
+    font-weight: 600;
+}
+
+.admin-live {
+    color: #3d8b1f;
+    font-weight: 600;
+}
+
+.admin-error {
+    /* Light box with dark text, so the message reads on any window background. */
+    color: #5c1410;
+    background: #fdecea;
+    border: 1px solid #d93025;
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin: 10px 0;
+    line-height: 1.4;
+}
+
+.admin-error:empty {
+    display: none;
+}
+
+.admin-error strong {
+    color: #3b0d09;
+}
+
+.admin-notice {
+    margin: 10px 0;
+    padding: 10px 12px;
+    border-radius: 6px;
+    background: rgba(158, 222, 106, 0.22);
+    border: 1px solid rgba(124, 201, 63, 0.6);
+    font-size: 13px;
+    word-break: break-word;
+}
+
+.admin-whitelist-add {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    margin: 6px 0 10px;
+}
+
+.admin-whitelist-add input {
+    padding: 6px 8px;
+    border: 1px solid rgba(0, 0, 0, 0.25);
+    border-radius: 6px;
+    min-width: 200px;
+}
+
+.admin-whitelist-msg {
+    width: 100%;
+    margin: 0;
+}
+
+/* The administration content follows the theme: dark text on a light page in
+   light mode, light text on a dark page in dark mode. The colors come from the
+   dashboard tokens, so the text never sits on a background of its own color. */
+.admin-content {
+    background: var(--dashboard-background);
+    color: var(--dashboard-text);
+    border-radius: 8px;
+    padding: 12px;
+}
+
+/* Some global rules give paragraphs and headings a fixed dark color. Text in
+   the panel inherits the theme color instead. Error messages keep their own. */
+.admin-content p,
+.admin-content h3,
+.admin-content th,
+.admin-content td,
+.admin-content label {
+    color: inherit;
+}
+
+/* ------------------------- Mint polish (batch 1) --------------------------- */
+
+/* Title-bar buttons: small rounded hover target; close turns red, as in Mint-Y. */
+.window-action-btn {
+    border-radius: 4px;
+    transition: background-color 120ms ease;
+}
+
+.window-action-btn:hover {
+    background-color: rgba(0, 0, 0, 0.10);
+}
+
+.window-action-btn.window-close-btn:hover {
+    background-color: #d64541;
+}
+
+.window-action-btn.window-close-btn:hover > img {
+    filter: brightness(0) invert(1);
+}
+
+.window-head-title {
+    font-weight: 500;
+}
+
+/* Panel labels read at the same size as Cinnamon's panel text. */
+.taskbar .taskbar-item {
+    font-size: 13px;
+}
+
+/* ----------------------- Administrator desktop shortcut -------------------- */
+
+.desktop-admin-shortcut,
+.desktop-settings-shortcut {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 2;
+    width: 84px;
+    padding: 8px 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    border-radius: 6px;
+    color: #ffffff;
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+/* The administrator's shortcut sits beside the Settings shortcut. */
+.desktop-admin-shortcut {
+    right: 112px;
+}
+
+.desktop-settings-shortcut:hover,
+.desktop-settings-shortcut:focus-visible,
+.desktop-admin-shortcut:hover,
+.desktop-admin-shortcut:focus-visible {
+    background-color: rgba(255, 255, 255, 0.12);
+    outline: none;
+}
+
+.desktop-admin-shortcut-icon {
+    font-size: 28px;
+    line-height: 1;
+    color: var(--mixt-accent);
+}
+
+.desktop-admin-shortcut-label {
+    font-size: 12px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+/* ----------------------- Desktop icon grid -------------------------------- */
+
+/* Faint grid shown only while an icon is being dragged. Cells are 100px with a
+   10px margin, matching DESKTOP_GRID in helpers/desktopGrid.js. */
+.desktop.desktop-grid-visible {
+    background-image:
+        linear-gradient(to right, rgba(255, 255, 255, 0.07) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+    background-size: 100px 100px;
+    background-position: 10px 10px;
+}
+
+/* ----------------------- Panel: Mint layout ------------------------------- */
+
+/* Launcher and window icons sit at the left edge of the panel, not centred. */
+.taskbar.taskbar-position-bottom,
+.taskbar.taskbar-position-bottom .taskbar-sortable {
+    justify-content: flex-start !important;
+}
+
+/* No floating bar at the top: Mint has a single panel. The Mixt toolbar
+   (search, account) moves into the panel, just left of the clock. */
+.toolbar {
+    top: auto !important;
+    bottom: 0 !important;
+    left: auto !important;
+    right: 118px !important;
+    width: auto !important;
+    height: 40px !important;
+    transform: none !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+.mint-clock {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    width: 112px;
+    height: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: var(--mixt-panel-text);
+    font-size: 12px;
+    line-height: 1.25;
+    pointer-events: none;
+    user-select: none;
+    z-index: 100000;
+}
+
+.mint-clock-date {
+    font-size: 11px;
+    opacity: 0.8;
+}
+
+/* ----------------------- Panel item centring ------------------------------ */
+/* One rule decides every launcher's box: the panel is 40px tall, each item is
+   34px with 3px above and below, and its icon is centred on that line. The
+   display property is left alone because the taskbar code shows and hides
+   items with it. */
+.taskbar .taskbar-item {
+    height: 34px !important;
+    min-height: 0 !important;
+    margin: 3px 1px !important;
+    padding: 0 6px !important;
+    line-height: 34px !important;
+    box-sizing: border-box !important;
+    text-align: center;
+}
+
+.taskbar .taskbar-item .taskbar-icon,
+.taskbar .taskbar-item img,
+.taskbar .taskbar-item svg {
+    vertical-align: middle !important;
+}
+
+.taskbar .taskbar-sortable > .taskbar-item:first-child {
+    padding: 0 10px !important;
+}
+
+/* Sortable launchers (jQuery UI adds its own offsets to them): same box as the rest. */
+.taskbar .taskbar-item.taskbar-item-sortable {
+    margin: 3px 1px !important;
+    top: 0 !important;
+}
+
+/* ----------------------- Administration: account editor ------------------- */
+
+.admin-account-form {
+    margin: 12px 0 20px;
+    padding: 14px;
+    border: 1px solid #d8dde3;
+    border-radius: 8px;
+    background: #fff;
+}
+
+.admin-form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 10px 14px;
+    margin: 10px 0;
+}
+
+.admin-field {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.admin-field span {
+    font-size: 12px;
+    color: #666;
+}
+
+.admin-field input {
+    width: 100%;
+    padding: 5px 7px;
+}
+
+.admin-form-checks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 18px;
+    margin: 8px 0;
+}
+
+.admin-check {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.admin-readonly {
+    color: #555;
+    font-size: 13px;
+}

@@ -1,0 +1,14 @@
+<html>
+<body>
+    <button id="feedback">Send us feedback</button>
+    <script src="/mixt.js/v2"></script>
+    <script>
+        document.getElementById('feedback').addEventListener('click', async () => {
+            const sent = await mixt.ui.showFeedbackDialog();
+            if (sent) {
+                mixt.print('Thanks for your feedback!');
+            }
+        });
+    </script>
+</body>
+</html>

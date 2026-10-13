@@ -1,0 +1,4 @@
+Third-party code in this folder (both permissive licences):
+
+- pdf.js (pdf.min.mjs, pdf.worker.min.mjs) - Apache License 2.0 - see LICENSE-pdfjs.txt
+- pdf-lib (pdf-lib.esm.min.js) - MIT License - see LICENSE-pdf-lib.txt
