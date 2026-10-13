@@ -169,6 +169,7 @@
         "pdf-editor": "./src/apps/pdf-editor",
         "meetings": "./src/apps/meetings",
         "team-chat": "./src/apps/team-chat",
+        "g-talk": "./src/apps/g-talk",
         "music": "./src/apps/music",
         "video-player": "./src/apps/video-player",
         "mail": "./src/apps/mail",
