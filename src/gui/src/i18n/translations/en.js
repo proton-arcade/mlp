@@ -31,7 +31,7 @@ const en = {
         addon_credits_note: 'Used once your monthly credits run out.',
         add_app: 'Add an app',
         add_app_browse: 'Find an app',
-        add_app_browse_desc: 'Browse the App Center and install what you need',
+        add_app_browse_desc: 'Browse the App Manager and install what you need',
         add_app_request: 'Request an app',
         add_app_request_c2a: 'Tell us what app you wish Mixt had. Your request goes straight to our team.',
         add_app_request_desc: 'Tell us what we should build next',

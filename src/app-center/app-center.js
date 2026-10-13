@@ -1,6 +1,6 @@
 /*
- * App Center: the software manager for accounts. It lists the apps this
- * account can use (GET /apps/catalog), opens them, and uninstalls them by
+ * App Manager (the App Store): lists the apps this account can use
+ * (GET /apps/catalog), searches them, opens them, and uninstalls them by
  * revoking their permissions, the same way the Apps tab does.
  */
 (function () {
@@ -41,15 +41,38 @@
         return resp.json();
     }
 
+    // Search: every word in the query must appear in the app's name, title or
+    // description. Matches in the title rank first, then names, then text.
+    function searchApps (list, query) {
+        const terms = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
+        if ( terms.length === 0 ) return list;
+        const scored = [];
+        for ( const a of list ) {
+            const title = String(a.title || '').toLowerCase();
+            const name = String(a.name || '').toLowerCase();
+            const desc = String(a.description || '').toLowerCase();
+            const hay = `${title} ${name} ${desc}`;
+            if ( ! terms.every((t) => hay.includes(t)) ) continue;
+            let score = 0;
+            for ( const t of terms ) {
+                if ( title.includes(t) ) score += 3;
+                else if ( name.includes(t) ) score += 2;
+                else score += 1;
+            }
+            scored.push({ a, score });
+        }
+        scored.sort((x, y) => y.score - x.score ||
+            String(x.a.title || x.a.name).localeCompare(String(y.a.title || y.a.name)));
+        return scored.map((x) => x.a);
+    }
+
     function render () {
-        const q = filterEl.value.trim().toLowerCase();
-        const shown = apps.filter((a) =>
-            !q || String(a.title || a.name).toLowerCase().includes(q) ||
-            String(a.description || '').toLowerCase().includes(q));
+        const q = filterEl.value;
+        const shown = searchApps(apps, q);
 
         if ( shown.length === 0 ) {
             listEl.innerHTML = '';
-            setStatus(apps.length === 0 ? 'No apps are available yet.' : 'No apps match your filter.');
+            setStatus(apps.length === 0 ? 'No apps are available yet.' : `No apps match "${q.trim()}".`);
             return;
         }
         setStatus(`${shown.length} app${shown.length === 1 ? '' : 's'}`);
@@ -75,7 +98,7 @@
             apps = await loadCatalog();
             render();
         } catch (err) {
-            console.error('App Center could not load the catalog:', err);
+            console.error('App Manager could not load the catalog:', err);
             listEl.innerHTML = '';
             setStatus('Could not load the app list. Check your connection and try Refresh.');
         } finally {
@@ -126,6 +149,13 @@
     });
 
     filterEl.addEventListener('input', render);
+    filterEl.addEventListener('keydown', (e) => {
+        if ( e.key === 'Escape' && filterEl.value ) {
+            e.preventDefault();
+            filterEl.value = '';
+            render();
+        }
+    });
     refreshBtn.addEventListener('click', refresh);
     refresh();
 })();
