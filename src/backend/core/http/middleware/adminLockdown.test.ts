@@ -64,6 +64,12 @@ describe('admin lockdown', () => {
         expect((await run(users, { method: 'POST', path: '/login', anonymous: true })).passed).toBe(true);
     });
 
+    it('lets anonymous visitors load the desktop static libraries', async () => {
+        const users = fakeUsers();
+        const css = await run(users, { method: 'GET', path: '/lib/jquery-ui-1.13.2/jquery-ui.min.css', anonymous: true });
+        expect(css.passed).toBe(true);
+    });
+
     it('lets the desktop shell serve /myacc, the account window', async () => {
         const users = fakeUsers();
         expect((await run(users, { method: 'GET', path: '/myacc', anonymous: true })).passed).toBe(true);
