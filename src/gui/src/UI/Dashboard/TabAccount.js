@@ -18,7 +18,6 @@
  */
 
 import UIWindowChangePassword from '../UIWindowChangePassword.js';
-import UIWindowChangeEmail from '../Settings/UIWindowChangeEmail.js';
 import UIWindowChangeUsername from '../UIWindowChangeUsername.js';
 import UIWindowConfirmUserDeletion from '../Settings/UIWindowConfirmUserDeletion.js';
 import UIWindowCopyToken from '../UIWindowCopyToken.js';
@@ -210,7 +209,6 @@ const TabAccount = {
             h += `<span class="user-email">${html_encode(window.user.email)}</span>`;
             h += '</div>';
             h += '</div>';
-            h += `<button class="button change-email">${i18n('change_email')}</button>`;
             h += '</div>';
         }
 
@@ -277,18 +275,6 @@ const TabAccount = {
         });
         $el_window.find('.dashboard-section-account .change-username').on('click', function (e) {
             UIWindowChangeUsername({
-                window_options: {
-                    parent_uuid: $el_window.attr('data-element_uuid'),
-                    backdrop: true,
-                    close_on_backdrop_click: true,
-                    parent_center: true,
-                    stay_on_top: true,
-                    has_head: false,
-                },
-            });
-        });
-        $el_window.find('.dashboard-section-account .change-email').on('click', function (e) {
-            UIWindowChangeEmail({
                 window_options: {
                     parent_uuid: $el_window.attr('data-element_uuid'),
                     backdrop: true,

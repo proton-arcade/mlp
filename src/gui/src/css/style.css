@@ -3721,17 +3721,6 @@ fieldset[name=number-code] {
     margin-top: 8px;
 }
 
-.forgot-password-link {
-    cursor: pointer;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    font-size: 13px;
-}
-
-.forgot-password-link:hover {
-    text-decoration: underline;
-}
-
 .pulse-dark {
     display: block;
     float: left;

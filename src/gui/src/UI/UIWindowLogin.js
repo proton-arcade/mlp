@@ -19,7 +19,6 @@
 
 import TeePromise from '../util/TeePromise.js';
 import UIWindow from './UIWindow.js';
-import UIWindowRecoverPassword from './UIWindowRecoverPassword.js';
 import UIWindowSignup from './UIWindowSignup.js';
 import { KNOWN_OIDC_PROVIDERS, OIDC_GENERIC_PROVIDER_ICON, humanizeOidcProviderId } from '../util/openid.js';
 import { offersFederatedSignInInPopup } from '../util/popupAuth.js';
@@ -309,7 +308,6 @@ async function UIWindowLogin (options) {
         h += '<div style="position: relative; margin-bottom: 20px;">';
         h += '<div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:5px;">';
         h += `<label style="margin-bottom:0;">${i18n('password')}</label>`;
-        h += `<span class="forgot-password-link" style="font-size:13px;">${i18n('forgot_pass_c2a')}</span>`;
         h += '</div>';
         h += `<input id="password-${internal_id}" class="password" type="${options.show_password ? 'text' : 'password'}" name="password" autocomplete="current-password"/>`;
         // show/hide icon
@@ -405,19 +403,6 @@ async function UIWindowLogin (options) {
                 window.location.href = window.location.pathname === '/desktop' ? '/desktop' : '/';
             });
         }
-
-        $(el_window).find('.forgot-password-link').on('click', function (e) {
-            UIWindowRecoverPassword({
-                window_options: {
-                    backdrop: true,
-                    // A stay-on-top login window (dashboard mode) sits in the
-                    // 99999999+ band; this dialog must join it there or it
-                    // opens buried under the login window's backdrop.
-                    stay_on_top: isMobile.phone || !!options.window_options?.stay_on_top,
-                    close_on_backdrop_click: false,
-                },
-            });
-        });
 
         (async () => {
             try {

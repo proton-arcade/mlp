@@ -34,12 +34,10 @@ import UIWindowCardVerificationRequired from './UI/UIWindowCardVerificationRequi
 import { openVerificationGateWindow } from './helpers/verification_gates.js';
 import UIWindowLogin from './UI/UIWindowLogin.js';
 import UIWindowLoginInProgress from './UI/UIWindowLoginInProgress.js';
-import UIWindowNewPassword from './UI/UIWindowNewPassword.js';
 import UIPermissionDialog from './UI/UIPermissionDialog.js';
 import UIWindowSaveAccount from './UI/UIWindowSaveAccount.js';
 import UIWindowSessionList from './UI/UIWindowSessionList.js';
 import UIWindowSignup from './UI/UIWindowSignup.js';
-import UIWindowRecoverPassword from './UI/UIWindowRecoverPassword.js';
 import { PROCESS_RUNNING } from './definitions.js';
 import { isAttestedOrigin } from './helpers/attestedOrigin.js';
 import confirm_before_unload from './helpers/confirmBeforeUnload.js';
@@ -1713,21 +1711,9 @@ window.initgui = async function (options) {
     }
 
     //--------------------------------------------------------------------------------------
-    // Action: Password recovery
-    //--------------------------------------------------------------------------------------
-    if (action === 'set-new-password') {
-        let user = window.url_query_params.get('user');
-        let token = window.url_query_params.get('token');
-
-        await UIWindowNewPassword({
-            user: user,
-            token: token,
-        });
-    }
-    //--------------------------------------------------------------------------------------
     // Action: Change Username
     //--------------------------------------------------------------------------------------
-    else if (action === 'change-username') {
+    if (action === 'change-username') {
         await UIWindowChangeUsername();
     }
     //--------------------------------------------------------------------------------------
@@ -1741,17 +1727,6 @@ window.initgui = async function (options) {
             opts.window_options = { cover_page: true, has_head: false };
         }
         await UIWindowLogin(Object.keys(opts).length ? opts : undefined);
-    }
-    //--------------------------------------------------------------------------------------
-    // Action: Password recovery
-    //--------------------------------------------------------------------------------------
-    else if (action === 'password-recovery') {
-        await UIWindowRecoverPassword({
-            window_options: {
-                cover_page: true,
-                has_head: false,
-            },
-        });
     }
     //--------------------------------------------------------------------------------------
     // Action: Signup
