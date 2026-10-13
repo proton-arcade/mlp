@@ -17,8 +17,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import {
+    canAdministerAccounts,
+    canUseDevCenter,
+    effectiveAccountType,
+} from './accountTypes.js';
+
 /**
- * Built-in apps that only the administrator may see or launch. Dev Center has
+ * Built-in apps that only some account types may see or launch. Dev Center has
  * `godmode` (broad file access), so ordinary accounts must not get it in their
  * taskbar, launch grid, or recent list.
  */
@@ -27,13 +33,33 @@ export const ADMIN_ONLY_APP_NAMES: ReadonlySet<string> = new Set([
     'admin-vault',
 ]);
 
+/** Games are not offered to guests. */
+export const GAME_APP_NAMES: ReadonlySet<string> = new Set([
+    'chess',
+    'checkers',
+    'backgammon',
+    'sudoku',
+    'klondike',
+]);
+
 export const ADMIN_USERNAME = 'admin';
 
-/** True when `user` may see or launch the app called `appName`. */
+/**
+ * True when `user` may see or launch the app called `appName`.
+ *
+ * - Admin-vault: owner and administrator.
+ * - Dev-center: owner, administrator and developer.
+ * - Games: not for guests. Everything else is visible to every account type.
+ */
 export function isAppVisibleTo(
     appName: string | null | undefined,
-    user: { username?: string | null } | null | undefined,
+    user:
+        { username?: string | null; account_type?: unknown } | null | undefined,
 ): boolean {
-    if (!appName || !ADMIN_ONLY_APP_NAMES.has(appName)) return true;
-    return user?.username === ADMIN_USERNAME;
+    if (!appName) return true;
+    const type = effectiveAccountType(user);
+    if (appName === 'admin-vault') return canAdministerAccounts(type);
+    if (appName === 'dev-center') return canUseDevCenter(type);
+    if (GAME_APP_NAMES.has(appName)) return type !== 'guest';
+    return true;
 }

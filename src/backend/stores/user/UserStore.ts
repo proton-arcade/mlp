@@ -37,6 +37,8 @@ export interface UserRow {
     uuid: string;
     username: string;
     email?: string | null;
+    /** Account type: owner, administrator, developer, standard or guest. */
+    account_type?: string;
     /** True when an admin has suspended the account. */
     suspended?: boolean;
     /**

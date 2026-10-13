@@ -17,6 +17,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import {
+    canAdministerAccounts,
+    effectiveAccountType,
+} from '../../../util/accountTypes.js';
 import type { Request, RequestHandler } from 'express';
 import {
     isCardVerificationEnabled,
@@ -219,11 +223,11 @@ export const DEFAULT_ADMIN_USERNAMES = ['admin', 'system'] as const;
 export const ADMIN_ONLY_BUILTIN_USERNAMES = ['admin'] as const;
 
 /**
- * Reject unless the username is `admin`, or one of `extras`, and the
- * actor carries no app anywhere in its token chain (`effectiveApp`). With
- * `appGated` a direct app-under-user actor is deferred to `allowedAppIdsGate`
- * instead; app-issued access tokens are rejected even then, since that gate
- * cannot see them. Does not imply `requireUserActor`.
+ * Reject unless the username is `admin`, or one of `extras`, and the actor
+ * carries no app anywhere in its token chain (`effectiveApp`). With `appGated`
+ * a direct app-under-user actor is deferred to `allowedAppIdsGate` instead;
+ * app-issued access tokens are rejected even then, since that gate cannot see
+ * them. Does not imply `requireUserActor`.
  */
 export const adminOnlyGate = (
     extras: readonly string[] = [],
@@ -231,13 +235,20 @@ export const adminOnlyGate = (
 ): RequestHandler => {
     // Match the username column's case-insensitive collation.
     const allowList = new Set<string>(
-        [...ADMIN_ONLY_BUILTIN_USERNAMES, ...extras].map((u) => u.toLowerCase()),
+        [...ADMIN_ONLY_BUILTIN_USERNAMES, ...extras].map((u) =>
+            u.toLowerCase(),
+        ),
     );
     // Admin follows the name, so a name that grants it must never be claimable.
     reserveUsernames(allowList);
     return (req, _res, next) => {
         const username = req.actor?.user.username;
-        if (!username || !allowList.has(username.toLowerCase())) {
+        // Owner and administrator accounts pass by type; the listed usernames
+        // (the built-in admin account and any extras) always pass.
+        const byType = canAdministerAccounts(
+            effectiveAccountType(req.actor?.user),
+        );
+        if (!byType && (!username || !allowList.has(username.toLowerCase()))) {
             next(
                 new HttpError(403, 'Only admins may request this resource', {
                     legacyCode: 'forbidden',

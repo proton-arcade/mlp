@@ -21,6 +21,11 @@ import { extension } from '@mixt/backend/src/extensions';
 import { isStorableEmail } from '@mixt/backend/src/util/email';
 import { generateDefaultFsentries } from '@mixt/backend/src/util/userProvisioning';
 import {
+    accountTypeChangeProblem,
+    DEFAULT_ACCOUNT_TYPE,
+    effectiveAccountType,
+} from '@mixt/backend/src/util/accountTypes';
+import {
     generateTemporaryPassword,
     temporaryPasswordExpiry,
 } from '@mixt/backend/src/util/temporaryPassword';
@@ -489,6 +494,29 @@ const addToWhitelist = async (req: Request, res: Response): Promise<void> => {
         return;
     }
 
+    // Approving an account may set its type. A new account defaults to standard.
+    const hasTypeInput = body.account_type !== undefined;
+    const existingAccount = await stores.user.getByUsername(username);
+    const actorType = effectiveAccountType(req.actor?.user);
+    if (hasTypeInput || !existingAccount) {
+        const typeProblem = accountTypeChangeProblem(
+            actorType,
+            {
+                currentType: existingAccount
+                    ? effectiveAccountType(existingAccount)
+                    : DEFAULT_ACCOUNT_TYPE,
+            },
+            hasTypeInput ? body.account_type : DEFAULT_ACCOUNT_TYPE,
+        );
+        if (typeProblem) {
+            res.status(400).json({ message: typeProblem, code: 'bad_request' });
+            return;
+        }
+    }
+    const requestedType = hasTypeInput
+        ? (body.account_type as string)
+        : DEFAULT_ACCOUNT_TYPE;
+
     const addedBy = req.actor?.user?.username ?? 'admin';
     let temporaryPassword: string | null = null;
 
@@ -528,6 +556,7 @@ const addToWhitelist = async (req: Request, res: Response): Promise<void> => {
             email: emailInput || null,
             free_storage: extension.config.storage_capacity ?? null,
             requires_email_confirmation: false,
+            account_type: requestedType,
         });
         saveVaultPassword(
             extension.config.admin_dir,
@@ -545,6 +574,13 @@ const addToWhitelist = async (req: Request, res: Response): Promise<void> => {
         } catch (err) {
             console.warn('[admin] failed to provision home for', username, err);
         }
+    }
+
+    if (existingAccount && hasTypeInput) {
+        await stores.user.update(existingAccount.id, {
+            account_type: requestedType,
+        });
+        await stores.user.invalidateById(existingAccount.id);
     }
 
     await writeWhitelist(stores.user, [
@@ -705,7 +741,8 @@ extension.patch(
             res.status(404).json({ message: 'No account has that username.' });
             return;
         }
-        const isAdmin = String(account.username).toLowerCase() === 'admin';
+        // The owner account is protected by its type (the built-in admin account is always owner).
+        const isAdmin = effectiveAccountType(account) === 'owner';
         const update: Row = {};
         const errors: string[] = [];
 
@@ -751,6 +788,16 @@ extension.patch(
             if (Number.isNaN(n))
                 errors.push('max_subdomains must be a whole number.');
             else update.max_subdomains = n;
+        }
+
+        if ('account_type' in body) {
+            const problem = accountTypeChangeProblem(
+                effectiveAccountType(req.actor?.user),
+                { currentType: effectiveAccountType(account) },
+                body.account_type,
+            );
+            if (problem) errors.push(problem);
+            else update.account_type = body.account_type;
         }
 
         if ('suspended' in body) {
