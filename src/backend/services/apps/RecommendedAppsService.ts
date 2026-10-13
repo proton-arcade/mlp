@@ -44,8 +44,7 @@ export const RECOMMENDED_APP_NAMES = [
     'backgammon',
     'sudoku',
     'klondike',
-    'music',
-    'video-player',
+    'media',
 ];
 
 export class RecommendedAppsService extends MixtService {

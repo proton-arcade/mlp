@@ -50,7 +50,7 @@ describe('app visibility by account type', () => {
     });
     it('shows guests only the approved apps (including games)', () => {
         const guest = { username: 'g', account_type: 'guest' };
-        for (const app of ['browser', 'g-talk', 'notes', 'whiteboard', 'meetings', 'music', 'video-player', 'chess', 'settings', 'shared', 'internet']) {
+        for (const app of ['browser', 'g-talk', 'notes', 'whiteboard', 'meetings', 'media', 'chess', 'settings', 'shared', 'internet']) {
             expect(isAppVisibleTo(app, guest)).toBe(true);
         }
         for (const app of ['explorer', 'team-chat', 'terminal', 'dev-center', 'admin-vault', 'app-center', 'spreadsheet', 'calendar', 'mail', 'contacts', 'presentation', 'pdf-editor', 'signatures']) {

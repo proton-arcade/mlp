@@ -1,6 +1,7 @@
 /*
- * Video Player: plays MP4 video and MP3 audio from files on this computer.
- * Built on the browser's own media elements. Only .mp4 and .mp3 are accepted.
+ * Media: plays MP4 video and MP3 audio from files on this computer, in one
+ * playlist. Built on the browser's own media elements. Only .mp4 and .mp3 are
+ * accepted. Shuffle and repeat control what plays next.
  */
 (function () {
     'use strict';
@@ -25,14 +26,19 @@
     const stopBtn = $('stop');
     const backBtn = $('back');
     const fwdBtn = $('fwd');
+    const shuffleBtn = $('shuffle');
+    const repeatBtn = $('repeat');
     const help = $('help');
 
     const ALLOWED = { mp4: 'video', mp3: 'audio' };
     const SPEEDS = [0.5, 1, 1.5, 2];
+    const REPEAT_LABELS = ['off', 'all', 'one'];
 
     let items = []; // { name, url, kind, duration }
     let current = -1;
     let seeking = false;
+    let shuffle = false;
+    let repeat = 0; // 0 off, 1 all, 2 one
 
     function fmt(sec) {
         if (!Number.isFinite(sec) || sec < 0) sec = 0;
@@ -74,6 +80,22 @@
         }
     }
 
+    // The index to play after `dir` (1 next, -1 previous), or -1 for none.
+    // Shuffle picks any other item. Repeat "all" wraps around; "one" is
+    // handled by the ended handler.
+    function indexFrom(dir) {
+        if (!items.length) return -1;
+        if (shuffle && items.length > 1) {
+            let i;
+            do { i = Math.floor(Math.random() * items.length); } while (i === current);
+            return i;
+        }
+        const j = current + dir;
+        if (j >= 0 && j < items.length) return j;
+        if (repeat === 1) return (j + items.length) % items.length;
+        return -1;
+    }
+
     function renderList() {
         listEl.innerHTML = '';
         items.forEach((item, i) => {
@@ -89,11 +111,17 @@
             listEl.appendChild(li);
         });
         const hasItems = items.length > 0;
-        [toggleBtn, stopBtn, muteBtn, fsBtn, seek, speed, backBtn, fwdBtn].forEach((el) => {
+        [toggleBtn, stopBtn, muteBtn, fsBtn, seek, speed, backBtn, fwdBtn, shuffleBtn, repeatBtn].forEach((el) => {
             el.disabled = !hasItems;
         });
-        prevBtn.disabled = !hasItems || current <= 0;
-        nextBtn.disabled = !hasItems || current >= items.length - 1;
+        prevBtn.disabled = !hasItems;
+        nextBtn.disabled = !hasItems;
+        shuffleBtn.setAttribute('aria-pressed', String(shuffle));
+        shuffleBtn.classList.toggle('on', shuffle);
+        repeatBtn.textContent = `↻ ${REPEAT_LABELS[repeat]}`;
+        repeatBtn.title = `Repeat: ${REPEAT_LABELS[repeat]} (R)`;
+        repeatBtn.setAttribute('aria-label', `Repeat ${REPEAT_LABELS[repeat]}`);
+        repeatBtn.classList.toggle('on', repeat > 0);
     }
 
     function play(index) {
@@ -110,6 +138,15 @@
         video.play().catch(() => {});
         renderList();
         setStatus(`Playing ${item.name}`);
+    }
+
+    function playNext(dir) {
+        const i = indexFrom(dir);
+        if (i >= 0) play(i);
+        else {
+            updateTime();
+            setStatus('End of playlist.');
+        }
     }
 
     function togglePlay() {
@@ -151,6 +188,18 @@
         setStatus(`Speed ${SPEEDS[next]}×`);
     }
 
+    function toggleShuffle() {
+        shuffle = !shuffle;
+        renderList();
+        setStatus(shuffle ? 'Shuffle on' : 'Shuffle off');
+    }
+
+    function cycleRepeat() {
+        repeat = (repeat + 1) % 3;
+        renderList();
+        setStatus(`Repeat ${REPEAT_LABELS[repeat]}`);
+    }
+
     function toggleFullscreen() {
         if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
         else stage.requestFullscreen().catch(() => {});
@@ -181,11 +230,12 @@
         updateMute();
     });
     video.addEventListener('ended', () => {
-        if (current < items.length - 1) play(current + 1);
-        else {
-            updateTime();
-            setStatus('End of playlist.');
+        if (repeat === 2) {
+            video.currentTime = 0;
+            video.play().catch(() => {});
+            return;
         }
+        playNext(1);
     });
     video.addEventListener('error', () => {
         if (current < 0) return;
@@ -211,10 +261,12 @@
     });
     toggleBtn.addEventListener('click', togglePlay);
     stopBtn.addEventListener('click', stop);
-    prevBtn.addEventListener('click', () => play(current - 1));
-    nextBtn.addEventListener('click', () => play(current + 1));
+    prevBtn.addEventListener('click', () => playNext(-1));
+    nextBtn.addEventListener('click', () => playNext(1));
     backBtn.addEventListener('click', () => step(-10));
     fwdBtn.addEventListener('click', () => step(10));
+    shuffleBtn.addEventListener('click', toggleShuffle);
+    repeatBtn.addEventListener('click', cycleRepeat);
     muteBtn.addEventListener('click', () => {
         video.muted = !video.muted;
         updateMute();
@@ -256,8 +308,10 @@
             case 'm': case 'M': muteBtn.click(); break;
             case 'f': case 'F': toggleFullscreen(); break;
             case 's': case 'S': stop(); break;
-            case 'p': case 'P': play(current - 1); break;
-            case 'n': case 'N': play(current + 1); break;
+            case 'p': case 'P': playNext(-1); break;
+            case 'n': case 'N': playNext(1); break;
+            case 'x': case 'X': toggleShuffle(); break;
+            case 'r': case 'R': cycleRepeat(); break;
             case '[': cycleSpeed(-1); break;
             case ']': cycleSpeed(1); break;
             default: return;
