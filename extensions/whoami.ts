@@ -1,4 +1,5 @@
 import { Context } from '@mixt/backend/src/core';
+import { effectiveAccountType } from '@mixt/backend/src/util/accountTypes';
 import { extension } from '@mixt/backend/src/extensions';
 import {
     cardFallbackDepsFrom,
@@ -156,6 +157,7 @@ export const handleWhoami = async (
 
     const details: Record<string, unknown> = {
         username: user.username,
+        account_type: effectiveAccountType(user),
         uuid: user.uuid,
         email: user.email,
         unconfirmed_email: user.email,

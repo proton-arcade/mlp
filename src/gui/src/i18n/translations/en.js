@@ -139,6 +139,7 @@ const en = {
         cpu: 'CPU',
         create_account: 'Create Account',
         create_free_account: 'Create Free Account',
+        continue_as_guest: 'Continue as guest',
         change_icon: 'Change Icon',
         create_desktop_shortcut: 'Create Shortcut (Desktop)',
         create_desktop_shortcut_s: 'Create Shortcuts (Desktop)',

@@ -1,8 +1,10 @@
 /*
- * Administration tab. Visible only to the `admin` account. Shows what the
- * server stores: accounts, live sessions, apps, subdomains, groups, storage and
- * the in-built mailboxes. Data comes from GET /admin/overview on the API origin.
+ * Administration tab. Visible to the owner and to administrators. Shows what the
+ * server stores: accounts, live sessions, apps, subdomains, storage and the
+ * in-built mailboxes. Data comes from GET /admin/overview on the API origin.
  */
+
+import { ACCOUNT_TYPE_LABELS, accountTypeOf } from '../../accountTypes.js';
 
 const esc = (value) => window.html_encode(value === null || value === undefined ? '' : String(value));
 
@@ -52,11 +54,33 @@ const checkField = (name, label, checked, disabled = false) =>
 const textField = (name, label, value, type = 'text') =>
     `<label class="admin-field"><span>${esc(label)}</span><input type="${type}" name="${name}" value="${esc(value ?? '')}"></label>`;
 
+// The account type control. The owner's type is fixed. Only the owner can
+// make or change an administrator; an administrator can set the other types.
+const accountTypeField = (u, viewerIsOwner) => {
+    const current = accountTypeOf(u);
+    const locked = current === 'owner' || (current === 'administrator' && !viewerIsOwner);
+    const choices = current === 'owner'
+        ? ['owner']
+        : ['administrator', 'developer', 'standard', 'guest']
+            .filter((t) => viewerIsOwner || t !== 'administrator' || current === 'administrator');
+    const options = choices
+        .map((t) => `<option value="${t}" ${t === current ? 'selected' : ''}>${esc(ACCOUNT_TYPE_LABELS[t])}</option>`)
+        .join('');
+    return `<label class="admin-field"><span>Account type</span><select name="account_type" ${locked ? 'disabled' : ''}>${options}</select></label>`;
+};
+
 const renderAccountEditor = (u) => {
     const stored = u.stored_password != null
         ? 'Stored in the admin vault'
         : (u.has_password ? 'Set (not in the admin vault)' : 'Not set');
-    const isAdmin = u.username === 'admin';
+    const targetType = accountTypeOf(u);
+    const isAdmin = targetType === 'owner';
+    const viewerIsOwner = accountTypeOf(window.user) === 'owner';
+    const isSelf = u.username === window.user?.username;
+    const canRemove = !isAdmin && !isSelf && (viewerIsOwner || targetType !== 'administrator');
+    const removeNote = isAdmin
+        ? 'The owner account cannot be removed, and its type cannot be changed.'
+        : (isSelf ? 'You cannot remove your own account.' : 'Only the owner can remove an administrator.');
     return `
         <form class="admin-account-form" data-username="${esc(u.username)}">
             <h3>Edit account: ${esc(u.username)}</h3>
@@ -67,6 +91,7 @@ const renderAccountEditor = (u) => {
             </p>
             <p class="admin-readonly">The username cannot be changed, because files and apps are stored under it. The password is changed with the Set password form below. Two-step sign-in is managed by the account owner.</p>
             <div class="admin-form-grid">
+                ${accountTypeField(u, viewerIsOwner)}
                 ${textField('email', 'Email', u.email)}
                 ${textField('phone', 'Phone', u.phone)}
                 ${textField('dev_first_name', 'Developer first name', u.dev_first_name)}
@@ -84,7 +109,13 @@ const renderAccountEditor = (u) => {
             </div>
             <p class="admin-edit-msg admin-error"></p>
             <button type="submit" class="button">Save account</button>
-        </form>`;
+        </form>
+        <div class="admin-remove-account-wrap">
+            ${canRemove
+                ? `<p class="admin-readonly">Removing an account deletes its files, sites and sessions. This cannot be undone.</p>
+                   <button type="button" class="button admin-remove-account" data-username="${esc(u.username)}">Remove account</button>`
+                : `<p class="admin-readonly">${esc(removeNote)}</p>`}
+        </div>`;
 };
 
 const renderOverview = (data) => {
@@ -104,9 +135,10 @@ const renderOverview = (data) => {
     ].join('');
 
     const users = section('Accounts', data.users.length, table(
-        ['Username', 'Mixt email', 'Email', 'Created', 'Last activity', 'Live', 'Whitelisted', 'Password', 'Email confirmed', '2FA', 'Suspended', 'Storage', 'Files', 'Apps', 'Subdomains', 'Mail (in/sent/out)', 'Groups', 'Signup IP', 'Signup user agent', 'Signup origin', 'Phone', 'Referral', 'Edit'],
+        ['Username', 'Type', 'Mixt email', 'Email', 'Created', 'Last activity', 'Live', 'Whitelisted', 'Password', 'Email confirmed', '2FA', 'Suspended', 'Storage', 'Files', 'Apps', 'Subdomains', 'Mail (in/sent/out)', 'Signup IP', 'Signup user agent', 'Signup origin', 'Phone', 'Referral', 'Edit'],
         data.users.map((u) => [
             `<strong>${esc(u.username)}</strong>`,
+            esc(ACCOUNT_TYPE_LABELS[accountTypeOf(u)] ?? accountTypeOf(u)),
             esc(u.mixt_email),
             esc(u.email ?? '—'),
             esc(fmtDate(u.created_at)),
@@ -124,7 +156,6 @@ const renderOverview = (data) => {
             esc(u.apps),
             esc(u.subdomains),
             `${esc(u.mail_inbox)} / ${esc(u.mail_sent)} / ${esc(u.mail_outbox)}`,
-            esc(u.groups.join(', ') || '—'),
             esc(u.signup_ip ?? '—'),
             esc(u.signup_user_agent ?? '—'),
             esc(u.signup_origin ?? '—'),
@@ -178,20 +209,6 @@ const renderOverview = (data) => {
         ]),
     ));
 
-    const groups = section('Groups', data.groups.length, table(
-        ['Name', 'Kind', 'Handle', 'Owner', 'Members', 'Directory', '2FA required', 'Created'],
-        data.groups.map((g) => [
-            esc(g.name ?? '—'),
-            esc(g.kind ?? '—'),
-            esc(g.handle ?? '—'),
-            esc(g.owner ?? '—'),
-            esc(g.members),
-            yesNo(g.directory_enabled),
-            yesNo(g.require_2fa),
-            esc(fmtDate(g.created_at)),
-        ]),
-    ));
-
     const mail = section('Mail (most recent)', data.mail.total, table(
         ['Address', 'Folder', 'Subject', 'Sent / received', 'Size'],
         data.mail.recent.map((m) => [
@@ -208,10 +225,18 @@ const renderOverview = (data) => {
         : '';
     pendingNotice = null;
 
+    const viewerIsOwner = accountTypeOf(window.user) === 'owner';
     const whitelistSection = section('Whitelisted users', data.whitelist.length, `
         <form class="admin-whitelist-add">
             <input type="text" name="username" placeholder="Username" required autocomplete="off">
             <input type="email" name="email" placeholder="Email (optional, new accounts)" autocomplete="off">
+            <select name="account_type" title="Account type when approving">
+                <option value="">Type: standard for new accounts, unchanged for existing</option>
+                <option value="developer">Developer</option>
+                <option value="standard">Standard</option>
+                <option value="guest">Guest</option>
+                ${viewerIsOwner ? '<option value="administrator">Administrator</option>' : ''}
+            </select>
             <button type="submit" class="button">Add user</button>
             <p class="admin-whitelist-msg admin-error"></p>
         </form>
@@ -242,7 +267,7 @@ const renderOverview = (data) => {
         ${notice}
         <div class="admin-cards">${cards}</div>
         <p class="admin-generated">Live = a session used in the last ${esc(data.live_window_minutes)} minutes. Generated ${esc(fmtDate(data.generated_at))}.</p>
-        ${whitelistSection}${setPasswordSection}<div class="admin-account-editor"></div>${users}${sessions}${apps}${subdomains}${groups}${mail}`;
+        ${whitelistSection}${setPasswordSection}<div class="admin-account-editor"></div>${users}${sessions}${apps}${subdomains}${mail}`;
 };
 
 // Step-up token from /auth/elevate. Held in memory only, for this tab.
@@ -347,7 +372,7 @@ const TabAdmin = {
                 <h2>Administration</h2>
                 <button class="admin-refresh button">Refresh</button>
             </div>
-            <p>Everything stored on this server. Only the administrator can see this page.</p>
+            <p>Everything stored on this server. Only the owner and administrators can see this page.</p>
         </div>
         <div class="admin-content"><p class="admin-empty">Loading…</p></div>`,
     init: ($el_window) => {
@@ -383,9 +408,11 @@ const TabAdmin = {
             const username = String($(form).find('[name=username]').val() || '').trim();
             const email = String($(form).find('[name=email]').val() || '').trim();
             $msg.text('');
+            const accountType = String($(form).find('[name=account_type]').val() || '');
             const { resp, data } = await adminRequest('POST', '/admin/whitelist', {
                 username,
                 ...(email ? { email } : {}),
+                ...(accountType ? { account_type: accountType } : {}),
             });
             if ( data.code === 'elevation_required' ) {
                 showElevationForm($el_window, 'Confirm your password, then add the user again.');
@@ -412,6 +439,21 @@ const TabAdmin = {
                 pendingNotice = data.message || 'Could not remove the user.';
             } else {
                 pendingNotice = `"${username}" was removed from the whitelist.`;
+            }
+            loadOverview($el_window);
+        });
+        $window.on('click', '.admin-remove-account', async (e) => {
+            const username = $(e.currentTarget).data('username');
+            if ( !window.confirm(`Remove the account \"${username}\" permanently? Its files, sites and sessions will be deleted. This cannot be undone.`) ) return;
+            const { resp, data } = await adminRequest('DELETE', `/admin/accounts/${encodeURIComponent(username)}`);
+            if ( data.code === 'elevation_required' ) {
+                showElevationForm($el_window, 'Confirm your password, then remove the account again.');
+                return;
+            }
+            if ( !resp.ok ) {
+                pendingNotice = data.message || 'Could not remove the account.';
+            } else {
+                pendingNotice = `The account \"${username}\" was removed.`;
             }
             loadOverview($el_window);
         });
@@ -445,6 +487,9 @@ const TabAdmin = {
                 requires_password_change: flag('requires_password_change'),
                 dev_approved_for_incentive_program: flag('dev_approved_for_incentive_program'),
             };
+            if (!$(form).find('[name=account_type]').prop('disabled')) {
+                payload.account_type = text('account_type');
+            }
             const { resp, data } = await adminRequest('PATCH', `/admin/accounts/${encodeURIComponent(username)}`, payload);
             if ( data.code === 'elevation_required' ) {
                 showElevationForm($el_window, 'Confirm your password, then save the account again.');

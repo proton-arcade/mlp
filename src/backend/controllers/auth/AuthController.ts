@@ -128,6 +128,7 @@ import { normalizeAbsolutePath } from '../../services/fs/resolveNode.js';
 import type { FSEntry } from '../../stores/fs/FSEntry.js';
 import { MixtController } from '../types.js';
 import { isServerUserAllowed } from '../../util/serverWhitelist';
+import { effectiveAccountType } from '../../util/accountTypes';
 
 export const USERNAME_REGEX = /^\w{1,}$/;
 export const USERNAME_MAX_LENGTH = 45;
@@ -1247,7 +1248,6 @@ export class AuthController extends MixtController {
                     uuid: user_uuid,
                     password: password_hash,
                     email: is_temp ? null : body.email,
-                    account_type: is_temp ? 'guest' : 'standard',
                     account_type: is_temp ? 'guest' : 'standard',
                     clean_email: is_temp ? null : cleanEmail(body.email),
                     free_storage: this.config.storage_capacity ?? null,
@@ -5449,6 +5449,7 @@ export class AuthController extends MixtController {
             token: gui_token,
             user: {
                 username: user.username,
+                account_type: effectiveAccountType(user),
                 uuid: user.uuid,
                 email: user.email,
                 email_confirmed: user.email_confirmed,

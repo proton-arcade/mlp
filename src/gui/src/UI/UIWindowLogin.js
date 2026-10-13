@@ -318,7 +318,7 @@ async function UIWindowLogin (options) {
                             </span>`;
         h += '</div>';
         // login
-        h += `<button type="submit" class="login-btn button button-primary button-block button-normal">${i18n('log_in')}</button>`;
+        h += `<button type="submit" class="login-btn button button-primary button-block button-normal">${i18n('sign_in')}</button>`;
         // OIDC
         h += '<div class="oidc-providers-wrapper" style="display:none; padding: 0 0 10px 0;">';
         h += `<div style="display:flex; align-items:center; gap:10px; margin: 10px 0; font-size:13px; color:#888;"><div style="flex:1; height:1px; background-color:#d0d0d0;"></div><span>${ i18n('or') }</span><div style="flex:1; height:1px; background-color:#d0d0d0;"></div></div>`;
@@ -336,6 +336,14 @@ async function UIWindowLogin (options) {
         if ( options.show_signup_button === undefined || options.show_signup_button ) {
             h += '<div class="c2a-wrapper" style="padding:20px;">';
             h += `<button class="signup-c2a-clickable">${i18n('create_free_account')}</button>`;
+            h += '</div>';
+        }
+        // Guest: a temporary account with the default apps and G-Talk only.
+        // Off unless the caller opts in (it is not offered inside a popup or on
+        // pages that need a real account).
+        if ( options.show_guest_button ) {
+            h += '<div class="guest-c2a-wrapper" style="padding:0 20px 20px 20px; text-align:center;">';
+            h += `<button class="guest-c2a-clickable button button-block button-normal">${i18n('continue_as_guest')}</button>`;
             h += '</div>';
         }
         h += '</div>';
@@ -478,6 +486,16 @@ async function UIWindowLogin (options) {
             } catch (_) {
             }
         })();
+
+        $(el_window).find('.guest-c2a-clickable').on('click', function (e) {
+            e.preventDefault();
+            $(this).prop('disabled', true);
+            // Resolves once the guest session is created; on failure the
+            // handler shows its own alert, so re-enable the button.
+            Promise.resolve(window.startGuestSession?.())
+                .catch(() => {})
+                .finally(() => $(this).prop('disabled', false));
+        });
 
         $(el_window).find('.login-btn').on('click', function (e) {
             // Prevent default button behavior (important for async requests)

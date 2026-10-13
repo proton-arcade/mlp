@@ -104,3 +104,28 @@ export function accountTypeChangeProblem(
     }
     return 'Your account cannot change account types.';
 }
+
+/**
+ * Check whether an administrator-side actor may remove `target` from the
+ * server (delete the account, or take it off the whitelist). Returns an error
+ * message, or null when allowed.
+ */
+export function accountRemovalProblem(
+    actorType: AccountType | string | null | undefined,
+    target: { currentType: AccountType; isSelf: boolean },
+): string | null {
+    if (target.currentType === 'owner') {
+        return 'The owner account cannot be removed or taken off the whitelist.';
+    }
+    if (target.isSelf) {
+        return 'You cannot remove your own account.';
+    }
+    if (actorType === 'owner') return null;
+    if (actorType === 'administrator') {
+        if (target.currentType === 'administrator') {
+            return 'Only the owner can remove an administrator.';
+        }
+        return null;
+    }
+    return 'Your account cannot remove other accounts.';
+}

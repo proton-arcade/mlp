@@ -21,6 +21,7 @@ import { extension } from '@mixt/backend/src/extensions';
 import { isStorableEmail } from '@mixt/backend/src/util/email';
 import { generateDefaultFsentries } from '@mixt/backend/src/util/userProvisioning';
 import {
+    accountRemovalProblem,
     accountTypeChangeProblem,
     DEFAULT_ACCOUNT_TYPE,
     effectiveAccountType,
@@ -286,6 +287,7 @@ extension.get(
                 id,
                 uuid: u.uuid ?? null,
                 username,
+                account_type: effectiveAccountType(u),
                 email: u.email ?? null,
                 mixt_email: `${username}@mixt.email`,
                 email_confirmed: Boolean(u.email_confirmed),
@@ -632,6 +634,19 @@ const removeFromWhitelist = async (
         return;
     }
 
+    const target = await stores.user.getByUsername(username);
+    const problem = accountRemovalProblem(
+        effectiveAccountType(req.actor?.user),
+        {
+            currentType: effectiveAccountType(target ?? { username }),
+            isSelf: Boolean(target) && target!.id === req.actor?.user?.id,
+        },
+    );
+    if (problem) {
+        res.status(403).json({ message: problem, code: 'forbidden' });
+        return;
+    }
+
     await writeWhitelist(
         stores.user,
         entries.filter((e) => e.username !== username),
@@ -693,6 +708,47 @@ extension.post(
         // A password change signs the account out everywhere, as a reset does.
         await services.auth.revokeAllSessionsForUserId(account.id);
         res.json({ username: account.username, updated: true });
+    },
+);
+
+/**
+ * Permanently removes an account: its files, sites, sessions and the account
+ * itself, and takes it off the whitelist. Irreversible. The owner cannot be
+ * removed, nobody can remove their own account, and only the owner can remove
+ * an administrator.
+ */
+extension.delete(
+    '/admin/accounts/:username',
+    { subdomain: 'api', adminOnly: true },
+    async (req: Request, res: Response) => {
+        const username = String(req.params.username ?? '');
+        const account = await stores.user.getByUsername(username);
+        if (!account) {
+            res.status(404).json({ message: 'No account has that username.' });
+            return;
+        }
+        const problem = accountRemovalProblem(
+            effectiveAccountType(req.actor?.user),
+            {
+                currentType: effectiveAccountType(account),
+                isSelf: account.id === req.actor?.user?.id,
+            },
+        );
+        if (problem) {
+            res.status(403).json({ message: problem, code: 'forbidden' });
+            return;
+        }
+        const lowered = String(account.username).toLowerCase();
+        await withWhitelistLock(async () => {
+            const entries = await readWhitelist(stores.user);
+            await writeWhitelist(
+                stores.user,
+                entries.filter((e) => e.username !== lowered),
+            );
+        });
+        await services.auth.revokeAllSessionsForUserId(account.id);
+        await services.userAccount.cascadeDelete(account.id);
+        res.json({ username: account.username, removed: true });
     },
 );
 

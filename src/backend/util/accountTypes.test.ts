@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+    accountRemovalProblem,
     accountTypeChangeProblem,
     canUseDevCenter,
     effectiveAccountType,
@@ -51,5 +52,22 @@ describe('app visibility by account type', () => {
         expect(isAppVisibleTo('chess', { username: 'g', account_type: 'guest' })).toBe(false);
         expect(isAppVisibleTo('chess', { username: 's', account_type: 'standard' })).toBe(true);
         expect(isAppVisibleTo('notes', { username: 'g', account_type: 'guest' })).toBe(true);
+    });
+});
+
+describe('accountRemovalProblem', () => {
+    it('never removes the owner', () => {
+        expect(accountRemovalProblem('owner', { currentType: 'owner', isSelf: false })).not.toBeNull();
+    });
+    it('does not let anyone remove their own account', () => {
+        expect(accountRemovalProblem('owner', { currentType: 'standard', isSelf: true })).not.toBeNull();
+    });
+    it('lets the owner remove others, and administrators remove non-administrators', () => {
+        expect(accountRemovalProblem('owner', { currentType: 'administrator', isSelf: false })).toBeNull();
+        expect(accountRemovalProblem('administrator', { currentType: 'guest', isSelf: false })).toBeNull();
+        expect(accountRemovalProblem('administrator', { currentType: 'administrator', isSelf: false })).not.toBeNull();
+    });
+    it('stops developers and standard users', () => {
+        expect(accountRemovalProblem('developer', { currentType: 'guest', isSelf: false })).not.toBeNull();
     });
 });

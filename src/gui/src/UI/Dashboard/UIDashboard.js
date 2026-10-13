@@ -55,6 +55,7 @@ import TabSecurity from './TabSecurity.js';
 import TabTeams from './TabTeams.js';
 import TabAdmin from './TabAdmin.js';
 import teamBadgeHtml from './teamBadge.js';
+import { canAdministerAccounts } from '../../accountTypes.js';
 
 // Registry of built-in tabs
 const builtinTabs = [
@@ -90,8 +91,8 @@ async function UIDashboard (options) {
 
     // Create mutable tabs array from built-in tabs
     const tabs = [...builtinTabs];
-    // The administrator account gets the Administration tab; nobody else does.
-    if ( window.user?.username === 'admin' ) {
+    // Owner and administrator accounts get the Administration tab; nobody else does.
+    if ( canAdministerAccounts(window.user) ) {
         tabs.push(TabAdmin);
     }
 

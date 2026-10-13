@@ -90,6 +90,7 @@ import apply_item_added_to_containers from '../helpers/applyItemAddedToContainer
 import parse_item_metadata from '../helpers/parseItemMetadata.js';
 import UIWindowSearch from './UIWindowSearch.js';
 import { mountPanelClock } from '../helpers/panelClock.js';
+import { canAdministerAccounts } from '../accountTypes.js';
 
 async function UIDesktop (options) {
     // start a transaction if we're not in embedded or fullpage mode
@@ -744,7 +745,7 @@ async function UIDesktop (options) {
                 data-sort_by="${!options.desktop_fsentry?.sort_by ? 'name' : options.desktop_fsentry.sort_by}"
                 data-sort_order="${!options.desktop_fsentry?.sort_order ? 'asc' : options.desktop_fsentry.sort_order}"
                 data-path="${html_encode(window.desktop_path)}"
-            >${SETTINGS_DESKTOP_SHORTCUT_HTML}${window.user?.username === 'admin' ? ADMIN_DESKTOP_SHORTCUT_HTML : ''}`;
+            >${SETTINGS_DESKTOP_SHORTCUT_HTML}${canAdministerAccounts(window.user) ? ADMIN_DESKTOP_SHORTCUT_HTML : ''}`;
 
     // Get window sidebar width
     mixt.kv.get('window_sidebar_width').catch(() => null).then(async (val) => {

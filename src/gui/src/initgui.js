@@ -1999,6 +1999,76 @@ window.initgui = async function (options) {
     };
 
     /**
+     * Creates a guest session (a temporary account with the default apps and
+     * G-Talk only) and signs this browser in with it. Called by the login
+     * window's "Continue as guest" button. Uses the same signup request as the
+     * first-visit temporary user, including the Turnstile challenge when it is
+     * configured.
+     *
+     * @returns {Promise<void>} Resolves when the attempt has finished.
+     */
+    window.startGuestSession = async function () {
+        const createGuest = async (turnstileToken) => {
+            const requestData = {
+                referrer: new URL(window.location.href).pathname,
+                is_temp: true,
+            };
+            if (turnstileToken) {
+                requestData['cf-turnstile-response'] = turnstileToken;
+            }
+            try {
+                const fingerprint = await window.getDeviceFingerprint?.();
+                if (fingerprint) requestData.fingerprint = fingerprint;
+            } catch (e) {
+                // signup must never block or fail because of device signals
+            }
+            let message =
+                'There was an error creating your guest session. Please try again.';
+            try {
+                const resp = await fetch(`${window.gui_origin}/signup`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...(window.custom_headers ?? {}),
+                    },
+                    body: JSON.stringify(requestData),
+                });
+                const data = await resp.json().catch(() => ({}));
+                if (resp.ok && data.token) {
+                    await window.update_auth_data(data.token, data.user);
+                    window.location.reload();
+                    return;
+                }
+                message = data.message ?? message;
+            } catch (e) {
+                console.error('Guest session failed:', e);
+            }
+            UIAlert({ message });
+        };
+
+        if (window.gui_params?.turnstileSiteKey) {
+            await new Promise((resolve) => {
+                window.showTurnstileChallenge({
+                    onSuccess: async (token) => {
+                        await createGuest(token);
+                        resolve();
+                    },
+                    onError: (error) => {
+                        console.error('Turnstile verification failed:', error);
+                        UIAlert({
+                            message:
+                                'Security verification failed. Please refresh the page and try again.',
+                        });
+                        resolve();
+                    },
+                });
+            });
+        } else {
+            await createGuest();
+        }
+    };
+
+    /**
      * Event handler for a custom 'logout' event attached to the document.
      * This function handles the process of logging out, including user confirmation,
      * communication with the backend, and subsequent UI updates. It takes special
@@ -2322,6 +2392,15 @@ window.initgui = async function (options) {
                 reload_on_success: !window.embedded_in_popup,
                 send_confirmation_code: true,
                 show_signup_button: !whoarewe.disable_user_signup,
+                // Guests are created through /signup, so they follow the same
+                // switches; never offered in a popup or on pages that need a
+                // real account (app landing pages and share links).
+                show_guest_button:
+                    !whoarewe.disable_user_signup &&
+                    !window.disable_temp_users &&
+                    !window.embedded_in_popup &&
+                    !is_app_landing_page &&
+                    !is_share_link,
                 redirect_url: needs_action ? window.location.href : undefined,
                 window_options: {
                     cover_page: true,
