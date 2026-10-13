@@ -141,6 +141,7 @@ const AVAILABLE_MIGRATIONS: [number, string[]][] = [
     [103, ['0108_video-player.sql']],
     [104, ['0109_app-manager-title.sql']],
     [105, ['0110_g-talk.sql']],
+    [106, ['0111_remove-business-apps.sql']],
 ];
 
 export class SqliteDatabaseClient extends AbstractDatabaseClient {

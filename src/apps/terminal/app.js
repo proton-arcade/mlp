@@ -13,8 +13,7 @@
     const history = [];
     let hIndex = 0;
 
-    const APPS = ['invoices', 'crm', 'cap-table', 'projects', 'time-tracking', 'shift-planner', 'equipment',
-        'inventory', 'point-of-sale', 'hiring', 'signatures', 'presentation', 'spreadsheet', 'whiteboard',
+    const APPS = ['signatures', 'presentation', 'spreadsheet', 'whiteboard',
         'notes', 'calendar', 'mail', 'contacts', 'terminal'];
 
     function print (text, cls) {
@@ -83,7 +82,7 @@
             print('  history           commands entered in this session');
             print('  calc <expr>       arithmetic, e.g. calc (3 + 4) * 2 ^ 3');
             print('  apps              list the built-in apps');
-            print('  open <app>       open a built-in app in a new tab, e.g. open invoices');
+            print('  open <app>       open a built-in app in a new tab, e.g. open notes');
         },
         clear () { out.innerHTML = ''; },
         echo (args) { print(args.join(' ')); },
