@@ -38,9 +38,15 @@ describe('checkAttachment', () => {
         expect(checkAttachment(file(), undefined)).toEqual({ ok: true });
     });
 
-    it('accepts the screen recording formats each platform produces', () => {
-        for ( const type of ['video/mp4', 'video/quicktime', 'video/webm'] ) {
-            expect(checkAttachment(file({ type }), [])).toEqual({ ok: true });
+    it('accepts MP4 screen recordings', () => {
+        expect(checkAttachment(file({ type: 'video/mp4' }), [])).toEqual({ ok: true });
+    });
+
+    it('rejects QuickTime and WebM, which the app no longer accepts', () => {
+        for ( const type of ['video/quicktime', 'video/webm'] ) {
+            expect(checkAttachment(file({ type }), [])).toEqual({
+                ok: false, error: 'contact_us_attachment_unsupported',
+            });
         }
     });
 

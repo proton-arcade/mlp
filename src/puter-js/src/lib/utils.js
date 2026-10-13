@@ -316,7 +316,7 @@ function blobToDataUri (blob) {
     });
 }
 
-const VIDEO_EXTENSIONS = ['mp4', 'webm', 'mov', 'mpeg', 'avi', 'mkv', 'm4v', 'ogv'];
+const VIDEO_EXTENSIONS = ['mp4', 'webm', 'mov', 'mpeg', 'avi', 'm4v', 'ogv'];
 
 const isVideoInput = (url) => {
     if ( typeof url !== 'string' ) return false;

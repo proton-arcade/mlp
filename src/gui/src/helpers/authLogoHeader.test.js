@@ -29,14 +29,10 @@ beforeAll(() => {
 const LOGO = '/images/logo-white.svg';
 
 describe('openerFaviconUrl', () => {
-    it('sends only the origin to the favicon service', () => {
-        const url = new URL(openerFaviconUrl('https://app.example.com/secret/path?token=abc'));
-        expect(url.origin + url.pathname).toBe('https://t3.gstatic.com/faviconV2');
-        expect(url.searchParams.get('url')).toBe('https://app.example.com');
-        expect(url.searchParams.get('size')).toBe('256');
-        expect(url.searchParams.get('fallback_opts')).toBe('TYPE,SIZE,URL');
-        expect(url.search).not.toContain('secret');
-        expect(url.search).not.toContain('token');
+    it('fetches no favicon, because Mixt runs fully offline', () => {
+        // The favicon service is an internet host. The caller shows the generic
+        // globe instead, and the opener's path and query never leave the page.
+        expect(openerFaviconUrl('https://app.example.com/secret/path?token=abc')).toBe('');
     });
 
     it('is empty for a non-URL', () => {
@@ -66,7 +62,7 @@ describe('authLogoHeader', () => {
         expect(opener).toBeGreaterThan(-1);
         expect(connector).toBeGreaterThan(opener);
         expect(mixt).toBeGreaterThan(connector);
-        expect(h).toContain('url=https%3A%2F%2Fexample.com');
+        expect(h).not.toContain('gstatic.com');
         expect(h).toContain('auth-logo-header-connected');
     });
 
@@ -83,7 +79,7 @@ describe('authLogoHeader', () => {
     it('encodes an opener origin carrying markup', () => {
         const h = authLogoHeader({ logoSrc: LOGO, openerOrigin: 'https://a.com/"><img src=x onerror=alert(1)>' });
         expect(h).not.toContain('<img src=x');
-        expect(h).toContain('url=https%3A%2F%2Fa.com');
+        expect(h).not.toContain('onerror');
     });
 });
 
